@@ -1,6 +1,6 @@
 /**
  * Builds the Copy Writing performance copy prompt (text, matches reference exactly).
- * Enforces natural human psychology, conversion copy, zero robotic AI phrases, and no emoji spam.
+ * Enforces natural human psychology, conversion copy, zero robotic AI phrases, no emoji spam, and zero em-dashes.
  * @param {object} s — copywriting mode state
  * @returns {string}
  */
@@ -9,12 +9,15 @@ export function buildCopywriting(s = {}) {
 OBJECTIVE: Tuliskan rangkaian naskah copy iklan yang bernas, persuasif, mengalir secara manusiawi, dan terbukti menghasilkan penjualan tinggi.
 
 ⛔ ATURAN ANTI-AI & PANDUAN GAYA BAHASA MANUSIA (WAJIB DIIKUTI):
-1. DILARANG MENGGUNAKAN SIMBOL/EMOJI AI KLASIK:
+1. DILARANG KERAS MENGGUNAKAN SIMBOL EM DASH (—) ATAU EN DASH (–):
+   - JANGAN PERNAH menyisipkan tanda garis panjang em-dash (—) di dalam hook, headline, maupun body text.
+   - Gunakan tanda koma (,), tanda kurung (), tanda titik dua (:), atau tanda minus biasa (-) standar keyboard.
+2. DILARANG MENGGUNAKAN SIMBOL/EMOJI AI KLASIK:
    - Hindari penggunaan simbol robotik berlebihan seperti: ✨, 🚀, 💡, 📌, 👉, 🔥, ✅, 👇 di setiap baris. Gunakan kata-kata yang kuat dan berdaya pikat alami.
-2. HINDARI FRASA KLISE & BUZZWORD KOSONG AI:
+3. HINDARI FRASA KLISE & BUZZWORD KOSONG AI:
    - Dilarang memakai kalimat robotik seperti: "Apakah Anda siap untuk merevolusi...", "Tingkatkan pengalaman Anda ke level berikutnya...", "Solusi terbaik untuk kebutuhan Anda...".
    - Tulis dengan bahasa percakapan manusia Indonesia asli yang relate dengan masalah nyata audiens.
-3. ALUR EMOSIONAL & PSIKOLOGI KONVERSI TINGGI:
+4. ALUR EMOSIONAL & PSIKOLOGI KONVERSI TINGGI:
    - Fokus pada pain point spesifik, keuntungan emosional nyata (bukan sekadar daftar fitur kering), dan urgensi yang masuk akal.
 
 OUTPUT RULES:
@@ -51,25 +54,25 @@ DELIVERABLES (TOTAL 10 COPY TERBAIK):
 - Conversion: Banner Text (4), Headline Hooks (3), Primary Text Meta Ads (2), CTA Variations (3)
 
 SECTION LIST (WAJIB ADA, MASING-MASING BLOCK SENDIRI):
-Awareness — Banner Text
-Awareness — Headline Hooks
-Awareness — Primary Text Meta Ads
-Awareness — CTA Variations
-Consideration — Banner Text
-Consideration — Headline Hooks
-Consideration — Primary Text Meta Ads
-Consideration — CTA Variations
-Conversion — Banner Text
-Conversion — Headline Hooks
-Conversion — Primary Text Meta Ads
-Conversion — CTA Variations
+Awareness: Banner Text
+Awareness: Headline Hooks
+Awareness: Primary Text Meta Ads
+Awareness: CTA Variations
+Consideration: Banner Text
+Consideration: Headline Hooks
+Consideration: Primary Text Meta Ads
+Consideration: CTA Variations
+Conversion: Banner Text
+Conversion: Headline Hooks
+Conversion: Primary Text Meta Ads
+Conversion: CTA Variations
 Scroll Stopper Opening (3)
 Short Hook Text (5)
 Meta Ad Copy (3 paket: Hook + Primary Text + CTA)
 
 FORMAT OUTPUT:
 \`\`\`text
-Awareness — Banner Text
+Awareness: Banner Text
 
 1. ...
 2. ...

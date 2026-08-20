@@ -110,7 +110,7 @@ A complete photorealistic journalistic news card for ${media}, ${state.sceneDesc
         return `[PANDUAN KHUSUS GOOGLE GEMINI - PENULISAN JURNALISTIK MANUSIAWI]:
 Bertindaklah sebagai Redaktur Pelaksana & Jurnalis Senior. 
 Tuliskan naskah berita/artikel yang bernas, faktual, dan mendalam. 
-WAJIB: Hindari emoji/simbol AI (✨, 🚀, 💡, 📌), hindari kalimat klise robotik, dan gunakan bahasa manusia yang mengalir alami sesuai kaidah PUEBI berdasarkan brief berikut:
+WAJIB: DILARANG KERAS MENGGUNAKAN SIMBOL EM DASH (—) ATAU EN DASH (–) KARENA CIRI ROBOT AI. Hindari emoji/simbol AI (✨, 🚀, 💡, 📌), hindari kalimat klise robotik, dan gunakan tanda baca manusia standar (koma, kurung, titik dua, tanda hubung minus biasa) sesuai kaidah PUEBI berdasarkan brief berikut:
 
 ${rawText}`;
       }
@@ -118,7 +118,7 @@ ${rawText}`;
       case 'grok': {
         return `[GROK 2 JOURNALISM & NEWS WRITING PROMPT]:
 Act as a seasoned investigative journalist and news editor. 
-Write a razor-sharp, well-researched, organic journalistic article with zero AI clichés, no generic fluff, and no emoji spam based on this brief:
+Write a razor-sharp, well-researched, organic journalistic article with zero em-dashes (—), zero AI clichés, no generic fluff, and no emoji spam based on this brief:
 
 ${rawText}`;
       }
@@ -136,7 +136,7 @@ cartoon, 3d render, CGI, fake, plastic look, blurry, watermark, duplicate, disto
       default: {
         return `[PERINTAH KHUSUS CHATGPT (REDAKTUR PELAKSANA SENIOR)]:
 Kamu adalah Redaktur Pelaksana Senior di ${media}. 
-Tuliskan naskah artikel / berita jurnalistik utuh siap terbit dengan gaya bahasa manusiawi yang mengalir alami, kaya data, tanpa basa-basi robotik, dan tanpa simbol/emoji AI (✨, 🚀, 💡, 📌) berdasarkan detail liputan berikut:
+Tuliskan naskah artikel / berita jurnalistik utuh siap terbit dengan gaya bahasa manusiawi yang mengalir alami, kaya data, tanpa basa-basi robotik, DILARANG MENGGUNAKAN TANDA EM DASH (—) MAUPUN EN DASH (–), dan tanpa simbol/emoji AI (✨, 🚀, 💡, 📌) berdasarkan detail liputan berikut:
 
 ${rawText}`;
       }
@@ -149,7 +149,7 @@ ${rawText}`;
       case 'gemini': {
         return `[PANDUAN KHUSUS GOOGLE GEMINI - PERFORMANCE COPYWRITING]:
 Bertindaklah sebagai Senior Direct Response Copywriter. 
-Tuliskan naskah iklan persuasif berkonversi tinggi dengan bahasa manusia yang relate, tanpa buzzword klise AI, dan tanpa emoji berlebihan dalam format teks terpisah:
+Tuliskan naskah iklan persuasif berkonversi tinggi dengan bahasa manusia yang relate, tanpa em-dash (—), tanpa buzzword klise AI, dan tanpa emoji berlebihan dalam format teks terpisah:
 
 ${rawText}`;
       }
@@ -157,7 +157,7 @@ ${rawText}`;
       case 'grok': {
         return `[GROK 2 PERFORMANCE COPYWRITING PROMPT]:
 Act as an elite conversion copywriter.
-Write authentic, high-converting Indonesian sales copy with zero robotic AI filler, sharp emotional hooks, and clear CTAs based on this brief:
+Write authentic, high-converting Indonesian sales copy with zero em-dashes (—), zero robotic AI filler, sharp emotional hooks, and clear CTAs based on this brief:
 
 ${rawText}`;
       }
@@ -175,7 +175,7 @@ blurry, low quality, distorted text, ugly composition, artifacts.`;
       default: {
         return `[PERINTAH KHUSUS CHATGPT (DIRECT RESPONSE COPYWRITER)]:
 Kamu adalah Senior Direct Response Copywriter kelas dunia.
-Tuliskan rangkaian naskah copywriting iklan berkonversi tinggi dengan psikologi penjualan yang kuat, gaya bertutur manusiawi, tanpa template robotik, dan tanpa spam emoji:
+Tuliskan rangkaian naskah copywriting iklan berkonversi tinggi dengan psikologi penjualan yang kuat, gaya bertutur manusiawi, DILARANG PAKAI SIMBOL EM DASH (—), tanpa template robotik, dan tanpa spam emoji:
 
 ${rawText}`;
       }

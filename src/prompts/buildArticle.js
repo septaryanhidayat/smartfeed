@@ -3,7 +3,7 @@ export { INITIAL_ARTICLE_STATE };
 
 /**
  * Builds the comprehensive prompt for Article & Journalism Mode
- * Strictly enforces Natural Human Writing, Zero AI Clichés, and Anti-Robot Syntax.
+ * Strictly enforces Natural Human Writing, Zero AI Clichés, Anti-Robot Syntax, and Anti-EmDash.
  * @param {object} s — article mode state
  * @returns {string}
  */
@@ -31,7 +31,7 @@ SPESIFIKASI PENULISAN:
 - Format Naskah: ${format.toUpperCase()}
 - Target Media Publikasi: ${targetMedia.toUpperCase()}
 - Tone / Sudut Pandang: ${tone}
-- Target Panjang Tulisan: ${length === 'short' ? '300 – 500 kata' : length === 'long' ? '1.000 – 1.500 kata' : '600 – 900 kata'}
+- Target Panjang Tulisan: ${length === 'short' ? '300 - 500 kata' : length === 'long' ? '1.000 - 1.500 kata' : '600 - 900 kata'}
 
 FAKTA UTAMA & INFORMASI LAPANGAN:
 - Fakta 5W + 1H: ${s.facts || 'Fakta kejadian utama'}
@@ -41,15 +41,19 @@ ${s.keywords ? `- Kata Kunci / Fokus SEO: ${s.keywords}` : ''}
 ${s.additionalNotes ? `- Catatan Tambahan Redaksi: ${s.additionalNotes}` : ''}
 
 ⛔ ATURAN ANTI-AI & PANDUAN GAYA BAHASA MANUSIA (SANGAT KETAT):
-1. DILARANG KERAS MENGGUNAKAN SIMBOL & EMOJI AI:
+1. DILARANG KERAS MENGGUNAKAN TANDA EM DASH (—) ATAU EN DASH (–):
+   - JANGAN PERNAH menyisipkan tanda garis panjang em-dash (—) di dalam judul, sub-judul, maupun seluruh kalimat isi artikel.
+   - Simbol em-dash (—) adalah penanda paling mencolok dari tulisan robot/AI karena tidak ada pada tombol keyboard standar manusia.
+   - Sebagai gantinya, WAJIB gunakan tanda baca manusia standar: tanda koma (,), tanda kurung (), tanda titik dua (:), atau tanda hubung minus (-) biasa.
+2. DILARANG KERAS MENGGUNAKAN SIMBOL & EMOJI AI:
    - Jangan pernah gunakan emoji template AI seperti: ✨, 🚀, 💡, 📌, 👉, 🔥, ✅, 👇, 🎯, 🌟 di dalam artikel atau judul. Naskah jurnalistik harus bersih, formal, dan berwibawa.
-2. HINDARI BASA-BASI & FRASA KLIPING ROBOTIK:
+3. HINDARI BASA-BASI & FRASA KLIPING ROBOTIK:
    - Dilarang membuka artikel dengan klise AI seperti: "Di era digital yang serba cepat ini...", "Dalam lanskap modern...", "Tidak dapat dipungkiri bahwa...", "Mari kita telusuri lebih dalam...".
    - Dilarang menggunakan penutup template seperti: "Hal ini menjadi angin segar...", "Patut dinantikan langkah selanjutnya...". Langsung masuk ke inti fakta dan analisis substansial!
-3. IRAMA & ALUR PENULISAN ORGANIK (BURSTINESS ALAMI):
+4. IRAMA & ALUR PENULISAN ORGANIK (BURSTINESS ALAMI):
    - Gunakan variasi panjang kalimat (gabungan kalimat pendek yang tegas dan kalimat panjang yang kaya konteks). Hindari ritme seragam yang kaku.
    - Hindari pengulangan kata transisi template di awal setiap paragraf ("Selain itu", "Di samping itu", "Oleh karena itu").
-4. KONTEN BERISI & KAYA DETAIL (NO FLUFF):
+5. KONTEN BERISI & KAYA DETAIL (NO FLUFF):
    - Jangan menulis kalimat hampa yang berputar-putar. Berikan data spesifik, konteks sebab-akibat yang logis, dampak nyata bagi publik, dan kutipan narasumber yang menyatu mengalir.
 
 STRUKTUR OUTPUT (TAMPILKAN LENGKAP & RUNTUT):
