@@ -37,7 +37,9 @@ import NewsCardMode from './modes/NewsCardMode.jsx';
 import QuoteCardMode from './modes/QuoteCardMode.jsx';
 import FactCheckMode from './modes/FactCheckMode.jsx';
 import ArticleMode from './modes/ArticleMode.jsx';
+import VideoScriptMode from './modes/VideoScriptMode.jsx';
 import ImageSlicerMode from './modes/ImageSlicerMode.jsx';
+import VideoScriptDemoModal from './components/VideoScriptDemoModal.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
 import { generateCarouselPrompts, INITIAL_CAROUSEL } from './prompts/buildCarousel.js';
 import { buildGridFeed, INITIAL_GRIDFEED } from './prompts/buildGridFeed.js';
@@ -54,6 +56,7 @@ import { buildNewsCard, INITIAL_NEWS_CARD } from './prompts/buildNewsCard.js';
 import { buildQuoteCard, INITIAL_QUOTE_CARD } from './prompts/buildQuoteCard.js';
 import { buildFactCheck, INITIAL_FACT_CHECK } from './prompts/buildFactCheck.js';
 import { buildArticle, INITIAL_ARTICLE_STATE } from './prompts/buildArticle.js';
+import { buildVideoScript, INITIAL_VIDEOSCRIPT_STATE } from './prompts/buildVideoScript.js';
 import { SUB_TYPES as FACECARD_SUB_TYPES } from './data/faceCardOptions.js';
 import { useHistory } from './context/HistoryContext.jsx';
 
@@ -71,6 +74,7 @@ const TITLES = {
   carousel:    { name: 'Carousel Feeds', desc: 'Pilih tipe template carousel & jumlah slide, sistem menyusun story flow, objektif tiap slide, dan variasi layout jadi satu rangkaian konten.' },
   gridfeed:    { name: '9 Feed Konsisten', desc: 'Isi info produk → sistem susun konsep 9 feed konsisten satu campaign, tiap feed beda peran (hero, fitur, harga, testimoni, CTA, dll). Ikuti video tutorial untuk hasilkan visualnya.' },
   imageslicer: { name: 'Grid & Image Slicer', desc: 'Potong otomatis gambar 9-Grid Instagram atau Carousel, preview garis potong interaktif, dan download semua potongan dalam file ZIP.' },
+  videoscript: { name: 'Naskah Video & Storyboard', desc: 'Isi konsep video untuk menghasilkan naskah teleprompter-ready, script wawancara, dan storyboard visual scene-by-scene.' },
   thumbnail:   { name: 'Youtube Thumbnail', desc: 'Isi detail video untuk menghasilkan thumbnail YouTube profesional siap pakai.' },
   typography:  { name: 'Ads Typography', desc: 'Arahkan AI Creative Director untuk Typography Ads premium.' },
   copywriting: { name: 'Copy Writing', desc: 'AI Creative Copy Engine untuk kebutuhan banner & iklan.' },
@@ -87,8 +91,8 @@ const TITLES = {
 };
 
 const HAS_MOCKUP = {
-  banner: true, carousel: true, gridfeed: false, imageslicer: false, thumbnail: true, typography: true,
-  copywriting: false, facecard: false, menufb: false, article: false,
+  banner: true, carousel: true, gridfeed: false, imageslicer: false, videoscript: false,
+  thumbnail: true, typography: true, copywriting: false, facecard: false, menufb: false, article: false,
   newscard: false, quotecard: false, factcheck: false,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
   storyboardaffiliate: false,
@@ -138,6 +142,7 @@ function AuthedApp() {
   const [quoteCard, dispatchQuoteCard]     = useReducer(modeReducer, INITIAL_QUOTE_CARD);
   const [factCheck, dispatchFactCheck]     = useReducer(modeReducer, INITIAL_FACT_CHECK);
   const [article, dispatchArticle]         = useReducer(modeReducer, INITIAL_ARTICLE_STATE);
+  const [videoScript, dispatchVideoScript] = useReducer(modeReducer, INITIAL_VIDEOSCRIPT_STATE);
   const [logoAff, dispatchLogoAff]                 = useReducer(modeReducer, INITIAL_LOGO_AFFILIATE);
   const [tryonAff, dispatchTryonAff]               = useReducer(modeReducer, INITIAL_TRYON_AFFILIATE);
   const [reviewAff, dispatchReviewAff]             = useReducer(modeReducer, INITIAL_REVIEW_AFFILIATE);
@@ -147,6 +152,7 @@ function AuthedApp() {
     mode === 'banner'              ? banner :
     mode === 'carousel'            ? carousel :
     mode === 'gridfeed'            ? gridfeed :
+    mode === 'videoscript'         ? videoScript :
     mode === 'thumbnail'           ? thumbnail :
     mode === 'typography'          ? typography :
     mode === 'facecard'            ? facecard :
@@ -166,6 +172,7 @@ function AuthedApp() {
     if (mode === 'banner')              return buildBanner(deferredState);
     if (mode === 'carousel')            return generateCarouselPrompts(deferredState);
     if (mode === 'gridfeed')            return buildGridFeed(deferredState);
+    if (mode === 'videoscript')         return buildVideoScript(deferredState);
     if (mode === 'thumbnail')           return buildThumbnail(deferredState);
     if (mode === 'typography')          return buildTypography(deferredState);
     if (mode === 'copywriting')         return buildCopywriting(deferredState);
@@ -192,6 +199,7 @@ function AuthedApp() {
       return activeState.productName || activeState.brandName || activeState.slide1Headline || 'Carousel Feeds';
     }
     if (mode === 'gridfeed')    return activeState.productName || activeState.brandName || activeState.headline || '9 Feed Konsisten';
+    if (mode === 'videoscript') return activeState.title || 'Naskah Video & Storyboard';
     if (mode === 'thumbnail')   return activeState.title || activeState.channel || 'Thumbnail Prompt';
     if (mode === 'typography')  return activeState.hook || 'Typography Prompt';
     if (mode === 'article')     return activeState.headline || 'Artikel & Berita';
@@ -309,6 +317,15 @@ function AuthedApp() {
     }, 600);
   };
 
+  const handleVideoScriptDemoPick = (demo) => {
+    setLoadingDemo({ label: demo.label, icon: 'Clapperboard' });
+    logActivity('DEMO', { tool: 'videoscript', details: demo.label });
+    setTimeout(() => {
+      dispatchVideoScript({ type: 'RESET_TO', state: { ...INITIAL_VIDEOSCRIPT_STATE, ...demo.preset } });
+      setLoadingDemo(null);
+    }, 600);
+  };
+
   const handleGenerate = async () => {
     // Verifikasi real-time: pastikan akun masih ada di spreadsheet
     if (checkSessionLive) {
@@ -316,8 +333,8 @@ function AuthedApp() {
       if (valid && !valid.ok) return;
     }
 
-    // All affiliate and journalism modes return string/object format.
-    const TEXT_MODES = ['gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate', 'article', 'newscard', 'quotecard', 'factcheck'];
+    // All affiliate, journalism, and video script modes return string/object format.
+    const TEXT_MODES = ['gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate', 'article', 'newscard', 'quotecard', 'factcheck', 'videoscript'];
     const text = mode === 'carousel'
       ? (Array.isArray(prompt) ? prompt : []).map((s) => `=== ${s.slideTitle} | Layout: ${s.layout} ===\n${s.prompt}`).join('\n\n\n')
       : ['newscard', 'quotecard', 'factcheck'].includes(mode)
@@ -362,6 +379,7 @@ function AuthedApp() {
     else if (entry.mode === 'facecard')    dispatchFacecard({ type: 'RESET_TO', state: safe(INITIAL_FACECARD, entry.snapshot) });
     else if (entry.mode === 'menufb')              dispatchMenufb({ type: 'RESET_TO', state: safe(INITIAL_MENU_FB, entry.snapshot) });
     else if (entry.mode === 'article')             dispatchArticle({ type: 'RESET_TO', state: safe(INITIAL_ARTICLE_STATE, entry.snapshot) });
+    else if (entry.mode === 'videoscript')         dispatchVideoScript({ type: 'RESET_TO', state: safe(INITIAL_VIDEOSCRIPT_STATE, entry.snapshot) });
     else if (entry.mode === 'newscard')            dispatchNewsCard({ type: 'RESET_TO', state: safe(INITIAL_NEWS_CARD, entry.snapshot) });
     else if (entry.mode === 'quotecard')           dispatchQuoteCard({ type: 'RESET_TO', state: safe(INITIAL_QUOTE_CARD, entry.snapshot) });
     else if (entry.mode === 'factcheck')           dispatchFactCheck({ type: 'RESET_TO', state: safe(INITIAL_FACT_CHECK, entry.snapshot) });
@@ -448,6 +466,7 @@ function AuthedApp() {
                 {mode === 'facecard'            && <FaceCardMode            state={facecard}      dispatch={dispatchFacecard} />}
                 {mode === 'menufb'              && <MenuFBMode              state={menufb}        dispatch={dispatchMenufb} />}
                 {mode === 'article'             && <ArticleMode             state={article}       dispatch={dispatchArticle} />}
+                {mode === 'videoscript'         && <VideoScriptMode         state={videoScript}   dispatch={dispatchVideoScript} />}
                 {mode === 'logoaffiliate'       && <LogoAffiliateMode       state={logoAff}       dispatch={dispatchLogoAff} />}
                 {mode === 'tryonaffiliate'      && <TryOnAffiliateMode      state={tryonAff}      dispatch={dispatchTryonAff} />}
                 {mode === 'reviewaffiliate'     && <ReviewAffiliateMode     state={reviewAff}     dispatch={dispatchReviewAff} />}
@@ -528,11 +547,13 @@ function AuthedApp() {
         <StatusBar mode={mode} />
       </div>
 
-      {/* Modals — Affiliate & Journalism modes pakai picker khusus */}
+      {/* Modals — Affiliate, Journalism, Video Script & Carousel modes pakai picker khusus */}
       {mode === 'carousel' ? (
         <CarouselDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleCarouselDemoPick} />
       ) : mode === 'menufb' ? (
         <MenuFBDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleMenuFBDemoPick} />
+      ) : mode === 'videoscript' ? (
+        <VideoScriptDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleVideoScriptDemoPick} />
       ) : ['article', 'newscard', 'quotecard', 'factcheck'].includes(mode) ? (
         <JournalismDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} mode={mode} onPick={handleJournalismDemoPick} />
       ) : ['logoaffiliate','tryonaffiliate','reviewaffiliate','storyboardaffiliate'].includes(mode) ? (

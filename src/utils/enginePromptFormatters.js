@@ -143,7 +143,46 @@ ${rawText}`;
     }
   }
 
-  // ─── 3. COPYWRITING MODE (PURE MARKETING COPY TEXT) ───
+  // ─── 3. VIDEO SCRIPT, INTERVIEW & STORYBOARD WRITING ───
+  if (mode === 'videoscript') {
+    switch (engine) {
+      case 'gemini': {
+        return `[PANDUAN KHUSUS GOOGLE GEMINI - SCRIPTWRITING & VIDEO STORYBOARD]:
+Bertindaklah sebagai Creative Video Director dan Head of Scriptwriting.
+Tuliskan naskah video / script wawancara / storyboard scene-by-scene yang mengalir alami, teleprompter-ready, DILARANG MEMAKAI TANDA EM DASH (—), dan tanpa emoji robotik berdasarkan brief berikut:
+
+${rawText}`;
+      }
+
+      case 'grok': {
+        return `[GROK 2 VIDEO SCRIPT & STORYBOARD PROMPT]:
+Act as an elite video creative director and visual storyteller.
+Write a fast-paced, high-retention video script, shot list, and scene-by-scene storyboard breakdown with zero em-dashes (—) and no AI fluff based on this brief:
+
+${rawText}`;
+      }
+
+      case 'leonardo': {
+        return `[LEONARDO.AI - CINEMATIC KEYFRAME STORYBOARD PROMPT]:
+PROMPT:
+Cinematic 4K keyframe storyboard visual for video titled "${state.title || 'cinematic video production'}", ${state.visualStyle || 'cinematic lighting'}, professional movie cinematography, 24fps film still, dramatic composition, highly detailed, 8k resolution, photorealism.
+
+NEGATIVE PROMPT:
+cartoon, CGI, low quality, distorted anatomy, blurry, watermark, bad lighting.`;
+      }
+
+      case 'chatgpt':
+      default: {
+        return `[PERINTAH KHUSUS CHATGPT (CREATIVE VIDEO DIRECTOR & SCRIPTWRITER)]:
+Kamu adalah Creative Video Director dan Senior Scriptwriter profesional.
+Tuliskan naskah video lengkap dengan rincian Scene-by-Scene, Timecode, arahan visual, Voice Over teleprompter-ready (DILARANG MENGGUNAKAN SIMBOL EM DASH —), on-screen text, dan prompt storyboard gambar AI berdasarkan brief berikut:
+
+${rawText}`;
+      }
+    }
+  }
+
+  // ─── 4. COPYWRITING MODE (PURE MARKETING COPY TEXT) ───
   if (mode === 'copywriting') {
     switch (engine) {
       case 'gemini': {
