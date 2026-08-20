@@ -237,10 +237,10 @@ export default function PromptPanel({
               : 'idle · klik Build Prompt'}
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
             <button
               onClick={handleGenerate}
-              className="btn-ghost !py-2 !px-3 text-xs"
+              className="btn-ghost !py-2 !px-3 text-xs whitespace-nowrap inline-flex items-center gap-1.5 shrink-0"
               disabled={streaming}
             >
               <RefreshCw className={`w-3 h-3 ${streaming ? 'animate-spin' : ''}`} />
@@ -260,16 +260,16 @@ export default function PromptPanel({
                 } catch {}
                 openMiniAiBrowser(selectedEngine);
                 showAlert({
-                  title: 'Mini Browser AI Terbuka!',
-                  text: `Prompt untuk ${selectedEngine.toUpperCase()} berhasil disalin otomatis ke clipboard.\n\n👉 Silakan tekan Ctrl + V di jendela samping untuk langsung generate!`,
+                  title: 'Mini Browser Dibuka!',
+                  text: `Prompt untuk ${selectedEngine.toUpperCase()} telah disalin otomatis ke clipboard.\n\n👉 Silakan tekan Ctrl + V di jendela samping untuk langsung generate!`,
                   icon: 'success',
                 });
               }}
-              className="btn-primary !py-2 !px-3.5 text-xs flex items-center gap-1.5 shadow-[0_0_16px_rgba(var(--accent-rgb),0.35)]"
+              className="btn-primary !py-2 !px-3 text-xs whitespace-nowrap inline-flex items-center gap-1.5 shrink-0 shadow-[0_0_16px_rgba(var(--accent-rgb),0.35)]"
               title={`Buka jendela mini ${selectedEngine.toUpperCase()} di samping layar`}
             >
               <AppWindow className="w-3.5 h-3.5" />
-              <span>🪟 Mini Browser AI</span>
+              <span>Mini Browser</span>
             </button>
 
             {/* Copy Prompt & Modal Launcher */}

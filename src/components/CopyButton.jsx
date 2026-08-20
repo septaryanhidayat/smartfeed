@@ -39,10 +39,10 @@ export default function CopyButton({ getText, label = 'Copy', size = 'sm', prima
   const sizeCls = size === 'xs' ? 'text-[11px] !px-2 !py-1' : '';
 
   return (
-    <button onClick={handle} className={`${base} ${sizeCls} ${className}`}>
+    <button onClick={handle} className={`${base} ${sizeCls} whitespace-nowrap inline-flex items-center justify-center gap-1.5 shrink-0 ${className}`}>
       {copied
-        ? <><Check className="w-3.5 h-3.5" /> Disalin</>
-        : <><Copy className="w-3.5 h-3.5" /> {label}</>}
+        ? <><Check className="w-3.5 h-3.5" /> <span>Disalin</span></>
+        : <><Copy className="w-3.5 h-3.5" /> <span>{label}</span></>}
     </button>
   );
 }
