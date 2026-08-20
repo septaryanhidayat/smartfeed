@@ -103,7 +103,46 @@ A complete photorealistic journalistic news card for ${media}, ${state.sceneDesc
     }
   }
 
-  // ─── 2. ALL OTHER MODULES (BANNER, THUMBNAIL, FACE CARD, MENU F&B, AFFILIATE, ETC) ───
+  // ─── 2. COPYWRITING MODE (PURE MARKETING COPY TEXT) ───
+  if (mode === 'copywriting') {
+    switch (engine) {
+      case 'gemini': {
+        return `[PANDUAN KHUSUS GOOGLE GEMINI - PERFORMANCE COPYWRITING]:
+Bertindaklah sebagai Senior Performance Copywriter dan Direct Response Strategist. 
+Tuliskan seluruh rangkaian naskah iklan persuasif berkonversi tinggi berikut ini dalam format teks rapi dengan codeblock terpisah:
+
+${rawText}`;
+      }
+
+      case 'grok': {
+        return `[GROK 2 PERFORMANCE COPYWRITING PROMPT]:
+Act as an elite direct-response copywriter, Meta & TikTok Ads creative strategist.
+Write high-converting Indonesian sales copy, scroll-stopping hooks, and persuasive ad angles based on this brief:
+
+${rawText}`;
+      }
+
+      case 'leonardo': {
+        return `[LEONARDO.AI - VISUAL AD MOCKUP PROMPT]:
+PROMPT:
+Masterpiece commercial ad creative visual for social media campaign, ${state.summary || 'e-commerce product promotion'}, bold promotional banner style, stunning studio lighting, sharp focus, 8k resolution, photorealistic marketing visual.
+
+NEGATIVE PROMPT:
+blurry, low quality, distorted text, ugly composition, artifacts.`;
+      }
+
+      case 'chatgpt':
+      default: {
+        return `[PERINTAH KHUSUS CHATGPT (TEXT & COPYWRITING)]:
+Kamu adalah Senior Performance Copywriter, Meta Ads Creative Specialist, dan Direct Response Strategist.
+Hasilkan dan tuliskan seluruh variasi naskah copywriting iklan berkonversi tinggi berikut ini dalam format teks terstruktur:
+
+${rawText}`;
+      }
+    }
+  }
+
+  // ─── 3. ALL VISUAL & IMAGE MODULES (BANNER, THUMBNAIL, FACE CARD, MENU F&B, AFFILIATE, ETC) ───
   switch (engine) {
     case 'gemini': {
       return `[PANDUAN EKSEKUSI GOOGLE GEMINI / IMAGEN 3]:
