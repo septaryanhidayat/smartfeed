@@ -24,10 +24,10 @@ window.__AF_CONFIG = {
    gptUrl: "",
 
    /* -- 2b. SOCIAL (footer) ------------------------------------------- */
-   instagramUrl: "https://instagram.com/akunkamu",
-   instagramHandle: "@akunkamu",
-   facebookUrl: "https://facebook.com/akunkamu",
-   facebookHandle: "Akun Kamu",
+   instagramUrl: "https://instagram.com/berandadigital.net",
+   instagramHandle: "@berandadigital_net",
+   facebookUrl: "https://www.facebook.com/berandateknologidigital",
+   facebookHandle: "Beranda Teknologi Digital",
 
    /* -- 3. HARGA (tampilan teks) -------------------------------------- */
    price: "249.000",          // harga tampil

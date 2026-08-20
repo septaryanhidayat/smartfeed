@@ -34,10 +34,10 @@ export const CONFIG = {
   gptUrl:     pick(cfg.gptUrl, ''),
 
   // ── Social (footer) ───────────────────────────────────────
-  instagramUrl:    pick(cfg.instagramUrl, 'https://instagram.com/smartfeed'),
-  instagramHandle: pick(cfg.instagramHandle, '@smartfeed'),
-  facebookUrl:     pick(cfg.facebookUrl, 'https://www.facebook.com/smartfeed'),
-  facebookHandle:  pick(cfg.facebookHandle, 'smartfeed'),
+  instagramUrl:    pick(cfg.instagramUrl, 'https://instagram.com/berandadigital.net'),
+  instagramHandle: pick(cfg.instagramHandle, '@berandadigital_net'),
+  facebookUrl:     pick(cfg.facebookUrl, 'https://www.facebook.com/berandateknologidigital'),
+  facebookHandle:  pick(cfg.facebookHandle, 'Beranda Teknologi Digital'),
 
   // ── Harga (tampilan) ──────────────────────────────────────
   price:        pick(cfg.price, '249.000'),
