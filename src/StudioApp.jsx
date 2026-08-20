@@ -36,6 +36,7 @@ import StoryboardAffiliateMode from './modes/StoryboardAffiliateMode.jsx';
 import NewsCardMode from './modes/NewsCardMode.jsx';
 import QuoteCardMode from './modes/QuoteCardMode.jsx';
 import FactCheckMode from './modes/FactCheckMode.jsx';
+import ImageSlicerMode from './modes/ImageSlicerMode.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
 import { generateCarouselPrompts, INITIAL_CAROUSEL } from './prompts/buildCarousel.js';
 import { buildGridFeed, INITIAL_GRIDFEED } from './prompts/buildGridFeed.js';
@@ -67,6 +68,7 @@ const TITLES = {
   banner:      { name: 'Design Feeds', desc: 'Isi detail produk untuk menghasilkan desain feed profesional siap pakai.' },
   carousel:    { name: 'Carousel Feeds', desc: 'Pilih tipe template carousel & jumlah slide, sistem menyusun story flow, objektif tiap slide, dan variasi layout jadi satu rangkaian konten.' },
   gridfeed:    { name: '9 Feed Konsisten', desc: 'Isi info produk → sistem susun konsep 9 feed konsisten satu campaign, tiap feed beda peran (hero, fitur, harga, testimoni, CTA, dll). Ikuti video tutorial untuk hasilkan visualnya.' },
+  imageslicer: { name: 'Grid & Image Slicer', desc: 'Potong otomatis gambar 9-Grid Instagram atau Carousel, preview garis potong interaktif, dan download semua potongan dalam file ZIP.' },
   thumbnail:   { name: 'Youtube Thumbnail', desc: 'Isi detail video untuk menghasilkan thumbnail YouTube profesional siap pakai.' },
   typography:  { name: 'Ads Typography', desc: 'Arahkan AI Creative Director untuk Typography Ads premium.' },
   copywriting: { name: 'Copy Writing', desc: 'AI Creative Copy Engine untuk kebutuhan banner & iklan.' },
@@ -82,7 +84,7 @@ const TITLES = {
 };
 
 const HAS_MOCKUP = {
-  banner: true, carousel: true, gridfeed: false, thumbnail: true, typography: true,
+  banner: true, carousel: true, gridfeed: false, imageslicer: false, thumbnail: true, typography: true,
   copywriting: false, facecard: false, menufb: false,
   newscard: false, quotecard: false, factcheck: false,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
@@ -412,92 +414,99 @@ function AuthedApp() {
         />
 
         <div className="flex-1 flex flex-col lg:flex-row min-w-0 lg:overflow-hidden">
+          {mode === 'imageslicer' ? (
+            <main className="flex-1 min-w-0 overflow-y-auto p-4 lg:p-6 max-w-7xl mx-auto w-full">
+              <ImageSlicerMode />
+            </main>
+          ) : (
+            <>
+              {/* COLUMN 1 — Form */}
+              <main className="flex-1 min-w-0 overflow-y-auto p-4 lg:p-5 lg:max-w-[680px] xl:lg:max-w-[760px]">
+                <div className="mb-4">
+                  <h1 className="text-xl font-bold">{t.name}</h1>
+                  <p className="text-xs text-text-mut mt-1">{t.desc}</p>
+                </div>
+                {mode === 'banner'              && <BannerMode              state={banner}        dispatch={dispatchBanner} />}
+                {mode === 'carousel'            && <CarouselMode            state={carousel}      dispatch={dispatchCarousel} />}
+                {mode === 'gridfeed'            && <GridFeedMode            state={gridfeed}      dispatch={dispatchGridfeed} />}
+                {mode === 'thumbnail'           && <ThumbnailMode           state={thumbnail}     dispatch={dispatchThumbnail} />}
+                {mode === 'typography'          && <TypographyMode          state={typography}    dispatch={dispatchTypography} />}
+                {mode === 'copywriting'         && <CopywritingMode         state={copywriting}   dispatch={dispatchCopywriting} />}
+                {mode === 'facecard'            && <FaceCardMode            state={facecard}      dispatch={dispatchFacecard} />}
+                {mode === 'menufb'              && <MenuFBMode              state={menufb}        dispatch={dispatchMenufb} />}
+                {mode === 'logoaffiliate'       && <LogoAffiliateMode       state={logoAff}       dispatch={dispatchLogoAff} />}
+                {mode === 'tryonaffiliate'      && <TryOnAffiliateMode      state={tryonAff}      dispatch={dispatchTryonAff} />}
+                {mode === 'reviewaffiliate'     && <ReviewAffiliateMode     state={reviewAff}     dispatch={dispatchReviewAff} />}
+                {mode === 'storyboardaffiliate' && <StoryboardAffiliateMode state={storyboardAff} dispatch={dispatchStoryboardAff} />}
+                {mode === 'newscard'            && <NewsCardMode            state={newsCard}      dispatch={dispatchNewsCard} />}
+                {mode === 'quotecard'           && <QuoteCardMode           state={quoteCard}     dispatch={dispatchQuoteCard} />}
+                {mode === 'factcheck'           && <FactCheckMode           state={factCheck}     dispatch={dispatchFactCheck} />}
 
-          {/* COLUMN 1 — Form */}
-          <main className="flex-1 min-w-0 overflow-y-auto p-4 lg:p-5 lg:max-w-[680px] xl:lg:max-w-[760px]">
-            <div className="mb-4">
-              <h1 className="text-xl font-bold">{t.name}</h1>
-              <p className="text-xs text-text-mut mt-1">{t.desc}</p>
-            </div>
-            {mode === 'banner'              && <BannerMode              state={banner}        dispatch={dispatchBanner} />}
-            {mode === 'carousel'            && <CarouselMode            state={carousel}      dispatch={dispatchCarousel} />}
-            {mode === 'gridfeed'            && <GridFeedMode            state={gridfeed}      dispatch={dispatchGridfeed} />}
-            {mode === 'thumbnail'           && <ThumbnailMode           state={thumbnail}     dispatch={dispatchThumbnail} />}
-            {mode === 'typography'          && <TypographyMode          state={typography}    dispatch={dispatchTypography} />}
-            {mode === 'copywriting'         && <CopywritingMode         state={copywriting}   dispatch={dispatchCopywriting} />}
-            {mode === 'facecard'            && <FaceCardMode            state={facecard}      dispatch={dispatchFacecard} />}
-            {mode === 'menufb'              && <MenuFBMode              state={menufb}        dispatch={dispatchMenufb} />}
-            {mode === 'logoaffiliate'       && <LogoAffiliateMode       state={logoAff}       dispatch={dispatchLogoAff} />}
-            {mode === 'tryonaffiliate'      && <TryOnAffiliateMode      state={tryonAff}      dispatch={dispatchTryonAff} />}
-            {mode === 'reviewaffiliate'     && <ReviewAffiliateMode     state={reviewAff}     dispatch={dispatchReviewAff} />}
-            {mode === 'storyboardaffiliate' && <StoryboardAffiliateMode state={storyboardAff} dispatch={dispatchStoryboardAff} />}
-            {mode === 'newscard'            && <NewsCardMode            state={newsCard}      dispatch={dispatchNewsCard} />}
-            {mode === 'quotecard'           && <QuoteCardMode           state={quoteCard}     dispatch={dispatchQuoteCard} />}
-            {mode === 'factcheck'           && <FactCheckMode           state={factCheck}     dispatch={dispatchFactCheck} />}
+                {/* Mobile-only: mockup + prompt inline below form */}
+                <div className="lg:hidden mt-4 space-y-4">
+                  {showMockup && <MockupPreview mode={mode} state={activeState} />}
+                  <div className="h-[70vh] min-h-[480px]">
+                    {mode === 'carousel' ? (
+                      <CarouselOutput
+                        slides={prompt}
+                        onGenerate={handleGenerate}
+                        onRestoreHistory={handleRestore}
+                        onCopied={handleCopied}
+                        restoreSignal={restoreSignal}
+                        autoShow={restoredMode === 'carousel'}
+                      />
+                    ) : (
+                      <PromptPanel
+                        mode={mode}
+                        promptText={prompt}
+                        state={activeState}
+                        onGenerate={handleGenerate}
+                        onRestoreHistory={handleRestore}
+                        onCopied={handleCopied}
+                        restoreSignal={restoreSignal}
+                        autoShow={restoredMode === mode}
+                      />
+                    )}
+                  </div>
+                </div>
+              </main>
 
-            {/* Mobile-only: mockup + prompt inline below form */}
-            <div className="lg:hidden mt-4 space-y-4">
-              {showMockup && <MockupPreview mode={mode} state={activeState} />}
-              <div className="h-[70vh] min-h-[480px]">
-                {mode === 'carousel' ? (
-                  <CarouselOutput
-                    slides={prompt}
-                    onGenerate={handleGenerate}
-                    onRestoreHistory={handleRestore}
-                    onCopied={handleCopied}
-                    restoreSignal={restoreSignal}
-                    autoShow={restoredMode === 'carousel'}
-                  />
-                ) : (
-                  <PromptPanel
-                    mode={mode}
-                    promptText={prompt}
-                    state={activeState}
-                    onGenerate={handleGenerate}
-                    onRestoreHistory={handleRestore}
-                    onCopied={handleCopied}
-                    restoreSignal={restoreSignal}
-                    autoShow={restoredMode === mode}
-                  />
+              {/* COLUMN 2 — Mockup + Prompt (DESKTOP only side panel).
+                  aside = overflow-y-auto + panel min-h: di layar pendek/scaling tinggi,
+                  mockup tidak lagi menghimpit panel sampai tombol Generate ke-clip —
+                  panel tetap penuh & footer (Generate) selalu terjangkau via scroll. */}
+              <aside className="hidden lg:flex flex-col w-[480px] xl:w-[560px] border-l border-border bg-bg-deep/50 overflow-y-auto">
+                {showMockup && (
+                  <div className="p-4 border-b border-border shrink-0">
+                    <MockupPreview mode={mode} state={activeState} />
+                  </div>
                 )}
-              </div>
-            </div>
-          </main>
-
-          {/* COLUMN 2 — Mockup + Prompt (DESKTOP only side panel).
-              aside = overflow-y-auto + panel min-h: di layar pendek/scaling tinggi,
-              mockup tidak lagi menghimpit panel sampai tombol Generate ke-clip —
-              panel tetap penuh & footer (Generate) selalu terjangkau via scroll. */}
-          <aside className="hidden lg:flex flex-col w-[480px] xl:w-[560px] border-l border-border bg-bg-deep/50 overflow-y-auto">
-            {showMockup && (
-              <div className="p-4 border-b border-border shrink-0">
-                <MockupPreview mode={mode} state={activeState} />
-              </div>
-            )}
-            <div className="flex-1 min-h-[340px] p-4 pt-3">
-              {mode === 'carousel' ? (
-                <CarouselOutput
-                  slides={prompt}
-                  onGenerate={handleGenerate}
-                  onRestoreHistory={handleRestore}
-                  onCopied={handleCopied}
-                  restoreSignal={restoreSignal}
-                  autoShow={restoredMode === 'carousel'}
-                />
-              ) : (
-                <PromptPanel
-                  mode={mode}
-                  promptText={prompt}
-                  state={activeState}
-                  onGenerate={handleGenerate}
-                  onRestoreHistory={handleRestore}
-                  onCopied={handleCopied}
-                  restoreSignal={restoreSignal}
-                  autoShow={restoredMode === mode}
-                />
-              )}
-            </div>
-          </aside>
+                <div className="flex-1 min-h-[340px] p-4 pt-3">
+                  {mode === 'carousel' ? (
+                    <CarouselOutput
+                      slides={prompt}
+                      onGenerate={handleGenerate}
+                      onRestoreHistory={handleRestore}
+                      onCopied={handleCopied}
+                      restoreSignal={restoreSignal}
+                      autoShow={restoredMode === 'carousel'}
+                    />
+                  ) : (
+                    <PromptPanel
+                      mode={mode}
+                      promptText={prompt}
+                      state={activeState}
+                      onGenerate={handleGenerate}
+                      onRestoreHistory={handleRestore}
+                      onCopied={handleCopied}
+                      restoreSignal={restoreSignal}
+                      autoShow={restoredMode === mode}
+                    />
+                  )}
+                </div>
+              </aside>
+            </>
+          )}
         </div>
       </div>
 

@@ -4,7 +4,8 @@ import {
   Image, Youtube, Megaphone, PencilLine, ScanFace, UtensilsCrossed,
   Wand2, Settings, PlayCircle, Sparkles, DollarSign, GalleryHorizontalEnd, HandCoins,
   Sparkles as LogoIcon, Shirt, Star, Film, ChevronRight, ChevronDown, Store, Grid3x3, LogOut,
-  PanelLeftClose, PanelLeftOpen, Sun, Moon, Layers, Newspaper, MessageSquareQuote, ShieldAlert
+  PanelLeftClose, PanelLeftOpen, Sun, Moon, Layers, Newspaper, MessageSquareQuote, ShieldAlert,
+  Scissors
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -15,6 +16,7 @@ const MODES = [
   { id: 'banner',      icon: Image,                label: 'Design Feeds',       badge: '' },
   { id: 'carousel',    icon: GalleryHorizontalEnd, label: 'Carousel Feeds',     badge: '' },
   { id: 'gridfeed',    icon: Grid3x3,              label: '9 Feed Konsisten',   badge: 'Hot' },
+  { id: 'imageslicer', icon: Scissors,             label: 'Grid & Image Slicer', badge: 'New' },
   { id: 'thumbnail',   icon: Youtube,              label: 'YouTube Thumbnail',  badge: '' },
   { id: 'typography',  icon: Megaphone,            label: 'Ads Design',         badge: '' },
   { id: 'copywriting', icon: PencilLine,           label: 'Copy Writing',       badge: '' },
