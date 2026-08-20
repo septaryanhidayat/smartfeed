@@ -1,10 +1,10 @@
 /**
  * Direct In-App AI Image Generators
  * Supports executing prompts directly inside Smart Feed using user-synced credentials:
- * - OpenAI (ChatGPT / DALL-E 3)
- * - Google Gemini (Imagen 3 / Gemini AI Studio)
+ * - OpenAI (ChatGPT / DALL-E 3 & DALL-E 2 Fallback)
+ * - Google Gemini (Imagen 3 / Gemini REST Multi-Endpoint)
  * - Leonardo.ai
- * - Grok (xAI)
+ * - Grok 2 (xAI)
  */
 
 export const AI_KEYS_STORAGE = 'af_synced_ai_keys_v1';
@@ -45,7 +45,7 @@ export function getSyncedEnginesCount() {
 }
 
 /**
- * Execute Direct Generation via Client-Side API
+ * Execute Direct Generation via Client-Side API with Auto-Fallbacks
  */
 export async function executeDirectAiGeneration(engineId, prompt, options = {}) {
   const keys = getSyncedAiKeys();
@@ -54,7 +54,7 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
   if (!apiKey || apiKey.trim().length < 5) {
     return {
       ok: false,
-      error: `API Key untuk ${engineId.toUpperCase()} belum disinkronkan. Silakan hubungkan akunmu terlebih dahulu di menu Koneksi AI.`,
+      error: `API Key untuk ${engineId.toUpperCase()} belum disinkronkan. Silakan buka menu "Koneksi AI" dan masukkan API Key akunmu.`,
     };
   }
 
@@ -69,9 +69,9 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
   const cleanPrompt = prompt.replace(/^\[.*?\]:\n*/g, '').slice(0, 3900);
 
   try {
-    // ── 1. OPENAI DALL-E 3 ──
+    // ── 1. OPENAI DALL-E 3 (WITH DALL-E 2 FALLBACK) ──
     if (engineId === 'chatgpt') {
-      const res = await fetch('https://api.openai.com/v1/images/generations', {
+      let res = await fetch('https://api.openai.com/v1/images/generations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,21 +86,40 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
         }),
       });
 
-      const data = await res.json();
+      let data = await res.json();
+
+      // If project key doesn't have DALL-E 3 enabled, try DALL-E 2 fallback
+      if (!res.ok && data.error?.message?.toLowerCase().includes('dall-e-3')) {
+        res = await fetch('https://api.openai.com/v1/images/generations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'dall-e-2',
+            prompt: cleanPrompt.slice(0, 1000),
+            n: 1,
+            size: '1024x1024',
+          }),
+        });
+        data = await res.json();
+      }
+
       if (!res.ok || data.error) {
-        throw new Error(data.error?.message || `HTTP ${res.status}: Gagal memproses gambar di OpenAI.`);
+        throw new Error(data.error?.message || `HTTP ${res.status}: Gagal memproses gambar di OpenAI. Pastikan saldo kredit OpenAI mencukupi.`);
       }
 
       const imageUrl = data.data?.[0]?.url;
       const revisedPrompt = data.data?.[0]?.revised_prompt || cleanPrompt;
-      return { ok: true, imageUrl, revisedPrompt, engine: 'ChatGPT (DALL-E 3)' };
+      return { ok: true, imageUrl, revisedPrompt, engine: 'ChatGPT (OpenAI DALL-E)' };
     }
 
-    // ── 2. GOOGLE GEMINI (IMAGEN 3) ──
+    // ── 2. GOOGLE GEMINI (IMAGEN 3 & AI STUDIO REST) ──
     if (engineId === 'gemini') {
-      // Primary Endpoint: Google Gemini Imagen 3
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
-      const res = await fetch(url, {
+      // Primary Endpoint A: Imagen 3 Generate
+      const urlA = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+      let res = await fetch(urlA, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -113,9 +132,29 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
         }),
       });
 
-      const data = await res.json();
+      let data = await res.json();
+
+      // If Imagen 3 model is not enabled on this specific Google AI Studio project, try Vertex imagegeneration endpoint
+      if (!res.ok || !data.predictions) {
+        const urlB = `https://generativelanguage.googleapis.com/v1beta/models/imagegeneration@006:predict?key=${apiKey}`;
+        const resB = await fetch(urlB, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            instances: [{ prompt: cleanPrompt }],
+            parameters: { sampleCount: 1, aspectRatio: '1:1', outputMimeType: 'image/jpeg' },
+          }),
+        });
+        const dataB = await resB.json();
+        if (resB.ok && dataB.predictions) {
+          res = resB;
+          data = dataB;
+        }
+      }
+
       if (!res.ok || data.error) {
-        throw new Error(data.error?.message || `HTTP ${res.status}: Gagal memproses di Google Gemini Imagen. Periksa apakah Gemini API Key valid.`);
+        const errMsg = data.error?.message || `HTTP ${res.status}: Akun Google Gemini ini belum mengaktifkan kuota Imagen 3 API.`;
+        throw new Error(`${errMsg} Silakan aktifkan Imagen API di console Google AI Studio atau gunakan opsi Copy Prompt.`);
       }
 
       const b64 = data.predictions?.[0]?.bytesBase64Encoded;
@@ -131,7 +170,6 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
 
     // ── 3. LEONARDO.AI ──
     if (engineId === 'leonardo') {
-      // Step 1: Create generation job
       const res = await fetch('https://cloud.leonardo.ai/api/rest/v1/generations', {
         method: 'POST',
         headers: {
@@ -149,12 +187,12 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
 
       const data = await res.json();
       if (!res.ok || !data.sdGenerationJob?.generationId) {
-        throw new Error(data.error || `HTTP ${res.status}: Gagal membuat job gambar di Leonardo.ai`);
+        throw new Error(data.error || `HTTP ${res.status}: Gagal membuat job gambar di Leonardo.ai. Pastikan API key valid.`);
       }
 
       const genId = data.sdGenerationJob.generationId;
 
-      // Step 2: Poll generation status
+      // Poll generation status
       let imageUrl = null;
       for (let i = 0; i < 12; i++) {
         await new Promise((r) => setTimeout(r, 2000));
@@ -183,14 +221,20 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'grok-2-vision-1212',
-          messages: [{ role: 'user', content: cleanPrompt }],
+          model: 'grok-2-latest',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an expert AI image generation assistant. Analyze and refine visual feed designs.',
+            },
+            { role: 'user', content: cleanPrompt },
+          ],
         }),
       });
 
       const data = await res.json();
       if (!res.ok || data.error) {
-        throw new Error(data.error?.message || `HTTP ${res.status}: Gagal memproses di Grok 2.`);
+        throw new Error(data.error?.message || `HTTP ${res.status}: Gagal memproses di Grok (xAI). Pastikan saldo xAI API mencukupi.`);
       }
 
       return {

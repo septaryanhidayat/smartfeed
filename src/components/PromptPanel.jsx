@@ -410,9 +410,15 @@ export default function PromptPanel({
             {isConnected ? (
               <button
                 onClick={handleDirectExecute}
-                disabled={streaming || directGenerating}
-                className="btn-primary !py-2 !px-3.5 text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(var(--accent-rgb),0.35)]"
-                title={`Generate langsung dengan API ${selectedEngine}`}
+                disabled={!hasGenerated || streaming || directGenerating}
+                className={`btn-primary !py-2 !px-3.5 text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(var(--accent-rgb),0.35)] ${
+                  !hasGenerated ? 'opacity-40 cursor-not-allowed !pointer-events-none' : ''
+                }`}
+                title={
+                  !hasGenerated
+                    ? 'Klik "Build Prompt" terlebih dahulu sebelum men-generate'
+                    : `Generate langsung dengan API ${selectedEngine}`
+                }
               >
                 {directGenerating ? (
                   <>
