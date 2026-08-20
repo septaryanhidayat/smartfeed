@@ -107,8 +107,10 @@ A complete photorealistic journalistic news card for ${media}, ${state.sceneDesc
   if (mode === 'article') {
     switch (engine) {
       case 'gemini': {
-        return `[PANDUAN KHUSUS GOOGLE GEMINI - PENULISAN BERITA & ARTIKEL REDAKSI]:
-Bertindaklah sebagai Redaktur Pelaksana & Jurnalis Senior. Tuliskan naskah berita/artikel yang mendalam, faktual, dan objektif sesuai standar dewan pers dan kaidah PUEBI berdasarkan brief berikut:
+        return `[PANDUAN KHUSUS GOOGLE GEMINI - PENULISAN JURNALISTIK MANUSIAWI]:
+Bertindaklah sebagai Redaktur Pelaksana & Jurnalis Senior. 
+Tuliskan naskah berita/artikel yang bernas, faktual, dan mendalam. 
+WAJIB: Hindari emoji/simbol AI (✨, 🚀, 💡, 📌), hindari kalimat klise robotik, dan gunakan bahasa manusia yang mengalir alami sesuai kaidah PUEBI berdasarkan brief berikut:
 
 ${rawText}`;
       }
@@ -116,7 +118,7 @@ ${rawText}`;
       case 'grok': {
         return `[GROK 2 JOURNALISM & NEWS WRITING PROMPT]:
 Act as a seasoned investigative journalist and news editor. 
-Write a compelling, razor-sharp, well-structured journalistic article and social media takeaway based on this brief:
+Write a razor-sharp, well-researched, organic journalistic article with zero AI clichés, no generic fluff, and no emoji spam based on this brief:
 
 ${rawText}`;
       }
@@ -132,9 +134,9 @@ cartoon, 3d render, CGI, fake, plastic look, blurry, watermark, duplicate, disto
 
       case 'chatgpt':
       default: {
-        return `[PERINTAH KHUSUS CHATGPT (REDAKTUR & JURNALIS SENIOR)]:
-Kamu adalah Redaktur Pelaksana Senior dan Jurnalis Berpengalaman di ${media}. 
-Tuliskan naskah artikel / berita jurnalistik utuh, terstruktur, dan siap terbit berdasarkan detail liputan berikut:
+        return `[PERINTAH KHUSUS CHATGPT (REDAKTUR PELAKSANA SENIOR)]:
+Kamu adalah Redaktur Pelaksana Senior di ${media}. 
+Tuliskan naskah artikel / berita jurnalistik utuh siap terbit dengan gaya bahasa manusiawi yang mengalir alami, kaya data, tanpa basa-basi robotik, dan tanpa simbol/emoji AI (✨, 🚀, 💡, 📌) berdasarkan detail liputan berikut:
 
 ${rawText}`;
       }
@@ -146,16 +148,16 @@ ${rawText}`;
     switch (engine) {
       case 'gemini': {
         return `[PANDUAN KHUSUS GOOGLE GEMINI - PERFORMANCE COPYWRITING]:
-Bertindaklah sebagai Senior Performance Copywriter dan Direct Response Strategist. 
-Tuliskan seluruh rangkaian naskah iklan persuasif berkonversi tinggi berikut ini dalam format teks rapi dengan codeblock terpisah:
+Bertindaklah sebagai Senior Direct Response Copywriter. 
+Tuliskan naskah iklan persuasif berkonversi tinggi dengan bahasa manusia yang relate, tanpa buzzword klise AI, dan tanpa emoji berlebihan dalam format teks terpisah:
 
 ${rawText}`;
       }
 
       case 'grok': {
         return `[GROK 2 PERFORMANCE COPYWRITING PROMPT]:
-Act as an elite direct-response copywriter, Meta & TikTok Ads creative strategist.
-Write high-converting Indonesian sales copy, scroll-stopping hooks, and persuasive ad angles based on this brief:
+Act as an elite conversion copywriter.
+Write authentic, high-converting Indonesian sales copy with zero robotic AI filler, sharp emotional hooks, and clear CTAs based on this brief:
 
 ${rawText}`;
       }
@@ -171,9 +173,9 @@ blurry, low quality, distorted text, ugly composition, artifacts.`;
 
       case 'chatgpt':
       default: {
-        return `[PERINTAH KHUSUS CHATGPT (TEXT & COPYWRITING)]:
-Kamu adalah Senior Performance Copywriter, Meta Ads Creative Specialist, dan Direct Response Strategist.
-Hasilkan dan tuliskan seluruh variasi naskah copywriting iklan berkonversi tinggi berikut ini dalam format teks terstruktur:
+        return `[PERINTAH KHUSUS CHATGPT (DIRECT RESPONSE COPYWRITER)]:
+Kamu adalah Senior Direct Response Copywriter kelas dunia.
+Tuliskan rangkaian naskah copywriting iklan berkonversi tinggi dengan psikologi penjualan yang kuat, gaya bertutur manusiawi, tanpa template robotik, dan tanpa spam emoji:
 
 ${rawText}`;
       }

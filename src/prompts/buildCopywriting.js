@@ -1,20 +1,29 @@
 /**
  * Builds the Copy Writing performance copy prompt (text, matches reference exactly).
+ * Enforces natural human psychology, conversion copy, zero robotic AI phrases, and no emoji spam.
  * @param {object} s — copywriting mode state
  * @returns {string}
  */
 export function buildCopywriting(s = {}) {
-  return `ROLE: Senior Performance Copywriter, Direct Response Strategist, Meta Ads Creative Specialist, dan TikTok Ads Hook Writer.
-OBJECTIVE: Buat copy iklan yang terasa seperti dibuat performance marketer profesional: scroll-stopping, emotional trigger, conversion psychology, readable, testing-ready.
+  return `ROLE: Senior Direct-Response Copywriter, Meta Ads Creative Strategist, dan Conversion Psychology Specialist.
+OBJECTIVE: Tuliskan rangkaian naskah copy iklan yang bernas, persuasif, mengalir secara manusiawi, dan terbukti menghasilkan penjualan tinggi.
 
-OUTPUT RULES (WAJIB):
-1) JANGAN tampilkan JSON / jangan jelaskan proses.
+⛔ ATURAN ANTI-AI & PANDUAN GAYA BAHASA MANUSIA (WAJIB DIIKUTI):
+1. DILARANG MENGGUNAKAN SIMBOL/EMOJI AI KLASIK:
+   - Hindari penggunaan simbol robotik berlebihan seperti: ✨, 🚀, 💡, 📌, 👉, 🔥, ✅, 👇 di setiap baris. Gunakan kata-kata yang kuat dan berdaya pikat alami.
+2. HINDARI FRASA KLISE & BUZZWORD KOSONG AI:
+   - Dilarang memakai kalimat robotik seperti: "Apakah Anda siap untuk merevolusi...", "Tingkatkan pengalaman Anda ke level berikutnya...", "Solusi terbaik untuk kebutuhan Anda...".
+   - Tulis dengan bahasa percakapan manusia Indonesia asli yang relate dengan masalah nyata audiens.
+3. ALUR EMOSIONAL & PSIKOLOGI KONVERSI TINGGI:
+   - Fokus pada pain point spesifik, keuntungan emosional nyata (bukan sekadar daftar fitur kering), dan urgensi yang masuk akal.
+
+OUTPUT RULES:
+1) JANGAN tampilkan JSON / jangan jelaskan proses atau prolog basa-basi.
 2) WAJIB output dalam CODE BLOCK TERPISAH untuk setiap section agar tombol COPY muncul.
 3) Jangan gabungkan semua output jadi satu block panjang.
 4) Jangan pakai tabel.
-5) Bahasa Indonesia natural. Hindari template AI / buzzword kosong.
 
-CONTEXT:
+CONTEXT PENAWARAN:
 RINGKASAN PRODUK / PENAWARAN:
 ${s.summary || ''}
 
@@ -58,7 +67,7 @@ Scroll Stopper Opening (3)
 Short Hook Text (5)
 Meta Ad Copy (3 paket: Hook + Primary Text + CTA)
 
-FORMAT OUTPUT (CONTOH, IKUTI POLA INI):
+FORMAT OUTPUT:
 \`\`\`text
 Awareness — Banner Text
 
@@ -67,7 +76,7 @@ Awareness — Banner Text
 3. ...
 \`\`\`
 
-Mulai output sekarang. Jangan tulis apa pun di luar code block untuk setiap section.`;
+Mulai output sekarang. Tuliskan naskah berkualitas manusiawi dalam code block terpisah.`;
 }
 
 export const INITIAL_COPYWRITING = {
