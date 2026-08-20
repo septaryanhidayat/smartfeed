@@ -1,31 +1,104 @@
-import { Check, ExternalLink, ImagePlus, Upload, Send, Sparkles, FileText, Clipboard, X, Layers } from 'lucide-react';
+import { useState } from 'react';
+import { Check, ExternalLink, ImagePlus, Upload, Send, Sparkles, Clipboard, X, Layers, Cpu, Palette, Zap, Wand2, Code2 } from 'lucide-react';
 import { CONFIG } from '../config.js';
 
-/**
- * 3 variants:
- * - "image"    → Banner / Youtube / Ads (mentions upload + activate image mode)
- * - "copy"     → Copy Writing (text only)
- * - "carousel" → Carousel Feeds (alur per-slide: slide 1 upload produk, slide 2+ upload hasil slide sebelumnya)
- *
- * Layout is intentionally different from a centered modal with vertical list:
- * - slides UP from bottom
- * - horizontal numbered step strip with icons
- * - 2-column detail (mockup left, steps right) on desktop
- * - dark gradient frame, neutral palette
- */
-export default function CopySuccessModal({ open, onClose, kind = 'image' }) {
+export const AI_DESTINATIONS = {
+  chatgpt: {
+    id: 'chatgpt',
+    name: 'ChatGPT',
+    url: CONFIG.chatgptUrl || 'https://chatgpt.com/',
+    openLabel: 'Buka ChatGPT',
+    color: '#10a37f',
+    icon: Sparkles,
+    actionDesc: 'Aktifkan mode <strong class="text-text">image generation</strong> di ChatGPT (icon gambar).',
+  },
+  gemini: {
+    id: 'gemini',
+    name: 'Google Gemini',
+    url: 'https://gemini.google.com/',
+    openLabel: 'Buka Gemini',
+    color: '#3b82f6',
+    icon: Cpu,
+    actionDesc: 'Paste prompt ke <strong class="text-text">Google Gemini</strong> untuk render visual dengan Imagen 3.',
+  },
+  deepseek: {
+    id: 'deepseek',
+    name: 'DeepSeek',
+    url: 'https://chat.deepseek.com/',
+    openLabel: 'Buka DeepSeek',
+    color: '#6366f1',
+    icon: Code2,
+    actionDesc: 'Paste prompt ke <strong class="text-text">DeepSeek</strong> untuk analisis & eksekusi prompt visual.',
+  },
+  midjourney: {
+    id: 'midjourney',
+    name: 'Midjourney',
+    url: 'https://www.midjourney.com/imagine',
+    openLabel: 'Buka Midjourney',
+    color: '#ec4899',
+    icon: Palette,
+    actionDesc: 'Ketik <strong class="text-text">/imagine</strong> lalu paste prompt di Discord atau Web Midjourney.',
+  },
+  grok: {
+    id: 'grok',
+    name: 'Grok 2',
+    url: 'https://grok.com/',
+    openLabel: 'Buka Grok 2',
+    color: '#f59e0b',
+    icon: Zap,
+    actionDesc: 'Paste prompt ke <strong class="text-text">Grok 2</strong> untuk generate gambar dengan Flux.1.',
+  },
+  leonardo: {
+    id: 'leonardo',
+    name: 'Leonardo.ai',
+    url: 'https://app.leonardo.ai/',
+    openLabel: 'Buka Leonardo.ai',
+    color: '#8b5cf6',
+    icon: Wand2,
+    actionDesc: 'Paste prompt ke kolom <strong class="text-text">Prompt Generation</strong> di Leonardo.ai.',
+  },
+};
+
+export default function CopySuccessModal({ open, onClose, kind = 'image', engine = 'chatgpt' }) {
   if (!open) return null;
+
+  // Fallback to saved engine in localStorage if not passed
+  const activeEngineKey = engine || (() => {
+    try { return localStorage.getItem('af_selected_ai_engine') || 'chatgpt'; } catch { return 'chatgpt'; }
+  })();
+
+  const dest = AI_DESTINATIONS[activeEngineKey] || AI_DESTINATIONS.chatgpt;
   const isCopy = kind === 'copy';
   const isCarousel = kind === 'carousel';
 
   const steps = isCarousel ? STEPS_CAROUSEL : isCopy ? STEPS_COPY : STEPS_IMAGE;
-  const detailLines = isCarousel ? DETAIL_CAROUSEL : isCopy ? DETAIL_COPY : DETAIL_IMAGE;
-  const ctaLabel = isCopy ? 'Lanjut ke ChatGPT' : 'Buka ChatGPT';
   const title = isCarousel
     ? 'Prompt carousel siap dieksekusi'
     : isCopy
       ? 'Prompt copywriting siap pakai'
-      : 'Prompt visual siap dieksekusi';
+      : `Prompt visual siap dieksekusi (${dest.name})`;
+
+  const detailLines = isCarousel
+    ? [
+        `Klik tombol <strong class="text-text">${dest.openLabel}</strong> di kanan bawah.`,
+        dest.actionDesc,
+        `<strong class="text-text">Prompt 1:</strong> upload gambar utama / produk asli, lalu <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd> & kirim.`,
+        `<strong class="text-text">Prompt 2 dan seterusnya:</strong> upload gambar <strong class="text-text">hasil slide sebelumnya</strong>, lalu paste prompt slide itu & kirim.`,
+        `Ulangi tiap slide berurutan sampai carousel lengkap jadi satu kesatuan.`,
+      ]
+    : isCopy
+      ? [
+          `Klik tombol <strong class="text-text">${dest.openLabel}</strong> di kanan bawah.`,
+          `Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd>, prompt copywriting sudah otomatis tersalin.`,
+          `Kirim, kamu akan dapat puluhan variasi copy siap A/B test.`,
+        ]
+      : [
+          `Klik tombol <strong class="text-text">${dest.openLabel}</strong> di kanan bawah.`,
+          dest.actionDesc,
+          `Upload foto produk / referensi yang ingin diolah AI (jika ada).`,
+          `Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd>, prompt sudah otomatis tersalin.`,
+          `Kirim pesan, biarkan ${dest.name} render desainmu.`,
+        ];
 
   return (
     <div
@@ -51,7 +124,7 @@ export default function CopySuccessModal({ open, onClose, kind = 'image' }) {
                 {title}
               </div>
               <div className="text-[10px] uppercase tracking-widest mono text-text-dim">
-                copied to clipboard · ready to paste
+                copied to clipboard · siap dipaste ke {dest.name}
               </div>
             </div>
           </div>
@@ -90,10 +163,10 @@ export default function CopySuccessModal({ open, onClose, kind = 'image' }) {
         </div>
 
         {/* Detail panel */}
-        <div className="px-5 py-4 mx-5 mb-4 mt-2 surface-elev">
+        <div className="px-5 py-4 mx-5 mb-3 mt-2 surface-elev">
           <div className="flex items-center gap-2 mb-2.5">
             <span className="text-accent text-[10px]">▸</span>
-            <span className="text-[10px] mono uppercase tracking-widest text-text">Detail alur</span>
+            <span className="text-[10px] mono uppercase tracking-widest text-text">Alur Eksekusi ({dest.name})</span>
           </div>
           <ol className="space-y-1.5 text-xs text-text-mut">
             {detailLines.map((line, i) => (
@@ -103,6 +176,34 @@ export default function CopySuccessModal({ open, onClose, kind = 'image' }) {
               </li>
             ))}
           </ol>
+        </div>
+
+        {/* Quick links to other AIs */}
+        <div className="px-5 pb-3">
+          <div className="text-[9px] mono uppercase tracking-widest text-text-dim mb-1.5 font-semibold">
+            Buka di Tool AI Lainnya:
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {Object.values(AI_DESTINATIONS).map((ai) => {
+              const isCurrent = ai.id === activeEngineKey;
+              return (
+                <a
+                  key={ai.id}
+                  href={ai.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-[10px] px-2 py-1 rounded-md border transition flex items-center gap-1 ${
+                    isCurrent
+                      ? 'bg-accent/15 border-accent text-accent font-bold'
+                      : 'border-border/60 text-text-mut hover:text-text hover:bg-bg-elev'
+                  }`}
+                >
+                  <span>{ai.name}</span>
+                  <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                </a>
+              );
+            })}
+          </div>
         </div>
 
         {/* Footer actions */}
@@ -115,23 +216,13 @@ export default function CopySuccessModal({ open, onClose, kind = 'image' }) {
           </button>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <a
-              href={CONFIG.chatgptUrl}
+              href={dest.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-ghost !py-2.5 !px-4 flex-1 sm:flex-none justify-center"
+              className="btn-primary !py-2.5 !px-5 flex-1 sm:flex-none justify-center whitespace-nowrap shadow-[0_0_15px_rgba(var(--accent-rgb),0.3)]"
             >
-              Buka ChatGPT <ExternalLink className="w-3.5 h-3.5" />
+              {dest.openLabel} <ExternalLink className="w-3.5 h-3.5" />
             </a>
-            {CONFIG.gptUrl && (
-              <a
-                href={CONFIG.gptUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary !py-2.5 !px-4 flex-1 sm:flex-none justify-center whitespace-nowrap"
-              >
-                Buka Smart Feed AI <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
           </div>
         </div>
       </div>
@@ -142,43 +233,21 @@ export default function CopySuccessModal({ open, onClose, kind = 'image' }) {
 /* ──────────── Step definitions ──────────── */
 
 const STEPS_IMAGE = [
-  { icon: ExternalLink, label: 'Open Chat' },
+  { icon: ExternalLink, label: 'Buka AI' },
   { icon: ImagePlus,    label: 'Mode Visual' },
-  { icon: Upload,       label: 'Upload Foto' },
+  { icon: Upload,       label: 'Upload / Input' },
   { icon: Send,         label: 'Eksekusi' },
 ];
 
 const STEPS_COPY = [
-  { icon: ExternalLink, label: 'Open Chat' },
+  { icon: ExternalLink, label: 'Buka AI' },
   { icon: Clipboard,    label: 'Paste' },
   { icon: Sparkles,     label: 'Generate' },
 ];
 
 const STEPS_CAROUSEL = [
-  { icon: ExternalLink, label: 'Open Chat' },
+  { icon: ExternalLink, label: 'Buka AI' },
   { icon: ImagePlus,    label: 'Mode Visual' },
   { icon: Upload,       label: 'Slide 1: Produk' },
   { icon: Layers,       label: 'Slide 2+: Hasil' },
-];
-
-const DETAIL_IMAGE = [
-  'Klik tombol <strong class="text-text">Buka ChatGPT</strong> di kanan bawah.',
-  'Aktifkan mode <strong class="text-text">image generation</strong> di ChatGPT (icon gambar).',
-  'Upload foto produk yang ingin diolah AI.',
-  'Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd>, prompt sudah otomatis tersalin.',
-  'Kirim pesan, biarkan AI render desainmu.',
-];
-
-const DETAIL_COPY = [
-  'Klik tombol <strong class="text-text">Lanjut ke ChatGPT</strong> di kanan bawah.',
-  'Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd>, prompt copywriting sudah otomatis tersalin.',
-  'Kirim, kamu akan dapat puluhan variasi copy siap A/B test.',
-];
-
-const DETAIL_CAROUSEL = [
-  'Klik tombol <strong class="text-text">Buka ChatGPT</strong> di kanan bawah.',
-  'Aktifkan mode <strong class="text-text">image generation</strong> di ChatGPT (icon gambar).',
-  '<strong class="text-text">Prompt 1:</strong> upload gambar utama / produk asli, lalu <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd> & kirim.',
-  '<strong class="text-text">Prompt 2 dan seterusnya:</strong> upload gambar <strong class="text-text">hasil slide sebelumnya</strong>, lalu paste prompt slide itu & kirim.',
-  'Ulangi tiap slide berurutan sampai carousel lengkap jadi satu kesatuan.',
 ];

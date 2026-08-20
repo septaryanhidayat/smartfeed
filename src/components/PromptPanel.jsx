@@ -237,7 +237,7 @@ export default function PromptPanel({
               getText={() => renderText}
               label="Copy"
               primary={false}
-              onCopied={canCopy ? onCopied : undefined}
+              onCopied={canCopy && onCopied ? () => onCopied(selectedEngine) : undefined}
               className={canCopy ? '' : 'opacity-50 pointer-events-none'}
             />
           </div>

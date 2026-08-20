@@ -101,6 +101,9 @@ function AuthedApp() {
   const [demoOpen, setDemoOpen] = useState(false);
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [copyModalOpen, setCopyModalOpen] = useState(false);
+  const [copiedEngine, setCopiedEngine] = useState(() => {
+    try { return localStorage.getItem('af_selected_ai_engine') || 'chatgpt'; } catch { return 'chatgpt'; }
+  });
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [affiliateProgramOpen, setAffiliateProgramOpen] = useState(false);
   const [resellerOpen, setResellerOpen] = useState(false);
@@ -325,8 +328,9 @@ function AuthedApp() {
     });
   };
 
-  const handleCopied = () => {
-    logActivity('COPY_PROMPT', { tool: mode, details: promptLabel });
+  const handleCopied = (engine) => {
+    if (engine) setCopiedEngine(engine);
+    logActivity('COPY_PROMPT', { tool: mode, details: `${promptLabel} (${engine || copiedEngine || 'chatgpt'})` });
     setCopyModalOpen(true);
   };
 
@@ -518,6 +522,7 @@ function AuthedApp() {
         open={copyModalOpen}
         onClose={() => setCopyModalOpen(false)}
         kind={mode === 'carousel' ? 'carousel' : mode === 'copywriting' ? 'copy' : 'image'}
+        engine={copiedEngine}
       />
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <AffiliateProgramModal open={affiliateProgramOpen} onClose={() => setAffiliateProgramOpen(false)} />
