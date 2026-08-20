@@ -5,13 +5,13 @@ import { useState } from 'react';
  * Default lazy-loads, but use `priority={true}` for above-the-fold images
  * (hero, first paint critical) so they don't cause blank top-of-page.
  */
-export default function SafeImage({ src, alt = '', className = '', fallback = null, priority = false, ...rest }) {
+export default function SafeImage({ src, alt = 'Visual Smart Feed', className = '', fallback = null, priority = false, ...rest }) {
   const [errored, setErrored] = useState(false);
   if (errored || !src) return fallback;
   return (
     <img
       src={src}
-      alt={alt}
+      alt={alt || 'Visual Smart Feed'}
       loading={priority ? 'eager' : 'lazy'}
       fetchpriority={priority ? 'high' : 'auto'}
       decoding="async"

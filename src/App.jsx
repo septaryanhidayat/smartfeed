@@ -49,6 +49,14 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (appRoute) {
+      document.title = 'Smart Feed Studio | Generator Konten & Desain Visual AI';
+    } else {
+      document.title = 'Smart Feed | Studio Visual Instan';
+    }
+  }, [appRoute]);
+
   if (!appRoute) return <LandingPage />;
   return (
     <Suspense fallback={<StudioLoading />}>

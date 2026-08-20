@@ -328,7 +328,7 @@ function ChatGPTScene({ demo: d, phase }) {
             <div className="mt-2 self-start max-w-[55%] tutorial-result-reveal relative">
               <div className="text-zinc-400 text-[10px] mb-1">Gambar siap! ✨</div>
               <div className="relative rounded-xl overflow-hidden border border-zinc-700 bg-zinc-900 aspect-[4/5]">
-                <img src={d.image} alt="" className="w-full h-full object-cover" />
+                <img src={d.image} alt={d.title || "Contoh visual Smart Feed"} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 ring-1 ring-inset rounded-xl pointer-events-none" style={{ boxShadow: `inset 0 0 0 1px ${d.accent}` }} />
                 {/* Sparkle burst */}
                 <SparkleBurst accent={d.accent} />
