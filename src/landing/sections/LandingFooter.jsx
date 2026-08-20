@@ -1,4 +1,4 @@
-import { Zap, Facebook } from 'lucide-react';
+import { Zap, Facebook, Instagram } from 'lucide-react';
 import SafeImage from '../primitives/SafeImage.jsx';
 import { CONFIG, brandParts } from '../../config.js';
 
@@ -45,18 +45,32 @@ export default function LandingFooter() {
 
           <div>
             <div className="text-[10px] mono uppercase tracking-widest text-text-dim mb-3">Social</div>
-            <ul className="space-y-2 text-xs">
-              <li>
+            <div className="flex items-center gap-2.5">
+              {CONFIG.instagramUrl && (
+                <a
+                  href={CONFIG.instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={`Instagram ${CONFIG.instagramHandle || ''}`}
+                  aria-label="Instagram"
+                  className="w-9 h-9 rounded-xl bg-bg-panel border border-border flex items-center justify-center text-text-mut hover:text-accent hover:border-accent/50 hover:bg-accent-sm transition-all shadow-sm group"
+                >
+                  <Instagram className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                </a>
+              )}
+              {CONFIG.facebookUrl && (
                 <a
                   href={CONFIG.facebookUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 text-text-mut hover:text-accent transition-colors"
+                  title={`Facebook ${CONFIG.facebookHandle || ''}`}
+                  aria-label="Facebook"
+                  className="w-9 h-9 rounded-xl bg-bg-panel border border-border flex items-center justify-center text-text-mut hover:text-accent hover:border-accent/50 hover:bg-accent-sm transition-all shadow-sm group"
                 >
-                  <Facebook className="w-3.5 h-3.5" /> {CONFIG.facebookHandle}
+                  <Facebook className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 </a>
-              </li>
-            </ul>
+              )}
+            </div>
           </div>
         </div>
 
