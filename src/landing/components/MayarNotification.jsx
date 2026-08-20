@@ -13,7 +13,7 @@ const NAME_POOL = [
 ];
 
 const VISIBLE_MS = 3000;
-const HIDDEN_MS  = 3000;
+const HIDDEN_MS = 3000;
 
 let LAST_PREFIX = '';
 function maskedEmail() {
@@ -41,7 +41,7 @@ const AVATAR_COLORS = [
 ];
 
 export default function MayarNotification() {
-  const [item, setItem]       = useState(() => makeItem());
+  const [item, setItem] = useState(() => makeItem());
   const [visible, setVisible] = useState(false);
 
   function makeItem() {
@@ -98,7 +98,7 @@ export default function MayarNotification() {
           <div className="mt-0.5 flex items-center gap-1 text-[9px] sm:text-[10px] text-zinc-500">
             <ShieldCheck className="w-2.5 h-2.5 text-blue-600" strokeWidth={2.5} />
             <span>
-              Verified by <span className="font-bold text-blue-600">Mayar</span>
+              Verified by <span className="font-bold text-blue-600">Tripay</span>
             </span>
           </div>
         </div>
