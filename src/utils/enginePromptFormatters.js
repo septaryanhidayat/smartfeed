@@ -1,19 +1,15 @@
 /**
  * Engine Prompt Formatters
- * Formats prompts specifically tailored to each AI engine's strengths and syntax:
- * - chatgpt    : ChatGPT / DALL-E 3 (Action-driven direct command + UI container hierarchy)
- * - gemini     : Google Gemini / Imagen 3 (Anti-quote, anti-typo, solid card container layout)
- * - deepseek   : DeepSeek (Visual reasoning & structured geometry breakdown)
- * - midjourney : Midjourney v6.1 (Dense token keywords + parameter flags --ar --v 6.1 --style raw)
- * - grok       : Grok 2 / Flux.1 (Natural language realism narrative)
- * - leonardo   : Leonardo.ai (Alchemy prompt structure + Negative Prompt block)
+ * Formats prompts specifically tailored to each image-generation AI engine:
+ * 1. chatgpt    : ChatGPT (DALL-E 3) - Action-driven direct command + UI container hierarchy
+ * 2. gemini     : Google Gemini (Imagen 3) - Anti-quote, anti-typo, solid card container layout
+ * 3. grok       : Grok 2 (Flux.1) - Natural language photorealism + authentic mobile UI context
+ * 4. leonardo   : Leonardo.ai - Alchemy prompt structure + Negative Prompt block
  */
 
 export const AI_ENGINES = [
   { id: 'chatgpt',    label: 'ChatGPT (DALL-E 3)', icon: 'Sparkles', color: '#10a37f' },
   { id: 'gemini',     label: 'Google Gemini',       icon: 'Cpu',      color: '#3b82f6' },
-  { id: 'deepseek',   label: 'DeepSeek',            icon: 'Code2',    color: '#6366f1' },
-  { id: 'midjourney', label: 'Midjourney v6.1',     icon: 'Palette',  color: '#ec4899' },
   { id: 'grok',       label: 'Grok 2 (Flux)',       icon: 'Zap',      color: '#f59e0b' },
   { id: 'leonardo',   label: 'Leonardo.ai',         icon: 'Wand2',    color: '#8b5cf6' },
 ];
@@ -21,7 +17,6 @@ export const AI_ENGINES = [
 export function formatPromptForEngine(rawText, engine = 'chatgpt', mode = '', state = {}) {
   if (!rawText) return '';
 
-  // Extract common fields if available
   const media = state.mediaName || 'Media Indonesia';
   const headline = state.headline || state.sourceName || state.claim || state.title || '';
   const ratio = (state.aspectRatio || state.ratio || '1:1').split(' ')[0] || '1:1';
@@ -54,38 +49,6 @@ ${state.supportingPhoto ? `- Elemen Visual Pelengkap: ${state.supportingPhoto} (
 
 4. KUALITAS & PARAMETER:
 Fotografi jurnalistik 8k, pencahayaan alami pers, tajam, profesional, aspect ratio ${ratio}.`;
-    }
-
-    case 'deepseek': {
-      return `[DEEPSEEK VISUAL REASONING & GENERATION PROMPT]:
-Role: Elite Editorial Art Director & Visual Journalist.
-Task: Construct a structured, high-conversion visual news card for ${media}.
-
-=== COMPOSITION & GEOMETRY ===
-• Aspect Ratio: ${ratio}
-• Visual Hierarchy: Top Header Ribbon (10%) -> Photojournalism Focal Subject (45%) -> Dark Opaque Information Panel (45%)
-• Color Palette: Dominant Dark Slate (#0a0f1d), Accent Red (#dc2626), Highlight Yellow (#eab308), Crisp White Typography.
-
-=== SUBJECT & SCENE BREAKDOWN ===
-• Main Scene: ${state.sceneDescription || state.context || 'News incident scene'}
-• Supporting Evidence: ${state.supportingPhoto || 'Relevant editorial documents/screens'}
-• Camera Lens: 35mm f/2.8 sharp documentary focus, natural lighting, candid newsroom realism.
-
-=== ON-SCREEN GRAPHIC SPECIFICATIONS ===
-• Top Badge: [${state.badge || 'BREAKING NEWS'}] · ${media.toUpperCase()}
-• Dateline: ${state.dateline || 'JAKARTA'}${state.date ? ` · ${state.date}` : ''}
-• Headline: ${headline}
-• Lead Paragraph: ${state.lead || state.quote || state.fact || ''}
-${state.keyPoint ? `• Key Facts Container: [FAKTA KUNCI] ${state.keyPoint}` : ''}
-
-=== DIRECT IMAGE INSTRUCTION ===
-Render a finished photorealistic editorial graphic poster incorporating both the authentic news photo and the structured typographic overlay with zero visual artifacts.`;
-    }
-
-    case 'midjourney': {
-      const cleanScene = (state.sceneDescription || state.context || headline).replace(/\n+/g, ' ');
-      const cleanSupporting = state.supportingPhoto ? `, featuring ${state.supportingPhoto}` : '';
-      return `photorealistic editorial news card for ${media}, ${cleanScene}${cleanSupporting}, journalistic photography, professional newsroom graphic overlay layout, bold headline text "${headline}", top red header ribbon, yellow category badge, authentic documentary aesthetic, shot on 35mm lens, neutral natural lighting, highly detailed textures, 8k resolution, award-winning press photo --ar ${arParam} --v 6.1 --style raw --q 2 --s 250`;
     }
 
     case 'grok': {
