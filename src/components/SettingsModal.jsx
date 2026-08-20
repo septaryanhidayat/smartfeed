@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext.jsx';
 import { useHistory } from '../context/HistoryContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { CONFIG } from '../config.js';
+import { showConfirmLogout } from '../utils/alerts.js';
 
 export default function SettingsModal({ open, onClose }) {
   const { theme, setTheme } = useTheme();
@@ -78,27 +79,15 @@ export default function SettingsModal({ open, onClose }) {
               <span className="text-text mono">{session?.email || '—'}</span>
             </Row>
           </div>
-          {!confirmLogout ? (
-            <button
-              onClick={() => setConfirmLogout(true)}
-              className="btn-ghost text-xs mt-3 text-red-400 hover:text-red-300 hover:border-red-500/40"
-            >
-              <LogOut className="w-3.5 h-3.5" /> Logout
-            </button>
-          ) : (
-            <div className="surface-elev p-3 mt-3 flex flex-col gap-2">
-              <div className="text-xs text-text">Logout sekarang? Kamu harus login ulang dengan email + password.</div>
-              <div className="flex gap-2">
-                <button onClick={() => setConfirmLogout(false)} className="btn-ghost text-xs flex-1">Batal</button>
-                <button
-                  onClick={() => { logout(); onClose && onClose(); }}
-                  className="btn-primary text-xs flex-1 !bg-red-500 hover:!bg-red-600"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          )}
+          <button
+            onClick={() => {
+              onClose && onClose();
+              showConfirmLogout(logout);
+            }}
+            className="btn-ghost text-xs mt-3 text-red-400 hover:text-red-300 hover:border-red-500/40"
+          >
+            <LogOut className="w-3.5 h-3.5" /> Logout
+          </button>
         </Group>
 
         {/* Tampilan */}

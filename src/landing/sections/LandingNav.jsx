@@ -13,7 +13,7 @@ const NAV_LINKS = [
 
 const CTA_HREF = CONFIG.paymentUrl;
 
-export default function LandingNav() {
+export default function LandingNav({ onOpenAccess }) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -67,13 +67,14 @@ export default function LandingNav() {
           ))}
         </nav>
 
-        <a
-          href="#harga"
-          className="btn-cta !py-2 !px-4 !text-xs sm:!text-sm"
+        <button
+          type="button"
+          onClick={onOpenAccess || (() => window.dispatchEvent(new CustomEvent('open-access-modal')))}
+          className="btn-cta !py-2 !px-4 !text-xs sm:!text-sm cursor-pointer"
         >
-          Klaim Early Access
+          Klaim Akses Gratis
           <ArrowRight className="w-3.5 h-3.5" />
-        </a>
+        </button>
       </div>
     </header>
   );

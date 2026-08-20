@@ -47,48 +47,37 @@ const INCLUDED = [
   '12 mode kreatif (Banner / Carousel / 9 Feed Konsisten / Thumbnail / Ads / Copy / Face Card ★ / Menu F&B ★)',
   '4 Affiliate Tools ★ (Logo · Try-On · Review · Storyboard)',
   '48+ kategori preset + 9 template Menu F&B siap pakai',
-  'Unlimited render — tanpa kuota harian',
+  'Unlimited render tanpa kuota harian',
   'Multi-format output (1:1 · 9:16 · 16:9 · 4:5 · A4)',
-  'Update mode & kategori baru — selamanya',
+  'Update mode & kategori baru selamanya',
   'Akses dashboard via email kamu',
 ];
 
 const toNum = (s) => parseInt(String(s).replace(/\D/g, ''), 10) || 0;
 
-export default function Pricing() {
+export default function Pricing({ onOpenAccess }) {
   const kuota = useKuota();
-  // Harga dari config; badge diskon dihitung otomatis dari harga coret.
-  const priceMain = CONFIG.price.split('.')[0];
-  const priceRest = CONFIG.price.includes('.') ? '.' + CONFIG.price.split('.').slice(1).join('.') : '';
-  const strikeNum = toNum(CONFIG.priceStrike);
-  const priceNum = toNum(CONFIG.price);
-  const discount = strikeNum > 0 && priceNum > 0 && priceNum < strikeNum
-    ? Math.round((1 - priceNum / strikeNum) * 100)
-    : null;
+
+  const handleOpenAccess = () => {
+    if (onOpenAccess) onOpenAccess();
+    else window.dispatchEvent(new CustomEvent('open-access-modal'));
+  };
+
   return (
     <section id="harga" className="relative py-24 overflow-hidden">
       <GlowOrb size={580} color="rgba(var(--accent-rgb),0.18)" className="left-1/2 -translate-x-1/2 top-10" />
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center reveal">
-          <span className="eyebrow"><span className="dot" /> early access · batch 1</span>
+          <span className="eyebrow"><span className="dot" /> akses khusus · peserta pelatihan</span>
           <h2 className="h-section mt-4">
-            Akses penuh, <span className="text-grad-red">satu kali bayar</span>.
-            <br />Selamanya.
+            Akses penuh, <span className="text-grad-red">100% Gratis</span>.
+            <br />Langsung Mulai.
           </h2>
           <p className="mt-4 text-text-mut max-w-xl mx-auto">
-            Harga naik tiap batch. Begitu kuota batch ini <span className="text-text font-semibold">penuh</span>,
-            harga langsung naik ke <span className="text-text font-semibold">Rp {CONFIG.priceStrike}</span> dan
-            <span className="text-accent font-semibold"> tidak turun lagi</span>. Yang telat, bayar penuh.
+            Disediakan khusus untuk mendukung kelancaran praktik dan pembelajaran seluruh peserta.
+            Daftarkan email kamu sekarang untuk langsung membuka akses ke studio.
           </p>
-        </div>
-
-        {/* Countdown */}
-        <div className="mt-8 flex flex-col items-center gap-3 reveal reveal-d1">
-          <span className="text-[10px] mono uppercase tracking-widest text-accent font-semibold">
-            ⚡ Harga naik dalam
-          </span>
-          <Counter durationDays={7} storageKey="af_deadline" />
         </div>
 
         {/* Card */}
@@ -96,33 +85,31 @@ export default function Pricing() {
           <div className="neon-border p-1.5 shadow-[0_30px_80px_-20px_rgba(var(--accent-rgb),0.5)]">
             <div className="rounded-[14px] bg-bg-panel p-7 sm:p-10 relative overflow-hidden">
               <div className="text-center">
-                {discount !== null && (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent text-white text-[10px] mono uppercase tracking-widest font-bold mb-3">
-                    <Zap className="w-3 h-3" />
-                    HEMAT {discount}%
-                  </div>
-                )}
-                <div className="text-[10px] mono uppercase tracking-[0.25em] text-accent">
-                  {CONFIG.brandName} · EARLY ACCESS
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-white text-[10px] mono uppercase tracking-widest font-bold mb-3">
+                  <Zap className="w-3 h-3" />
+                  GRATIS PESERTA
                 </div>
-                <h3 className="mt-2 text-xl font-bold">Early Access</h3>
+                <div className="text-[10px] mono uppercase tracking-[0.25em] text-accent">
+                  {CONFIG.brandName} · WORKSHOP &amp; PELATIHAN
+                </div>
+                <h3 className="mt-2 text-xl font-bold">Akses Pelatihan</h3>
 
                 <div className="mt-6 flex flex-col items-center gap-1">
-                  <span className="text-text-dim text-base sm:text-lg line-through mono">Rp {CONFIG.priceStrike}</span>
-                  <span className="text-5xl sm:text-6xl font-black text-text whitespace-nowrap leading-none">
-                    Rp {priceMain}<span className="text-3xl text-accent">{priceRest}</span>
+                  <span className="text-text-dim text-base sm:text-lg line-through mono">Rp {CONFIG.priceStrike || '500.000'}</span>
+                  <span className="text-5xl sm:text-6xl font-black text-accent whitespace-nowrap leading-none">
+                    Rp 0
                   </span>
                 </div>
 
-                {/* HIGHLIGHTED: Sekali bayar selamanya badge */}
+                {/* HIGHLIGHTED: Akses Peserta Pelatihan badge */}
                 <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-sm border border-border-strong shadow-[0_0_24px_rgba(var(--accent-rgb),0.25)]">
                   <InfinityIcon className="w-4 h-4 text-accent" strokeWidth={2.5} />
                   <span className="text-sm font-bold tracking-wide text-text">
-                    Sekali Bayar · <span className="text-accent">Selamanya</span>
+                    Akses Langsung · <span className="text-accent">Tanpa Biaya</span>
                   </span>
                 </div>
                 <div className="mt-2 text-[10px] mono uppercase tracking-widest text-text-dim">
-                  Tanpa langganan · tanpa biaya tersembunyi
+                  Aktivasi instan cukup masukkan email peserta
                 </div>
               </div>
 
@@ -135,7 +122,7 @@ export default function Pricing() {
                   <div className="text-sm font-bold text-text">Ribuan gaya visual, satu studio.</div>
                   <p className="text-xs text-text-mut mt-1">
                     {CONFIG.brandName} bisa mencetak <span className="text-text font-semibold">ribuan variasi style</span> yang
-                    disesuaikan langsung dengan karakter produkmu — minimalis, luxury, edgy, playful, premium —
+                    disesuaikan langsung dengan karakter produkmu (minimalis, luxury, edgy, playful, premium),
                     semua hasilnya <span className="text-accent font-semibold">setara karya designer profesional kelas studio</span>.
                   </p>
                 </div>
@@ -155,13 +142,17 @@ export default function Pricing() {
 
               {/* CTA */}
               <div className="mt-8 flex flex-col items-center gap-3">
-                <a href={CTA_HREF} target="_blank" rel="noreferrer" className="btn-cta !text-base !px-8 !py-4">
+                <button
+                  type="button"
+                  onClick={handleOpenAccess}
+                  className="btn-cta !text-base !px-8 !py-4 cursor-pointer"
+                >
                   <Sparkles className="w-4.5 h-4.5" />
-                  Klaim Early Access Sekarang
+                  Daftar &amp; Mulai Akses Gratis
                   <ArrowRight className="w-4.5 h-4.5" />
-                </a>
+                </button>
                 <div className="text-[10px] mono uppercase tracking-widest text-text-dim">
-                  Transfer · QRIS · OVO · Gopay · Dana
+                  Tanpa kartu kredit · Tanpa biaya pembayaran
                 </div>
               </div>
 
@@ -208,10 +199,10 @@ export default function Pricing() {
 
               <ul className="mt-6 grid sm:grid-cols-2 gap-2.5">
                 {[
-                  'File website lengkap + sistem login & akses tools member — siap upload (tanpa coding)',
+                  'File website lengkap + sistem login & akses tools member, siap upload (tanpa coding)',
                   'Rebrand bebas: nama, logo, warna, harga, link pembayaran sendiri',
-                  'Jual ulang sepuasnya — 100% keuntungan jadi milikmu, tanpa bagi hasil',
-                  'Login pelanggan pakai Google Spreadsheet — tanpa biaya bulanan / server / API',
+                  'Jual ulang sepuasnya, 100% keuntungan jadi milikmu, tanpa bagi hasil',
+                  'Login pelanggan pakai Google Spreadsheet, tanpa biaya bulanan / server / API',
                   'Panduan setup lengkap + tool ganti password (tanpa coding)',
                   '12 mode (termasuk Carousel & 9 Feed Konsisten) + 4 Affiliate Tools + update fitur ke depan ikut',
                 ].map((i) => (

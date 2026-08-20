@@ -38,15 +38,15 @@ window.__AF_CONFIG = {
       false = sembunyikan kartu "Jual Ulang" (untuk situs jualan biasa). */
    showResellerTier: false,
 
-   /* -- 4. LOGIN via GOOGLE SPREADSHEET ------------------------------
-      1. Buat Google Sheet, kolom A1 = "Email", isi email pelanggan ke bawah.
-      2. File > Share > Publish to web > pilih sheet > format CSV > Publish.
-      3. Salin URL (berakhiran output=csv), tempel DI ANTARA kutip di bawah. */
+   /* -- 4. PENDAFTARAN & LOGIN via GOOGLE SPREADSHEET ----------------
+      a. sheetWebhookUrl: URL Google Apps Script Web App untuk otomatis mencatat
+         email & nama peserta pelatihan langsung ke Google Sheet saat mendaftar.
+      b. sheetCsvUrl: URL Published CSV spreadsheet daftar email. */
+   sheetWebhookUrl: "https://script.google.com/macros/s/AKfycbzg2zaqllAPWEXKgzVG54iRo0pXkOlc8rLSBgkXAVZeoHicUzbnM_EANtEU46pXKsMo/exec",
    sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQArR06UvroNZT1AReqN5kPWbyrHvq0VVaLKezPHcFarwDhY0zO69wjtZxajvdzKlqZlm2PVbcx175-/pub?gid=0&single=true&output=csv",
 
-   // Password login (semua pelanggan pakai 1 password ini). JANGAN tulis
-   // password apa adanya - buka hash-tool.html, ketik password, salin hash-nya,
-   // tempel DI ANTARA kutip (ganti kode lama).
+   // Password login (semua pelanggan pakai 1 password ini).
    loginPasswordHash: "21e37e7c35bf7735516fb55cffd36b025e124647430849feac0b61fff45decd3",
-   // ^ bawaan = password "SmartFeedOKE". Ganti dengan punyamu (pakai hash-tool.html).
+   // ^ bawaan = password "SmartFeedOKE".
 };
+

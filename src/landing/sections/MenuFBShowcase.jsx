@@ -98,7 +98,7 @@ export default function MenuFBShowcase() {
             <span className="dot" /> ★ fitur baru · F&B brands
           </span>
           <h2 className="h-section mt-4">
-            Menu F&B — <span className="text-grad-red">9 Template Premium</span> untuk Resto & Patisserie
+            Menu F&B: <span className="text-grad-red">9 Template Premium</span> untuk Resto & Patisserie
           </h2>
           <p className="mt-4 text-text-mut leading-relaxed">
             Tinggal pilih template, isi menu items dan harga, klik Generate.

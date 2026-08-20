@@ -23,7 +23,7 @@ export default function TryOnAffiliateMode({ state, dispatch }) {
           <SelectOrCustom label="Target Audience" value={state.target_audience} onChange={set('target_audience')} options={TARGET_AUDIENCES} />
         </div>
         <div className="mt-2 text-[11px] text-text-dim p-2 rounded bg-bg-elev/40 border border-border">
-          💡 Siapkan foto produkmu sebagai gambar referensi — ikuti langkah di video tutorial.
+          💡 Siapkan foto produkmu sebagai gambar referensi, ikuti langkah di video tutorial.
         </div>
       </Section>
 

@@ -9,14 +9,14 @@ const StudioApp = lazyWithRetry(() => import('./StudioApp.jsx'), 'studio');
 
 function isAppRoute() {
   if (typeof window === 'undefined') return false;
-  const host     = window.location.host     || '';
+  const host = window.location.host || '';
   const pathname = window.location.pathname || '';
-  const hash     = window.location.hash     || '';
+  const hash = window.location.hash || '';
   return (
-    host.startsWith('app.')          ||  // app.brandmu.id subdomain
-    pathname === '/app'              ||  // /app exact
-    pathname.startsWith('/app/')     ||  // /app/something
-    hash === '#/app'                 ||  // legacy hash routing
+    host.startsWith('app.') ||  // app.brandmu.id subdomain
+    pathname === '/app' ||  // /app exact
+    pathname.startsWith('/app/') ||  // /app/something
+    hash === '#/app' ||  // legacy hash routing
     hash.startsWith('#/app/')
   );
 }
@@ -25,13 +25,16 @@ function isAppRoute() {
 function StudioLoading() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-bg">
-      <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center text-white font-black text-lg shadow-[0_0_24px_rgba(var(--accent-rgb),0.55)] animate-pulse">
-        F
-      </div>
+      <img
+        src="/favicon.jpg"
+        alt="Logo"
+        className="w-12 h-12 rounded-xl object-contain shadow-[0_0_24px_rgba(var(--accent-rgb),0.55)] animate-pulse"
+      />
       <div className="text-xs text-text-mut mono uppercase tracking-widest">Memuat studio...</div>
     </div>
   );
 }
+
 
 export default function App() {
   const [appRoute, setAppRoute] = useState(isAppRoute);
@@ -39,10 +42,10 @@ export default function App() {
   useEffect(() => {
     const onRouteChange = () => setAppRoute(isAppRoute());
     window.addEventListener('hashchange', onRouteChange);
-    window.addEventListener('popstate',  onRouteChange);
+    window.addEventListener('popstate', onRouteChange);
     return () => {
       window.removeEventListener('hashchange', onRouteChange);
-      window.removeEventListener('popstate',  onRouteChange);
+      window.removeEventListener('popstate', onRouteChange);
     };
   }, []);
 

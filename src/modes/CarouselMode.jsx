@@ -44,7 +44,7 @@ export default function CarouselMode({ state, dispatch }) {
         <Section num="B" title="Isi Berita" icon={Newspaper} badge="Cukup isi ini">
           <p className="text-[11px] text-text-dim mb-3">
             Tempel teks berita lengkap. Sistem otomatis memecahnya jadi cover headline,
-            ringkasan, fakta-fakta, sampai slide sumber/follow — sesuai jumlah slide yang dipilih.
+            ringkasan, fakta-fakta, sampai slide sumber/follow, sesuai jumlah slide yang dipilih.
           </p>
           <TextareaField
             label="Berita / Update"
@@ -55,7 +55,7 @@ export default function CarouselMode({ state, dispatch }) {
           />
           <div className="mt-3">
             <SelectField
-              label="Layout Slide 1 (Cover) — letak gambar & teks"
+              label="Layout Slide 1 (Cover): letak gambar & teks"
               value={state.coverLayout}
               onChange={set('coverLayout')}
               options={COVER_LAYOUTS}
@@ -117,7 +117,7 @@ export default function CarouselMode({ state, dispatch }) {
         </div>
       </Section>
 
-      <Section num="C" title="Slide 1 — Diisi Manual (Hook)" icon={PenLine}
+      <Section num="C" title="Slide 1: Diisi Manual (Hook)" icon={PenLine}
         badge="Slide 2+ otomatis">
         <p className="text-[11px] text-text-dim mb-3">
           Hanya slide 1 yang Anda isi. Slide 2 sampai terakhir akan dibuat otomatis oleh AI image tool
@@ -131,7 +131,7 @@ export default function CarouselMode({ state, dispatch }) {
         </div>
         <div className="mt-3">
           <SelectField
-            label="Layout Slide 1 (Cover) — letak gambar & teks"
+            label="Layout Slide 1 (Cover): letak gambar & teks"
             value={state.coverLayout}
             onChange={set('coverLayout')}
             options={COVER_LAYOUTS}

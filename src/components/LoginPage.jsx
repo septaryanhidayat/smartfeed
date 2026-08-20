@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Mail, Lock, LogIn, AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { CONFIG, brandParts } from '../config.js';
+import { logActivity } from '../utils/activityLogger.js';
+import { notifyLoginSuccess, notifyLoginError } from '../utils/alerts.js';
 import ThemeToggle from './ThemeToggle.jsx';
 
 export default function LoginPage() {
@@ -18,9 +20,16 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const r = await login(email, password);
-      if (!r.ok) setError(r.error);
+      if (!r.ok) {
+        setError(r.error);
+        notifyLoginError(r.error);
+      } else {
+        notifyLoginSuccess(email);
+        logActivity('LOGIN', { email });
+      }
     } catch (e) {
       setError('Terjadi kesalahan: ' + e.message);
+      notifyLoginError(e.message);
     } finally {
       setLoading(false);
     }
@@ -140,6 +149,16 @@ export default function LoginPage() {
                 <><LogIn className="w-4 h-4" /> Masuk <ArrowRight className="w-4 h-4" /></>
               )}
             </button>
+
+            {/* Back to landing for free training registration */}
+            <div className="pt-2 text-center">
+              <a
+                href="/"
+                className="text-xs text-text-dim hover:text-accent transition inline-flex items-center gap-1"
+              >
+                ← Belum terdaftar? Daftar akses pelatihan gratis di sini
+              </a>
+            </div>
           </form>
         </div>
       </div>

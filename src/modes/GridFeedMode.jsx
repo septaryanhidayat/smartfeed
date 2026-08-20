@@ -27,7 +27,7 @@ export default function GridFeedMode({ state, dispatch }) {
             </span>
             <span>
               <span className="block text-sm font-bold text-accent leading-tight">Tutorial: 9 Feed Konsisten</span>
-              <span className="block text-[11px] text-text-mut">Cara pakai lengkap — Generate → ChatGPT → Auto Feeds AI → tiap feed</span>
+              <span className="block text-[11px] text-text-mut">Cara pakai lengkap: Generate → ChatGPT → Smart Feed AI → tiap feed</span>
             </span>
           </span>
           <ChevronDown className={`w-4 h-4 text-accent shrink-0 transition ${tutOpen ? 'rotate-180' : ''}`} />
@@ -38,7 +38,7 @@ export default function GridFeedMode({ state, dispatch }) {
             <ol className="text-xs text-text-mut space-y-2.5 leading-relaxed list-none m-0">
               <li><b className="text-accent">1.</b> Isi info produk di bawah (atau klik <b className="text-text">Demo</b>). Klik <b className="text-text">Generate</b> → keluar konsep <b className="text-text">9 feed konsisten</b>, lalu klik <b className="text-text">Copy</b>.</li>
               <li><b className="text-accent">2.</b> Buka <a href={CONFIG.chatgptUrl} target="_blank" rel="noreferrer" className="text-accent underline font-semibold hover:text-accent-h">ChatGPT</a> → klik <b className="text-text">Buat gambar</b> → <b className="text-text">+ Tambah foto &amp; file</b> (upload foto produk) → tekan <b className="text-text">Ctrl+V</b> (paste prompt) → <b className="text-text">Kirim</b>. ChatGPT membuat <b className="text-text">1 gambar berisi 9 feed</b>.</li>
-              <li><b className="text-accent">3.</b> Buka <a href={CONFIG.gptUrl || 'https://chatgpt.com/'} target="_blank" rel="noreferrer" className="text-accent underline font-semibold hover:text-accent-h">Auto Feeds AI</a> (Custom GPT) → <b className="text-text">upload gambar 9 feed</b> tadi → kirim.</li>
+              <li><b className="text-accent">3.</b> Buka <a href={CONFIG.gptUrl || 'https://chatgpt.com/'} target="_blank" rel="noreferrer" className="text-accent underline font-semibold hover:text-accent-h">Smart Feed AI</a> (Custom GPT) → <b className="text-text">upload gambar 9 feed</b> tadi → kirim.</li>
               <li><b className="text-accent">4.</b> Ketik <b className="text-text">GENERATE FEEDS 1</b> → AI buatkan gambar feed 1. Lanjut <b className="text-text">GENERATE FEEDS 2</b>, <b className="text-text">3</b>, … sampai <b className="text-text">9</b>.</li>
               <li><b className="text-accent">5.</b> Download tiap feed, lalu posting <b className="text-text">urut</b> agar susunan grid di profil rapi.</li>
             </ol>
@@ -73,7 +73,7 @@ export default function GridFeedMode({ state, dispatch }) {
       <Section num="B" title="Pesan & CTA" icon={PenLine} badge="Slide 1 = hook">
         <p className="text-[11px] text-text-dim mb-3">
           Headline jadi konsep utama (Feed 1). Feed lain otomatis menyesuaikan peran
-          (lifestyle, fitur, harga, testimoni, CTA, dst) — konsisten satu campaign.
+          (lifestyle, fitur, harga, testimoni, CTA, dst), konsisten satu campaign.
         </p>
         <TextField label="Headline Utama" value={state.headline} onChange={set('headline')} placeholder="Jadikan Si Kecil Bintang Musik!" />
         <div className="mt-3">
@@ -92,7 +92,7 @@ export default function GridFeedMode({ state, dispatch }) {
             hint="Menentukan palette, typography & lighting yang sama di semua feed." />
           <SelectField label="Goal Campaign" value={state.goal} onChange={set('goal')} options={GOALS} />
         </div>
-        <p className="text-[11px] text-text-dim mt-2">Format paten: <b className="text-text-mut">9 Feed Konsisten</b> — standar Instagram.</p>
+        <p className="text-[11px] text-text-dim mt-2">Format paten: <b className="text-text-mut">9 Feed Konsisten</b> (standar Instagram).</p>
 
         {/* Warna: default ikut style; klik Custom untuk override palette */}
         <div className="mt-4 rounded-lg border border-border bg-bg-deep/40 p-3">

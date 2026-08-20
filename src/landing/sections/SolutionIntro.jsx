@@ -8,7 +8,7 @@ import SampleAdCard from '../primitives/SampleAdCard.jsx';
 const POINTS = [
   { icon: Cpu,     text: 'Engine kreatif yang ngerti karakter visual komersial' },
   { icon: Layers3, text: '12 mode kerja: Banner · Carousel · 9 Feed Konsisten · Thumbnail · Typography · Copy · Face Card · Menu F&B + Logo · Try-On · Review · Storyboard' },
-  { icon: Wand2,   text: 'Output siap upload — tanpa edit manual, tanpa retouch' },
+  { icon: Wand2,   text: 'Output siap upload, tanpa edit manual, tanpa retouch' },
   { icon: CheckCircle2, text: 'Tanpa Canva, tanpa Photoshop, tanpa desainer freelance' },
 ];
 
@@ -52,7 +52,7 @@ export default function SolutionIntro() {
             Satu studio untuk <span className="text-grad-red">semua kebutuhan visual</span> brand kamu.
           </h2>
           <p className="mt-4 text-text-mut leading-relaxed">
-            {CONFIG.brandName} adalah <span className="text-text font-semibold">studio visual otomatis</span> — engine yang
+            {CONFIG.brandName} adalah <span className="text-text font-semibold">studio visual otomatis</span>, engine yang
             sudah dilatih membaca karakter desain commercial-grade, sehingga hasilnya
             konsisten, sesuai brand, dan layak naik di feed.
           </p>

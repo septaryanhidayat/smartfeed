@@ -1,5 +1,5 @@
 import { useState, useReducer, useMemo, useDeferredValue } from 'react';
-import { PlayCircle } from 'lucide-react';
+import { PlayCircle, User, LogOut } from 'lucide-react';
 import { CONFIG, brandParts } from './config.js';
 import { getDemoIcon } from './components/demoIcons.js';
 import Sidebar from './components/Sidebar.jsx';
@@ -10,6 +10,7 @@ import DemoCategoryModal from './components/DemoCategoryModal.jsx';
 import CarouselDemoModal from './components/CarouselDemoModal.jsx';
 import MenuFBDemoModal from './components/MenuFBDemoModal.jsx';
 import AffiliateDemoModal from './components/AffiliateDemoModal.jsx';
+import JournalismDemoModal from './components/JournalismDemoModal.jsx';
 import TutorialModal from './components/TutorialModal.jsx';
 import CopySuccessModal from './components/CopySuccessModal.jsx';
 import AffiliateProgramModal from './components/AffiliateProgramModal.jsx';
@@ -17,6 +18,8 @@ import ResellerModal from './components/ResellerModal.jsx';
 import SettingsModal from './components/SettingsModal.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import { useAuth } from './context/AuthContext.jsx';
+import { logActivity } from './utils/activityLogger.js';
+import { showConfirmLogout } from './utils/alerts.js';
 import BannerMode from './modes/BannerMode.jsx';
 import CarouselMode from './modes/CarouselMode.jsx';
 import CarouselOutput from './components/CarouselOutput.jsx';
@@ -30,6 +33,9 @@ import LogoAffiliateMode from './modes/LogoAffiliateMode.jsx';
 import TryOnAffiliateMode from './modes/TryOnAffiliateMode.jsx';
 import ReviewAffiliateMode from './modes/ReviewAffiliateMode.jsx';
 import StoryboardAffiliateMode from './modes/StoryboardAffiliateMode.jsx';
+import NewsCardMode from './modes/NewsCardMode.jsx';
+import QuoteCardMode from './modes/QuoteCardMode.jsx';
+import FactCheckMode from './modes/FactCheckMode.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
 import { generateCarouselPrompts, INITIAL_CAROUSEL } from './prompts/buildCarousel.js';
 import { buildGridFeed, INITIAL_GRIDFEED } from './prompts/buildGridFeed.js';
@@ -42,6 +48,9 @@ import { buildLogoAffiliate, INITIAL_LOGO_AFFILIATE } from './prompts/buildLogoA
 import { buildTryOnAffiliate, INITIAL_TRYON_AFFILIATE } from './prompts/buildTryOnAffiliate.js';
 import { buildReviewAffiliate, INITIAL_REVIEW_AFFILIATE } from './prompts/buildReviewAffiliate.js';
 import { buildStoryboardAffiliate, INITIAL_STORYBOARD_AFFILIATE } from './prompts/buildStoryboardAffiliate.js';
+import { buildNewsCard, INITIAL_NEWS_CARD } from './prompts/buildNewsCard.js';
+import { buildQuoteCard, INITIAL_QUOTE_CARD } from './prompts/buildQuoteCard.js';
+import { buildFactCheck, INITIAL_FACT_CHECK } from './prompts/buildFactCheck.js';
 import { SUB_TYPES as FACECARD_SUB_TYPES } from './data/faceCardOptions.js';
 import { useHistory } from './context/HistoryContext.jsx';
 
@@ -56,22 +65,26 @@ function modeReducer(state, action) {
 
 const TITLES = {
   banner:      { name: 'Design Feeds', desc: 'Isi detail produk untuk menghasilkan desain feed profesional siap pakai.' },
-  carousel:    { name: 'Carousel Feeds', desc: 'Pilih tipe template carousel & jumlah slide — sistem menyusun story flow, objektif tiap slide, dan variasi layout jadi satu rangkaian konten.' },
+  carousel:    { name: 'Carousel Feeds', desc: 'Pilih tipe template carousel & jumlah slide, sistem menyusun story flow, objektif tiap slide, dan variasi layout jadi satu rangkaian konten.' },
   gridfeed:    { name: '9 Feed Konsisten', desc: 'Isi info produk → sistem susun konsep 9 feed konsisten satu campaign, tiap feed beda peran (hero, fitur, harga, testimoni, CTA, dll). Ikuti video tutorial untuk hasilkan visualnya.' },
   thumbnail:   { name: 'Youtube Thumbnail', desc: 'Isi detail video untuk menghasilkan thumbnail YouTube profesional siap pakai.' },
   typography:  { name: 'Ads Typography', desc: 'Arahkan AI Creative Director untuk Typography Ads premium.' },
   copywriting: { name: 'Copy Writing', desc: 'AI Creative Copy Engine untuk kebutuhan banner & iklan.' },
   facecard:    { name: 'Face Card Analysis', desc: 'Buat analisa wajah editorial: face features, spectacles, style, color, dan makeup. Ikuti video tutorial untuk memakai hasilnya.' },
-  menufb:      { name: 'Menu F&B', desc: 'Buat menu poster F&B dinamis — patisserie, restaurant, healthy food, dessert. Wireframe live update sesuai input.' },
+  menufb:      { name: 'Menu F&B', desc: 'Buat menu poster F&B dinamis (patisserie, restaurant, healthy food, dessert). Wireframe live update sesuai input.' },
+  newscard:    { name: 'Breaking News Card', desc: 'Isi rubrik & detail peristiwa untuk menghasilkan kartu berita kilat & foto jurnalistik berbobot.' },
+  quotecard:   { name: 'Quote Card Tokoh', desc: 'Isi kutipan narasumber, gelar jabatan, dan konteks wawancara untuk kartu kutipan berwibawa.' },
+  factcheck:   { name: 'Cek Fakta / Fact Check', desc: 'Verifikasi klaim hoaks viral dengan stempel putusan, klarifikasi fakta, dan rujukan resmi.' },
   logoaffiliate:       { name: 'Logo', desc: 'Buat identitas logo brand affiliate-ready: konsep brand + arahan visual lengkap. Ikuti video tutorial untuk hasilkan logonya.' },
   tryonaffiliate:      { name: 'Try-On Produk Affiliate', desc: 'Buat konsep try-on / wear-test produk. Pakai foto produk + ikuti video tutorial untuk hasilkan visual konversi tinggi.' },
-  reviewaffiliate:     { name: 'Review Produk Affiliate', desc: 'Buat konsep BANNER review produk high-converting. Pakai foto produk — produk dijaga sama persis.' },
+  reviewaffiliate:     { name: 'Review Produk Affiliate', desc: 'Buat konsep BANNER review produk high-converting. Pakai foto produk, produk dijaga sama persis.' },
   storyboardaffiliate: { name: 'Storyboard Affiliate', desc: 'Buat konsep storyboard video: scene-by-scene + caption + shot list otomatis. Pakai foto produk + ikuti video tutorial.' },
 };
 
 const HAS_MOCKUP = {
   banner: true, carousel: true, gridfeed: false, thumbnail: true, typography: true,
   copywriting: false, facecard: false, menufb: false,
+  newscard: false, quotecard: false, factcheck: false,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
   storyboardaffiliate: false,
 };
@@ -83,6 +96,7 @@ export default function StudioApp() {
 }
 
 function AuthedApp() {
+  const { session, logout, checkSessionLive } = useAuth();
   const [mode, setMode] = useState('banner');
   const [demoOpen, setDemoOpen] = useState(false);
   const [tutorialOpen, setTutorialOpen] = useState(false);
@@ -98,7 +112,11 @@ function AuthedApp() {
   const [restoredMode, setRestoredMode] = useState(null);
   const { add } = useHistory();
 
-  const changeMode = (m) => { setRestoredMode(null); setMode(m); };
+  const changeMode = (m) => {
+    setRestoredMode(null);
+    setMode(m);
+    logActivity('OPEN_TOOL', { tool: m });
+  };
 
   const [banner, dispatchBanner]           = useReducer(modeReducer, INITIAL_BANNER);
   const [carousel, dispatchCarousel]       = useReducer(modeReducer, INITIAL_CAROUSEL);
@@ -108,6 +126,9 @@ function AuthedApp() {
   const [copywriting, dispatchCopywriting] = useReducer(modeReducer, INITIAL_COPYWRITING);
   const [facecard, dispatchFacecard]       = useReducer(modeReducer, INITIAL_FACECARD);
   const [menufb, dispatchMenufb]           = useReducer(modeReducer, INITIAL_MENU_FB);
+  const [newsCard, dispatchNewsCard]       = useReducer(modeReducer, INITIAL_NEWS_CARD);
+  const [quoteCard, dispatchQuoteCard]     = useReducer(modeReducer, INITIAL_QUOTE_CARD);
+  const [factCheck, dispatchFactCheck]     = useReducer(modeReducer, INITIAL_FACT_CHECK);
   const [logoAff, dispatchLogoAff]                 = useReducer(modeReducer, INITIAL_LOGO_AFFILIATE);
   const [tryonAff, dispatchTryonAff]               = useReducer(modeReducer, INITIAL_TRYON_AFFILIATE);
   const [reviewAff, dispatchReviewAff]             = useReducer(modeReducer, INITIAL_REVIEW_AFFILIATE);
@@ -121,6 +142,9 @@ function AuthedApp() {
     mode === 'typography'          ? typography :
     mode === 'facecard'            ? facecard :
     mode === 'menufb'              ? menufb :
+    mode === 'newscard'            ? newsCard :
+    mode === 'quotecard'           ? quoteCard :
+    mode === 'factcheck'           ? factCheck :
     mode === 'logoaffiliate'       ? logoAff :
     mode === 'tryonaffiliate'      ? tryonAff :
     mode === 'reviewaffiliate'     ? reviewAff :
@@ -137,6 +161,9 @@ function AuthedApp() {
     if (mode === 'copywriting')         return buildCopywriting(deferredState);
     if (mode === 'facecard')            return buildFaceCard(deferredState);
     if (mode === 'menufb')              return buildMenuFB(deferredState);
+    if (mode === 'newscard')            return buildNewsCard(deferredState);
+    if (mode === 'quotecard')           return buildQuoteCard(deferredState);
+    if (mode === 'factcheck')           return buildFactCheck(deferredState);
     if (mode === 'logoaffiliate')       return buildLogoAffiliate(deferredState);
     if (mode === 'tryonaffiliate')      return buildTryOnAffiliate(deferredState);
     if (mode === 'reviewaffiliate')     return buildReviewAffiliate(deferredState);
@@ -156,6 +183,9 @@ function AuthedApp() {
     if (mode === 'gridfeed')    return activeState.productName || activeState.brandName || activeState.headline || '9 Feed Konsisten';
     if (mode === 'thumbnail')   return activeState.title || activeState.channel || 'Thumbnail Prompt';
     if (mode === 'typography')  return activeState.hook || 'Typography Prompt';
+    if (mode === 'newscard')    return activeState.headline || activeState.badge || 'Breaking News Card';
+    if (mode === 'quotecard')   return activeState.sourceName || 'Quote Card Tokoh';
+    if (mode === 'factcheck')   return activeState.claim || activeState.status || 'Cek Fakta Card';
     if (mode === 'copywriting') return (activeState.summary || 'Copy Writing').slice(0, 60);
     if (mode === 'facecard') {
       const sub = FACECARD_SUB_TYPES.find((t) => t.value === activeState.subType);
@@ -194,12 +224,14 @@ function AuthedApp() {
         colorSecondary: b.secondaryColor || '#ffffff',
       } });
       // Note: facecard & menufb tidak ikut LOAD_DEMO — punya demo modal sendiri.
+      logActivity('DEMO', { tool: mode, details: cat.name });
       setLoadingDemo(null);
     }, 900);
   };
 
   const handleCarouselDemoPick = (demo) => {
     setLoadingDemo({ label: demo.label, icon: demo.icon });
+    logActivity('DEMO', { tool: 'carousel', details: demo.label });
     setTimeout(() => {
       dispatchCarousel({ type: 'RESET_TO', state: { ...INITIAL_CAROUSEL, ...demo.preset } });
       setLoadingDemo(null);
@@ -208,15 +240,17 @@ function AuthedApp() {
 
   const handleMenuFBDemoPick = (demo) => {
     setLoadingDemo({ label: demo.label, icon: demo.icon });
+    logActivity('DEMO', { tool: 'menufb', details: demo.label });
     setTimeout(() => {
       // RESET_TO so the new preset fully replaces state (not merged with old categories[])
       dispatchMenufb({ type: 'RESET_TO', state: { ...INITIAL_MENU_FB, ...demo.preset } });
       setLoadingDemo(null);
-    }, 900);
+    }, 600);
   };
 
   const handleAffiliateDemoPick = (demo) => {
     setLoadingDemo({ label: demo.label, icon: 'Sparkles' });
+    logActivity('DEMO', { tool: mode, details: demo.label });
     setTimeout(() => {
       const initialMap = {
         logoaffiliate:       INITIAL_LOGO_AFFILIATE,
@@ -242,16 +276,46 @@ function AuthedApp() {
     }, 600);
   };
 
-  const handleGenerate = () => {
-    // All affiliate modes return string. Banner/typography/menufb/facecard return objects.
-    const TEXT_MODES = ['gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate'];
+  const handleJournalismDemoPick = (demo, pickedMode) => {
+    const targetMode = pickedMode || mode;
+    setLoadingDemo({ label: demo.label, icon: 'Newspaper' });
+    logActivity('DEMO', { tool: targetMode, details: demo.label });
+    setTimeout(() => {
+      if (targetMode === 'newscard') {
+        dispatchNewsCard({ type: 'RESET_TO', state: { ...INITIAL_NEWS_CARD, ...demo.preset } });
+      } else if (targetMode === 'quotecard') {
+        dispatchQuoteCard({ type: 'RESET_TO', state: { ...INITIAL_QUOTE_CARD, ...demo.preset } });
+      } else if (targetMode === 'factcheck') {
+        dispatchFactCheck({ type: 'RESET_TO', state: { ...INITIAL_FACT_CHECK, ...demo.preset } });
+      }
+      if (mode !== targetMode) {
+        changeMode(targetMode);
+      }
+      setLoadingDemo(null);
+    }, 600);
+  };
+
+  const handleGenerate = async () => {
+    // Verifikasi real-time: pastikan akun masih ada di spreadsheet
+    if (checkSessionLive) {
+      const valid = await checkSessionLive();
+      if (valid && !valid.ok) return;
+    }
+
+    // All affiliate and journalism modes return string/object format.
+    const TEXT_MODES = ['gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate', 'newscard', 'quotecard', 'factcheck'];
     const text = mode === 'carousel'
       ? (Array.isArray(prompt) ? prompt : []).map((s) => `=== ${s.slideTitle} | Layout: ${s.layout} ===\n${s.prompt}`).join('\n\n\n')
-      : TEXT_MODES.includes(mode)
-        ? prompt
-        : (mode === 'typography' && prompt?.json)
-          ? JSON.stringify(prompt.json, null, 2)
-          : JSON.stringify(prompt, null, 2);
+      : ['newscard', 'quotecard', 'factcheck'].includes(mode)
+        ? (prompt?.raw || prompt || '')
+        : TEXT_MODES.includes(mode)
+          ? prompt
+          : (mode === 'typography' && prompt?.json)
+            ? JSON.stringify(prompt.json, null, 2)
+            : JSON.stringify(prompt, null, 2);
+
+    logActivity('GENERATE', { tool: mode, details: promptLabel });
+
     add({
       mode,
       label: promptLabel,
@@ -259,6 +323,11 @@ function AuthedApp() {
       prompt: text,
       snapshot: activeState,
     });
+  };
+
+  const handleCopied = () => {
+    logActivity('COPY_PROMPT', { tool: mode, details: promptLabel });
+    setCopyModalOpen(true);
   };
 
   const handleRestore = (entry) => {
@@ -302,12 +371,26 @@ function AuthedApp() {
           <div className="text-[9px] sm:text-[10px] text-text-dim mono uppercase tracking-widest">{CONFIG.tagline}</div>
         </div>
         <div className="flex items-center gap-2">
+          {session?.email && (
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-bg-elev border border-border text-[11px] text-text-mut mono">
+              <User className="w-3 h-3 text-accent" />
+              <span className="max-w-[140px] truncate">{session.name || session.email}</span>
+            </div>
+          )}
           <button onClick={() => setTutorialOpen(true)} className="btn-ghost text-xs !py-1.5 !px-3" title="Video tutorial">
             <PlayCircle className="w-3.5 h-3.5" />
             <span>Tutorial</span>
           </button>
           <button onClick={() => setDemoOpen(true)} className="btn-primary text-xs !py-1.5 !px-3">
             <span className="hidden sm:inline">✨ Randomize</span><span className="sm:hidden">✨</span> Demo
+          </button>
+          <button
+            onClick={() => showConfirmLogout(logout)}
+            className="btn-ghost text-xs !py-1.5 !px-2.5 text-text-dim hover:text-red-400"
+            title="Logout"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden md:inline">Logout</span>
           </button>
         </div>
       </header>
@@ -344,6 +427,9 @@ function AuthedApp() {
             {mode === 'tryonaffiliate'      && <TryOnAffiliateMode      state={tryonAff}      dispatch={dispatchTryonAff} />}
             {mode === 'reviewaffiliate'     && <ReviewAffiliateMode     state={reviewAff}     dispatch={dispatchReviewAff} />}
             {mode === 'storyboardaffiliate' && <StoryboardAffiliateMode state={storyboardAff} dispatch={dispatchStoryboardAff} />}
+            {mode === 'newscard'            && <NewsCardMode            state={newsCard}      dispatch={dispatchNewsCard} />}
+            {mode === 'quotecard'           && <QuoteCardMode           state={quoteCard}     dispatch={dispatchQuoteCard} />}
+            {mode === 'factcheck'           && <FactCheckMode           state={factCheck}     dispatch={dispatchFactCheck} />}
 
             {/* Mobile-only: mockup + prompt inline below form */}
             <div className="lg:hidden mt-4 space-y-4">
@@ -354,7 +440,7 @@ function AuthedApp() {
                     slides={prompt}
                     onGenerate={handleGenerate}
                     onRestoreHistory={handleRestore}
-                    onCopied={() => setCopyModalOpen(true)}
+                    onCopied={handleCopied}
                     restoreSignal={restoreSignal}
                     autoShow={restoredMode === 'carousel'}
                   />
@@ -364,7 +450,7 @@ function AuthedApp() {
                     promptText={prompt}
                     onGenerate={handleGenerate}
                     onRestoreHistory={handleRestore}
-                    onCopied={() => setCopyModalOpen(true)}
+                    onCopied={handleCopied}
                     restoreSignal={restoreSignal}
                     autoShow={restoredMode === mode}
                   />
@@ -389,7 +475,7 @@ function AuthedApp() {
                   slides={prompt}
                   onGenerate={handleGenerate}
                   onRestoreHistory={handleRestore}
-                  onCopied={() => setCopyModalOpen(true)}
+                  onCopied={handleCopied}
                   restoreSignal={restoreSignal}
                   autoShow={restoredMode === 'carousel'}
                 />
@@ -399,7 +485,7 @@ function AuthedApp() {
                   promptText={prompt}
                   onGenerate={handleGenerate}
                   onRestoreHistory={handleRestore}
-                  onCopied={() => setCopyModalOpen(true)}
+                  onCopied={handleCopied}
                   restoreSignal={restoreSignal}
                   autoShow={restoredMode === mode}
                 />
@@ -413,11 +499,13 @@ function AuthedApp() {
         <StatusBar mode={mode} />
       </div>
 
-      {/* Modals — Affiliate modes pakai picker khusus dengan image grid */}
+      {/* Modals — Affiliate & Journalism modes pakai picker khusus */}
       {mode === 'carousel' ? (
         <CarouselDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleCarouselDemoPick} />
       ) : mode === 'menufb' ? (
         <MenuFBDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleMenuFBDemoPick} />
+      ) : ['newscard', 'quotecard', 'factcheck'].includes(mode) ? (
+        <JournalismDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} mode={mode} onPick={handleJournalismDemoPick} />
       ) : ['logoaffiliate','tryonaffiliate','reviewaffiliate','storyboardaffiliate'].includes(mode) ? (
         <AffiliateDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} mode={mode} onPick={handleAffiliateDemoPick} />
       ) : (

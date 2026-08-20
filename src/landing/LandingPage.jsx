@@ -1,4 +1,4 @@
-import { useEffect, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import lazyWithRetry from '../lazyWithRetry.js';
 
 // EAGER imports — above-the-fold critical (load with main bundle)
@@ -32,6 +32,7 @@ const Pricing          = lazyWithRetry(() => import('./sections/Pricing.jsx'), '
 const FinalCta         = lazyWithRetry(() => import('./sections/FinalCta.jsx'), 'fcta');
 const LandingFooter    = lazyWithRetry(() => import('./sections/LandingFooter.jsx'), 'ft');
 const MayarNotification = lazyWithRetry(() => import('./components/MayarNotification.jsx'), 'mn');
+import AccessModal from '../components/AccessModal.jsx';
 
 // Minimal placeholder — just reserves vertical space so layout doesn't jump
 function SectionPlaceholder() {
@@ -49,10 +50,15 @@ function SafeSection({ children }) {
 }
 
 export default function LandingPage() {
-  // Landing must always render dark-red regardless of user's studio toggle.
-  // ThemeProvider re-applies stored preference asynchronously, so use a
-  // MutationObserver to defensively re-assert dark while landing is mounted.
-  // On unmount, restore the user's saved preference for the studio.
+  const [accessOpen, setAccessOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setAccessOpen(true);
+    window.addEventListener('open-access-modal', handleOpen);
+    return () => window.removeEventListener('open-access-modal', handleOpen);
+  }, []);
+
+  // Landing must always render light/dark according to theme
   useEffect(() => {
     const root = document.documentElement;
 
@@ -83,12 +89,14 @@ export default function LandingPage() {
     };
   }, []);
 
+  const openAccess = () => setAccessOpen(true);
+
   return (
     <div className="relative min-h-screen bg-bg text-text overflow-x-clip">
-      <LandingNav />
+      <LandingNav onOpenAccess={openAccess} />
       <main>
         {/* Above-the-fold — render immediately */}
-        <Hero />
+        <Hero onOpenAccess={openAccess} />
         <TopShowcase />
 
         {/* Below-the-fold — code-split, stream in as chunks load.
@@ -103,15 +111,15 @@ export default function LandingPage() {
         <SafeSection><AffiliateShowcase /></SafeSection>
         <SafeSection><FaceCardShowcase /></SafeSection>
         <SafeSection><MenuFBShowcase /></SafeSection>
-        <SafeSection><HowItWorks /></SafeSection>
-        <SafeSection><WhyDifferent /></SafeSection>
+        <SafeSection><HowItWorks onOpenAccess={openAccess} /></SafeSection>
+        <SafeSection><WhyDifferent onOpenAccess={openAccess} /></SafeSection>
         <SafeSection><AudienceCards /></SafeSection>
         <SafeSection><Comparison /></SafeSection>
         <SafeSection><Testimonials /></SafeSection>
         <SafeSection><BottomShowcase /></SafeSection>
-        <SafeSection><Pricing /></SafeSection>
+        <SafeSection><Pricing onOpenAccess={openAccess} /></SafeSection>
         <SafeSection><Faq /></SafeSection>
-        <SafeSection><FinalCta /></SafeSection>
+        <SafeSection><FinalCta onOpenAccess={openAccess} /></SafeSection>
       </main>
       <ErrorBoundary fallback={null}>
         <Suspense fallback={null}>
@@ -119,6 +127,8 @@ export default function LandingPage() {
           <MayarNotification />
         </Suspense>
       </ErrorBoundary>
+
+      <AccessModal open={accessOpen} onClose={() => setAccessOpen(false)} />
     </div>
   );
 }

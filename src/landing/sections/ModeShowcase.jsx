@@ -59,7 +59,7 @@ const MODES = [
     icon: FileText,
     code: 'M6',
     name: 'Copy Writing',
-    desc: 'Auto-generate hook, body, dan CTA — formatnya match dengan visual yang lagi kamu kerjain.',
+    desc: 'Auto-generate hook, body, dan CTA dengan format yang match dengan visual yang lagi kamu kerjain.',
     ratio: '1/1',
     variant: 13,
     img: MODE_PREVIEWS.copy,
@@ -79,7 +79,7 @@ const MODES = [
     icon: UtensilsCrossed,
     code: 'M8',
     name: 'Menu F&B ★',
-    desc: '9 template premium untuk resto, patisserie, bakery — dari Parisian luxury sampai Korean street food viral. Formula visual per-brand.',
+    desc: '9 template premium untuk resto, patisserie, bakery: dari Parisian luxury sampai Korean street food viral. Formula visual per-brand.',
     ratio: '4/5',
     variant: 33,
     img: MENU_FB_PREVIEWS.cherryelle,
@@ -119,7 +119,7 @@ const MODES = [
     icon: Clapperboard,
     code: 'M12',
     name: 'Video Storyboard ★',
-    desc: 'Storyboard board scene-by-scene yang dibuat otomatis sesuai durasi — landscape 16:9, banyak scene cepat.',
+    desc: 'Storyboard scene-by-scene yang dibuat otomatis sesuai durasi: landscape 16:9, banyak scene cepat.',
     ratio: '16/9',
     variant: 19,
     img: '/landing/affiliate-demos/storyboardaffiliate/sb-saas-30s.jpg?v=3',
@@ -139,7 +139,7 @@ export default function ModeShowcase() {
           </h2>
           <p className="mt-4 text-text-mut">
             Bukan satu generator yang dipakai untuk semua. Tiap mode punya logic
-            sendiri agar output AI-nya konsisten sesuai format akhirnya — termasuk
+            sendiri agar output AI-nya konsisten sesuai format akhirnya, termasuk
             <span className="text-text"> Carousel Feeds</span> &amp;
             <span className="text-text"> 4 affiliate tools</span> baru.
           </p>

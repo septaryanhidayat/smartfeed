@@ -69,7 +69,7 @@ export default function ThumbnailMode({ state, dispatch }) {
       <ReferenceModal
         open={refOpen === 'style'}
         onClose={() => setRefOpen(null)}
-        title="Referensi Gaya Desain — YouTube Thumbnail"
+        title="Referensi Gaya Desain (YouTube Thumbnail)"
         subtitle="Pilih gaya visual yang cocok untuk thumbnail YouTube"
         options={STYLES}
         currentValue={state.designStyle}
@@ -80,7 +80,7 @@ export default function ThumbnailMode({ state, dispatch }) {
       <ReferenceModal
         open={refOpen === 'lighting'}
         onClose={() => setRefOpen(null)}
-        title="Referensi Gaya Pencahayaan — YouTube Thumbnail"
+        title="Referensi Gaya Pencahayaan (YouTube Thumbnail)"
         subtitle="Pilih tipe lighting untuk subject thumbnail"
         options={LIGHTINGS}
         currentValue={state.lighting}

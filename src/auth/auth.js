@@ -1,5 +1,5 @@
 /**
- * Auto Feeds — Email-allowlist authentication.
+ * Smart Feed — Email-allowlist authentication.
  *
  * KEAMANAN:
  * 1. PASSWORD tidak lagi disimpan plaintext — hanya SHA-256(salt+password).
@@ -155,18 +155,22 @@ const ERR = {
   emptyPwd:   'Password tidak boleh kosong',
   badFormat:  'Format email tidak valid',
   wrongPwd:   'Password salah',
-  notAllowed: 'Email kamu belum terdaftar di sistem',
+  notAllowed: 'Email Anda belum terdaftar di database',
   network:    'Tidak bisa terhubung. Cek koneksi internet kamu.',
   systemDown: 'Sistem sedang bermasalah. Coba lagi beberapa menit.',
 };
 
 /* ───── Cek email via Google Spreadsheet (Published CSV) ─────
-   Mode reseller: tanpa API key. URL CSV publik hanya berisi email. */
+   Mode spreadsheet: selalu fetch live data tanpa cache lama. */
 async function fetchAllowedFromSheet(csvUrl) {
-  const cached = readCache(csvUrl);
-  if (cached) return { ok: true, emails: cached };
   try {
-    const res = await fetch(csvUrl, { redirect: 'follow', cache: 'no-store' });
+    const sep = csvUrl.includes('?') ? '&' : '?';
+    const freshUrl = `${csvUrl}${sep}_t=${Date.now()}&_r=${Math.random()}`;
+    const res = await fetch(freshUrl, {
+      redirect: 'follow',
+      cache: 'no-store',
+      headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+    });
     if (!res.ok) return { ok: false, err: ERR.systemDown };
     const text = await res.text();
     // Kalau yang balik HTML (sheet belum di-Publish to web dengan benar) → kasih tahu jelas.
@@ -175,8 +179,6 @@ async function fetchAllowedFromSheet(csvUrl) {
     // Ambil SEMUA pola email di mana pun (tahan koma/titik-koma/tab/kutip/BOM).
     const matches = text.toLowerCase().match(/[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}/g) || [];
     matches.forEach((m) => { if (!emails.includes(m)) emails.push(m); });
-    if (!emails.length) return { ok: false, err: ERR.systemDown }; // tidak ada email terbaca
-    writeCache(csvUrl, emails);
     return { ok: true, emails };
   } catch (e) {
     if (typeof console !== 'undefined') console.warn('[auth] sheet', e?.message);
@@ -298,14 +300,73 @@ export async function validateLogin(rawEmail, rawPassword) {
   if (CONFIG.sheetCsvUrl) {
     const s = await fetchAllowedFromSheet(CONFIG.sheetCsvUrl);
     if (!s.ok) return { ok: false, error: s.err };
-    if (!s.emails.includes(email)) return { ok: false, error: ERR.notAllowed };
+    if (!s.emails.includes(email)) {
+      return { ok: false, error: ERR.notAllowed };
+    }
     return { ok: true, email };
   }
   const r = await fetchAllowed();
   if (!r.ok) return { ok: false, error: r.err };
-  if (!r.emails.includes(email)) return { ok: false, error: ERR.notAllowed };
+  if (!r.emails.includes(email)) {
+    return { ok: false, error: ERR.notAllowed };
+  }
 
   return { ok: true, email };
+}
+
+export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
+  if (!rawEmail) return { allowed: false, reason: 'Sesi tidak valid' };
+  const email = rawEmail.toLowerCase().trim();
+
+  // 1. Cek via Google Spreadsheet CSV jika ada
+  if (CONFIG.sheetCsvUrl) {
+    try {
+      const sep = CONFIG.sheetCsvUrl.includes('?') ? '&' : '?';
+      const noCacheUrl = `${CONFIG.sheetCsvUrl}${sep}_t=${Date.now()}&_r=${Math.random()}`;
+      const res = await fetch(noCacheUrl, {
+        cache: 'no-store',
+        headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' },
+        redirect: 'follow'
+      });
+      if (!res.ok) return { allowed: true }; // network error fallback
+      const text = await res.text();
+      if (/^\s*<(!doctype|html)/i.test(text)) return { allowed: true }; // invalid csv format yet
+      const matches = text.toLowerCase().match(/[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}/g) || [];
+      
+      const isAllowed = matches.includes(email);
+      if (!isAllowed) {
+        // Toleransi 3 menit khusus untuk akun yang baru saja mendaftar
+        // agar Google Sheets sempat memperbarui output CSV publiknya.
+        if (sessionObj?.loggedInAt && (Date.now() - sessionObj.loggedInAt < 3 * 60 * 1000)) {
+          return { allowed: true };
+        }
+
+        clearAuthCache();
+        return { allowed: false, reason: 'Email Anda telah dinonaktifkan atau dihapus dari database.' };
+      }
+      return { allowed: true };
+    } catch {
+      return { allowed: true }; // network error fallback
+    }
+  }
+
+  // 2. Cek via Airtable jika ada
+  if (AT) {
+    try {
+      const r = await fetchAllowed();
+      if (r.ok && Array.isArray(r.emails)) {
+        if (!r.emails.includes(email)) {
+          if (sessionObj?.loggedInAt && (Date.now() - sessionObj.loggedInAt < 3 * 60 * 1000)) {
+            return { allowed: true };
+          }
+          clearAuthCache();
+          return { allowed: false, reason: 'Email Anda tidak lagi terdaftar di sistem.' };
+        }
+      }
+    } catch {}
+  }
+
+  return { allowed: true };
 }
 
 export function clearAuthCache() {
@@ -317,3 +378,4 @@ export function clearAuthCache() {
     }
   } catch {}
 }
+

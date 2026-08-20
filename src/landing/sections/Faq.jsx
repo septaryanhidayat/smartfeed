@@ -5,11 +5,11 @@ import { CONFIG } from '../../config.js';
 const FAQS = [
   {
     q: `Apa bedanya ${CONFIG.brandName} dengan Canva atau Photoshop?`,
-    a: `Canva dan Photoshop adalah editor — kamu harus tahu desain dulu, atur layer satu per satu. ${CONFIG.brandName} adalah studio otomatis — kamu cukup isi brief, hasilnya langsung jadi visual siap upload tanpa edit manual.`,
+    a: `Canva dan Photoshop adalah editor (kamu harus tahu desain dulu, atur layer satu per satu). ${CONFIG.brandName} adalah studio otomatis: kamu cukup isi brief, hasilnya langsung jadi visual siap upload tanpa edit manual.`,
   },
   {
     q: 'Apakah saya butuh skill desain untuk pakai ini?',
-    a: `Tidak. Itu justru masalah yang ${CONFIG.brandName} selesaikan. Cukup pilih kategori industri, isi nama produk, pilih warna brand — selebihnya engine yang kerjain. Pemula total pun bisa pakai hari pertama.`,
+    a: `Tidak. Itu justru masalah yang ${CONFIG.brandName} selesaikan. Cukup pilih kategori industri, isi nama produk, pilih warna brand, selebihnya engine yang kerjain. Pemula total pun bisa pakai hari pertama.`,
   },
   {
     q: 'Format dan rasio apa saja yang bisa dihasilkan?',
@@ -17,7 +17,7 @@ const FAQS = [
   },
   {
     q: 'Apakah ada biaya bulanan?',
-    a: `Tidak. ${CONFIG.brandName} adalah sekali bayar — Rp ${CONFIG.price} selama early access — akses penuh seumur hidup. Tidak ada paywall, tidak ada limit harian.`,
+    a: `Tidak. ${CONFIG.brandName} adalah sekali bayar (Rp ${CONFIG.price} selama early access) untuk akses penuh seumur hidup. Tidak ada paywall, tidak ada limit harian.`,
   },
   {
     q: 'Apakah saya dapat update mode baru di masa depan?',
@@ -29,7 +29,7 @@ const FAQS = [
   },
   {
     q: 'Berapa banyak design yang bisa saya hasilkan?',
-    a: 'Unlimited. Tidak ada quota, tidak ada throttle per hari. Mau bikin 5 atau 500 visual sehari — sama saja, gratis selamanya.',
+    a: 'Unlimited. Tidak ada quota, tidak ada throttle per hari. Mau bikin 5 atau 500 visual sehari tetap sama saja, gratis selamanya.',
   },
   {
     q: 'Apakah hasilnya bisa untuk pemakaian komersial?',
@@ -41,7 +41,7 @@ const FAQS = [
   },
   {
     q: 'Apakah hasilnya bisa di-custom sesuai brand kita?',
-    a: 'Sangat bisa. Kamu input warna brand, gaya komunikasi, dan persona produk — engine otomatis menyesuaikan komposisi, palette, dan tone visual agar tetap on-brand.',
+    a: 'Sangat bisa. Kamu input warna brand, gaya komunikasi, dan persona produk, engine otomatis menyesuaikan komposisi, palette, dan tone visual agar tetap on-brand.',
   },
 ];
 

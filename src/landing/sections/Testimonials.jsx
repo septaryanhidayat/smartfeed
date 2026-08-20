@@ -3,10 +3,10 @@ import SafeImage from '../primitives/SafeImage.jsx';
 import { TESTI_AVATARS } from '../data/galleryManifest.js';
 
 const TESTIS = [
-  { name: 'Rendra A.',  role: 'Owner brand skincare',  body: 'Biasanya brief ke designer 3 hari kelar, sekarang sore racik design — malamnya udah jalanin Meta Ads. Game changer buat tim kecil.' },
+  { name: 'Rendra A.',  role: 'Owner brand skincare',  body: 'Biasanya brief ke designer 3 hari kelar, sekarang sore racik design dan malamnya udah jalanin Meta Ads. Game changer buat tim kecil.' },
   { name: 'Aulia M.',   role: 'YouTuber 240k subs',    body: 'Thumbnail mode-nya ngeselin di awal (kenapa enak banget), sekarang gak pernah lagi mikir layout dari nol.' },
   { name: 'Bagas D.',   role: 'Performance marketer',  body: 'Buat 30 variant creative test pagi, malamnya udah ada winning ads. ROAS naik 1.8x dalam dua minggu.' },
-  { name: 'Kirana S.',  role: 'Course creator',        body: 'Banner promo kelas, e-book cover, slide cover — semua dari satu studio. Brand jadi keliatan konsisten.' },
+  { name: 'Kirana S.',  role: 'Course creator',        body: 'Banner promo kelas, e-book cover, slide cover, semua dari satu studio. Brand jadi keliatan konsisten.' },
   { name: 'Yoga P.',    role: 'UMKM kopi specialty',   body: 'Awalnya skeptis, tapi setelah lihat hasil typography mode-nya... ya udah, langsung lifetime.' },
   { name: 'Dinda L.',   role: 'Agency partner',        body: 'Margin proyek visual naik karena waktu produksi ke-cut drastis. Klien gak tau bedanya, dan itu poinnya.' },
 ];

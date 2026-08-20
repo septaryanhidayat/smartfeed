@@ -18,9 +18,9 @@ const SHOTS = [
 ];
 
 const BULLETS = [
-  '9 feed otomatis dari 1 brief — alur yang nyambung',
+  '9 feed otomatis dari 1 brief dengan alur yang nyambung',
   'Tiap feed beda peran: hero, fitur, harga, testimoni, CTA',
-  'Warna, font & produk konsisten — terlihat satu campaign',
+  'Warna, font & produk konsisten sehingga terlihat satu campaign',
   'Hasil rasio 4:5 siap langsung posting ke Instagram',
 ];
 
@@ -51,7 +51,7 @@ export default function GridFeedShowcase() {
           </h2>
           <p className="mt-4 text-text-mut max-w-lg">
             Pilih produk &amp; gaya, sistem menyusun konsep <span className="text-text">9 feed</span> jadi
-            satu campaign — tiap feed beda peran tapi tetap serasi. Geser mockup di samping
+            satu campaign, tiap feed beda peran tapi tetap serasi. Geser mockup di samping
             untuk lihat tampilan di profil Instagram.
           </p>
           <ul className="mt-6 space-y-2.5">
@@ -98,7 +98,7 @@ export default function GridFeedShowcase() {
                 </div>
                 <div className="mt-1.5 leading-tight">
                   <div className="text-[11px] font-bold text-text">Brand Kamu · {SHOTS[i].label}</div>
-                  <div className="text-[9px] text-text-mut">Campaign 9 feed by Auto Feeds ✨</div>
+                  <div className="text-[9px] text-text-mut">Campaign 9 feed by Smart Feed ✨</div>
                 </div>
                 <div className="mt-1.5 flex gap-1.5">
                   <span className="flex-1 text-center text-[9px] font-semibold text-white bg-accent rounded py-1">Mengikuti</span>

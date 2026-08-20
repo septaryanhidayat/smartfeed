@@ -10,11 +10,11 @@ export default function ReferenceGallery({ mode }) {
   if (refs.length === 0) return null;
 
   const LABELS = {
-    logoaffiliate: 'Contoh Visual Output — Logo Style Reference',
-    tryonaffiliate: 'Contoh Visual Output — Try-On Style Reference',
-    reviewaffiliate: 'Contoh Visual Output — Review Style Reference',
-    storyboardaffiliate: 'Contoh Visual Output — Storyboard Moodboard',
-    ugcaffiliate: 'Contoh Visual Output — UGC Style Reference',
+    logoaffiliate: 'Contoh Visual Output (Logo Style Reference)',
+    tryonaffiliate: 'Contoh Visual Output (Try-On Style Reference)',
+    reviewaffiliate: 'Contoh Visual Output (Review Style Reference)',
+    storyboardaffiliate: 'Contoh Visual Output (Storyboard Moodboard)',
+    ugcaffiliate: 'Contoh Visual Output (UGC Style Reference)',
   };
   const title = LABELS[mode] || 'Visual Reference';
 
@@ -24,7 +24,7 @@ export default function ReferenceGallery({ mode }) {
         <ImageIcon className="w-3.5 h-3.5 text-accent" />
         <div className="flex-1 min-w-0">
           <div className="text-[10px] mono uppercase tracking-widest text-text-mut truncate">{title}</div>
-          <div className="text-[10px] text-text-dim mt-0.5">Inspirasi look & feel — bukan output langsung, melainkan style yang prompt akan hasilkan</div>
+          <div className="text-[10px] text-text-dim mt-0.5">Inspirasi look & feel, bukan output langsung, melainkan style yang prompt akan hasilkan</div>
         </div>
       </header>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3">

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { validateLogin, SESSION_TTL_MS, clearAuthCache } from '../auth/auth.js';
+import { validateLogin, verifyEmailAllowed, SESSION_TTL_MS, clearAuthCache } from '../auth/auth.js';
+import { showAccountDisabledAlert } from '../utils/alerts.js';
 
 const AuthContext = createContext(null);
 const KEY = 'af_session_v1';
@@ -22,17 +23,53 @@ function loadSession() {
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(loadSession);
 
-  // Re-check expiry on mount + every 30s while app open
+  const logout = useCallback(() => {
+    try {
+      localStorage.removeItem(KEY);
+      clearAuthCache();
+    } catch {}
+    setSession(null);
+  }, []);
+
+  // Cek apakah email user masih aktif di Spreadsheet
+  const checkSessionLive = useCallback(async () => {
+    if (!session || !session.email) return { ok: true };
+    const check = await verifyEmailAllowed(session.email, session);
+    if (!check.allowed) {
+      logout();
+      showAccountDisabledAlert();
+      return { ok: false, error: check.reason };
+    }
+    return { ok: true };
+  }, [session, logout]);
+
+  // Re-check expiry on mount + check spreadsheet setiap 10 detik & saat tab aktif
   useEffect(() => {
+    try {
+      localStorage.removeItem('af_recent_registered_emails_v1');
+    } catch {}
+
     if (!session) return;
+    
+    // Cek langsung saat mount / refresh
+    checkSessionLive();
+
     const id = setInterval(() => {
       if (Date.now() > session.expiresAt) {
-        localStorage.removeItem(KEY);
-        setSession(null);
+        logout();
+        return;
       }
-    }, 30_000);
-    return () => clearInterval(id);
-  }, [session]);
+      checkSessionLive();
+    }, 10_000);
+
+    const onFocus = () => checkSessionLive();
+    window.addEventListener('focus', onFocus);
+
+    return () => {
+      clearInterval(id);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [session, logout, checkSessionLive]);
 
   const login = useCallback(async (email, password) => {
     const result = await validateLogin(email, password);
@@ -49,19 +86,28 @@ export function AuthProvider({ children }) {
     return { ok: true };
   }, []);
 
-  const logout = useCallback(() => {
-    try {
-      localStorage.removeItem(KEY);
-      clearAuthCache();
-    } catch {}
-    setSession(null);
+  const loginFree = useCallback((email, name) => {
+    const cleanEmail = (email || '').toLowerCase().trim();
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return { ok: false, error: 'Format email tidak valid' };
+    }
+    const now = Date.now();
+    const newSession = {
+      email: cleanEmail,
+      name: name || '',
+      loggedInAt: now,
+      expiresAt: now + SESSION_TTL_MS,
+    };
+    try { localStorage.setItem(KEY, JSON.stringify(newSession)); } catch {}
+    setSession(newSession);
+    return { ok: true, email: cleanEmail };
   }, []);
 
   const isAuthenticated = !!session;
   const expiresInDays = session ? Math.max(0, Math.ceil((session.expiresAt - Date.now()) / (24 * 60 * 60 * 1000))) : 0;
 
   return (
-    <AuthContext.Provider value={{ session, isAuthenticated, login, logout, expiresInDays }}>
+    <AuthContext.Provider value={{ session, isAuthenticated, login, loginFree, logout, checkSessionLive, expiresInDays }}>
       {children}
     </AuthContext.Provider>
   );

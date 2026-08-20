@@ -129,7 +129,7 @@ export default function CopySuccessModal({ open, onClose, kind = 'image' }) {
                 rel="noopener noreferrer"
                 className="btn-primary !py-2.5 !px-4 flex-1 sm:flex-none justify-center whitespace-nowrap"
               >
-                Buka Auto Feeds AI <ExternalLink className="w-3.5 h-3.5" />
+                Buka Smart Feed AI <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
           </div>
@@ -165,14 +165,14 @@ const DETAIL_IMAGE = [
   'Klik tombol <strong class="text-text">Buka ChatGPT</strong> di kanan bawah.',
   'Aktifkan mode <strong class="text-text">image generation</strong> di ChatGPT (icon gambar).',
   'Upload foto produk yang ingin diolah AI.',
-  'Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd> — prompt sudah otomatis tersalin.',
+  'Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd>, prompt sudah otomatis tersalin.',
   'Kirim pesan, biarkan AI render desainmu.',
 ];
 
 const DETAIL_COPY = [
   'Klik tombol <strong class="text-text">Lanjut ke ChatGPT</strong> di kanan bawah.',
-  'Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd> — prompt copywriting sudah otomatis tersalin.',
-  'Kirim — kamu akan dapat puluhan variasi copy siap A/B test.',
+  'Tekan <kbd class="px-1 py-0.5 rounded bg-bg-deep border border-border mono text-[10px]">Ctrl+V</kbd>, prompt copywriting sudah otomatis tersalin.',
+  'Kirim, kamu akan dapat puluhan variasi copy siap A/B test.',
 ];
 
 const DETAIL_CAROUSEL = [

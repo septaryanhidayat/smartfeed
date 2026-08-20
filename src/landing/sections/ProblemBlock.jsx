@@ -10,7 +10,7 @@ const PAINS = [
   {
     icon: Wallet,
     title: 'Biaya tool desain numpuk',
-    body: 'Langganan Canva Pro, stok foto, plugin Photoshop — habis sebelum konten cuan.',
+    body: 'Langganan Canva Pro, stok foto, plugin Photoshop: habis sebelum konten cuan.',
   },
   {
     icon: Repeat,
@@ -35,7 +35,7 @@ export default function ProblemBlock() {
             Bikin satu banner saja, <span className="text-grad-red">drama-nya banyak</span>.
           </h2>
           <p className="mt-4 text-text-mut">
-            Konten harian, promo flash sale, thumbnail YouTube, story TikTok —
+            Konten harian, promo flash sale, thumbnail YouTube, story TikTok,
             semua butuh visual. Tapi proses pembuatannya selalu sama: lambat,
             mahal, dan bikin pusing.
           </p>

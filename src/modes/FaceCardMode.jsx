@@ -82,7 +82,7 @@ export default function FaceCardMode({ state, dispatch }) {
       {/* SECTION D — Optional Subject Hints */}
       <Section num="D" title="Subject Hints (Opsional)" icon={User} badge="opsional">
         <p className="text-[11px] text-text-dim mb-3 leading-relaxed">
-          Field di bawah opsional — beri arahan tambahan untuk AI. Kosongkan semua jika ingin AI sepenuhnya menganalisis dari foto yang kamu upload nanti.
+          Field di bawah opsional: beri arahan tambahan untuk AI. Kosongkan semua jika ingin AI sepenuhnya menganalisis dari foto yang kamu upload nanti.
         </p>
         <div className="grid sm:grid-cols-2 gap-3">
           <SelectField label="Gender Hint"       value={state.genderHint}    onChange={set('genderHint')}    options={GENDER_HINTS} />
@@ -105,7 +105,7 @@ export default function FaceCardMode({ state, dispatch }) {
 
 function FaceFeatureFields({ state, set }) {
   return (
-    <Section num="C" title="Face Features — Pengaturan Detail" icon={Settings2}>
+    <Section num="C" title="Face Features: Pengaturan Detail" icon={Settings2}>
       <CheckboxGroupField
         label="Features yang Dilabel"
         values={state.featuresToLabel}
@@ -129,7 +129,7 @@ function FaceFeatureFields({ state, set }) {
 
 function SpectaclesFields({ state, set }) {
   return (
-    <Section num="C" title="Spectacles — Pengaturan Detail" icon={Settings2}>
+    <Section num="C" title="Spectacles: Pengaturan Detail" icon={Settings2}>
       <CheckboxGroupField
         label="Frame Styles yang Ditampilkan"
         values={state.frameStyles}
@@ -154,7 +154,7 @@ function SpectaclesFields({ state, set }) {
 
 function StyleAnalysisFields({ state, set }) {
   return (
-    <Section num="C" title="Style Analysis — Pengaturan Detail" icon={Settings2}>
+    <Section num="C" title="Style Analysis: Pengaturan Detail" icon={Settings2}>
       <CheckboxGroupField
         label="Style Categories (max 8)"
         values={state.styleCategories}
@@ -184,7 +184,7 @@ function StyleAnalysisFields({ state, set }) {
 
 function ColorAnalysisFields({ state, set }) {
   return (
-    <Section num="C" title="Color Analysis — Pengaturan Detail" icon={Settings2}>
+    <Section num="C" title="Color Analysis: Pengaturan Detail" icon={Settings2}>
       <div className="grid sm:grid-cols-2 gap-3">
         <SelectField label="Undertone Result" value={state.undertoneResult} onChange={set('undertoneResult')} options={UNDERTONES} />
         <SelectField label="Season Type"      value={state.seasonType}      onChange={set('seasonType')}      options={SEASON_TYPES} />
@@ -216,7 +216,7 @@ function ColorAnalysisFields({ state, set }) {
 
 function MakeupAnalysisFields({ state, set }) {
   return (
-    <Section num="C" title="Makeup Analysis — Pengaturan Detail" icon={Settings2}>
+    <Section num="C" title="Makeup Analysis: Pengaturan Detail" icon={Settings2}>
       <div className="grid sm:grid-cols-3 gap-3">
         <SelectField label="Skin Tone"        value={state.skinTone}        onChange={set('skinTone')}        options={SKIN_TONES} />
         <SelectField label="Undertone"        value={state.makeupUndertone} onChange={set('makeupUndertone')} options={MAKEUP_UNDERTONES} />

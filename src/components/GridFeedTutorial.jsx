@@ -4,9 +4,9 @@ import { X, MousePointer2, Sparkles, Copy, Plus, Image as ImageIcon, Send, Check
 
 /**
  * Tutorial BERGERAK untuk mode Feed Grid 3x3.
- * 1) Auto Feeds: Generate → Copy
+ * 1) Smart Feed: Generate → Copy
  * 2) chatgpt.com BIASA: Buat gambar → + Tambah foto → paste prompt → Kirim → jadi grid 3x3
- * 3) Buka link Auto Feeds AI → upload grid → Kirim
+ * 3) Buka link Smart Feed AI → upload grid → Kirim
  * 4) Ketik "GENERATE FEEDS 1" → lanjut sampai 9
  * Kursor diarahkan ke posisi TOMBOL ASLI (diukur via ref) supaya selalu pas.
  */
@@ -14,9 +14,9 @@ import { X, MousePointer2, Sparkles, Copy, Plus, Image as ImageIcon, Send, Check
 const GPT_LINK = 'https://chatgpt.com/';
 
 const STEPS = [
-  { n: 1, t: 'Generate & Copy di Auto Feeds' },
+  { n: 1, t: 'Generate & Copy di Smart Feed' },
   { n: 2, t: 'chatgpt.com: Buat gambar · +foto · paste · Kirim → 9 feed' },
-  { n: 3, t: 'Buka Auto Feeds AI · upload grid · Kirim' },
+  { n: 3, t: 'Buka Smart Feed AI · upload grid · Kirim' },
   { n: 4, t: 'Ketik GENERATE FEEDS 1 → lanjut sampai 9' },
 ];
 
@@ -150,7 +150,7 @@ export default function GridFeedTutorial({ open, onClose }) {
 
         <div ref={stageRef} className="relative w-full bg-bg-deep" style={{ aspectRatio: '16 / 9' }}>
           <div className="absolute inset-0">
-            {studio ? <Studio phase={phase} /> : sw1 ? <Switch label="Buka chatgpt.com…" /> : chatgpt ? <ChatGPT phase={phase} /> : sw2 ? <Switch label="Buka link Auto Feeds AI…" link={GPT_LINK} /> : <AutoFeedsAI phase={phase} />}
+            {studio ? <Studio phase={phase} /> : sw1 ? <Switch label="Buka chatgpt.com…" /> : chatgpt ? <ChatGPT phase={phase} /> : sw2 ? <Switch label="Buka link Smart Feed AI…" link={GPT_LINK} /> : <SmartFeedAI phase={phase} />}
           </div>
           {/* Kursor tunggal — diposisikan dari hasil pengukuran tombol */}
           <div className="absolute z-50 transition-all duration-1000 ease-out pointer-events-none" style={{ left: cursor.x + '%', top: cursor.y + '%' }}>
@@ -186,13 +186,13 @@ function MiniGrid({ className = '' }) {
   return <div className={`grid grid-cols-3 gap-px bg-border ${className}`}>{Array.from({ length: 9 }).map((_, k) => <div key={k} className="bg-gradient-to-br from-accent/30 to-bg-deep" style={{ aspectRatio: '4/5' }} />)}</div>;
 }
 
-/* STEP 1 — Auto Feeds studio */
+/* STEP 1 — Smart Feed studio */
 function Studio({ phase }) {
   const show = ['click-gen', 'to-copy', 'click-copy'].includes(phase);
   const copied = phase === 'click-copy';
   return (
     <div className="absolute inset-0 p-3 flex flex-col gap-2 text-[10px]">
-      <div className="text-[9px] mono uppercase tracking-widest text-accent">Auto Feeds · 9 Feed Konsisten</div>
+      <div className="text-[9px] mono uppercase tracking-widest text-accent">Smart Feed · 9 Feed Konsisten</div>
       <div className="flex-1 rounded-md border border-border bg-bg-panel p-2 overflow-hidden">
         <div className="text-text-dim text-[9px] mb-1">Output Prompt</div>
         <div className="rounded bg-black/40 border border-border h-full p-2 font-mono text-[8px] leading-relaxed text-text-mut overflow-hidden">
@@ -235,7 +235,6 @@ function ChatGPT({ phase }) {
         <Pill label="Tulis atau edit" />
         <Pill label="Cari sesuatu" />
       </div>
-      {/* Label PASTE saat paste prompt */}
       {phase === 'paste1' && (
         <div className="absolute left-1/2 -translate-x-1/2 bottom-[4.2rem] px-3 py-1.5 rounded-lg bg-accent text-white text-[10px] font-bold shadow-lg flex items-center gap-1.5 animate-slide-up">
           📋 Paste prompt (Ctrl + V)
@@ -251,7 +250,7 @@ function ChatGPT({ phase }) {
   );
 }
 
-/* STEP 3+4 — Auto Feeds AI (custom GPT) */
+/* STEP 3+4 — Smart Feed AI (custom GPT) */
 function FeedChip({ n }) {
   return (
     <span className="inline-flex flex-col items-center">
@@ -261,7 +260,7 @@ function FeedChip({ n }) {
   );
 }
 
-function AutoFeedsAI({ phase }) {
+function SmartFeedAI({ phase }) {
   const gridAtt = ['grid-att', 'to-sendc', 'click-sendc'].includes(phase);
   const showConcept = phase === 'concept';
   const typingN = ['type-gen1', 'click-f1'].includes(phase) ? 1 : ['type-gen2', 'click-f2'].includes(phase) ? 2 : ['type-gen3', 'click-f3'].includes(phase) ? 3 : 0;
@@ -275,7 +274,7 @@ function AutoFeedsAI({ phase }) {
   return (
     <div className="absolute inset-0 p-3 flex flex-col text-[10px]">
       <div className="flex items-center gap-1.5 rounded-md bg-bg-elev border border-accent/40 px-2 py-1 text-[8px] text-accent min-w-0"><Globe className="w-3 h-3 shrink-0" /> <span className="truncate">{GPT_LINK}</span></div>
-      <div className="flex items-center gap-1.5 text-[10px] font-bold py-1.5"><span className="w-4 h-4 rounded bg-accent flex items-center justify-center text-white text-[8px] font-black">F</span> Auto Feeds AI</div>
+      <div className="flex items-center gap-1.5 text-[10px] font-bold py-1.5"><span className="w-4 h-4 rounded bg-accent flex items-center justify-center text-white text-[8px] font-black">F</span> Smart Feed AI</div>
       <div className="flex-1 overflow-hidden space-y-1.5 py-1">
         {showConcept && <div className="w-fit max-w-[85%] bg-bg-panel border border-border rounded-lg px-2 py-1.5 text-[9px] text-text-mut">Konsep feed 1–9 siap, style konsisten. <b className="text-text">Generate gambar FEED 1?</b> 🙂</div>}
         {(f1done || f2done || f3done) && (

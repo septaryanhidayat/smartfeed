@@ -39,7 +39,7 @@ export default function MenuFBDemoModal({ open, onClose, onPick }) {
           <div>
             <h2 className="text-base font-semibold">Pilih Demo Menu F&B</h2>
             <p className="text-xs text-text-mut mt-0.5">
-              9 template siap pakai — preview hasil AI di atas, klik untuk auto-fill form.
+              9 template siap pakai: preview hasil AI di atas, klik untuk auto-fill form.
             </p>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-md hover:bg-bg-elev flex items-center justify-center text-text-mut">

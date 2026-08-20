@@ -11,7 +11,7 @@ const SLIDES = [
 ];
 
 const BULLETS = [
-  '12+ tipe template — Product, Promo, Testimonial, Tips, Story, News, dll',
+  '12+ tipe template: Product, Promo, Testimonial, Tips, Story, News, dll',
   '3–7 slide, alur cerita tersusun otomatis (hook → value → CTA)',
   'Layout tiap slide beda tapi tetap satu campaign yang konsisten',
   'Atur letak gambar, teks & warna di slide pertama',
@@ -124,13 +124,13 @@ export default function CarouselShowcase() {
               <span className="dot" /> baru · carousel feeds
             </span>
             <h2 className="h-section mt-4">
-              Carousel feed yang <span className="text-grad-red">nyambung</span> —
-              satu cerita, banyak slide.
+              Carousel feed yang <span className="text-grad-red">nyambung</span>,
+              satu cerita dalam banyak slide.
             </h2>
             <p className="mt-4 text-text-mut leading-relaxed">
               Pilih tipe template & jumlah slide, lalu sistem menyusun
               <span className="text-text"> alur cerita, objective tiap slide, variasi layout</span>,
-              sampai komposisi visual yang konsisten — dari hook sampai CTA. Termasuk
+              sampai komposisi visual yang konsisten dari hook sampai CTA. Termasuk
               template <span className="text-text">News</span> untuk konten berita.
             </p>
 

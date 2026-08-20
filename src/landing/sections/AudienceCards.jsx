@@ -21,7 +21,7 @@ const PERSONAS = [
   {
     icon: GraduationCap,
     title: 'Course Creator & Mentor',
-    body: 'Banner promosi kelas, ebook cover, slide pembuka — semua dari satu studio.',
+    body: 'Banner promosi kelas, ebook cover, slide pembuka, semua dari satu studio.',
   },
   {
     icon: Building2,
@@ -45,7 +45,7 @@ export default function AudienceCards() {
             {CONFIG.brandName} dibuat untuk <span className="text-grad-red">enam tipe orang</span> ini.
           </h2>
           <p className="mt-4 text-text-mut">
-            Kalau salah satu deskripsi di bawah terdengar seperti kamu — {CONFIG.brandName}
+            Kalau salah satu deskripsi di bawah terdengar seperti kamu, {CONFIG.brandName}
             akan langsung kepake hari pertama akses.
           </p>
         </div>

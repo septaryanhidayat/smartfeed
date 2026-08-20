@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { X, Store, Check, ExternalLink, Zap } from 'lucide-react';
 import { CONFIG } from '../config.js';
 
-const FEATURES = [
-  'File website lengkap + sistem login & akses tools member — siap upload (tanpa coding)',
-  'Jual ulang sepuasnya — 100% keuntungan jadi milikmu, tanpa bagi hasil',
-  'Panduan setup lengkap + tool ganti password (tanpa coding)',
-  'Rebrand bebas: nama, logo, warna, harga, link pembayaran sendiri',
-  'Login pelanggan pakai Google Spreadsheet — tanpa biaya bulanan / server / API',
-  '12 mode (termasuk Carousel & 9 Feed Konsisten) + 4 Affiliate Tools + update fitur ke depan ikut',
+const BULLETS = [
+  'File website lengkap + sistem login & akses tools member, siap upload (tanpa coding)',
+  'Jual ulang sepuasnya, 100% keuntungan jadi milikmu, tanpa bagi hasil',
+  'Rebrand bebas: nama brand, logo, warna tema, harga, link checkout sendiri',
+  'Dashboard admin untuk buat & kelola akun pembeli tanpa coding',
+  'Login pelanggan pakai Google Spreadsheet, tanpa biaya bulanan / server / API',
+  '12 mode kreatif (Banner, Carousel, 9 Feed, Thumbnail, Ads, Copy, Face Card, Menu F&B, Logo, Try-On, Review, Storyboard)',
+  'Update fitur & kategori baru di masa depan otomatis ikut',
 ];
 
 /**

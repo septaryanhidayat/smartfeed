@@ -13,13 +13,13 @@ const STEPS = [
     n: '02',
     icon: Cpu,
     title: 'Engine racik visualnya',
-    body: `${CONFIG.brandName} otomatis menyusun komposisi, lighting, typography, dan color grading — semua dipetakan presisi.`,
+    body: `${CONFIG.brandName} otomatis menyusun komposisi, lighting, typography, dan color grading dengan pemetaan presisi.`,
   },
   {
     n: '03',
     icon: Wand2,
     title: 'Design jadi, tinggal upload',
-    body: 'Visualmu lahir dalam hitungan detik — siap pasang ke feed, story, thumbnail, atau bahan iklan.',
+    body: 'Visualmu lahir dalam hitungan detik, siap pasang ke feed, story, thumbnail, atau bahan iklan.',
   },
 ];
 
@@ -35,7 +35,7 @@ export default function HowItWorks() {
             Tiga langkah, <span className="text-grad-red">tanpa skill desain</span>.
           </h2>
           <p className="mt-4 text-text-mut">
-            Dari kotak kosong ke visual siap upload — semua dalam satu sesi browser.
+            Dari kotak kosong ke visual siap upload, semua dalam satu sesi browser.
           </p>
         </div>
 

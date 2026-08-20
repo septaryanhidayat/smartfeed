@@ -43,7 +43,7 @@ export default function TopShowcase() {
             Segala Jenis <span className="text-grad-red">Produk Brand Dan Jasa</span>
           </h2>
           <p className="mt-2 text-sm text-text-mut">
-            Geser pelan — semua design di bawah ini dibuat tanpa designer, tanpa Canva, tanpa Photoshop.
+            Geser pelan, semua design di bawah ini dibuat tanpa designer, tanpa Canva, tanpa Photoshop.
           </p>
         </div>
       </div>

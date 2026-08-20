@@ -16,7 +16,7 @@ export default function StoryboardAffiliateMode({ state, dispatch }) {
     <div className="space-y-3">
       <Section num="1" title="Produk" icon={Film}>
         <div className="mb-3 text-[11px] text-text-dim p-2 rounded bg-bg-elev/40 border border-border">
-          💡 Output = <span className="text-accent">konsep storyboard</span>. Produk dijaga sama persis — scene-by-scene otomatis. Ikuti video tutorial untuk memakainya.
+          💡 Output = <span className="text-accent">konsep storyboard</span>. Produk dijaga sama persis, scene-by-scene otomatis. Ikuti video tutorial untuk memakainya.
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Product Name (opsional)" value={state.product_name} onChange={set('product_name')} placeholder="Mini Leather Tote" />

@@ -42,7 +42,7 @@ export default function DesignMarquee() {
             digenerate dalam hitungan detik.
           </h2>
           <p className="mt-4 text-text-mut">
-            Semua visual di bawah lahir dari {CONFIG.brandName} — tanpa Canva, tanpa
+            Semua visual di bawah lahir dari {CONFIG.brandName}, tanpa Canva, tanpa
             Photoshop, tanpa edit manual. Brief masuk, design keluar.
           </p>
         </div>

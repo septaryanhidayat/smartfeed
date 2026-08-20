@@ -76,7 +76,7 @@ export default function BannerMode({ state, dispatch }) {
       <ReferenceModal
         open={refOpen === 'style'}
         onClose={() => setRefOpen(null)}
-        title="Referensi Gaya Desain — Banner"
+        title="Referensi Gaya Desain (Banner)"
         subtitle="Pilih gaya visual yang cocok untuk banner produk"
         options={STYLES}
         currentValue={state.style}
@@ -87,7 +87,7 @@ export default function BannerMode({ state, dispatch }) {
       <ReferenceModal
         open={refOpen === 'lighting'}
         onClose={() => setRefOpen(null)}
-        title="Referensi Gaya Pencahayaan — Banner"
+        title="Referensi Gaya Pencahayaan (Banner)"
         subtitle="Pilih tipe lighting untuk render produk"
         options={LIGHTINGS}
         currentValue={state.lighting}

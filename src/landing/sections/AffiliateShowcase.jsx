@@ -11,7 +11,7 @@ const TOOLS = [
     icon: Sparkles,
     badge: 'Logo + Mockup',
     title: 'Logo Produk',
-    desc: 'Generate logo brand affiliate-ready, lalu tempel logo kamu ke 21 media merchandise & brand mockup. Custom HEX palette — hasil langsung jadi logo & mockup produk.',
+    desc: 'Generate logo brand affiliate-ready, lalu tempel logo kamu ke 21 media merchandise & brand mockup. Custom HEX palette, hasil langsung jadi logo & mockup produk.',
     bullets: ['Logo studio + Brand Mockup', 'Custom HEX palette override', '21 media (kaos, tote, banner, dll)'],
     layout: '2x2',
     imgs: ['logoaffiliate/logo-saas-tech', 'logoaffiliate/logo-skincare-premium', 'logoaffiliate/logo-streetwear-bold', 'logoaffiliate/logo-coffee-warm'],
@@ -57,11 +57,11 @@ export default function AffiliateShowcase() {
             <span className="dot" /> ★ baru · affiliate tools
           </span>
           <h2 className="h-section mt-4">
-            Affiliate Tools — <span className="text-grad-red">Logo, Try-On, Review &amp; Storyboard</span>
+            Affiliate Tools: <span className="text-grad-red">Logo, Try-On, Review &amp; Storyboard</span>
           </h2>
           <p className="mt-4 text-text-mut leading-relaxed">
             Empat tool khusus buat affiliate marketer & seller. Isi form, sediakan foto produkmu,
-            dan dapat <span className="text-text">visual jualan yang konsisten</span> — produk
+            dan dapat <span className="text-text">visual jualan yang konsisten</span>, dengan produk yang
             dijaga sama persis dengan fotomu.
           </p>
 

@@ -19,7 +19,7 @@ const OUTPUT_MODES = [
 
 export default function LogoAffiliateMode({ state, dispatch }) {
   const set = (field) => (value) => dispatch({ type: 'SET_FIELD', field, value });
-  const paletteOptions = LOGO_COLOR_PALETTES.map((p) => ({ value: p.name, label: `${p.name} — ${p.desc}` }));
+  const paletteOptions = LOGO_COLOR_PALETTES.map((p) => ({ value: p.name, label: `${p.name} (${p.desc})` }));
 
   const isMockup = state.output_mode === 'mockup';
   const customHex = [state.primary_color, state.secondary_color, state.accent_color].filter(Boolean);
@@ -104,7 +104,7 @@ export default function LogoAffiliateMode({ state, dispatch }) {
           {/* Daftar SEMUA media yang akan dibuat — tanpa pilihan */}
           <Section num="2" title="Media yang akan dibuat" icon={Shirt}>
             <p className="text-[11px] text-text-dim mb-3 leading-relaxed">
-              Gak perlu pilih — hasilnya mencakup logo kamu di <span className="text-accent">semua media</span> di bawah sekaligus. Ikuti video tutorial untuk memakainya + file logo kamu.
+              Gak perlu pilih, hasilnya mencakup logo kamu di <span className="text-accent">semua media</span> di bawah sekaligus. Ikuti video tutorial untuk memakainya + file logo kamu.
             </p>
             <div className="flex flex-wrap items-center gap-1.5 mb-4 text-[10px]">
               <span className="text-text-dim">Palette &amp; personality dari tab Buat Logo:</span>

@@ -21,7 +21,7 @@ export default function ReviewAffiliateMode({ state, dispatch }) {
   const set = (field) => (value) => dispatch({ type: 'SET_FIELD', field, value });
   const paletteOptions = RVB_COLOR_PALETTES.map((p) => ({
     value: p.name,
-    label: p.colors.length ? `${p.name} — ${p.colors.join(', ')}` : `${p.name} (ikut warna produk)`,
+    label: p.colors.length ? `${p.name} (${p.colors.join(', ')})` : `${p.name} (ikut warna produk)`,
   }));
   const frameworkOptions = RVB_FRAMEWORKS.map((f) => ({ value: f.value, label: f.label }));
   const activeFw = RVB_FRAMEWORKS.find((f) => f.value === state.review_framework);
@@ -30,7 +30,7 @@ export default function ReviewAffiliateMode({ state, dispatch }) {
     <div className="space-y-3">
       <Section num="1" title="Produk" icon={Star}>
         <div className="mb-3 text-[11px] text-text-dim p-2 rounded bg-bg-elev/40 border border-border">
-          💡 Output = <span className="text-accent">konsep banner review</span>. Produk dijaga sama persis — ikuti video tutorial untuk hasilkan visualnya.
+          💡 Output = <span className="text-accent">konsep banner review</span>. Produk dijaga sama persis, ikuti video tutorial untuk hasilkan visualnya.
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Product Name" value={state.product_name} onChange={set('product_name')} placeholder="Mini Leather Tote" required />
@@ -81,10 +81,10 @@ export default function ReviewAffiliateMode({ state, dispatch }) {
           <SelectField label="Headline Placement" value={state.headline_placement} onChange={set('headline_placement')} options={RVB_HEADLINE_PLACEMENTS} />
         </div>
         <div className="mt-3">
-          <SelectOrCustom label="Headline Text (opsional — kosong = AI buat)" value={state.headline_text} onChange={set('headline_text')} options={RVB_HEADLINE_EXAMPLES} hint="Maks 8 kata." />
+          <SelectOrCustom label="Headline Text (opsional, kosong = AI buat)" value={state.headline_text} onChange={set('headline_text')} options={RVB_HEADLINE_EXAMPLES} hint="Maks 8 kata." />
         </div>
         <div className="mt-3">
-          <SelectOrCustom label="Subheadline (opsional — kosong = AI buat)" value={state.subheadline} onChange={set('subheadline')} options={RVB_SUBHEADLINE_EXAMPLES} hint="1 kalimat, maks 14 kata." />
+          <SelectOrCustom label="Subheadline (opsional, kosong = AI buat)" value={state.subheadline} onChange={set('subheadline')} options={RVB_SUBHEADLINE_EXAMPLES} hint="1 kalimat, maks 14 kata." />
         </div>
         <div className="grid sm:grid-cols-2 gap-3 mt-3">
           <SelectField label="Review Format" value={state.review_format} onChange={set('review_format')} options={RVB_REVIEW_FORMATS} />

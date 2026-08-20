@@ -3,12 +3,12 @@ import { CONFIG } from '../../config.js';
 import ScanlineGrid from '../primitives/ScanlineGrid.jsx';
 
 const REASONS = [
-  { icon: Gauge,   title: 'Output presisi',     body: 'Bukan template generik — tiap field dipetakan ke karakter visual commercial-grade.' },
-  { icon: Boxes,   title: '48+ kategori siap',  body: 'F&B, fashion, beauty, otomotif, edukasi, finance, sampai niche gaming — preset on click.' },
-  { icon: Cpu,     title: 'Multi-format output',body: 'Banner, thumbnail, typography, story, reels — semua format lahir dari satu studio.' },
-  { icon: Lock,    title: 'Sekali bayar',       body: 'Tanpa langganan bulanan. Tanpa kredit per render. Akses penuh selamanya begitu lunas.' },
-  { icon: InfIcon, title: 'Render unlimited',   body: 'Sebanyak apapun visual yang kamu butuh — gak ada batas, gak ada throttle.' },
-  { icon: Crown,   title: 'Update lifetime',    body: 'Mode baru, kategori baru, opsi gaya baru — semua di-push otomatis ke akunmu.' },
+  { icon: Gauge,   title: 'Output presisi',     body: 'Bukan template generik, tiap field dipetakan ke karakter visual commercial-grade.' },
+  { icon: Boxes,   title: '48+ kategori siap',  body: 'F&B, fashion, beauty, otomotif, edukasi, finance, sampai niche gaming: preset on click.' },
+  { icon: Cpu,     title: 'Multi-format output',body: 'Banner, thumbnail, typography, story, reels: semua format lahir dari satu studio.' },
+  { icon: Lock,    title: 'Akses Pelatihan',   body: 'Disediakan gratis untuk seluruh peserta pelatihan tanpa biaya langganan.' },
+  { icon: InfIcon, title: 'Render unlimited',   body: 'Sebanyak apapun visual yang kamu butuh, tanpa batas dan tanpa throttle.' },
+  { icon: Crown,   title: 'Update lifetime',    body: 'Mode baru, kategori baru, opsi gaya baru: semua di-push otomatis ke akunmu.' },
 ];
 
 export default function WhyDifferent() {
@@ -19,7 +19,7 @@ export default function WhyDifferent() {
         <div className="max-w-2xl reveal">
           <span className="eyebrow"><span className="dot" /> yang bikin beda</span>
           <h2 className="h-section mt-4">
-            Bukan sekedar template generator — <span className="text-grad-red">studio yang serius</span>.
+            Bukan sekedar template generator, melainkan <span className="text-grad-red">studio yang serius</span>.
           </h2>
           <p className="mt-4 text-text-mut">
             Setiap mode di {CONFIG.brandName} dirancang dari hasil reverse-engineering brief

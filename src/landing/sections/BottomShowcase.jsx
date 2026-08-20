@@ -42,7 +42,7 @@ export default function BottomShowcase() {
             Hasil yang <span className="text-grad-red">naik feed kemarin</span>.
           </h2>
           <p className="mt-3 text-sm text-text-mut">
-            Setiap variant di bawah lahir dari satu studio — beda kategori, beda gaya, beda format.
+            Setiap variant di bawah lahir dari satu studio: beda kategori, beda gaya, beda format.
             Semua tanpa edit manual.
           </p>
         </div>

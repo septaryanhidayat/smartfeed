@@ -173,7 +173,7 @@ export default function PromptPanel({
           <div className="text-[10px] mono text-text-dim uppercase tracking-widest">
             {hasGenerated
               ? `${charCount.toLocaleString()} chars · ${lineCount} lines${streaming ? ' · streaming...' : ''}`
-              : 'idle — klik Generate'}
+              : 'idle · klik Generate'}
           </div>
           <div className="flex items-center gap-2">
             <button onClick={handleGenerate} className="btn-primary !py-2 !px-3 text-xs" disabled={streaming}>
@@ -239,7 +239,7 @@ function EmptyTerminal({ mode }) {
       </div>
       <div className="flex-1" />
       <div className="text-[10px] text-text-dim mt-2 opacity-60 mono uppercase tracking-widest">
-        — prompt akan muncul di sini setelah Generate —
+        prompt akan muncul di sini setelah Generate
       </div>
     </div>
   );

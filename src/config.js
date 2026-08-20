@@ -15,7 +15,7 @@ const pick = (v, d) => (v === undefined || v === null || v === '' ? d : v);
 
 export const CONFIG = {
   // ── Branding ──────────────────────────────────────────────
-  brandName: pick(cfg.brandName, 'Auto Feeds'),
+  brandName: pick(cfg.brandName, 'Smart Feed'),
   tagline:   pick(cfg.tagline, 'AI Design Studio · v2.1'),
   logoUrl:   pick(cfg.logoUrl, '/landing/brand/logo.png'),
 
@@ -26,7 +26,7 @@ export const CONFIG = {
   bgColor:     pick(cfg.bgColor, ''),
 
   // ── Link ──────────────────────────────────────────────────
-  paymentUrl:   pick(cfg.paymentUrl, 'https://aiautomation.myr.id/pl/auto-feeds/'),
+  paymentUrl:   pick(cfg.paymentUrl, 'https://aiautomation.myr.id/pl/smart-feed/'),
   affiliateUrl: pick(cfg.affiliateUrl, 'https://web.mayar.id/sign-in/referral/fUAlH05'),
 
   // Tombol setelah Copy: link ChatGPT biasa + Custom GPT (kosong = sembunyikan tombol GPT).
@@ -34,10 +34,10 @@ export const CONFIG = {
   gptUrl:     pick(cfg.gptUrl, ''),
 
   // ── Social (footer) ───────────────────────────────────────
-  instagramUrl:    pick(cfg.instagramUrl, 'https://instagram.com/brandmu'),
-  instagramHandle: pick(cfg.instagramHandle, '@brandmu'),
-  facebookUrl:     pick(cfg.facebookUrl, 'https://www.facebook.com/people/Autofeedsid/61590446791266/'),
-  facebookHandle:  pick(cfg.facebookHandle, 'Autofeedsid'),
+  instagramUrl:    pick(cfg.instagramUrl, 'https://instagram.com/smartfeed'),
+  instagramHandle: pick(cfg.instagramHandle, '@smartfeed'),
+  facebookUrl:     pick(cfg.facebookUrl, 'https://www.facebook.com/smartfeed'),
+  facebookHandle:  pick(cfg.facebookHandle, 'smartfeed'),
 
   // ── Harga (tampilan) ──────────────────────────────────────
   price:        pick(cfg.price, '90.000'),
@@ -47,20 +47,11 @@ export const CONFIG = {
   // ── Tier 2: Lisensi Reseller (hak jual kembali, profit 100%) ──
   showResellerTier:   cfg.showResellerTier !== false,        // true = tampilkan kartu reseller
   resellerPrice:      pick(cfg.resellerPrice, '290.000'),
-  resellerStrike:     pick(cfg.resellerStrike, '2.000.000'),
-  resellerPaymentUrl: pick(cfg.resellerPaymentUrl, pick(cfg.paymentUrl, 'https://aiautomation.myr.id/pl/auto-feeds/')),
-
-  // ── LOGIN ─────────────────────────────────────────────────
-  // mode: 'sheet' (Google Spreadsheet CSV) | 'airtable' (default lama).
-  // Kalau sheetCsvUrl diisi → otomatis mode 'sheet'.
+  // ── PENDAFTARAN & LOGIN VIA GOOGLE SPREADSHEET ──────────
+  sheetWebhookUrl: pick(cfg.sheetWebhookUrl, ''),
   sheetCsvUrl: pick(cfg.sheetCsvUrl, ''),
-  // Proxy server (mis. "/auth.php"): password + token diverifikasi SERVER-SIDE
-  // → tidak ada token/password di config.js maupun bundle. Kalau diisi,
-  // login lewat proxy ini (paling aman untuk situs utama).
   authEndpoint: pick(cfg.authEndpoint, ''),
-  // SHA-256(salt + password). Default = password lama 'Designitumudah'.
-  // Buyer ganti pakai hash-tool.html (tanpa coding).
-  loginPasswordHash: pick(cfg.loginPasswordHash, '963c3db89fe46ce864f484d91214378d1e5f52948afef6828d2ab28e479c90ee'),
+  loginPasswordHash: pick(cfg.loginPasswordHash, '21e37e7c35bf7735516fb55cffd36b025e124647430849feac0b61fff45decd3'),
 
   // Kredensial Airtable (terobfuscate) HANYA ada di config milik pemilik asli.
   // Paket reseller TIDAK menyertakan ini → token kamu tidak ikut terjual.
@@ -68,7 +59,7 @@ export const CONFIG = {
   airtable: cfg.airtable || null,
 };
 
-// Wordmark: kata terakhir di-accent (mis. "Auto Feeds" → Auto + <Feeds>).
+// Wordmark: kata terakhir di-accent (mis. "Smart Feed" → Smart + <Feed>).
 export function brandParts() {
   const words = CONFIG.brandName.trim().split(/\s+/);
   if (words.length === 1) return { lead: '', accent: words[0] };

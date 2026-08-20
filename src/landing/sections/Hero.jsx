@@ -9,7 +9,12 @@ import SampleAdCard from '../primitives/SampleAdCard.jsx';
 import { CONFIG } from '../../config.js';
 const CTA_HREF = CONFIG.paymentUrl;
 
-export default function Hero() {
+export default function Hero({ onOpenAccess }) {
+  const handleOpenAccess = () => {
+    if (onOpenAccess) onOpenAccess();
+    else window.dispatchEvent(new CustomEvent('open-access-modal'));
+  };
+
   return (
     <section id="top" className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
       <GlowOrb size={600} className="-top-40 -left-40" color="rgba(var(--accent-rgb),0.18)" />
@@ -17,12 +22,10 @@ export default function Hero() {
       <ScanlineGrid />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-14 items-center">
-        {/* Copy column — TANPA .reveal: konten hero harus langsung tampil,
-            tidak boleh menunggu animasi (di iOS/HP animasi kadang tak jalan
-            di first paint → headline tak pernah muncul). */}
+        {/* Copy column — TANPA .reveal: konten hero harus langsung tampil */}
         <div>
           <span className="eyebrow">
-            <span className="dot" /> EARLY ACCESS · BATCH PERTAMA
+            <span className="dot" /> AKSES KHUSUS PELATIHAN · GRATIS
           </span>
 
           <h1 className="h-display mt-5">
@@ -37,11 +40,15 @@ export default function Hero() {
           </p>
 
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <a href="#harga" className="btn-cta">
+            <button
+              type="button"
+              onClick={handleOpenAccess}
+              className="btn-cta cursor-pointer"
+            >
               <Sparkles className="w-4 h-4" />
-              Ambil Early Access — Rp {CONFIG.price}
+              Daftar Akses Pelatihan Gratis
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </button>
             <a href="#contoh" className="btn-cta-ghost">
               <Play className="w-4 h-4" />
               Lihat Hasil Generate
@@ -50,7 +57,7 @@ export default function Hero() {
 
           {/* Mini trust strip */}
           <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-text-dim">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-accent" /> Sekali bayar — seumur hidup</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-accent" /> 100% Gratis untuk Peserta</span>
             <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-accent" /> 12 mode kreatif</span>
             <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-accent" /> 48+ kategori siap pakai</span>
           </div>
@@ -60,7 +67,7 @@ export default function Hero() {
         <div className="relative">
           <NeonBorder className="p-2 shadow-[0_30px_80px_-20px_rgba(var(--accent-rgb),0.45)]">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-bg-deep scanlines">
-              <AutoFeedsMockup />
+              <SmartFeedMockup />
               {/* HUD overlay */}
               <div className="absolute top-3 right-3 mono text-[10px] text-text-dim uppercase tracking-widest z-20">
                 af-studio · v2.1
@@ -87,7 +94,7 @@ export default function Hero() {
 }
 
 // ═══════════════════════════════════════════════════════
-//   AUTO FEEDS STUDIO MOCKUP — multi-phase animated demo
+//   SMART FEED STUDIO MOCKUP — multi-phase animated demo
 //   Phases: cursor moves through fields → click generate →
 //   studio dissolves with futuristic effect →
 //   floating result collage appears (no render-in-platform).
@@ -98,15 +105,15 @@ const DEMOS = [
     results: ['/landing/ads-1x1/ig-01.jpg', '/landing/ads-1x1/ig-13.jpg', '/landing/ads-9x16/vert-02.jpg', '/landing/ads-typography/typo-11.jpg', '/landing/ads-1x1/ig-08.jpg']
   },
   {
-    brand: 'GoldHeritage', headline: '24K Pendant — Eid Edition', style: 'Luxury Premium', accent: '#ca8a04',
+    brand: 'GoldHeritage', headline: '24K Pendant (Eid Edition)', style: 'Luxury Premium', accent: '#ca8a04',
     results: ['/landing/ads-1x1/ig-10.jpg', '/landing/ads-typography/typo-12.jpg', '/landing/ads-1x1/ig-04.jpg', '/landing/ads-9x16/vert-06.jpg', '/landing/ads-1x1/ig-08.jpg']
   },
   {
-    brand: 'AutoLux', headline: 'Sedan 2026 — Hybrid Engine', style: 'Dark Neon', accent: '#3b82f6',
+    brand: 'AutoLux', headline: 'Sedan 2026 (Hybrid Engine)', style: 'Dark Neon', accent: '#3b82f6',
     results: ['/landing/ads-1x1/ig-19.jpg', '/landing/ads-1x1/ig-20.jpg', '/landing/ads-16x9/yt-14.jpg', '/landing/ads-typography/typo-07.jpg', '/landing/ads-9x16/vert-19.jpg']
   },
   {
-    brand: 'ModeKita', headline: 'Drop SS26 — Editorial Series', style: 'Dark Editorial', accent: '#dc2626',
+    brand: 'ModeKita', headline: 'Drop SS26 (Editorial Series)', style: 'Dark Editorial', accent: '#dc2626',
     results: ['/landing/ads-1x1/ig-04.jpg', '/landing/ads-typography/typo-13.jpg', '/landing/ads-1x1/ig-10.jpg', '/landing/ads-9x16/vert-01.jpg', '/landing/ads-1x1/ig-17.jpg']
   },
   {
@@ -140,7 +147,7 @@ const PHASE_TARGET = {
   'dissolving': 'gen',
 };
 
-function AutoFeedsMockup() {
+function SmartFeedMockup() {
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState('cursor-brand');
 

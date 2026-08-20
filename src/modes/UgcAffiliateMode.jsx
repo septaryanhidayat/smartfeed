@@ -66,7 +66,7 @@ export default function UgcAffiliateMode({ state, dispatch }) {
       </Section>
 
       <Section num="4" title="Hook · Emotion · CTA" icon={Megaphone}>
-        <SelectOrCustom label="Hook Opening" value={state.hook} onChange={set('hook')} options={UGC_HOOKS} hint="Pilih preset atau custom — sistem tetap sediakan 5 hook alternatif." />
+        <SelectOrCustom label="Hook Opening" value={state.hook} onChange={set('hook')} options={UGC_HOOKS} hint="Pilih preset atau custom, sistem tetap sediakan 5 hook alternatif." />
         <div className="grid sm:grid-cols-2 gap-3 mt-3">
           <SelectOrCustom label="Emotion" value={state.emotion} onChange={set('emotion')} options={UGC_EMOTIONS} />
           <SelectOrCustom label="Selling Intensity" value={state.selling_intensity} onChange={set('selling_intensity')} options={SELLING_INTENSITIES} />

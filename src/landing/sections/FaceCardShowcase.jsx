@@ -61,7 +61,7 @@ export default function FaceCardShowcase() {
             <span className="dot" /> ★ fitur baru · premium
           </span>
           <h2 className="h-section mt-4">
-            Face Card Analysis — <span className="text-grad-red">Personal Branding</span> dalam 1 Klik
+            Face Card Analysis: <span className="text-grad-red">Personal Branding</span> dalam 1 Klik
           </h2>
           <p className="mt-4 text-text-mut leading-relaxed">
             Cukup satu portrait, langsung dapat <span className="text-text font-semibold">5 board analisa premium</span> ala
