@@ -5,7 +5,7 @@ import {
   Wand2, Settings, PlayCircle, Sparkles, DollarSign, GalleryHorizontalEnd, HandCoins,
   Sparkles as LogoIcon, Shirt, Star, Film, ChevronRight, ChevronDown, Store, Grid3x3, LogOut,
   PanelLeftClose, PanelLeftOpen, Sun, Moon, Layers, Newspaper, MessageSquareQuote, ShieldAlert,
-  Scissors
+  Scissors, Key
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -47,6 +47,7 @@ export default function Sidebar({
   onOpenDemo,
   onOpenTutorial,
   onOpenSettings,
+  onOpenAiIntegration,
   onOpenAffiliateProgram,
   onOpenReseller,
 }) {
@@ -570,6 +571,25 @@ export default function Sidebar({
               </span>
             </button>
           )
+        )}
+
+        {/* Koneksi AI Button */}
+        {isExpanded ? (
+          <button
+            type="button"
+            onClick={onOpenAiIntegration}
+            className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-semibold text-text-mut hover:text-text hover:bg-bg-elev transition"
+          >
+            <Key className="w-4 h-4 text-accent shrink-0" />
+            <span className="truncate">Koneksi AI (API Key)</span>
+          </button>
+        ) : (
+          <button onClick={onOpenAiIntegration} className="side-btn group" title="Koneksi AI (API Key)">
+            <Key className="w-5 h-5 text-accent" />
+            <span className="absolute left-[54px] top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-md text-[11px] font-semibold bg-bg-panel border border-border text-text opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transition shadow-panel z-50">
+              Koneksi AI (API Key)
+            </span>
+          </button>
         )}
 
         {/* Settings Button */}
