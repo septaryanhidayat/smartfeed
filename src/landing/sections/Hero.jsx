@@ -25,7 +25,7 @@ export default function Hero({ onOpenAccess }) {
         {/* Copy column — TANPA .reveal: konten hero harus langsung tampil */}
         <div>
           <span className="eyebrow">
-            <span className="dot" /> AKSES KHUSUS PELATIHAN · GRATIS
+            <span className="dot" /> PROMO SPESIAL · AKSES SEUMUR HIDUP
           </span>
 
           <h1 className="h-display mt-5">
@@ -35,31 +35,44 @@ export default function Hero({ onOpenAccess }) {
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-text-mut leading-relaxed max-w-xl">
-            Bikin <span className="text-text">aset visual</span> untuk
-            media sosial, iklan, dan branding secara instan. Lupakan skill desain yang rumit, biaya langganan aplikasi mahal, atau drama nunggu revisi berhari-hari.
+            Bikin <span className="text-text font-semibold">aset visual, banner iklan, carousel, berita, hingga naskah video</span> secara instan.
+            Lupakan skill desain rumit, biaya langganan bulanan mahal, atau nunggu revisi berhari-hari.
           </p>
 
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <button
-              type="button"
-              onClick={handleOpenAccess}
-              className="btn-cta cursor-pointer"
+            <a
+              href="#harga"
+              className="btn-cta cursor-pointer text-center"
             >
               <Sparkles className="w-4 h-4" />
-              Daftar Akses Pelatihan Gratis
+              Dapatkan Akses — Rp {CONFIG.price || '149.000'}
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
             <a href="#contoh" className="btn-cta-ghost">
               <Play className="w-4 h-4" />
               Lihat Hasil Generate
             </a>
           </div>
 
+          {/* Training participant claim link (if enabled) */}
+          {CONFIG.enableFreeTrainingClaim && (
+            <div className="mt-3 text-xs text-text-mut">
+              Khusus Peserta Pelatihan?{' '}
+              <button
+                type="button"
+                onClick={handleOpenAccess}
+                className="text-accent underline font-semibold hover:text-accent-h cursor-pointer bg-transparent border-0 p-0"
+              >
+                Klaim Akses Gratis Di Sini →
+              </button>
+            </div>
+          )}
+
           {/* Mini trust strip */}
-          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-text-dim">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-accent" /> 100% Gratis untuk Peserta</span>
-            <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-accent" /> 12 mode kreatif</span>
-            <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-accent" /> 48+ kategori siap pakai</span>
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-text-dim">
+            <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-accent" /> Sekali bayar selamanya</span>
+            <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-accent" /> 17+ modul AI lengkap</span>
+            <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-accent" /> Update fitur baru gratis</span>
           </div>
         </div>
 

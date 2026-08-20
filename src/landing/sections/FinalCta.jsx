@@ -21,27 +21,40 @@ export default function FinalCta({ onOpenAccess }) {
         <h2 className="h-display mt-5">
           Berhenti nungguin designer.
           <br />
-          <span className="text-grad-red">Mulai render hari ini.</span>
+          <span className="text-grad-red">Mulai buat konten profesional hari ini.</span>
         </h2>
         <p className="mt-5 text-text-mut max-w-2xl mx-auto text-base">
           Tingkatkan kualitas visual konten dan promosi kamu secara instan dengan {CONFIG.brandName}.
-          Daftarkan email peserta sekarang dan mulai coba seluruh fiturnya gratis.
+          Ambil penawaran promo seumur hidup sekarang sebelum harga normal kembali.
         </p>
 
         <div className="mt-9 flex flex-col sm:flex-row gap-3 items-center justify-center">
-          <button
-            type="button"
-            onClick={handleOpenAccess}
-            className="btn-cta !text-base !px-8 !py-4 cursor-pointer"
+          <a
+            href={CTA_HREF}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-cta !text-base !px-8 !py-4 text-center"
           >
             <Sparkles className="w-5 h-5" />
-            Daftar Akses Gratis Sekarang
+            Dapatkan Akses Sekarang — Rp {CONFIG.price || '149.000'}
             <ArrowRight className="w-5 h-5" />
-          </button>
+          </a>
         </div>
 
-        <div className="mt-6 text-[10px] mono uppercase tracking-widest text-text-dim">
-          Akses instan langsung masuk ke studio · 100% gratis
+        {CONFIG.enableFreeTrainingClaim && (
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={handleOpenAccess}
+              className="text-xs text-accent underline font-semibold hover:text-accent-h cursor-pointer bg-transparent border-0"
+            >
+              Peserta Pelatihan? Klik di sini untuk klaim akses gratis →
+            </button>
+          </div>
+        )}
+
+        <div className="mt-4 text-[10px] mono uppercase tracking-widest text-text-dim">
+          Akses instan selamanya · Sekali bayar tanpa langganan bulanan
         </div>
       </div>
     </section>

@@ -44,13 +44,13 @@ function useKuota() {
 }
 
 const INCLUDED = [
-  '12 mode kreatif (Banner / Carousel / 9 Feed Konsisten / Thumbnail / Ads / Copy / Face Card ★ / Menu F&B ★)',
-  '4 Affiliate Tools ★ (Logo · Try-On · Review · Storyboard)',
-  '48+ kategori preset + 9 template Menu F&B siap pakai',
-  'Unlimited render tanpa kuota harian',
-  'Multi-format output (1:1 · 9:16 · 16:9 · 4:5 · A4)',
-  'Update mode & kategori baru selamanya',
-  'Akses dashboard via email kamu',
+  '17+ Modul Generator Konten & Desain AI (Banner, Carousel, 9 Feed Konsisten, Thumbnail, Video Script & Storyboard, Artikel Berita & Jurnalistik, Face Card, Copywriting, Menu F&B, dll)',
+  '4 Affiliate Suite Tools (Logo Brand, Virtual Try-On, Review Produk, Storyboard Promosi)',
+  '50+ Kategori Preset Industri & Bisnis Siap Pakai',
+  'Unlimited Render Prompt AI tanpa kuota harian',
+  'Multi-Format Rasio Gambar (1:1 Feed · 9:16 Story/Reels/TikTok · 16:9 Banner/YT · 4:5 Portrait · A4 Dokumen)',
+  'Update Fitur & Modul AI Baru Selamanya (Lifetime)',
+  'Akses Dashboard Studio Instan via Email',
 ];
 
 const toNum = (s) => parseInt(String(s).replace(/\D/g, ''), 10) || 0;
@@ -69,14 +69,13 @@ export default function Pricing({ onOpenAccess }) {
 
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center reveal">
-          <span className="eyebrow"><span className="dot" /> akses khusus · peserta pelatihan</span>
+          <span className="eyebrow"><span className="dot" /> penawaran spesial · investasi sekali</span>
           <h2 className="h-section mt-4">
-            Akses penuh, <span className="text-grad-red">100% Gratis</span>.
-            <br />Langsung Mulai.
+            Investasi Sekali, <span className="text-grad-red">Akses Selamanya</span>.
+            <br />Tanpa Biaya Bulanan.
           </h2>
           <p className="mt-4 text-text-mut max-w-xl mx-auto">
-            Disediakan khusus untuk mendukung kelancaran praktik dan pembelajaran seluruh peserta.
-            Daftarkan email kamu sekarang untuk langsung membuka akses ke studio.
+            Dapatkan akses penuh ke seluruh 17+ modul generator konten dan studio visual AI profesional untuk meningkatkan omset dan branding kamu.
           </p>
         </div>
 
@@ -87,17 +86,17 @@ export default function Pricing({ onOpenAccess }) {
               <div className="text-center">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-white text-[10px] mono uppercase tracking-widest font-bold mb-3">
                   <Zap className="w-3 h-3" />
-                  GRATIS PESERTA
+                  DISKON PROMO 70%
                 </div>
                 <div className="text-[10px] mono uppercase tracking-[0.25em] text-accent">
-                  {CONFIG.brandName} · WORKSHOP &amp; PELATIHAN
+                  {CONFIG.brandName} · FULL LIFETIME ACCESS
                 </div>
-                <h3 className="mt-2 text-xl font-bold">Akses Pelatihan</h3>
+                <h3 className="mt-2 text-xl font-bold">Lisensi Akses Penuh</h3>
 
                 <div className="mt-6 flex flex-col items-center gap-1">
-                  <span className="text-text-dim text-base sm:text-lg line-through mono">Rp {CONFIG.priceStrike || '500.000'}</span>
+                  <span className="text-text-dim text-base sm:text-lg line-through mono">Rp {CONFIG.priceStrike || '499.000'}</span>
                   <span className="text-5xl sm:text-6xl font-black text-accent whitespace-nowrap leading-none">
-                    Rp 0
+                    Rp {CONFIG.price || '149.000'}
                   </span>
                 </div>
 
@@ -105,11 +104,11 @@ export default function Pricing({ onOpenAccess }) {
                 <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-sm border border-border-strong shadow-[0_0_24px_rgba(var(--accent-rgb),0.25)]">
                   <InfinityIcon className="w-4 h-4 text-accent" strokeWidth={2.5} />
                   <span className="text-sm font-bold tracking-wide text-text">
-                    Akses Langsung · <span className="text-accent">Tanpa Biaya</span>
+                    Akses Seumur Hidup · <span className="text-accent">Tanpa Langganan</span>
                   </span>
                 </div>
                 <div className="mt-2 text-[10px] mono uppercase tracking-widest text-text-dim">
-                  Aktivasi instan cukup masukkan email peserta
+                  Sekali bayar · Akses instan langsung ke seluruh tools
                 </div>
               </div>
 
@@ -142,31 +141,43 @@ export default function Pricing({ onOpenAccess }) {
 
               {/* CTA */}
               <div className="mt-8 flex flex-col items-center gap-3">
-                <button
-                  type="button"
-                  onClick={handleOpenAccess}
-                  className="btn-cta !text-base !px-8 !py-4 cursor-pointer"
+                <a
+                  href={CTA_HREF}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-cta !text-base !px-8 !py-4 text-center"
                 >
                   <Sparkles className="w-4.5 h-4.5" />
-                  Daftar &amp; Mulai Akses Gratis
+                  Ambil Promo Sekarang — Rp {CONFIG.price || '149.000'}
                   <ArrowRight className="w-4.5 h-4.5" />
-                </button>
+                </a>
+                
+                {CONFIG.enableFreeTrainingClaim && (
+                  <button
+                    type="button"
+                    onClick={handleOpenAccess}
+                    className="text-xs text-accent underline font-semibold hover:text-accent-h cursor-pointer bg-transparent border-0 mt-1"
+                  >
+                    Peserta Pelatihan? Klik di sini untuk klaim akses gratis →
+                  </button>
+                )}
+
                 <div className="text-[10px] mono uppercase tracking-widest text-text-dim">
-                  Tanpa kartu kredit · Tanpa biaya pembayaran
+                  Pembayaran aman otomatis via QRIS &amp; Virtual Account
                 </div>
               </div>
 
               {/* scarcity bar — dinamis per user */}
               <div className="mt-7 pt-6 border-t border-border">
                 <div className="flex items-center justify-between text-[10px] mono uppercase tracking-widest text-text-dim mb-2">
-                  <span>kuota batch 1</span>
+                  <span>kuota promo batch 1</span>
                   <span className="text-accent">{kuota} / 100 terisi</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-bg-deep overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-deep)] transition-all duration-700" style={{ width: `${kuota}%` }} />
                 </div>
                 <div className="mt-2.5 text-[10px] mono uppercase tracking-widest text-accent font-semibold text-center">
-                  ⚡ Sisa {Math.max(100 - kuota, 0)} slot · harga naik begitu penuh
+                  ⚡ Sisa {Math.max(100 - kuota, 0)} slot promo · harga normal kembali Rp {CONFIG.priceStrike || '499.000'}
                 </div>
               </div>
             </div>

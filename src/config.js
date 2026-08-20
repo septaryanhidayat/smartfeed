@@ -40,13 +40,16 @@ export const CONFIG = {
   facebookHandle:  pick(cfg.facebookHandle, 'smartfeed'),
 
   // ── Harga (tampilan) ──────────────────────────────────────
-  price:        pick(cfg.price, '90.000'),
-  priceStrike:  pick(cfg.priceStrike, '700.000'),
-  affiliatePerSignup: Number(pick(cfg.affiliatePerSignup, 63000)),
+  price:        pick(cfg.price, '149.000'),
+  priceStrike:  pick(cfg.priceStrike, '499.000'),
+  affiliatePerSignup: Number(pick(cfg.affiliatePerSignup, 75000)),
+  enableFreeTrainingClaim: cfg.enableFreeTrainingClaim !== false,
 
   // ── Tier 2: Lisensi Reseller (hak jual kembali, profit 100%) ──
   showResellerTier:   cfg.showResellerTier !== false,        // true = tampilkan kartu reseller
   resellerPrice:      pick(cfg.resellerPrice, '290.000'),
+  resellerStrike:     pick(cfg.resellerStrike, '1.500.000'),
+  resellerPaymentUrl: pick(cfg.resellerPaymentUrl, 'https://aiautomation.myr.id/pl/smart-feed/'),
   // ── PENDAFTARAN & LOGIN VIA GOOGLE SPREADSHEET ──────────
   sheetWebhookUrl: pick(cfg.sheetWebhookUrl, ''),
   sheetCsvUrl: pick(cfg.sheetCsvUrl, ''),

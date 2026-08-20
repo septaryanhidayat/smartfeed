@@ -30,9 +30,10 @@ window.__AF_CONFIG = {
    facebookHandle: "Akun Kamu",
 
    /* -- 3. HARGA (tampilan teks) -------------------------------------- */
-   price: "49.000",     // harga tampil
-   priceStrike: "500.000",    // harga coret
-   affiliatePerSignup: 23000, // komisi affiliate per pendaftaran (angka, tanpa kutip)
+   price: "149.000",          // harga tampil
+   priceStrike: "499.000",    // harga coret
+   affiliatePerSignup: 75000, // komisi affiliate per pendaftaran (angka, tanpa kutip)
+   enableFreeTrainingClaim: true, // true = tampilkan link/tombol klaim gratis peserta pelatihan
 
    /* -- 3b. TIER LISENSI RESELLER ------------------------------------
       false = sembunyikan kartu "Jual Ulang" (untuk situs jualan biasa). */

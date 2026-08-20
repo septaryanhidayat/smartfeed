@@ -67,14 +67,21 @@ export default function LandingNav({ onOpenAccess }) {
           ))}
         </nav>
 
-        <button
-          type="button"
-          onClick={onOpenAccess || (() => window.dispatchEvent(new CustomEvent('open-access-modal')))}
-          className="btn-cta !py-2 !px-4 !text-xs sm:!text-sm cursor-pointer"
-        >
-          Klaim Akses Gratis
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <a
+            href="/app"
+            className="px-3 py-1.5 text-xs sm:text-sm font-semibold text-text-mut hover:text-accent transition-colors"
+          >
+            Login Studio
+          </a>
+          <a
+            href="#harga"
+            className="btn-cta !py-2 !px-3.5 sm:!px-4 !text-xs sm:!text-sm cursor-pointer"
+          >
+            Dapatkan Akses
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
       </div>
     </header>
   );
