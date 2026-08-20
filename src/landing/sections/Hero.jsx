@@ -26,15 +26,14 @@ export default function Hero() {
           </span>
 
           <h1 className="h-display mt-5">
-            Tanpa Designer, Buat Konten Ala <span className="text-grad-red">Desain Grafis Profesional</span>
+            Nggak Perlu Jago Desain <span className="text-grad-red">Bikin Konten Sekelas Pro</span>
             <br className="hidden sm:block" />
-            {' '}dalam Hitungan Detik
+            {' '}Cuma Sekejap!
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-text-mut leading-relaxed max-w-xl">
-            Generate <span className="text-text">desain iklan profesional</span> untuk
-            feed, ads, dan branding hanya dalam beberapa detik. Tanpa belajar desain,
-            tanpa langganan tool mahal, tanpa nunggu revisi tiga hari.
+            Bikin <span className="text-text">aset visual</span> untuk
+            media sosial, iklan, dan branding secara instan. Lupakan skill desain yang rumit, biaya langganan aplikasi mahal, atau drama nunggu revisi berhari-hari.
           </p>
 
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -94,28 +93,38 @@ export default function Hero() {
 //   floating result collage appears (no render-in-platform).
 // ═══════════════════════════════════════════════════════
 const DEMOS = [
-  { brand: 'AuraSkin',     headline: 'Premium Sunscreen SPF 50',     style: 'Minimal Clean',    accent: '#f472b6',
-    results: ['/landing/ads-1x1/ig-01.jpg', '/landing/ads-1x1/ig-13.jpg', '/landing/ads-9x16/vert-02.jpg', '/landing/ads-typography/typo-11.jpg', '/landing/ads-1x1/ig-08.jpg'] },
-  { brand: 'GoldHeritage', headline: '24K Pendant — Eid Edition',    style: 'Luxury Premium',   accent: '#ca8a04',
-    results: ['/landing/ads-1x1/ig-10.jpg', '/landing/ads-typography/typo-12.jpg', '/landing/ads-1x1/ig-04.jpg', '/landing/ads-9x16/vert-06.jpg', '/landing/ads-1x1/ig-08.jpg'] },
-  { brand: 'AutoLux',      headline: 'Sedan 2026 — Hybrid Engine',   style: 'Dark Neon',        accent: '#3b82f6',
-    results: ['/landing/ads-1x1/ig-19.jpg', '/landing/ads-1x1/ig-20.jpg', '/landing/ads-16x9/yt-14.jpg', '/landing/ads-typography/typo-07.jpg', '/landing/ads-9x16/vert-19.jpg'] },
-  { brand: 'ModeKita',     headline: 'Drop SS26 — Editorial Series', style: 'Dark Editorial',   accent: '#dc2626',
-    results: ['/landing/ads-1x1/ig-04.jpg', '/landing/ads-typography/typo-13.jpg', '/landing/ads-1x1/ig-10.jpg', '/landing/ads-9x16/vert-01.jpg', '/landing/ads-1x1/ig-17.jpg'] },
-  { brand: 'HomeNest',     headline: 'Walnut Dining Table',          style: 'Warm & Cozy',      accent: '#92400e',
-    results: ['/landing/ads-1x1/ig-11.jpg', '/landing/ads-1x1/ig-12.jpg', '/landing/ads-9x16/vert-08.jpg', '/landing/ads-typography/typo-06.jpg', '/landing/ads-1x1/ig-13.jpg'] },
+  {
+    brand: 'AuraSkin', headline: 'Premium Sunscreen SPF 50', style: 'Minimal Clean', accent: '#f472b6',
+    results: ['/landing/ads-1x1/ig-01.jpg', '/landing/ads-1x1/ig-13.jpg', '/landing/ads-9x16/vert-02.jpg', '/landing/ads-typography/typo-11.jpg', '/landing/ads-1x1/ig-08.jpg']
+  },
+  {
+    brand: 'GoldHeritage', headline: '24K Pendant — Eid Edition', style: 'Luxury Premium', accent: '#ca8a04',
+    results: ['/landing/ads-1x1/ig-10.jpg', '/landing/ads-typography/typo-12.jpg', '/landing/ads-1x1/ig-04.jpg', '/landing/ads-9x16/vert-06.jpg', '/landing/ads-1x1/ig-08.jpg']
+  },
+  {
+    brand: 'AutoLux', headline: 'Sedan 2026 — Hybrid Engine', style: 'Dark Neon', accent: '#3b82f6',
+    results: ['/landing/ads-1x1/ig-19.jpg', '/landing/ads-1x1/ig-20.jpg', '/landing/ads-16x9/yt-14.jpg', '/landing/ads-typography/typo-07.jpg', '/landing/ads-9x16/vert-19.jpg']
+  },
+  {
+    brand: 'ModeKita', headline: 'Drop SS26 — Editorial Series', style: 'Dark Editorial', accent: '#dc2626',
+    results: ['/landing/ads-1x1/ig-04.jpg', '/landing/ads-typography/typo-13.jpg', '/landing/ads-1x1/ig-10.jpg', '/landing/ads-9x16/vert-01.jpg', '/landing/ads-1x1/ig-17.jpg']
+  },
+  {
+    brand: 'HomeNest', headline: 'Walnut Dining Table', style: 'Warm & Cozy', accent: '#92400e',
+    results: ['/landing/ads-1x1/ig-11.jpg', '/landing/ads-1x1/ig-12.jpg', '/landing/ads-9x16/vert-08.jpg', '/landing/ads-typography/typo-06.jpg', '/landing/ads-1x1/ig-13.jpg']
+  },
 ];
 
 // Phase timing (ms from start of cycle)
 const PHASES = [
-  { name: 'cursor-brand',  at:    0 },
-  { name: 'cursor-style',  at: 1500 },
-  { name: 'cursor-ratio',  at: 3000 },
-  { name: 'cursor-gen',    at: 4400 },
-  { name: 'clicking',      at: 5400 },
-  { name: 'dissolving',    at: 5800 },
-  { name: 'results',       at: 6700 },
-  { name: 'reset',         at:12500 },
+  { name: 'cursor-brand', at: 0 },
+  { name: 'cursor-style', at: 1500 },
+  { name: 'cursor-ratio', at: 3000 },
+  { name: 'cursor-gen', at: 4400 },
+  { name: 'clicking', at: 5400 },
+  { name: 'dissolving', at: 5800 },
+  { name: 'results', at: 6700 },
+  { name: 'reset', at: 12500 },
 ];
 const CYCLE_MS = 13500;
 
@@ -126,13 +135,13 @@ const PHASE_TARGET = {
   'cursor-brand': 'brand',
   'cursor-style': 'style',
   'cursor-ratio': 'ratio',
-  'cursor-gen':   'gen',
-  'clicking':     'gen',
-  'dissolving':   'gen',
+  'cursor-gen': 'gen',
+  'clicking': 'gen',
+  'dissolving': 'gen',
 };
 
 function AutoFeedsMockup() {
-  const [idx, setIdx]     = useState(0);
+  const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState('cursor-brand');
 
   // Drive phase timeline + cycle
@@ -165,21 +174,21 @@ function AutoFeedsMockup() {
       {/* Layer 2: Holographic dissolve scanline */}
       {isDissolving && (
         <div className="absolute inset-x-0 top-0 h-16 dissolve-scanline pointer-events-none z-30"
-             style={{
-               background: 'linear-gradient(180deg, transparent, rgba(var(--accent-rgb),0.6), transparent)',
-               boxShadow: '0 0 40px rgba(var(--accent-rgb),0.8)',
-             }}
+          style={{
+            background: 'linear-gradient(180deg, transparent, rgba(var(--accent-rgb),0.6), transparent)',
+            boxShadow: '0 0 40px rgba(var(--accent-rgb),0.8)',
+          }}
         />
       )}
 
       {/* Layer 3: Generate burst */}
       {isDissolving && (
         <div className="absolute z-30 pointer-events-none gen-burst rounded-full"
-             style={{
-               left: '80%', top: '92%', width: 40, height: 40,
-               transform: 'translate(-50%, -50%)',
-               background: `radial-gradient(circle, ${d.accent} 0%, transparent 70%)`,
-             }}
+          style={{
+            left: '80%', top: '92%', width: 40, height: 40,
+            transform: 'translate(-50%, -50%)',
+            background: `radial-gradient(circle, ${d.accent} 0%, transparent 70%)`,
+          }}
         />
       )}
 
@@ -196,18 +205,18 @@ function AutoFeedsMockup() {
 
 // ────────────── STUDIO UI (cursor + highlighted fields) ──────────────
 function StudioUI({ demo: d, phase }) {
-  const mainRef  = useRef(null);
+  const mainRef = useRef(null);
   const brandRef = useRef(null);
   const styleRef = useRef(null);
   const ratioRef = useRef(null);
-  const genRef   = useRef(null);
+  const genRef = useRef(null);
   const [cursor, setCursor] = useState(null); // {x,y} px relatif ke main, atau null (belum diukur)
 
   const hl = {
     brand: phase === 'cursor-brand',
     style: phase === 'cursor-style',
     ratio: phase === 'cursor-ratio',
-    gen:   phase === 'cursor-gen' || phase === 'clicking',
+    gen: phase === 'cursor-gen' || phase === 'clicking',
   };
 
   // Ukur posisi target sebenarnya → cursor selalu pas di semua ukuran layar.
@@ -269,10 +278,10 @@ function StudioUI({ demo: d, phase }) {
             <div className="text-sm font-bold mb-3">{d.headline}</div>
 
             <div className="space-y-2">
-              <FormRow label="BRAND"    value={d.brand}        active={hl.brand} fieldRef={brandRef} />
+              <FormRow label="BRAND" value={d.brand} active={hl.brand} fieldRef={brandRef} />
               <FormRow label="HEADLINE" value={d.headline} />
-              <FormRow label="STYLE"    value={d.style}        dropdown active={hl.style} accent={d.accent} fieldRef={styleRef} />
-              <FormRow label="RATIO"    value="1:1 Instagram"  dropdown active={hl.ratio} accent={d.accent} fieldRef={ratioRef} />
+              <FormRow label="STYLE" value={d.style} dropdown active={hl.style} accent={d.accent} fieldRef={styleRef} />
+              <FormRow label="RATIO" value="1:1 Instagram" dropdown active={hl.ratio} accent={d.accent} fieldRef={ratioRef} />
             </div>
 
             <div className="mt-3 flex items-center gap-2">
@@ -284,9 +293,8 @@ function StudioUI({ demo: d, phase }) {
             {/* Generate button — bottom right */}
             <button
               ref={genRef}
-              className={`absolute bottom-3 sm:bottom-4 right-3 sm:right-4 px-5 py-2 rounded-md bg-gradient-to-b from-[var(--accent)] to-[var(--accent-deep)] text-white text-xs font-bold flex items-center gap-1.5 border border-white/20 transition-all duration-200 ${
-                hl.gen ? 'shadow-[0_0_24px_rgba(var(--accent-rgb),0.7)] scale-105' : 'shadow-md'
-              } ${phase === 'clicking' ? 'scale-95' : ''}`}
+              className={`absolute bottom-3 sm:bottom-4 right-3 sm:right-4 px-5 py-2 rounded-md bg-gradient-to-b from-[var(--accent)] to-[var(--accent-deep)] text-white text-xs font-bold flex items-center gap-1.5 border border-white/20 transition-all duration-200 ${hl.gen ? 'shadow-[0_0_24px_rgba(var(--accent-rgb),0.7)] scale-105' : 'shadow-md'
+                } ${phase === 'clicking' ? 'scale-95' : ''}`}
             >
               <Sparkles className="w-3.5 h-3.5" strokeWidth={2.5} />
               Generate
@@ -298,7 +306,7 @@ function StudioUI({ demo: d, phase }) {
             className="absolute z-40 pointer-events-none"
             style={{
               left: cursor ? `${cursor.x}px` : '22%',
-              top:  cursor ? `${cursor.y}px` : '22%',
+              top: cursor ? `${cursor.y}px` : '22%',
               transform: 'translate(-2px, -2px)',
               opacity: cursor ? 1 : 0,
               transition: 'left 0.7s cubic-bezier(0.4, 0, 0.2, 1), top 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
@@ -307,7 +315,7 @@ function StudioUI({ demo: d, phase }) {
             <MousePointer2 className="w-4 h-4 text-white drop-shadow-[0_2px_3px_rgba(0,0,0,0.7)]" strokeWidth={2.2} fill="white" />
             {phase === 'clicking' && (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full cursor-click-pulse"
-                   style={{ background: `radial-gradient(circle, ${d.accent} 0%, transparent 70%)` }} />
+                style={{ background: `radial-gradient(circle, ${d.accent} 0%, transparent 70%)` }} />
             )}
           </div>
         </div>
@@ -318,9 +326,8 @@ function StudioUI({ demo: d, phase }) {
 
 function SideIcon({ icon: Icon, active }) {
   return (
-    <div className={`w-7 h-7 rounded-md flex items-center justify-center ${
-      active ? 'bg-accent-sm text-accent border border-border-strong' : 'text-text-dim'
-    }`}>
+    <div className={`w-7 h-7 rounded-md flex items-center justify-center ${active ? 'bg-accent-sm text-accent border border-border-strong' : 'text-text-dim'
+      }`}>
       <Icon className="w-3.5 h-3.5" strokeWidth={2} />
     </div>
   );
@@ -332,9 +339,8 @@ function FormRow({ label, value, dropdown, active, accent, fieldRef }) {
       <div className="text-[8px] mono uppercase tracking-widest text-text-dim mb-0.5">{label}</div>
       <div
         ref={fieldRef}
-        className={`flex items-center gap-1 px-2 py-1.5 rounded-md bg-bg-deep text-[10px] transition-all duration-200 ${
-          active ? 'border ring-2' : 'border border-border'
-        }`}
+        className={`flex items-center gap-1 px-2 py-1.5 rounded-md bg-bg-deep text-[10px] transition-all duration-200 ${active ? 'border ring-2' : 'border border-border'
+          }`}
         style={active ? { borderColor: accent || '#ef4444', '--tw-ring-color': (accent || '#ef4444') + '40' } : {}}
       >
         <span className="flex-1 truncate text-text">{value}</span>
@@ -348,11 +354,11 @@ function FormRow({ label, value, dropdown, active, accent, fieldRef }) {
 function ResultCollage({ demo }) {
   // 5 cards in scattered floating composition
   const cards = [
-    { src: demo.results[0], pos: { left: '50%', top: '50%' }, rot: '-2deg',  w: '52%', z: 30, delay: 0,    accent: true },
+    { src: demo.results[0], pos: { left: '50%', top: '50%' }, rot: '-2deg', w: '52%', z: 30, delay: 0, accent: true },
     { src: demo.results[1], pos: { left: '18%', top: '28%' }, rot: '-10deg', w: '24%', z: 20, delay: 0.15 },
-    { src: demo.results[2], pos: { left: '82%', top: '32%' }, rot: '8deg',   w: '20%', z: 20, delay: 0.25 },
-    { src: demo.results[3], pos: { left: '22%', top: '78%' }, rot: '6deg',   w: '22%', z: 20, delay: 0.35 },
-    { src: demo.results[4], pos: { left: '80%', top: '78%' }, rot: '-7deg',  w: '24%', z: 20, delay: 0.45 },
+    { src: demo.results[2], pos: { left: '82%', top: '32%' }, rot: '8deg', w: '20%', z: 20, delay: 0.25 },
+    { src: demo.results[3], pos: { left: '22%', top: '78%' }, rot: '6deg', w: '22%', z: 20, delay: 0.35 },
+    { src: demo.results[4], pos: { left: '80%', top: '78%' }, rot: '-7deg', w: '24%', z: 20, delay: 0.45 },
   ];
 
   return (
@@ -362,16 +368,16 @@ function ResultCollage({ demo }) {
 
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none"
-           style={{ background: `radial-gradient(ellipse at center, ${demo.accent}30 0%, transparent 60%)` }}
+        style={{ background: `radial-gradient(ellipse at center, ${demo.accent}30 0%, transparent 60%)` }}
       />
 
       {/* Holographic sweeping grid */}
       <div className="absolute inset-x-0 h-32 holo-grid-sweep pointer-events-none"
-           style={{
-             background: `linear-gradient(180deg, transparent, ${demo.accent}40 50%, transparent)`,
-             backgroundSize: '100% 8px',
-             backgroundImage: `repeating-linear-gradient(180deg, transparent 0 6px, ${demo.accent}30 6px 7px)`,
-           }}
+        style={{
+          background: `linear-gradient(180deg, transparent, ${demo.accent}40 50%, transparent)`,
+          backgroundSize: '100% 8px',
+          backgroundImage: `repeating-linear-gradient(180deg, transparent 0 6px, ${demo.accent}30 6px 7px)`,
+        }}
       />
 
       {/* Cards */}
@@ -381,7 +387,7 @@ function ResultCollage({ demo }) {
           className="absolute result-float-in rounded-xl overflow-hidden border-2 border-bg-panel shadow-2xl"
           style={{
             left: c.pos.left,
-            top:  c.pos.top,
+            top: c.pos.top,
             width: c.w,
             zIndex: c.z,
             animationDelay: `${c.delay}s`,

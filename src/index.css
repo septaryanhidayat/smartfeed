@@ -22,21 +22,21 @@
   color-scheme: dark;
 }
 :root.theme-light {
-  --bg:           #f4f6fa;
-  --bg-deep:      #eaeef5;
+  --bg:           #f4f7fa;
+  --bg-deep:      #e6edf5;
   --bg-panel:     #ffffff;
-  --bg-elev:      #f1f5f9;
-  --border:       rgba(15, 118, 110, 0.18);
-  --border-strong:rgba(15, 118, 110, 0.40);
-  --text:         #0f172a;
-  --text-muted:   #475569;
-  --text-dim:     #94a3b8;
-  --accent-rgb:   13, 148, 136;
-  --accent:       #0d9488;
-  --accent-hover: #0f766e;
-  --accent-soft:  rgba(13, 148, 136, 0.15);
-  --accent-deep:  #0f766e;
-  --shadow-strong: 0 10px 40px -8px rgba(15, 23, 42, 0.18);
+  --bg-elev:      #eef3f9;
+  --border:       rgba(0, 168, 181, 0.20);
+  --border-strong:rgba(0, 168, 181, 0.45);
+  --text:         #0A2540;
+  --text-muted:   #334e68;
+  --text-dim:     #627d98;
+  --accent-rgb:   0, 168, 181;
+  --accent:       #00a8b5;
+  --accent-hover: #008c97;
+  --accent-soft:  rgba(0, 168, 181, 0.15);
+  --accent-deep:  #006b74;
+  --shadow-strong: 0 10px 40px -8px rgba(10, 37, 64, 0.15);
   color-scheme: light;
 }
 

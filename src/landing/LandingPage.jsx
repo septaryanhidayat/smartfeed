@@ -56,30 +56,30 @@ export default function LandingPage() {
   useEffect(() => {
     const root = document.documentElement;
 
-    const applyDark = () => {
-      if (root.classList.contains('theme-light')) {
-        root.classList.remove('theme-light');
+    const applyLight = () => {
+      if (root.classList.contains('theme-dark')) {
+        root.classList.remove('theme-dark');
       }
-      if (!root.classList.contains('theme-dark')) {
-        root.classList.add('theme-dark');
+      if (!root.classList.contains('theme-light')) {
+        root.classList.add('theme-light');
       }
     };
-    applyDark();
+    applyLight();
     root.style.scrollBehavior = 'smooth';
 
-    const obs = new MutationObserver(applyDark);
+    const obs = new MutationObserver(applyLight);
     obs.observe(root, { attributes: true, attributeFilter: ['class'] });
 
     return () => {
       obs.disconnect();
       root.style.scrollBehavior = '';
-      let stored = 'dark';
+      let stored = 'light';
       try {
         const s = localStorage.getItem('af_theme');
         if (s === 'light' || s === 'dark') stored = s;
       } catch {}
       root.classList.remove('theme-dark', 'theme-light');
-      root.classList.add(stored === 'light' ? 'theme-light' : 'theme-dark');
+      root.classList.add(stored === 'dark' ? 'theme-dark' : 'theme-light');
     };
   }, []);
 
