@@ -7,6 +7,14 @@ export default defineConfig({
     // es2017: transpile optional chaining (?.) dkk — HP/WebView lama (pra-2020)
     // gagal PARSE sintaks modern → React tak pernah mount → halaman blank.
     target: 'es2017',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-icons': ['lucide-react'],
+        },
+      },
+    },
   },
   server: {
     port: 5174,
