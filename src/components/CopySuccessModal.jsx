@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Check, ExternalLink, ImagePlus, Upload, Send, Sparkles, Clipboard, X, Layers, Cpu, Palette, Zap, Wand2, Code2 } from 'lucide-react';
+import { Check, ExternalLink, ImagePlus, Upload, Send, Sparkles, Clipboard, X, Layers, Cpu, Palette, Zap, Wand2, Code2, AppWindow } from 'lucide-react';
 import { CONFIG } from '../config.js';
+import { openMiniAiBrowser } from '../utils/miniBrowser.js';
 
 export const AI_DESTINATIONS = {
   chatgpt: {
@@ -194,17 +195,29 @@ export default function CopySuccessModal({ open, onClose, kind = 'image', engine
             onClick={onClose}
             className="text-[10px] mono uppercase tracking-widest text-text-mut hover:text-text transition self-center sm:self-auto"
           >
-            Selesai
+            Tutup
           </button>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
             <a
               href={dest.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary !py-2.5 !px-5 flex-1 sm:flex-none justify-center whitespace-nowrap shadow-[0_0_15px_rgba(var(--accent-rgb),0.3)]"
+              className="btn-ghost !py-2.5 !px-3.5 w-full sm:w-auto text-xs justify-center whitespace-nowrap"
             >
-              {dest.openLabel} <ExternalLink className="w-3.5 h-3.5" />
+              <span>Tab Baru</span>
+              <ExternalLink className="w-3 h-3 text-text-dim" />
             </a>
+
+            <button
+              type="button"
+              onClick={() => {
+                openMiniAiBrowser(activeEngineKey);
+                onClose();
+              }}
+              className="btn-primary !py-2.5 !px-4 w-full sm:w-auto text-xs flex items-center justify-center gap-2 whitespace-nowrap shadow-[0_0_18px_rgba(var(--accent-rgb),0.35)]"
+            >
+              <span>🪟 Buka Mini Browser Samping ({dest.name})</span>
+            </button>
           </div>
         </div>
       </div>

@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  Code2, Sparkles, Clock, Terminal, Cpu, Zap, Wand2, RefreshCw
+  Code2, Sparkles, Clock, Terminal, Cpu, Zap, Wand2, RefreshCw, AppWindow
 } from 'lucide-react';
 import CopyButton from './CopyButton.jsx';
 import HistoryPanel from './HistoryPanel.jsx';
 import { AI_ENGINES, formatPromptForEngine } from '../utils/enginePromptFormatters.js';
+import { openMiniAiBrowser } from '../utils/miniBrowser.js';
+import { showAlert } from '../utils/alerts.js';
 
 const ENGINE_ICONS = {
   Sparkles, Cpu, Zap, Wand2
@@ -245,11 +247,36 @@ export default function PromptPanel({
               <span>{hasGenerated ? 'Rebuild' : 'Build Prompt'}</span>
             </button>
 
-            {/* Main Copy Prompt & Open AI Button */}
+            {/* 🪟 Floating Mini Browser AI Companion Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (!hasGenerated) {
+                  setHasGenerated(true);
+                  setStreamedText(liveDisplay);
+                }
+                try {
+                  navigator.clipboard.writeText(liveDisplay);
+                } catch {}
+                openMiniAiBrowser(selectedEngine);
+                showAlert({
+                  title: 'Mini Browser AI Terbuka!',
+                  text: `Prompt untuk ${selectedEngine.toUpperCase()} berhasil disalin otomatis ke clipboard.\n\n👉 Silakan tekan Ctrl + V di jendela samping untuk langsung generate!`,
+                  icon: 'success',
+                });
+              }}
+              className="btn-primary !py-2 !px-3.5 text-xs flex items-center gap-1.5 shadow-[0_0_16px_rgba(var(--accent-rgb),0.35)]"
+              title={`Buka jendela mini ${selectedEngine.toUpperCase()} di samping layar`}
+            >
+              <AppWindow className="w-3.5 h-3.5" />
+              <span>🪟 Mini Browser AI</span>
+            </button>
+
+            {/* Copy Prompt & Modal Launcher */}
             <CopyButton
               getText={() => renderText}
-              label={`Copy Prompt (${selectedEngine.toUpperCase()})`}
-              primary={true}
+              label="Copy Prompt"
+              primary={false}
               onCopied={canCopy && onCopied ? () => onCopied(selectedEngine) : undefined}
               className={canCopy ? '' : 'opacity-50 pointer-events-none'}
             />
