@@ -1,17 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
-import { Code2, Sparkles, Clock, Terminal } from 'lucide-react';
+import { Code2, Sparkles, Clock, Terminal, Cpu, Palette, Zap, Wand2 } from 'lucide-react';
 import CopyButton from './CopyButton.jsx';
 import HistoryPanel from './HistoryPanel.jsx';
+import { AI_ENGINES, formatPromptForEngine } from '../utils/enginePromptFormatters.js';
+
+const ENGINE_ICONS = {
+  Sparkles, Cpu, Code2, Palette, Zap, Wand2
+};
 
 /**
  * Always-visible prompt output panel.
  * Empty terminal state until user clicks Generate.
  * Generate triggers a streaming reveal animation.
- * For Typography mode: section tabs let you switch between full JSON and 8 sectioned views.
+ * Features AI Engine Selector: ChatGPT, Gemini, DeepSeek, Midjourney, Grok, Leonardo.ai.
  */
 export default function PromptPanel({
   mode,
   promptText,      // string OR { json, sections } (Typography)
+  state = {},      // active mode form state
   onGenerate,      // saves to history (called once when Generate clicked)
   onRestoreHistory,
   onCopied,        // fires when main Copy Prompt button is clicked
@@ -20,6 +26,21 @@ export default function PromptPanel({
 }) {
   const [showHistory, setShowHistory] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
+  const [selectedEngine, setSelectedEngine] = useState(() => {
+    try {
+      return localStorage.getItem('af_selected_ai_engine') || 'chatgpt';
+    } catch {
+      return 'chatgpt';
+    }
+  });
+
+  const handleSelectEngine = (engineId) => {
+    setSelectedEngine(engineId);
+    try {
+      localStorage.setItem('af_selected_ai_engine', engineId);
+    } catch {}
+  };
+
   const [hasGenerated, setHasGenerated] = useState(autoShow);
   const [streaming, setStreaming] = useState(false);
   const [streamedText, setStreamedText] = useState('');
@@ -61,9 +82,14 @@ export default function PromptPanel({
     fullText = JSON.stringify(promptText.json, null, 2);
     sections = promptText.sections;
   } else if (typeof promptText === 'object' && promptText !== null) {
-    fullText = JSON.stringify(promptText, null, 2);
+    // For journalism modes or raw text objects
+    if (promptText.raw) {
+      fullText = formatPromptForEngine(promptText.raw, selectedEngine, mode, state);
+    } else {
+      fullText = JSON.stringify(promptText, null, 2);
+    }
   } else {
-    fullText = String(promptText || '');
+    fullText = formatPromptForEngine(String(promptText || ''), selectedEngine, mode, state);
   }
 
   // What the active tab WOULD display (when not streaming)
@@ -133,6 +159,34 @@ export default function PromptPanel({
           <Clock className="w-3.5 h-3.5" /> {showHistory ? 'Tutup' : 'Riwayat'}
         </button>
       </div>
+
+      {/* AI Engine Selector Bar (ChatGPT, Gemini, DeepSeek, Midjourney, Grok, Leonardo) */}
+      {!showHistory && (
+        <div className="px-3 py-2 border-b border-border bg-bg-elev/20 overflow-x-auto hide-scrollbar shrink-0">
+          <div className="flex items-center gap-1.5 min-w-max">
+            <span className="text-[9px] mono uppercase tracking-wider text-text-dim mr-1 font-semibold">Engine AI:</span>
+            {AI_ENGINES.map((eng) => {
+              const Icon = ENGINE_ICONS[eng.icon] || Sparkles;
+              const active = selectedEngine === eng.id;
+              return (
+                <button
+                  key={eng.id}
+                  type="button"
+                  onClick={() => handleSelectEngine(eng.id)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-semibold transition whitespace-nowrap ${
+                    active
+                      ? 'bg-accent text-white shadow-sm font-bold'
+                      : 'text-text-mut hover:text-text hover:bg-bg-elev border border-border/60'
+                  }`}
+                >
+                  <Icon className="w-3 h-3" style={{ color: active ? '#ffffff' : eng.color }} />
+                  <span>{eng.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Section tabs (Typography only) */}
       {sections && !showHistory && (

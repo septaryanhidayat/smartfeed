@@ -448,6 +448,7 @@ function AuthedApp() {
                   <PromptPanel
                     mode={mode}
                     promptText={prompt}
+                    state={activeState}
                     onGenerate={handleGenerate}
                     onRestoreHistory={handleRestore}
                     onCopied={handleCopied}
@@ -483,6 +484,7 @@ function AuthedApp() {
                 <PromptPanel
                   mode={mode}
                   promptText={prompt}
+                  state={activeState}
                   onGenerate={handleGenerate}
                   onRestoreHistory={handleRestore}
                   onCopied={handleCopied}
