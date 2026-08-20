@@ -5,7 +5,7 @@ import {
   Wand2, Settings, PlayCircle, Sparkles, DollarSign, GalleryHorizontalEnd, HandCoins,
   Sparkles as LogoIcon, Shirt, Star, Film, ChevronRight, ChevronDown, Store, Grid3x3, LogOut,
   PanelLeftClose, PanelLeftOpen, Sun, Moon, Layers, Newspaper, MessageSquareQuote, ShieldAlert,
-  Scissors
+  Scissors, BookOpenText
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -25,9 +25,10 @@ const MODES = [
 ];
 
 const JOURNALISM_MODES = [
-  { id: 'newscard',  icon: Newspaper,          label: 'Breaking News',  badge: 'Hot', desc: 'Kartu berita kilat & editorial' },
-  { id: 'quotecard', icon: MessageSquareQuote, label: 'Quote Tokoh',    badge: '',    desc: 'Kutipan narasumber & pejabat' },
-  { id: 'factcheck', icon: ShieldAlert,        label: 'Cek Fakta',      badge: 'New', desc: 'Verifikasi hoaks & klarifikasi' },
+  { id: 'article',   icon: BookOpenText,       label: 'Artikel & Berita', badge: 'New', desc: 'Straight news, feature, opini & rilis pers' },
+  { id: 'newscard',  icon: Newspaper,          label: 'Breaking News',    badge: 'Hot', desc: 'Kartu berita kilat & editorial' },
+  { id: 'quotecard', icon: MessageSquareQuote, label: 'Quote Tokoh',      badge: '',    desc: 'Kutipan narasumber & pejabat' },
+  { id: 'factcheck', icon: ShieldAlert,        label: 'Cek Fakta',        badge: 'New', desc: 'Verifikasi hoaks & klarifikasi' },
 ];
 
 const JOURNALISM_IDS = JOURNALISM_MODES.map((m) => m.id);

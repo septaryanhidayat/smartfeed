@@ -103,7 +103,45 @@ A complete photorealistic journalistic news card for ${media}, ${state.sceneDesc
     }
   }
 
-  // ─── 2. COPYWRITING MODE (PURE MARKETING COPY TEXT) ───
+  // ─── 2. ARTICLE & JOURNALISM WRITING (NEWS / OPINION / FEATURE / PRESS RELEASE) ───
+  if (mode === 'article') {
+    switch (engine) {
+      case 'gemini': {
+        return `[PANDUAN KHUSUS GOOGLE GEMINI - PENULISAN BERITA & ARTIKEL REDAKSI]:
+Bertindaklah sebagai Redaktur Pelaksana & Jurnalis Senior. Tuliskan naskah berita/artikel yang mendalam, faktual, dan objektif sesuai standar dewan pers dan kaidah PUEBI berdasarkan brief berikut:
+
+${rawText}`;
+      }
+
+      case 'grok': {
+        return `[GROK 2 JOURNALISM & NEWS WRITING PROMPT]:
+Act as a seasoned investigative journalist and news editor. 
+Write a compelling, razor-sharp, well-structured journalistic article and social media takeaway based on this brief:
+
+${rawText}`;
+      }
+
+      case 'leonardo': {
+        return `[LEONARDO.AI - EDITORIAL PRESS PHOTO COVER PROMPT]:
+PROMPT:
+Masterpiece editorial photojournalism cover for news article about "${headline}", ${state.facts || 'press event'}, authentic 35mm documentary photography, natural press lighting, highly detailed, 8k resolution, cinematic color tone, award-winning newsroom photography.
+
+NEGATIVE PROMPT:
+cartoon, 3d render, CGI, fake, plastic look, blurry, watermark, duplicate, distorted faces.`;
+      }
+
+      case 'chatgpt':
+      default: {
+        return `[PERINTAH KHUSUS CHATGPT (REDAKTUR & JURNALIS SENIOR)]:
+Kamu adalah Redaktur Pelaksana Senior dan Jurnalis Berpengalaman di ${media}. 
+Tuliskan naskah artikel / berita jurnalistik utuh, terstruktur, dan siap terbit berdasarkan detail liputan berikut:
+
+${rawText}`;
+      }
+    }
+  }
+
+  // ─── 3. COPYWRITING MODE (PURE MARKETING COPY TEXT) ───
   if (mode === 'copywriting') {
     switch (engine) {
       case 'gemini': {

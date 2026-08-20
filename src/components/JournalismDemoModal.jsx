@@ -1,23 +1,24 @@
 import { useState, useMemo } from 'react';
-import { X, Search, Newspaper, MessageSquareQuote, ShieldAlert, Sparkles, Gavel, CloudRain, TrendingUp, Trophy, Scale, Building2, Shield, CheckCircle, AlertTriangle } from 'lucide-react';
+import { X, Search, Newspaper, MessageSquareQuote, ShieldAlert, Sparkles, Gavel, CloudRain, TrendingUp, Trophy, Scale, Building2, Shield, CheckCircle, AlertTriangle, BookOpenText } from 'lucide-react';
 import { JOURNALISM_DEMO_PRESETS } from '../data/journalismDemoOptions.js';
 
 const ICONS = {
-  Gavel, CloudRain, TrendingUp, Trophy, Scale, Building2, Shield, ShieldAlert, CheckCircle, AlertTriangle
+  Gavel, CloudRain, TrendingUp, Trophy, Scale, Building2, Shield, ShieldAlert, CheckCircle, AlertTriangle, BookOpenText
 };
 
 const MODE_TABS = [
-  { id: 'newscard',  label: 'Breaking News', icon: Newspaper },
-  { id: 'quotecard', label: 'Quote Tokoh',   icon: MessageSquareQuote },
-  { id: 'factcheck', label: 'Cek Fakta',     icon: ShieldAlert },
+  { id: 'article',   label: 'Artikel & Berita', icon: BookOpenText },
+  { id: 'newscard',  label: 'Breaking News',    icon: Newspaper },
+  { id: 'quotecard', label: 'Quote Tokoh',      icon: MessageSquareQuote },
+  { id: 'factcheck', label: 'Cek Fakta',        icon: ShieldAlert },
 ];
 
 export default function JournalismDemoModal({ open, onClose, mode, onPick }) {
-  const [activeTab, setActiveTab] = useState(mode || 'newscard');
+  const [activeTab, setActiveTab] = useState(mode || 'article');
   const [q, setQ] = useState('');
 
   // Sync tab with mode on open
-  const currentTab = ['newscard', 'quotecard', 'factcheck'].includes(mode) && !activeTab ? mode : (activeTab || 'newscard');
+  const currentTab = ['article', 'newscard', 'quotecard', 'factcheck'].includes(mode) && !activeTab ? mode : (activeTab || 'article');
 
   const items = JOURNALISM_DEMO_PRESETS[currentTab] || [];
 

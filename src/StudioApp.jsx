@@ -36,6 +36,7 @@ import StoryboardAffiliateMode from './modes/StoryboardAffiliateMode.jsx';
 import NewsCardMode from './modes/NewsCardMode.jsx';
 import QuoteCardMode from './modes/QuoteCardMode.jsx';
 import FactCheckMode from './modes/FactCheckMode.jsx';
+import ArticleMode from './modes/ArticleMode.jsx';
 import ImageSlicerMode from './modes/ImageSlicerMode.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
 import { generateCarouselPrompts, INITIAL_CAROUSEL } from './prompts/buildCarousel.js';
@@ -52,6 +53,7 @@ import { buildStoryboardAffiliate, INITIAL_STORYBOARD_AFFILIATE } from './prompt
 import { buildNewsCard, INITIAL_NEWS_CARD } from './prompts/buildNewsCard.js';
 import { buildQuoteCard, INITIAL_QUOTE_CARD } from './prompts/buildQuoteCard.js';
 import { buildFactCheck, INITIAL_FACT_CHECK } from './prompts/buildFactCheck.js';
+import { buildArticle, INITIAL_ARTICLE_STATE } from './prompts/buildArticle.js';
 import { SUB_TYPES as FACECARD_SUB_TYPES } from './data/faceCardOptions.js';
 import { useHistory } from './context/HistoryContext.jsx';
 
@@ -74,6 +76,7 @@ const TITLES = {
   copywriting: { name: 'Copy Writing', desc: 'AI Creative Copy Engine untuk kebutuhan banner & iklan.' },
   facecard:    { name: 'Face Card Analysis', desc: 'Buat analisa wajah editorial: face features, spectacles, style, color, dan makeup. Ikuti video tutorial untuk memakai hasilnya.' },
   menufb:      { name: 'Menu F&B', desc: 'Buat menu poster F&B dinamis (patisserie, restaurant, healthy food, dessert). Wireframe live update sesuai input.' },
+  article:     { name: 'Artikel & Berita Media', desc: 'Isi detail peristiwa untuk menghasilkan naskah artikel, straight news, feature, opini redaksi, atau siaran pers siap terbit.' },
   newscard:    { name: 'Breaking News Card', desc: 'Isi rubrik & detail peristiwa untuk menghasilkan kartu berita kilat & foto jurnalistik berbobot.' },
   quotecard:   { name: 'Quote Card Tokoh', desc: 'Isi kutipan narasumber, gelar jabatan, dan konteks wawancara untuk kartu kutipan berwibawa.' },
   factcheck:   { name: 'Cek Fakta / Fact Check', desc: 'Verifikasi klaim hoaks viral dengan stempel putusan, klarifikasi fakta, dan rujukan resmi.' },
@@ -85,7 +88,7 @@ const TITLES = {
 
 const HAS_MOCKUP = {
   banner: true, carousel: true, gridfeed: false, imageslicer: false, thumbnail: true, typography: true,
-  copywriting: false, facecard: false, menufb: false,
+  copywriting: false, facecard: false, menufb: false, article: false,
   newscard: false, quotecard: false, factcheck: false,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
   storyboardaffiliate: false,
@@ -134,6 +137,7 @@ function AuthedApp() {
   const [newsCard, dispatchNewsCard]       = useReducer(modeReducer, INITIAL_NEWS_CARD);
   const [quoteCard, dispatchQuoteCard]     = useReducer(modeReducer, INITIAL_QUOTE_CARD);
   const [factCheck, dispatchFactCheck]     = useReducer(modeReducer, INITIAL_FACT_CHECK);
+  const [article, dispatchArticle]         = useReducer(modeReducer, INITIAL_ARTICLE_STATE);
   const [logoAff, dispatchLogoAff]                 = useReducer(modeReducer, INITIAL_LOGO_AFFILIATE);
   const [tryonAff, dispatchTryonAff]               = useReducer(modeReducer, INITIAL_TRYON_AFFILIATE);
   const [reviewAff, dispatchReviewAff]             = useReducer(modeReducer, INITIAL_REVIEW_AFFILIATE);
@@ -147,6 +151,7 @@ function AuthedApp() {
     mode === 'typography'          ? typography :
     mode === 'facecard'            ? facecard :
     mode === 'menufb'              ? menufb :
+    mode === 'article'             ? article :
     mode === 'newscard'            ? newsCard :
     mode === 'quotecard'           ? quoteCard :
     mode === 'factcheck'           ? factCheck :
@@ -166,6 +171,7 @@ function AuthedApp() {
     if (mode === 'copywriting')         return buildCopywriting(deferredState);
     if (mode === 'facecard')            return buildFaceCard(deferredState);
     if (mode === 'menufb')              return buildMenuFB(deferredState);
+    if (mode === 'article')             return buildArticle(deferredState);
     if (mode === 'newscard')            return buildNewsCard(deferredState);
     if (mode === 'quotecard')           return buildQuoteCard(deferredState);
     if (mode === 'factcheck')           return buildFactCheck(deferredState);
@@ -188,6 +194,7 @@ function AuthedApp() {
     if (mode === 'gridfeed')    return activeState.productName || activeState.brandName || activeState.headline || '9 Feed Konsisten';
     if (mode === 'thumbnail')   return activeState.title || activeState.channel || 'Thumbnail Prompt';
     if (mode === 'typography')  return activeState.hook || 'Typography Prompt';
+    if (mode === 'article')     return activeState.headline || 'Artikel & Berita';
     if (mode === 'newscard')    return activeState.headline || activeState.badge || 'Breaking News Card';
     if (mode === 'quotecard')   return activeState.sourceName || 'Quote Card Tokoh';
     if (mode === 'factcheck')   return activeState.claim || activeState.status || 'Cek Fakta Card';
@@ -286,7 +293,9 @@ function AuthedApp() {
     setLoadingDemo({ label: demo.label, icon: 'Newspaper' });
     logActivity('DEMO', { tool: targetMode, details: demo.label });
     setTimeout(() => {
-      if (targetMode === 'newscard') {
+      if (targetMode === 'article') {
+        dispatchArticle({ type: 'RESET_TO', state: { ...INITIAL_ARTICLE_STATE, ...demo.preset } });
+      } else if (targetMode === 'newscard') {
         dispatchNewsCard({ type: 'RESET_TO', state: { ...INITIAL_NEWS_CARD, ...demo.preset } });
       } else if (targetMode === 'quotecard') {
         dispatchQuoteCard({ type: 'RESET_TO', state: { ...INITIAL_QUOTE_CARD, ...demo.preset } });
@@ -308,7 +317,7 @@ function AuthedApp() {
     }
 
     // All affiliate and journalism modes return string/object format.
-    const TEXT_MODES = ['gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate', 'newscard', 'quotecard', 'factcheck'];
+    const TEXT_MODES = ['gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate', 'article', 'newscard', 'quotecard', 'factcheck'];
     const text = mode === 'carousel'
       ? (Array.isArray(prompt) ? prompt : []).map((s) => `=== ${s.slideTitle} | Layout: ${s.layout} ===\n${s.prompt}`).join('\n\n\n')
       : ['newscard', 'quotecard', 'factcheck'].includes(mode)
@@ -352,6 +361,10 @@ function AuthedApp() {
     else if (entry.mode === 'copywriting') dispatchCopywriting({ type: 'RESET_TO', state: safe(INITIAL_COPYWRITING, entry.snapshot) });
     else if (entry.mode === 'facecard')    dispatchFacecard({ type: 'RESET_TO', state: safe(INITIAL_FACECARD, entry.snapshot) });
     else if (entry.mode === 'menufb')              dispatchMenufb({ type: 'RESET_TO', state: safe(INITIAL_MENU_FB, entry.snapshot) });
+    else if (entry.mode === 'article')             dispatchArticle({ type: 'RESET_TO', state: safe(INITIAL_ARTICLE_STATE, entry.snapshot) });
+    else if (entry.mode === 'newscard')            dispatchNewsCard({ type: 'RESET_TO', state: safe(INITIAL_NEWS_CARD, entry.snapshot) });
+    else if (entry.mode === 'quotecard')           dispatchQuoteCard({ type: 'RESET_TO', state: safe(INITIAL_QUOTE_CARD, entry.snapshot) });
+    else if (entry.mode === 'factcheck')           dispatchFactCheck({ type: 'RESET_TO', state: safe(INITIAL_FACT_CHECK, entry.snapshot) });
     else if (entry.mode === 'logoaffiliate')       dispatchLogoAff({ type: 'RESET_TO', state: safe(INITIAL_LOGO_AFFILIATE, entry.snapshot) });
     else if (entry.mode === 'tryonaffiliate')      dispatchTryonAff({ type: 'RESET_TO', state: safe(INITIAL_TRYON_AFFILIATE, entry.snapshot) });
     else if (entry.mode === 'reviewaffiliate')     dispatchReviewAff({ type: 'RESET_TO', state: safe(INITIAL_REVIEW_AFFILIATE, entry.snapshot) });
@@ -434,6 +447,7 @@ function AuthedApp() {
                 {mode === 'copywriting'         && <CopywritingMode         state={copywriting}   dispatch={dispatchCopywriting} />}
                 {mode === 'facecard'            && <FaceCardMode            state={facecard}      dispatch={dispatchFacecard} />}
                 {mode === 'menufb'              && <MenuFBMode              state={menufb}        dispatch={dispatchMenufb} />}
+                {mode === 'article'             && <ArticleMode             state={article}       dispatch={dispatchArticle} />}
                 {mode === 'logoaffiliate'       && <LogoAffiliateMode       state={logoAff}       dispatch={dispatchLogoAff} />}
                 {mode === 'tryonaffiliate'      && <TryOnAffiliateMode      state={tryonAff}      dispatch={dispatchTryonAff} />}
                 {mode === 'reviewaffiliate'     && <ReviewAffiliateMode     state={reviewAff}     dispatch={dispatchReviewAff} />}
