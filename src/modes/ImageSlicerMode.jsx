@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import {
-  Scissors, Upload, Download, Grid3x3, Layers, Sparkles, Check, RefreshCw,
-  Eye, FileArchive, ArrowDownRight, Sliders, Image as ImageIcon, Copy, AlertCircle
+  Scissors, Upload, Download, Grid3x3, Layers, Check, RefreshCw,
+  Eye, FileArchive, Sliders, Image as ImageIcon, ZoomIn, ZoomOut,
+  Maximize2, Sparkles, AlertCircle, ShieldCheck
 } from 'lucide-react';
 import JSZip from 'jszip';
 import { showAlert } from '../utils/alerts.js';
 
 const PRESETS = [
-  { id: '3x3', label: '3x3 (9-Grid Instagram)', cols: 3, rows: 3, icon: Grid3x3, desc: '9 Kotak feed rapi untuk profil IG' },
+  { id: '3x3', label: '3x3 (9-Grid Instagram)', cols: 3, rows: 3, icon: Grid3x3, desc: '9 Kotak feed profil Instagram' },
   { id: '1x3', label: '1x3 (3 Slide Carousel)', cols: 3, rows: 1, icon: Layers, desc: '3 Slide panorama horizontal' },
   { id: '1x4', label: '1x4 (4 Slide Carousel)', cols: 4, rows: 1, icon: Layers, desc: '4 Slide panorama horizontal' },
   { id: '1x5', label: '1x5 (5 Slide Carousel)', cols: 5, rows: 1, icon: Layers, desc: '5 Slide panorama horizontal' },
@@ -23,8 +24,13 @@ export default function ImageSlicerMode() {
   const [selectedPreset, setSelectedPreset] = useState('3x3');
   const [cols, setCols] = useState(3);
   const [rows, setRows] = useState(3);
+  
+  // Precision Fine-Tuning controls for AI-generated borders / gaps
+  const [outerMargin, setOuterMargin] = useState(0); // in percent (0 - 10%)
+  const [gridGap, setGridGap] = useState(0);         // in percent (0 - 8%)
+  
   const [outputFormat, setOutputFormat] = useState('image/jpeg'); // 'image/jpeg' or 'image/png'
-  const [numberingOrder, setNumberingOrder] = useState('normal'); // 'normal' (1..N) or 'instagram' (N..1)
+  const [numberingOrder, setNumberingOrder] = useState('instagram'); // 'instagram' (N..1) or 'normal' (1..N)
   const [targetSize, setTargetSize] = useState('original'); // 'original', '1080x1080', '1080x1350'
 
   const [slices, setSlices] = useState([]);
@@ -94,7 +100,7 @@ export default function ImageSlicerMode() {
     return () => window.removeEventListener('paste', handlePaste);
   }, []);
 
-  // Compute Slices whenever image or grid params change
+  // Compute Slices with Precision Geometry (Outer Margin & Grid Gaps)
   useEffect(() => {
     if (!imageObj || cols < 1 || rows < 1) {
       setSlices([]);
@@ -105,8 +111,22 @@ export default function ImageSlicerMode() {
     const timeout = setTimeout(() => {
       const totalWidth = imageObj.naturalWidth;
       const totalHeight = imageObj.naturalHeight;
-      const sliceWidth = totalWidth / cols;
-      const sliceHeight = totalHeight / rows;
+
+      // Outer margin in pixels
+      const padX = (totalWidth * (outerMargin / 100));
+      const padY = (totalHeight * (outerMargin / 100));
+      const usableW = Math.max(10, totalWidth - (padX * 2));
+      const usableH = Math.max(10, totalHeight - (padY * 2));
+
+      // Grid gap in pixels
+      const gapX = cols > 1 ? (usableW * (gridGap / 100)) / (cols - 1) : 0;
+      const gapY = rows > 1 ? (usableH * (gridGap / 100)) / (rows - 1) : 0;
+
+      const totalGapsW = (cols - 1) * gapX;
+      const totalGapsH = (rows - 1) * gapY;
+
+      const sliceWidth = Math.max(1, (usableW - totalGapsW) / cols);
+      const sliceHeight = Math.max(1, (usableH - totalGapsH) / rows);
       const totalSlices = cols * rows;
 
       const generated = [];
@@ -117,6 +137,9 @@ export default function ImageSlicerMode() {
           const orderNormal = index + 1; // 1, 2, 3...
           const orderInstagram = totalSlices - index; // 9, 8, 7... 1
           const finalNumber = numberingOrder === 'instagram' ? orderInstagram : orderNormal;
+
+          const startX = padX + (c * (sliceWidth + gapX));
+          const startY = padY + (r * (sliceHeight + gapY));
 
           // Create canvas for this slice
           const canvas = document.createElement('canvas');
@@ -135,11 +158,11 @@ export default function ImageSlicerMode() {
           canvas.height = outH;
           const ctx = canvas.getContext('2d');
 
-          // Draw cropped slice
+          // Draw cropped slice with precision source coordinates
           ctx.drawImage(
             imageObj,
-            c * sliceWidth,
-            r * sliceHeight,
+            startX,
+            startY,
             sliceWidth,
             sliceHeight,
             0,
@@ -148,7 +171,7 @@ export default function ImageSlicerMode() {
             outH
           );
 
-          const dataUrl = canvas.toDataURL(outputFormat, 0.92);
+          const dataUrl = canvas.toDataURL(outputFormat, 0.94);
 
           generated.push({
             id: `slice-${r}-${c}`,
@@ -159,18 +182,22 @@ export default function ImageSlicerMode() {
             dataUrl,
             width: outW,
             height: outH,
+            // Calculate percentage boxes for accurate preview guide
+            boxLeftPct: (startX / totalWidth) * 100,
+            boxTopPct: (startY / totalHeight) * 100,
+            boxWidthPct: (sliceWidth / totalWidth) * 100,
+            boxHeightPct: (sliceHeight / totalHeight) * 100,
             filename: `${imageMeta.name || 'slice'}_part_${String(finalNumber).padStart(2, '0')}.${outputFormat === 'image/png' ? 'png' : 'jpg'}`,
           });
         }
       }
 
-      // Sort slices for display
       setSlices(generated);
       setIsProcessing(false);
-    }, 100);
+    }, 80);
 
     return () => clearTimeout(timeout);
-  }, [imageObj, cols, rows, outputFormat, targetSize, numberingOrder, imageMeta.name]);
+  }, [imageObj, cols, rows, outerMargin, gridGap, outputFormat, targetSize, numberingOrder, imageMeta.name]);
 
   // Download single slice
   const downloadSingle = (slice) => {
@@ -192,11 +219,9 @@ export default function ImageSlicerMode() {
       const folderName = `${imageMeta.name || 'smartfeed'}_slices`;
       const folder = zip.folder(folderName);
 
-      // Sort slices based on display order for clarity
       const sorted = [...slices].sort((a, b) => a.displayOrder - b.displayOrder);
 
       sorted.forEach((s) => {
-        // Remove header dataurl
         const base64Data = s.dataUrl.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
         folder.file(s.filename, base64Data, { base64: true });
       });
@@ -213,7 +238,7 @@ export default function ImageSlicerMode() {
 
       showAlert({
         title: 'ZIP Berhasil Diunduh!',
-        text: `${slices.length} potongan gambar berhasil dipaketkan dalam format .zip.`,
+        text: `${slices.length} potongan gambar berhasil dipaketkan dalam format .zip siap pakai.`,
         icon: 'success',
       });
     } catch (err) {
@@ -234,11 +259,11 @@ export default function ImageSlicerMode() {
           </div>
           <div>
             <h2 className="text-base font-bold text-text flex items-center gap-2">
-              Image & Carousel Slicer
-              <span className="badge-new !text-[10px]">Auto ZIP</span>
+              Presisi Grid & Image Slicer
+              <span className="badge-new !text-[10px]">Pixel-Perfect</span>
             </h2>
             <p className="text-xs text-text-mut mt-0.5">
-              Potong otomatis gambar 9-Grid Instagram atau Carousel Horizontal, lihat preview live, dan download semua dalam satu file ZIP.
+              Potong otomatis 9-Grid Instagram atau Carousel tanpa celah putih. Garis potong menempel presisi 100% di atas gambar.
             </p>
           </div>
         </div>
@@ -247,7 +272,7 @@ export default function ImageSlicerMode() {
           <button
             onClick={downloadAllZip}
             disabled={isZipping}
-            className="btn-primary !py-2.5 !px-4 text-xs shrink-0 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]"
+            className="btn-primary !py-2.5 !px-5 text-xs shrink-0 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]"
           >
             {isZipping ? <RefreshCw className="w-4 h-4 animate-spin" /> : <FileArchive className="w-4 h-4" />}
             <span>{isZipping ? 'Membuat ZIP...' : `Download Semua (${slices.length} File ZIP)`}</span>
@@ -259,13 +284,13 @@ export default function ImageSlicerMode() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left Column: Upload & Setting */}
         <div className="lg:col-span-5 space-y-4">
-          {/* Upload Card */}
+          {/* 1. Upload Card */}
           <div className="surface p-4 border border-border space-y-3">
             <div className="text-xs font-bold text-text uppercase tracking-wider mono flex items-center justify-between">
               <span>1. Upload Gambar</span>
               {imageSrc && (
-                <span className="text-[10px] text-accent lowercase">
-                  {imageMeta.width} x {imageMeta.height} px
+                <span className="text-[10px] text-accent lowercase font-semibold">
+                  {imageMeta.width} × {imageMeta.height} px
                 </span>
               )}
             </div>
@@ -306,13 +331,13 @@ export default function ImageSlicerMode() {
                   onClick={() => fileInputRef.current?.click()}
                   className="btn-ghost !py-1.5 !px-2.5 text-xs text-accent hover:bg-accent-sm shrink-0"
                 >
-                  Ganti
+                  Ganti Gambar
                 </button>
               </div>
             )}
           </div>
 
-          {/* Grid Preset Picker */}
+          {/* 2. Grid Preset Picker */}
           <div className="surface p-4 border border-border space-y-3">
             <div className="text-xs font-bold text-text uppercase tracking-wider mono">
               2. Pilih Model Potongan (Preset)
@@ -344,7 +369,7 @@ export default function ImageSlicerMode() {
               })}
             </div>
 
-            {/* Custom Grid Sliders (if selected) */}
+            {/* Custom Grid Sliders */}
             {selectedPreset === 'custom' && (
               <div className="p-3 rounded-lg bg-bg-elev border border-border space-y-3 mt-2 animate-fade-in">
                 <div>
@@ -380,10 +405,70 @@ export default function ImageSlicerMode() {
             )}
           </div>
 
-          {/* Output Options */}
+          {/* 3. Precision Fine-Tuning (Margin & Celah Pemisah AI) */}
+          <div className="surface p-4 border border-border space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-bold text-text uppercase tracking-wider mono flex items-center gap-1.5">
+                <Sliders className="w-3.5 h-3.5 text-accent" />
+                <span>3. Penyesuaian Presisi Celah (Gaps)</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => { setOuterMargin(0); setGridGap(0); }}
+                className="text-[10px] text-text-dim hover:text-accent mono uppercase"
+                title="Reset margin & celah ke 0"
+              >
+                Reset
+              </button>
+            </div>
+
+            <div className="p-3 rounded-lg bg-bg-elev/60 border border-border space-y-3.5 text-xs">
+              {/* Outer Margin Slider */}
+              <div>
+                <div className="flex justify-between font-semibold mb-1">
+                  <span className="text-text">Margin Tepi Luar (Outer Padding):</span>
+                  <span className="mono text-accent">{outerMargin}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="0.2"
+                  value={outerMargin}
+                  onChange={(e) => setOuterMargin(parseFloat(e.target.value))}
+                  className="w-full accent-accent"
+                />
+                <p className="text-[10px] text-text-dim mt-0.5">
+                  Geser jika gambar AI memiliki bingkai tepi luar yang ingin dibuang.
+                </p>
+              </div>
+
+              {/* Grid Gap Slider */}
+              <div>
+                <div className="flex justify-between font-semibold mb-1">
+                  <span className="text-text">Celah Antar Kotak (Grid Gutter / Gap):</span>
+                  <span className="mono text-accent">{gridGap}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="6"
+                  step="0.2"
+                  value={gridGap}
+                  onChange={(e) => setGridGap(parseFloat(e.target.value))}
+                  className="w-full accent-accent"
+                />
+                <p className="text-[10px] text-text-dim mt-0.5">
+                  Geser jika di antara 9 kotak feed terdapat garis putih pemisah dari hasil generate AI.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Output Options */}
           <div className="surface p-4 border border-border space-y-3">
             <div className="text-xs font-bold text-text uppercase tracking-wider mono">
-              3. Pengaturan Output
+              4. Format & Urutan Output
             </div>
 
             <div className="space-y-3 text-xs">
@@ -392,14 +477,14 @@ export default function ImageSlicerMode() {
                 <select
                   value={numberingOrder}
                   onChange={(e) => setNumberingOrder(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-bg-elev border border-border text-text focus:border-accent outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-bg-elev border border-border text-text focus:border-accent outline-none font-medium"
                 >
+                  <option value="instagram">Instagram 9-Grid (09, 08, 07... 01) — Siap Posting Berurutan ke Feed</option>
                   <option value="normal">Normal (01, 02, 03... Kiri ke Kanan) — Cocok untuk Carousel</option>
-                  <option value="instagram">Instagram 9-Grid (09, 08, 07... 01) — Siap Upload Berurutan ke Feed IG</option>
                 </select>
                 {numberingOrder === 'instagram' && (
-                  <p className="text-[10px] text-amber-400 mt-1">
-                    * Urutan terbalik (9 ke 1) memudahkan saat upload ke Instagram agar foto pertama jatuh di grid bawah dan foto terakhir di grid kiri atas.
+                  <p className="text-[10px] text-emerald-400 mt-1">
+                    ✓ Urutan terbalik memastikan saat kamu upload foto #1 di IG, posisinya tepat di kanan bawah profil.
                   </p>
                 )}
               </div>
@@ -441,7 +526,7 @@ export default function ImageSlicerMode() {
             <div className="flex items-center justify-between">
               <div className="text-xs font-bold text-text uppercase tracking-wider mono flex items-center gap-1.5">
                 <Eye className="w-3.5 h-3.5 text-accent" />
-                <span>Preview Garis Potong ({cols} × {rows} = {cols * rows} Bagian)</span>
+                <span>Preview Garis Potong Interaktif ({cols} × {rows} = {cols * rows} Bagian)</span>
               </div>
               {slices.length > 0 && (
                 <span className="text-[10px] mono text-text-dim">
@@ -451,42 +536,35 @@ export default function ImageSlicerMode() {
             </div>
 
             {imageSrc ? (
-              <div className="relative rounded-xl overflow-hidden border border-border bg-black/50 shadow-inner flex items-center justify-center">
-                <img
-                  src={imageSrc}
-                  alt="Original Slice Preview"
-                  className="w-full h-auto max-h-[420px] object-contain block"
-                />
+              <div className="p-3 rounded-xl bg-bg-elev/40 border border-border flex items-center justify-center overflow-hidden">
+                {/* Image-bound container with exact dimensions to eliminate letterbox misalignments */}
+                <div className="relative inline-block max-w-full rounded-lg overflow-hidden shadow-2xl border border-border/80">
+                  <img
+                    src={imageSrc}
+                    alt="Original Slice Preview"
+                    className="block max-h-[460px] w-auto max-w-full object-contain"
+                  />
 
-                {/* Grid Overlay Guide */}
-                <div
-                  className="absolute inset-0 pointer-events-none grid"
-                  style={{
-                    gridTemplateColumns: `repeat(${cols}, 1fr)`,
-                    gridTemplateRows: `repeat(${rows}, 1fr)`,
-                  }}
-                >
-                  {Array.from({ length: cols * rows }).map((_, idx) => {
-                    const r = Math.floor(idx / cols);
-                    const c = idx % cols;
-                    const orderNormal = idx + 1;
-                    const orderInstagram = (cols * rows) - idx;
-                    const displayNum = numberingOrder === 'instagram' ? orderInstagram : orderNormal;
-
-                    return (
-                      <div
-                        key={idx}
-                        className="border border-red-500/60 bg-red-500/5 relative flex items-center justify-center group"
-                      >
-                        <span className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-black/80 text-white font-mono font-bold text-[10px] border border-white/20 shadow-md">
-                          #{displayNum}
-                        </span>
-                        <span className="text-[10px] mono text-white/50 bg-black/60 px-1 rounded opacity-0 sm:opacity-75">
-                          R{r + 1} C{c + 1}
-                        </span>
-                      </div>
-                    );
-                  })}
+                  {/* Pixel-Perfect Dynamic Slice Boxes matching the Canvas geometry 100% */}
+                  {slices.map((s) => (
+                    <div
+                      key={s.id}
+                      className="absolute border-2 border-red-500/80 bg-red-500/10 transition-all pointer-events-none flex items-center justify-center group"
+                      style={{
+                        left: `${s.boxLeftPct}%`,
+                        top: `${s.boxTopPct}%`,
+                        width: `${s.boxWidthPct}%`,
+                        height: `${s.boxHeightPct}%`,
+                      }}
+                    >
+                      <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/90 text-white font-mono font-bold text-[10px] border border-white/30 shadow-md">
+                        #{s.displayOrder}
+                      </span>
+                      <span className="text-[10px] mono text-white font-bold bg-black/60 px-1.5 py-0.5 rounded opacity-0 sm:opacity-80">
+                        R{s.row} C{s.col}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
             ) : (
