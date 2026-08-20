@@ -1,9 +1,9 @@
 /**
  * Engine Prompt Formatters
- * Formats prompts specifically tailored to each image-generation AI engine:
+ * Formats prompts specifically tailored to each image-generation AI engine across ALL modules:
  * 1. chatgpt    : ChatGPT (DALL-E 3) - Action-driven direct command + UI container hierarchy
  * 2. gemini     : Google Gemini (Imagen 3) - Anti-quote, anti-typo, solid card container layout
- * 3. grok       : Grok 2 (Flux.1) - Natural language photorealism + authentic mobile UI context
+ * 3. grok       : Grok 2 (Flux.1) - Natural language photorealism + authentic context
  * 4. leonardo   : Leonardo.ai - Alchemy prompt structure + Negative Prompt block
  */
 
@@ -17,18 +17,17 @@ export const AI_ENGINES = [
 export function formatPromptForEngine(rawText, engine = 'chatgpt', mode = '', state = {}) {
   if (!rawText) return '';
 
+  const isJournalism = ['newscard', 'quotecard', 'factcheck'].includes(mode);
   const media = state.mediaName || 'Media Indonesia';
-  const headline = state.headline || state.sourceName || state.claim || state.title || '';
+  const headline = state.headline || state.sourceName || state.claim || state.title || state.productName || state.brandName || '';
   const ratio = (state.aspectRatio || state.ratio || '1:1').split(' ')[0] || '1:1';
   const arParam = ratio.replace(':', '/');
 
-  switch (engine) {
-    case 'gemini': {
-      // Specialized optimization for Google Gemini / Imagen 3:
-      // 1. Force solid container card layout (not floating text)
-      // 2. Strict no-quote rule to eliminate double quotes in output
-      // 3. Explicit UI color boxes (red header, yellow badge, blue key fact card)
-      return `[PANDUAN KHUSUS GOOGLE GEMINI / IMAGEN 3]:
+  // ─── 1. JOURNALISM & MEDIA CARDS ───
+  if (isJournalism) {
+    switch (engine) {
+      case 'gemini': {
+        return `[PANDUAN KHUSUS GOOGLE GEMINI / IMAGEN 3]:
 Buatkan satu gambar poster visual utuh News Card Editorial untuk ${media} dengan spesifikasi tata letak grafis berikut:
 
 1. TATA LETAK POSTER & KARTU GRAFIS (CARD CONTAINER):
@@ -49,10 +48,10 @@ ${state.supportingPhoto ? `- Elemen Visual Pelengkap: ${state.supportingPhoto} (
 
 4. KUALITAS & PARAMETER:
 Fotografi jurnalistik 8k, pencahayaan alami pers, tajam, profesional, aspect ratio ${ratio}.`;
-    }
+      }
 
-    case 'grok': {
-      return `[GROK 2 / FLUX.1 PROMPT]:
+      case 'grok': {
+        return `[GROK 2 / FLUX.1 PROMPT]:
 Generate an ultra-realistic, authentic journalistic social media news card for ${media} in ${ratio} aspect ratio.
 
 The image consists of a professional split layout:
@@ -67,20 +66,20 @@ Overlaid seamlessly is an editorial news design:
 ${state.keyPoint ? `- A distinct lower container card with a weather/info icon highlighting: "FAKTA KUNCI: ${state.keyPoint}"` : ''}
 
 Style: Authentic, credible newsroom design, razor-sharp typography, no cartoon/CGI artifacts, masterpiece photojournalism.`;
-    }
+      }
 
-    case 'leonardo': {
-      return `[LEONARDO.AI PROMPT]:
+      case 'leonardo': {
+        return `[LEONARDO.AI PROMPT]:
 PROMPT:
 Masterpiece editorial news card for ${media}, ${state.sceneDescription || state.context || headline}, ${state.supportingPhoto ? `with ${state.supportingPhoto}, ` : ''}authentic photojournalism, crisp 35mm photography, bold headline text "${headline}", red top ribbon badge, yellow category chip, clean dark card container at bottom with legible typography, highly detailed, 8k resolution, cinematic newsroom lighting, photorealism.
 
 NEGATIVE PROMPT:
 blurry text, typo, deformed letters, floating words without container, quotation marks on text, cartoon, 3d render, plastic skin, distorted fingers, low resolution, overexposed, oversaturated.`;
-    }
+      }
 
-    case 'chatgpt':
-    default: {
-      return `PERINTAH UNTUK CHATGPT (DALL-E 3):
+      case 'chatgpt':
+      default: {
+        return `PERINTAH UNTUK CHATGPT (DALL-E 3):
 Buatkan dan hasilkan langsung SATU gambar visual News Card Editorial ${media} berukuran rasio ${ratio} berikut ini sekarang juga. Jangan bertanya instruksi tambahan, langsung generate gambarnya:
 
 1. TATA LETAK VISUAL & FOTO PELENGKAP:
@@ -100,6 +99,55 @@ ${state.keyPoint ? `- Kotak Fakta Kunci (Container Biru di Bawah): "FAKTA KUNCI:
 
 3. DIRECT GENERATION CODE:
 A complete photorealistic journalistic news card for ${media}, ${state.sceneDescription || state.context || ''}, ${state.supportingPhoto ? `with ${state.supportingPhoto}, ` : ''}editorial layout, bold typography reading "${headline}", badge [${state.badge || 'BREAKING NEWS'}], dateline ${state.dateline || 'JAKARTA'}, 8k ultra detailed photography --ar ${arParam} --style raw`;
+      }
+    }
+  }
+
+  // ─── 2. ALL OTHER MODULES (BANNER, THUMBNAIL, FACE CARD, MENU F&B, AFFILIATE, ETC) ───
+  switch (engine) {
+    case 'gemini': {
+      return `[PANDUAN EKSEKUSI GOOGLE GEMINI / IMAGEN 3]:
+Buatkan satu gambar visual utuh berkualitas studio tinggi berukuran rasio ${ratio} berdasarkan spesifikasi berikut:
+
+1. KOMPOSISI VISUAL & TATA LETAK:
+- Subjek & Latar: ${rawText}
+- Penataan Elemen Grafis: Tempatkan teks dan label pendukung di dalam panel kontainer grafis atau badge yang kontras dan menyatu rapi agar tidak melayang di atas foto.
+- Tipografi: Cetak teks dengan tipografi tegas, bersih, proporsional, dan BEBAS DARI TANDA PETIK ("" atau “”). Pastikan ejaan kata tepat.
+
+2. KUALITAS PRODUKSI:
+- Detail ultra-tajam, pencahayaan fotorealistik alami, tekstur otentik, aspect ratio ${ratio}.`;
+    }
+
+    case 'grok': {
+      return `[GROK 2 / FLUX.1 PROMPT]:
+High-resolution, ultra-photorealistic commercial graphic rendering for ${headline || 'visual creative'} in ${ratio} aspect ratio.
+
+Visual Details:
+${rawText}
+
+Execution Style:
+Captured on prime 50mm lens, natural studio/candid lighting, authentic physical textures, razor-sharp edge contrast, seamless graphical integration, 8k resolution, cinematic color grading, photorealism.`;
+    }
+
+    case 'leonardo': {
+      return `[LEONARDO.AI PROMPT]:
+PROMPT:
+Masterpiece commercial creative rendering, ${headline ? `${headline}, ` : ''}${rawText}, highly detailed, 8k resolution, commercial advertising photography, studio lighting, hyper-realistic, vibrant colors, tack sharp focus.
+
+NEGATIVE PROMPT:
+blurry, distorted, typo, bad anatomy, deformed limbs, floating artifacts, oversaturated, low quality, duplicate, cartoon CGI plastic look.`;
+    }
+
+    case 'chatgpt':
+    default: {
+      // Check if rawText already starts with direct command
+      if (rawText.startsWith('PERINTAH')) {
+        return rawText;
+      }
+      return `PERINTAH UNTUK CHATGPT (DALL-E 3):
+Buatkan dan hasilkan langsung SATU gambar visual berkualitas tinggi berukuran rasio ${ratio} berdasarkan brief berikut. Jangan bertanya instruksi tambahan, langsung generate gambarnya:
+
+${rawText}`;
     }
   }
 }
