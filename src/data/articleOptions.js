@@ -48,17 +48,17 @@ export const ARTICLE_LENGTHS = [
 ];
 
 export const INITIAL_ARTICLE_STATE = {
-  headline: 'Pemerintah Resmi Luncurkan Program Transformasi Digital Nasional 2026',
+  headline: '',
   rubric: 'Nasional & Politik',
   mediaName: 'Media Indonesia',
-  dateline: 'JAKARTA, 20 Agustus 2026',
+  dateline: 'JAKARTA',
   format: 'straight_news',
   targetMedia: 'online_seo',
   tone: 'Netral & Objektif (Standar Jurnalistik Dewan Pers)',
   length: 'medium',
-  facts: 'Pemerintah mengalokasikan anggaran khusus untuk percepatan digitalisasi pelayanan publik, pelatihan talenta AI, dan infrastruktur internet cepat ke pelosok daerah.',
-  quotes: 'Menteri Komunikasi: "Transformasi ini bukan sekadar adopsi teknologi, melainkan pemerataan akses ekonomi bagi seluruh lapisan masyarakat."',
-  sourceDetails: 'Konferensi Pers Resmi di Istana Negara, dihadiri jajaran kementerian terkait dan asosiasi industri teknologi nasional.',
-  keywords: 'Transformasi Digital 2026, Pelayanan Publik, Talenta AI Indonesia',
-  additionalNotes: 'Sertakan data perbandingan target tahun sebelumnya dan rincian alokasi anggaran.',
+  facts: '',
+  quotes: '',
+  sourceDetails: '',
+  keywords: '',
+  additionalNotes: '',
 };

@@ -2,16 +2,16 @@ export const INITIAL_NEWS_CARD = {
   mediaName: 'Media Indonesia',
   badge: 'BREAKING NEWS',
   rubric: 'Hukum & Kriminal',
-  headline: 'KPK OTT Pejabat Daerah Terkait Dugaan Korupsi Proyek Infrastruktur',
+  headline: '',
   dateline: 'JAKARTA',
-  date: '20 Agustus 2026',
-  lead: 'Penyidik menyita sejumlah barang bukti dokumen penting dan uang tunai bernilai miliaran rupiah dalam operasi tangkap tangan.',
-  keyPoint: '6 orang saksi kunci telah diamankan untuk pemeriksaan maraton selama 1x24 jam.',
+  date: '',
+  lead: '',
+  keyPoint: '',
   aspectRatio: '1:1 (Instagram Feed)',
   photographyStyle: 'Documentary Photojournalism (Reuters / AP style, candid realism)',
   lighting: 'Natural Day Press Lighting',
-  sceneDescription: 'Gedung merah putih KPK saat malam hari dengan barisan jurnalis membawa kamera dan mikrofon meliput mobil tahanan yang baru tiba.',
-  supportingPhoto: 'Foto inset tumpukan berkas dokumen bukti sitaan dan map berkas perkara bermaterai di sudut bawah kartu',
+  sceneDescription: '',
+  supportingPhoto: '',
 };
 
 export const NEWS_BADGES = [

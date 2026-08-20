@@ -1,15 +1,15 @@
 export const INITIAL_QUOTE_CARD = {
   mediaName: 'Media Indonesia',
-  sourceName: 'Prof. Mahfud Santoso, S.H., M.Hum.',
-  sourceRole: 'Pakar Hukum Tata Negara & Pengamat Kebijakan Publik',
-  quote: 'Penegakan hukum tidak boleh tebang pilih. Jika bukti formil dan materiil sudah lengkap, pengadilan adalah tempat paling adil untuk membuktikan kebenaran.',
-  context: 'Konferensi Pers Terbuka Menanggapi Kasus Dugaan Gratifikasi Pejabat',
+  sourceName: '',
+  sourceRole: '',
+  quote: '',
+  context: 'Konferensi Pers Terbuka',
   dateline: 'JAKARTA',
-  date: '20 Agustus 2026',
+  date: '',
   portraitStyle: 'Candid Press Conference (Speaking at podium with microphones)',
   lighting: 'Editorial Moody Lighting (High-Contrast Dramatic)',
   aspectRatio: '1:1 (Instagram Feed)',
-  supportingPhoto: 'Latar mimbar konferensi pers dengan deretan mikrofon berlogo stasiun TV dan awak media',
+  supportingPhoto: '',
 };
 
 export const PORTRAIT_STYLES = [

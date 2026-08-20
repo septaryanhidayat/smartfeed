@@ -533,7 +533,7 @@ function AuthedApp() {
         <CarouselDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleCarouselDemoPick} />
       ) : mode === 'menufb' ? (
         <MenuFBDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleMenuFBDemoPick} />
-      ) : ['newscard', 'quotecard', 'factcheck'].includes(mode) ? (
+      ) : ['article', 'newscard', 'quotecard', 'factcheck'].includes(mode) ? (
         <JournalismDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} mode={mode} onPick={handleJournalismDemoPick} />
       ) : ['logoaffiliate','tryonaffiliate','reviewaffiliate','storyboardaffiliate'].includes(mode) ? (
         <AffiliateDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} mode={mode} onPick={handleAffiliateDemoPick} />

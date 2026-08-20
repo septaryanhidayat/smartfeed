@@ -1,14 +1,14 @@
 export const INITIAL_FACT_CHECK = {
   mediaName: 'Cek Fakta Media Indonesia',
   status: 'HOAKS / PALSU',
-  claim: 'Beredar narasi bahwa BMKG mengeluarkan peringatan dini tsunami setinggi 15 meter di pesisir selatan Jawa malam ini.',
-  fact: 'BMKG menegaskan narasi tersebut sepenuhnya PALSU. Pantauan sensor seismik dan buoy laut selatan berada dalam batas normal dan tidak ada potensi gelombang ekstrem.',
-  officialSource: 'Klarifikasi Resmi BMKG Pusat (No. Pers: 08/KLARIF/BMKG/2026)',
+  claim: '',
+  fact: '',
+  officialSource: '',
   dateline: 'JAKARTA',
-  date: '20 Agustus 2026',
+  date: '',
   visualTheme: 'Stempel Merah Tegas & Perbandingan Visual Split',
   aspectRatio: '1:1 (Instagram Feed)',
-  supportingPhoto: 'Tangkapan layar postingan media sosial yang diberi tanda silang merah besar HOAKS',
+  supportingPhoto: '',
 };
 
 export const VERDICT_STATUSES = [
