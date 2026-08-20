@@ -16,7 +16,6 @@ import CopySuccessModal from './components/CopySuccessModal.jsx';
 import AffiliateProgramModal from './components/AffiliateProgramModal.jsx';
 import ResellerModal from './components/ResellerModal.jsx';
 import SettingsModal from './components/SettingsModal.jsx';
-import AiIntegrationModal from './components/AiIntegrationModal.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 import { logActivity } from './utils/activityLogger.js';
@@ -108,7 +107,6 @@ function AuthedApp() {
     try { return localStorage.getItem('af_selected_ai_engine') || 'chatgpt'; } catch { return 'chatgpt'; }
   });
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [aiIntegrationOpen, setAiIntegrationOpen] = useState(false);
   const [affiliateProgramOpen, setAffiliateProgramOpen] = useState(false);
   const [resellerOpen, setResellerOpen] = useState(false);
   const [loadingDemo, setLoadingDemo] = useState(null);  // {label, icon} while applying demo
@@ -411,7 +409,6 @@ function AuthedApp() {
           onOpenDemo={() => setDemoOpen(true)}
           onOpenTutorial={() => setTutorialOpen(true)}
           onOpenSettings={() => setSettingsOpen(true)}
-          onOpenAiIntegration={() => setAiIntegrationOpen(true)}
           onOpenAffiliateProgram={() => setAffiliateProgramOpen(true)}
           onOpenReseller={() => setResellerOpen(true)}
         />
@@ -466,7 +463,6 @@ function AuthedApp() {
                         onGenerate={handleGenerate}
                         onRestoreHistory={handleRestore}
                         onCopied={handleCopied}
-                        onOpenAiIntegration={() => setAiIntegrationOpen(true)}
                         restoreSignal={restoreSignal}
                         autoShow={restoredMode === mode}
                       />
@@ -503,7 +499,6 @@ function AuthedApp() {
                       onGenerate={handleGenerate}
                       onRestoreHistory={handleRestore}
                       onCopied={handleCopied}
-                      onOpenAiIntegration={() => setAiIntegrationOpen(true)}
                       restoreSignal={restoreSignal}
                       autoShow={restoredMode === mode}
                     />
@@ -539,7 +534,6 @@ function AuthedApp() {
         engine={copiedEngine}
       />
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
-      <AiIntegrationModal open={aiIntegrationOpen} onClose={() => setAiIntegrationOpen(false)} />
       <AffiliateProgramModal open={affiliateProgramOpen} onClose={() => setAffiliateProgramOpen(false)} />
       <ResellerModal open={resellerOpen} onClose={() => setResellerOpen(false)} />
 
