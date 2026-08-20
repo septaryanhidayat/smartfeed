@@ -1,6 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/YOUR_CPANEL_USERNAME/public_html/
+    # Ganti path di bawah sesuai Document Root subdomain Anda di cPanel
+    # Contoh: /home/USERNAME/smartfeed.berandadigital.net/ atau /home/USERNAME/public_html/smartfeed/
+    - export DEPLOYPATH=${DEPLOYPATH:-~/smartfeed.berandadigital.net/}
     - /bin/cp -R dist/* $DEPLOYPATH
     - /bin/cp dist/.htaccess $DEPLOYPATH
