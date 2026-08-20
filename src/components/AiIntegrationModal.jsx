@@ -121,11 +121,24 @@ export default function AiIntegrationModal({ open, onClose, onKeysUpdated }) {
           </button>
         </div>
 
-        {/* Security Banner */}
-        <div className="p-4 mx-6 mt-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-3">
-          <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-          <div className="text-xs text-emerald-300 leading-relaxed">
-            <strong>Keamanan Terjamin 100%:</strong> Seluruh API Key disimpan secara lokal di browser kamu (<code className="bg-black/30 px-1 py-0.5 rounded text-[10px] text-emerald-200">localStorage</code>). Kunci tidak pernah dikirim ke server Smart Feed ataupun pihak ketiga lainnya.
+        {/* Security & Info Banner */}
+        <div className="mx-6 mt-4 space-y-2">
+          <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+            <div className="text-xs text-emerald-300 leading-relaxed">
+              <strong>Keamanan 100% Lokal:</strong> Seluruh API Key disimpan secara lokal di browser kamu (<code className="bg-black/30 px-1 py-0.5 rounded text-[10px] text-emerald-200">localStorage</code>) dan tidak pernah dikirim ke server Smart Feed.
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs text-amber-300">
+            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="leading-relaxed">
+              <strong>Perbedaan Akun Web vs Developer API:</strong>
+              <ul className="list-disc pl-4 mt-1 space-y-0.5 text-[11px] text-amber-200">
+                <li>Untuk generate langsung di dalam sistem (In-App API), akun API wajib memiliki saldo/kredit aktif di developer console (OpenAI Platform, Google Cloud Vertex, xAI Console).</li>
+                <li>Jika menggunakan akun biasa / web gratisan, cukup gunakan tombol <strong>"Copy Prompt & Buka Web"</strong> untuk generate gratis di website resmi masing-masing AI.</li>
+              </ul>
+            </div>
           </div>
         </div>
 

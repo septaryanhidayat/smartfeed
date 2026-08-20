@@ -178,8 +178,8 @@ export default function PromptPanel({
     } else {
       setDirectError(res.error);
       showAlert({
-        title: 'Gagal Generate Gambar',
-        text: res.error || 'Terjadi kesalahan saat memanggil API AI.',
+        title: 'Gagal Generate via API',
+        text: `${res.error}\n\n💡 Solusi Mudah: Gunakan tombol "Copy Prompt & Buka Web" untuk generate langsung di website resmi ${selectedEngine.toUpperCase()} menggunakan akun login biasa tanpa perlu API berbayar.`,
         icon: 'error',
       });
     }
