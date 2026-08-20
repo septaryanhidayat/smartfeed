@@ -24,7 +24,7 @@ window.__AF_CONFIG = {
    gptUrl: "",
 
    /* -- 2b. SOCIAL (footer) ------------------------------------------- */
-   instagramUrl: "https://instagram.com/berandadigital.net",
+   instagramUrl: "https://www.instagram.com/berandadigital_net/",
    instagramHandle: "@berandadigital_net",
    facebookUrl: "https://www.facebook.com/berandateknologidigital",
    facebookHandle: "Beranda Teknologi Digital",

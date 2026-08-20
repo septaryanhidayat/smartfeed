@@ -34,7 +34,7 @@ export const CONFIG = {
   gptUrl:     pick(cfg.gptUrl, ''),
 
   // ── Social (footer) ───────────────────────────────────────
-  instagramUrl:    pick(cfg.instagramUrl, 'https://instagram.com/berandadigital.net'),
+  instagramUrl:    pick(cfg.instagramUrl, 'https://www.instagram.com/berandadigital_net/'),
   instagramHandle: pick(cfg.instagramHandle, '@berandadigital_net'),
   facebookUrl:     pick(cfg.facebookUrl, 'https://www.facebook.com/berandateknologidigital'),
   facebookHandle:  pick(cfg.facebookHandle, 'Beranda Teknologi Digital'),
