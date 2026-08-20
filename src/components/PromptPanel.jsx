@@ -151,9 +151,16 @@ export default function PromptPanel({
       return;
     }
 
+    if (streamTimer.current) { clearTimeout(streamTimer.current); streamTimer.current = null; }
+    setHasGenerated(true);
+    setStreaming(false);
+    setStreamedText(liveDisplay);
+
     setDirectGenerating(true);
     setDirectError(null);
     setGeneratedResult(null);
+
+    if (typeof onGenerate === 'function') onGenerate();
 
     const res = await executeDirectAiGeneration(selectedEngine, liveDisplay, {
       ratio: state.aspectRatio || state.ratio || '1:1',
@@ -307,6 +314,25 @@ export default function PromptPanel({
           <EmptyTerminal mode={mode} />
         ) : (
           <div className="flex-1 overflow-y-auto flex flex-col p-3 space-y-3">
+            {/* Loading Indicator while AI generates */}
+            {directGenerating && (
+              <div className="rounded-xl border border-accent/50 bg-accent-sm/40 p-4 animate-fade-in space-y-3">
+                <div className="flex items-center justify-between text-xs font-bold text-text">
+                  <div className="flex items-center gap-2">
+                    <RefreshCw className="w-4 h-4 text-accent animate-spin" />
+                    <span>Sedang Merender Gambar via {selectedEngine.toUpperCase()}...</span>
+                  </div>
+                  <span className="mono text-[10px] text-accent">Memproses API</span>
+                </div>
+                <div className="w-full bg-bg-panel/80 rounded-full h-1.5 overflow-hidden border border-border">
+                  <div className="h-full bg-accent animate-pulse w-3/4 rounded-full" />
+                </div>
+                <p className="text-[11px] text-text-mut">
+                  Proses ini membutuhkan waktu beberapa detik tergantung antrean server AI.
+                </p>
+              </div>
+            )}
+
             {/* Generated In-App Result Card (if available) */}
             {generatedResult?.imageUrl && (
               <div className="rounded-xl border border-accent/40 bg-accent-sm/30 p-3 animate-fade-in space-y-2.5">
@@ -374,7 +400,7 @@ export default function PromptPanel({
             <button
               onClick={handleGenerate}
               className="btn-ghost !py-2 !px-3 text-xs"
-              disabled={streaming}
+              disabled={streaming || directGenerating}
             >
               <RefreshCw className={`w-3 h-3 ${streaming ? 'animate-spin' : ''}`} />
               <span>{hasGenerated ? 'Rebuild' : 'Build Prompt'}</span>
@@ -384,7 +410,7 @@ export default function PromptPanel({
             {isConnected ? (
               <button
                 onClick={handleDirectExecute}
-                disabled={!hasGenerated || streaming || directGenerating}
+                disabled={streaming || directGenerating}
                 className="btn-primary !py-2 !px-3.5 text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(var(--accent-rgb),0.35)]"
                 title={`Generate langsung dengan API ${selectedEngine}`}
               >

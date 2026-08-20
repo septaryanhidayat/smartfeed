@@ -2,7 +2,7 @@
  * Direct In-App AI Image Generators
  * Supports executing prompts directly inside Smart Feed using user-synced credentials:
  * - OpenAI (ChatGPT / DALL-E 3)
- * - Google Gemini (Imagen 3 / Gemini REST)
+ * - Google Gemini (Imagen 3 / Gemini AI Studio)
  * - Leonardo.ai
  * - Grok (xAI)
  */
@@ -21,7 +21,7 @@ export function getSyncedAiKeys() {
 export function saveSyncedAiKey(engineId, key) {
   try {
     const current = getSyncedAiKeys();
-    current[engineId] = key ? key.trim() : '';
+    current[engineId] = key ? key.trim().replace(/^["']|["']$/g, '') : '';
     localStorage.setItem(AI_KEYS_STORAGE, JSON.stringify(current));
     return true;
   } catch {
@@ -49,19 +49,24 @@ export function getSyncedEnginesCount() {
  */
 export async function executeDirectAiGeneration(engineId, prompt, options = {}) {
   const keys = getSyncedAiKeys();
-  const apiKey = keys[engineId];
+  let apiKey = keys[engineId];
 
-  if (!apiKey) {
+  if (!apiKey || apiKey.trim().length < 5) {
     return {
       ok: false,
-      error: `API Key untuk ${engineId.toUpperCase()} belum disinkronkan. Silakan hubungkan akunmu terlebih dahulu.`,
+      error: `API Key untuk ${engineId.toUpperCase()} belum disinkronkan. Silakan hubungkan akunmu terlebih dahulu di menu Koneksi AI.`,
     };
   }
+
+  apiKey = apiKey.trim().replace(/^["']|["']$/g, '');
 
   const ratio = options.ratio || '1:1';
   let size = '1024x1024';
   if (ratio.includes('16:9') || ratio.includes('Landscape')) size = '1792x1024';
   else if (ratio.includes('9:16') || ratio.includes('Portrait')) size = '1024x1792';
+
+  // Clean prompt text for API
+  const cleanPrompt = prompt.replace(/^\[.*?\]:\n*/g, '').slice(0, 3900);
 
   try {
     // ── 1. OPENAI DALL-E 3 ──
@@ -74,7 +79,7 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
         },
         body: JSON.stringify({
           model: 'dall-e-3',
-          prompt: prompt.slice(0, 3900),
+          prompt: cleanPrompt,
           n: 1,
           size,
           quality: 'standard',
@@ -87,19 +92,19 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
       }
 
       const imageUrl = data.data?.[0]?.url;
-      const revisedPrompt = data.data?.[0]?.revised_prompt || prompt;
+      const revisedPrompt = data.data?.[0]?.revised_prompt || cleanPrompt;
       return { ok: true, imageUrl, revisedPrompt, engine: 'ChatGPT (DALL-E 3)' };
     }
 
     // ── 2. GOOGLE GEMINI (IMAGEN 3) ──
     if (engineId === 'gemini') {
-      // Endpoint Google Gemini Imagen 3
+      // Primary Endpoint: Google Gemini Imagen 3
       const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          instances: [{ prompt: prompt.slice(0, 3000) }],
+          instances: [{ prompt: cleanPrompt }],
           parameters: {
             sampleCount: 1,
             aspectRatio: ratio.includes('16:9') ? '16:9' : ratio.includes('9:16') ? '9:16' : '1:1',
@@ -110,7 +115,7 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
 
       const data = await res.json();
       if (!res.ok || data.error) {
-        throw new Error(data.error?.message || `HTTP ${res.status}: Gagal memproses di Google Gemini.`);
+        throw new Error(data.error?.message || `HTTP ${res.status}: Gagal memproses di Google Gemini Imagen. Periksa apakah Gemini API Key valid.`);
       }
 
       const b64 = data.predictions?.[0]?.bytesBase64Encoded;
@@ -119,7 +124,7 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
       return {
         ok: true,
         imageUrl: `data:image/jpeg;base64,${b64}`,
-        revisedPrompt: prompt,
+        revisedPrompt: cleanPrompt,
         engine: 'Google Gemini (Imagen 3)',
       };
     }
@@ -134,7 +139,7 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          prompt: prompt.slice(0, 1500),
+          prompt: cleanPrompt.slice(0, 1000),
           num_images: 1,
           width: 1024,
           height: 1024,
@@ -144,14 +149,14 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
 
       const data = await res.json();
       if (!res.ok || !data.sdGenerationJob?.generationId) {
-        throw new Error(data.error || 'Gagal membuat job gambar di Leonardo.ai');
+        throw new Error(data.error || `HTTP ${res.status}: Gagal membuat job gambar di Leonardo.ai`);
       }
 
       const genId = data.sdGenerationJob.generationId;
 
-      // Step 2: Poll generation status (up to 15 seconds)
+      // Step 2: Poll generation status
       let imageUrl = null;
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 12; i++) {
         await new Promise((r) => setTimeout(r, 2000));
         const checkRes = await fetch(`https://cloud.leonardo.ai/api/rest/v1/generations/${genId}`, {
           headers: { Authorization: `Bearer ${apiKey}` },
@@ -164,9 +169,9 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
         }
       }
 
-      if (!imageUrl) throw new Error('Waktu tunggu Leonardo.ai habis. Coba ulangi kembali.');
+      if (!imageUrl) throw new Error('Waktu tunggu Leonardo.ai habis. Coba klik generate lagi.');
 
-      return { ok: true, imageUrl, revisedPrompt: prompt, engine: 'Leonardo.ai' };
+      return { ok: true, imageUrl, revisedPrompt: cleanPrompt, engine: 'Leonardo.ai' };
     }
 
     // ── 4. GROK 2 (xAI) ──
@@ -179,7 +184,7 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
         },
         body: JSON.stringify({
           model: 'grok-2-vision-1212',
-          messages: [{ role: 'user', content: prompt }],
+          messages: [{ role: 'user', content: cleanPrompt }],
         }),
       });
 
@@ -197,6 +202,6 @@ export async function executeDirectAiGeneration(engineId, prompt, options = {}) 
 
     throw new Error(`Engine ${engineId} belum mendukung direct generation.`);
   } catch (err) {
-    return { ok: false, error: err.message || 'Terjadi kesalahan koneksi API.' };
+    return { ok: false, error: err.message || 'Terjadi kesalahan koneksi API AI.' };
   }
 }
