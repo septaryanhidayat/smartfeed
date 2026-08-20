@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "pack": "vite build && tar -czvf smartfeed-dist.tar.gz -C dist .",
     "preview": "vite preview",
     "gen:images": "node scripts/generate-images.mjs"
   },
