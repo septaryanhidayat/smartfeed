@@ -30,7 +30,7 @@ window.__AF_CONFIG = {
    facebookHandle: "Akun Kamu",
 
    /* -- 3. HARGA (tampilan teks) -------------------------------------- */
-   price: "149.000",          // harga tampil
+   price: "249.000",          // harga tampil
    priceStrike: "499.000",    // harga coret
    affiliatePerSignup: 75000, // komisi affiliate per pendaftaran (angka, tanpa kutip)
    enableFreeTrainingClaim: true, // true = tampilkan link/tombol klaim gratis peserta pelatihan
@@ -43,7 +43,7 @@ window.__AF_CONFIG = {
       a. sheetWebhookUrl: URL Google Apps Script Web App untuk otomatis mencatat
          email & nama peserta pelatihan langsung ke Google Sheet saat mendaftar.
       b. sheetCsvUrl: URL Published CSV spreadsheet daftar email. */
-   sheetWebhookUrl: "https://script.google.com/macros/s/AKfycbzg2zaqllAPWEXKgzVG54iRo0pXkOlc8rLSBgkXAVZeoHicUzbnM_EANtEU46pXKsMo/exec",
+   sheetWebhookUrl: "https://script.google.com/macros/s/AKfycbzSVFXWUhaP09jdbRcD1FVVDZaDHhsskUvbx-mS7FZ2QfQcRxjMfm3WwLRoPg5wfVV1/exec",
    sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQArR06UvroNZT1AReqN5kPWbyrHvq0VVaLKezPHcFarwDhY0zO69wjtZxajvdzKlqZlm2PVbcx175-/pub?gid=0&single=true&output=csv",
 
    // Password login (semua pelanggan pakai 1 password ini).
