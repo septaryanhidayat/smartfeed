@@ -94,7 +94,7 @@ export default function Checkout() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const priceNum = CONFIG.price || '149.000';
+  const priceNum = CONFIG.price || '1.000';
   const priceStrikeNum = CONFIG.priceStrike || '499.000';
 
   const handleChange = (e) => {
@@ -350,8 +350,8 @@ export default function Checkout() {
                   <span className="mono font-semibold whitespace-nowrap">Rp {priceStrikeNum}</span>
                 </div>
                 <div className="flex justify-between text-emerald-400 font-semibold">
-                  <span>Diskon Promo Early Access</span>
-                  <span className="mono whitespace-nowrap">- Rp 350.000</span>
+                  <span>Diskon Promo Uji Coba</span>
+                  <span className="mono whitespace-nowrap">- Rp 498.000</span>
                 </div>
                 <div className="flex justify-between text-text-mut text-[11px] sm:text-xs">
                   <span>Biaya Transaksi Payment Gateway</span>
