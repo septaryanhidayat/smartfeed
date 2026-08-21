@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import {
   Presentation, Sparkles, LayoutTemplate, Layers, Palette, Users, BookOpen,
   ChevronLeft, ChevronRight, Copy, Check, Download, Wand2, Mic, Eye, FileText, MonitorPlay,
-  CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, School
+  CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, Shuffle, Briefcase
 } from 'lucide-react';
 import {
   PRESENTATION_USE_CASES,
@@ -15,16 +15,15 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const [copiedVisual, setCopiedVisual] = useState(false);
-  const [showSpeakerNotes, setShowSpeakerNotes] = useState(true);
 
   const {
-    topic = 'Konsep Pendirian SMA IT Plus Robbani Boarding School',
-    presenter = 'Tim Perumus Yayasan',
-    audience = 'Dewan Pembina Yayasan & Calon Stakeholder',
+    topic = 'Proposal Pendirian Akademi Teknologi & Vokasi Digital Modern',
+    presenter = 'Tim Inisiator & Perumus Visi',
+    audience = 'Dewan Pembina, Pengurus Yayasan & Mitra Strategis',
     useCase = 'executive_concept',
     style = 'executive_navy_gold',
     slideCount = 10,
-    keyPoints = 'Integrasi Tahfizh 15 Juz + Kesiapan Masuk PTN + Software Skill IT (Desain, Coding, AI), Boarding school membuka pasar luar daerah, simulasi anggaran 25 siswa, roadmap implementasi 4 tahap.',
+    keyPoints = 'Integrasi Kurikulum Industri + Pembinaan Karakter Unggul + Software Skill Terapan (UI/UX, Full-Stack, AI), model boarding school memperluas jangkauan pasar, simulasi pembiayaan 50 siswa awal, roadmap implementasi 4 tahap menuju akreditasi unggul.',
     includeSpeakerNotes = true,
     includeVisualPrompts = true,
   } = state || {};
@@ -68,36 +67,58 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     }
   };
 
+  const handleRandomizeDemo = () => {
+    if (!onSetState || PRESENTATION_DEMOS.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * PRESENTATION_DEMOS.length);
+    const picked = PRESENTATION_DEMOS[randomIndex];
+    onSetState(picked);
+    setActiveSlideIndex(0);
+  };
+
   return (
     <div className="space-y-6">
       
-      {/* Top Quick Demo Selector */}
-      <div className="surface p-4 rounded-xl flex flex-wrap items-center justify-between gap-3 border border-border">
+      {/* Top Demo Selector & Randomize Bar */}
+      <div className="surface p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-border shadow-xs">
         <div className="flex items-center gap-2.5">
-          <span className="w-8 h-8 rounded-lg bg-accent/15 text-accent flex items-center justify-center font-bold shadow-xs">
-            <Presentation className="w-4 h-4" />
+          <span className="w-9 h-9 rounded-xl bg-accent/15 text-accent flex items-center justify-center font-bold shadow-xs">
+            <Presentation className="w-5 h-5" />
           </span>
           <div>
             <div className="text-xs font-bold text-text flex items-center gap-1.5">
-              <span>Preset Presentasi Eksekutif (Robbani Masterclass)</span>
+              <span>Pilihan Template Layout Eksekutif</span>
               <span className="text-[9px] px-1.5 py-0.2 rounded bg-accent/20 text-accent font-bold mono">M20</span>
             </div>
-            <div className="text-[10px] text-text-dim">Template kualitas proposal pendirian, pitch deck bisnis & kurikulum digital</div>
+            <div className="text-[10px] text-text-dim">Pilih template layout atau klik acak untuk inspirasi struktur presentasi</div>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
           {PRESENTATION_DEMOS.map((demo, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleLoadDemo(demo)}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-bg-panel hover:bg-bg-elev border border-border text-text-mut hover:text-text transition flex items-center gap-1.5 cursor-pointer"
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 cursor-pointer ${
+                topic === demo.topic
+                  ? 'bg-accent text-white border-accent shadow-sm'
+                  : 'bg-bg-panel hover:bg-bg-elev border-border text-text-mut hover:text-text'
+              }`}
             >
-              <Wand2 className="w-3 h-3 text-accent" />
-              <span>{demo.topic.split(':')[0]}</span>
+              <span>{demo.tag || demo.topic.split(':')[0]}</span>
             </button>
           ))}
+
+          {/* Randomize Demo Button */}
+          <button
+            type="button"
+            onClick={handleRandomizeDemo}
+            className="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 transition flex items-center gap-1.5 cursor-pointer"
+            title="Acak template dan topik presentasi"
+          >
+            <Shuffle className="w-3.5 h-3.5" />
+            <span>Acak Template</span>
+          </button>
         </div>
       </div>
 
@@ -107,12 +128,15 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
         {/* LEFT COLUMN: Input Configuration */}
         <div className="space-y-4">
           <div className="surface p-5 rounded-2xl border border-border space-y-4">
-            <div className="text-xs font-bold text-text flex items-center gap-2 border-b border-border pb-2.5">
-              <LayoutTemplate className="w-4 h-4 text-accent" />
-              <span>Parameter Presentasi</span>
+            <div className="text-xs font-bold text-text flex items-center justify-between border-b border-border pb-2.5">
+              <div className="flex items-center gap-2">
+                <LayoutTemplate className="w-4 h-4 text-accent" />
+                <span>Parameter &amp; Topik Presentasi</span>
+              </div>
+              <span className="text-[10px] mono text-accent font-bold">16:9 Widescreen</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               <div>
                 <label className="block text-xs font-semibold text-text mb-1">
                   Topik / Judul Presentasi *
@@ -121,7 +145,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={topic}
                   onChange={(e) => onChangeField('topic', e.target.value)}
-                  placeholder="Contoh: Konsep Pendirian SMA IT Plus Robbani Boarding School"
+                  placeholder="Contoh: Proposal Pendirian Akademi Vokasi Digital Modern"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -135,7 +159,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                     type="text"
                     value={presenter}
                     onChange={(e) => onChangeField('presenter', e.target.value)}
-                    placeholder="Tim Perumus Yayasan"
+                    placeholder="Tim Penyusun"
                     className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                   />
                 </div>
@@ -148,7 +172,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                     type="text"
                     value={audience}
                     onChange={(e) => onChangeField('audience', e.target.value)}
-                    placeholder="Dewan Pembina & Stakeholder"
+                    placeholder="Dewan Direksi & Stakeholder"
                     className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                   />
                 </div>
@@ -172,7 +196,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Gaya Visual & Palet Warna
+                    Gaya Visual &amp; Palet Warna
                   </label>
                   <select
                     value={style}
@@ -188,13 +212,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
               <div>
                 <label className="block text-xs font-semibold text-text mb-1">
-                  Poin Kunci & Diferensiasi Khusus
+                  Poin Kunci &amp; Penekanan Khusus
                 </label>
                 <textarea
                   rows={3}
                   value={keyPoints}
                   onChange={(e) => onChangeField('keyPoints', e.target.value)}
-                  placeholder="Poin penting yang wajib ada di slide (Tahfizh 15 juz, software skill IT terapan, skema beasiswa, dll)..."
+                  placeholder="Ketik poin penting yang ingin ditekankan (model kurikulum, keunggulan diferensiasi, target pendanaan, dll)..."
                   className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -216,7 +240,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             </div>
           </div>
 
-          {/* Master Actions */}
+          {/* Master Action Buttons */}
           <div className="surface p-4 rounded-2xl border border-border space-y-2.5">
             <button
               type="button"
@@ -257,7 +281,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 Slide {activeSlideIndex + 1} dari {slides.length}
               </span>
               <span className="text-[10px] mono px-2 py-0.5 rounded-full bg-accent/15 text-accent font-bold">
-                16:9 Widescreen
+                16:9 Widescreen Layout
               </span>
             </div>
 
@@ -288,7 +312,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
               <div>
                 <div className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#EAAA00]">
-                  {currentSlide.eyebrow || 'SMA IT PLUS ROBBANI'}
+                  {currentSlide.eyebrow || 'EXECUTIVE PRESENTATION'}
                 </div>
                 <h3 className="text-base sm:text-xl font-black text-white leading-tight mt-0.5">
                   {currentSlide.title}
@@ -298,10 +322,12 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 </p>
               </div>
 
-              {/* School Emblem Badge on Top Right */}
+              {/* Dynamic Header Emblem Badge */}
               <div className="shrink-0 flex items-center gap-2 bg-[#002D62] px-3 py-1 rounded-lg border border-amber-500/30">
-                <School className="w-4 h-4 text-[#EAAA00]" />
-                <span className="text-[9px] font-black text-white tracking-widest uppercase">ROBBANI</span>
+                <Briefcase className="w-3.5 h-3.5 text-[#EAAA00]" />
+                <span className="text-[9px] font-black text-white tracking-widest uppercase">
+                  {useCase === 'pitch_deck' ? 'PITCH DECK' : useCase === 'corporate_strategy' ? 'STRATEGY' : 'EXECUTIVE'}
+                </span>
               </div>
             </div>
 
@@ -313,17 +339,17 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 <div className="grid grid-cols-[1.2fr_1fr] gap-4 items-center h-full">
                   <div className="space-y-3">
                     <div className="inline-block px-2.5 py-0.5 rounded-full bg-[#EAAA00] text-[#002D62] text-[9px] font-black uppercase tracking-widest">
-                      KONSEP PENDIRIAN
+                      EXECUTIVE PROPOSAL
                     </div>
-                    <div className="text-lg sm:text-2xl font-black leading-tight text-white">
-                      {topic || 'SMA IT PLUS ROBBANI'}
+                    <div className="text-lg sm:text-2xl font-black leading-tight text-white line-clamp-2">
+                      {topic}
                     </div>
-                    <p className="text-[10px] sm:text-xs text-white/80 leading-relaxed">
-                      Membangun Generasi Berilmu, Beriman, Berkarya, dan Bermanfaat untuk Umat
+                    <p className="text-[10px] sm:text-xs text-white/80 leading-relaxed line-clamp-2">
+                      {currentSlide.subtitle}
                     </p>
                     {/* Category Badges */}
                     <div className="flex flex-wrap gap-1.5 pt-1">
-                      {['QUR\'AN', 'PTN', 'DESAIN', 'PEMROGRAMAN', 'AI'].map((chip, cIdx) => (
+                      {(currentSlide.categoryChips || ['STRATEGI', 'INOVASI', 'OPERASIONAL', 'TEKNOLOGI', 'EKSEKUSI']).map((chip, cIdx) => (
                         <span key={cIdx} className="text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded bg-[#002D62] border border-amber-500/40 text-[#EAAA00]">
                           {chip}
                         </span>
@@ -331,9 +357,9 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                     </div>
                   </div>
                   <div className="h-full rounded-xl overflow-hidden bg-gradient-to-tr from-[#002D62] to-[#0d47a1] border border-white/15 p-3 flex flex-col items-center justify-center text-center">
-                    <School className="w-10 h-10 text-[#EAAA00] mb-2 animate-pulse" />
-                    <div className="text-[10px] font-bold text-white">Render Gedung 3D</div>
-                    <div className="text-[8px] text-white/60 mt-0.5">Boarding School Modern & Digital</div>
+                    <Sparkles className="w-10 h-10 text-[#EAAA00] mb-2 animate-pulse" />
+                    <div className="text-[10px] font-bold text-white">Visual Konsep 3D</div>
+                    <div className="text-[8px] text-white/60 mt-0.5">High-Impact Professional Render</div>
                   </div>
                 </div>
               )}
@@ -356,10 +382,10 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   <div className="rounded-xl bg-[#002D62] border-2 border-[#EAAA00] p-3 flex flex-col justify-between text-center">
                     <div className="text-xs font-black text-[#EAAA00] tracking-widest uppercase">CORE</div>
                     <p className="text-[9px] sm:text-[10px] text-white leading-relaxed font-semibold">
-                      {currentSlide.coreHighlight?.body || 'Menyiapkan jenjang strategis kader berilmu, beriman & berkarya.'}
+                      {currentSlide.coreHighlight?.body || 'Membangun ekosistem terpadu berdaya saing tinggi.'}
                     </p>
                     <div className="bg-[#EAAA00] text-[#002D62] text-[8px] sm:text-[9px] font-black py-1 px-2 rounded">
-                      {currentSlide.coreHighlight?.output || 'Output: Qur\'an + PTN + IT'}
+                      {currentSlide.coreHighlight?.output || 'Output Teruji + Portofolio Nyata'}
                     </div>
                   </div>
                 </div>
@@ -383,13 +409,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                       {currentSlide.solutionBanner?.badge || 'Solusi Diferensiasi'}
                     </span>
                     <p className="text-[9px] text-white/90 leading-tight">
-                      {currentSlide.solutionBanner?.text || 'Penguatan PTN + Tahfizh + Skill IT terapan menghasilkan portofolio nyata.'}
+                      {currentSlide.solutionBanner?.text || 'Diferensiasi nyata yang terlihat hasilnya dan terukur dampaknya.'}
                     </p>
                   </div>
                 </div>
               )}
 
-              {/* Other Archetypes: Standard List with Visual Icons */}
+              {/* Other Archetypes: Standard List with Visual Cards */}
               {currentSlide.slideNo > 3 && (
                 <div className="space-y-2">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -412,8 +438,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
             {/* Bottom Navy & Gold Ribbon Branding Bar */}
             <div className="border-t border-white/10 pt-2 flex items-center justify-between text-[8px] sm:text-[9px] text-white/60 font-mono">
-              <span className="truncate">SMA IT Plus Robbani Boarding School | Konsep Digital School</span>
-              <span className="text-[#EAAA00] font-bold shrink-0">Berilmu, Beriman, Berkarya</span>
+              <span className="truncate">{topic} | {presenter || 'Executive Deck'}</span>
+              <span className="text-[#EAAA00] font-bold shrink-0">Visioner · Terukur · Berdampak</span>
             </div>
 
           </div>

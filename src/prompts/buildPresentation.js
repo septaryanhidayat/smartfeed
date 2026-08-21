@@ -1,22 +1,22 @@
 import { PRESENTATION_USE_CASES, PRESENTATION_STYLES } from '../data/presentationOptions.js';
 
 export const INITIAL_PRESENTATION = {
-  topic: 'Konsep Pendirian SMA IT Plus Robbani Boarding School',
-  presenter: 'Tim Perumus Yayasan',
-  audience: 'Dewan Pembina Yayasan & Calon Stakeholder',
+  topic: 'Proposal Pendirian Akademi Teknologi & Vokasi Digital Modern',
+  presenter: 'Tim Inisiator & Perumus Visi',
+  audience: 'Dewan Pembina, Pengurus Yayasan & Mitra Strategis',
   useCase: 'executive_concept',
   style: 'executive_navy_gold',
   slideCount: 10,
-  keyPoints: 'Integrasi Tahfizh 15 Juz + Kesiapan Masuk PTN + Software Skill IT (Desain, Coding, AI), Boarding school membuka pasar luar daerah, simulasi anggaran 25 siswa, roadmap implementasi 4 tahap.',
+  keyPoints: 'Integrasi Kurikulum Industri + Pembinaan Karakter Unggul + Software Skill Terapan (UI/UX, Full-Stack, AI), model boarding school memperluas jangkauan pasar, simulasi pembiayaan 50 siswa awal, roadmap implementasi 4 tahap menuju akreditasi unggul.',
   includeSpeakerNotes: true,
   includeVisualPrompts: true,
 };
 
 export function buildPresentation(state) {
   const {
-    topic = '',
-    presenter = '',
-    audience = '',
+    topic = 'Proposal Strategis Pengembangan & Inovasi',
+    presenter = 'Tim Penyusun Proposal',
+    audience = 'Dewan Direksi & Pemangku Kepentingan',
     useCase = 'executive_concept',
     style = 'executive_navy_gold',
     slideCount = 10,
@@ -31,217 +31,217 @@ export function buildPresentation(state) {
   const count = Math.max(4, Math.min(Number(slideCount) || 10, 14));
   const slides = [];
 
-  // SLIDE 1: Cover Hero Slide (Split Layout: Big Typography + Architectural 3D Photo)
+  // SLIDE 1: Cover Hero Slide (Split Layout 50:50)
   slides.push({
     slideNo: 1,
     type: 'Cover Hero (Executive Split)',
-    eyebrow: 'KONSEP & PENDIRIAN',
-    title: topic || 'Konsep Pendirian Institusi Unggul',
-    subtitle: 'Membangun Generasi Berilmu, Beriman, Berkarya, dan Bermanfaat untuk Umat',
-    layout: 'Split 50:50 — Left: Large Title, Eyebrow, Vision, Category Badges; Right: Photorealistic 3D Architecture with Walking Students; Bottom: Dark Navy & Gold Ribbon Branding Bar',
-    categoryChips: ['QUR\'AN', 'PTN', 'DESAIN', 'PEMROGRAMAN', 'AI'],
+    eyebrow: 'EXECUTIVE PROPOSAL',
+    title: topic,
+    subtitle: 'Membangun Ekosistem Berkelanjutan, Berdaya Saing Tinggi, dan Memberikan Dampak Nyata',
+    layout: 'Split 50:50 — Sisi Kiri: Judul Utama Tebal, Eyebrow Tag Emas, Visi Misi, dan 5 Badge Kategori; Sisi Kanan: Visual Fotorealistik 3D Rendering / Konsep Modern; Sisi Bawah: Pita Branding Elegan',
+    categoryChips: ['STRATEGI', 'INOVASI', 'OPERASIONAL', 'TEKNOLOGI', 'EKSEKUSI'],
     bullets: [
       `Topik Utama: ${topic}`,
       `Disusun Oleh: ${presenter || 'Tim Inisiator'}`,
-      `Target Audiens: ${audience || 'Stakeholder & Dewan Pembina'}`,
-      'Format Rasio: 16:9 Widescreen High Definition',
+      `Target Audiens: ${audience || 'Pemangku Kepentingan'}`,
+      'Rasio Standar: 16:9 Widescreen High Definition',
     ],
-    speakerNotes: `Bismillah. Selamat datang Bapak/Ibu sekalian. Pada presentasi ini, kita akan membahas ${topic} secara komprehensif mulai dari dasar filosofis, diferensiasi pasar, kurikulum implementatif, hingga simulasi anggaran tahun pertama.`,
-    visualPrompt: `16:9 widescreen presentation slide, left side clean white with bold navy typography "${topic}" and golden badges, right side realistic 3D architectural render of a modern Islamic boarding school building under bright blue sky with Indonesian students wearing uniform and backpacks walking toward the entrance, elegant corporate navy and golden ribbon footer bar, ultra-high resolution.`,
+    speakerNotes: `Selamat datang Bapak/Ibu sekalian. Pada sesi ini, kami memaparkan secara komprehensif mengenai ${topic}, mencakup landasan strategis, formulasi pemecahan masalah, alur implementasi terukur, hingga simulasi pembiayaan dan roadmap eksekusi.`,
+    visualPrompt: `16:9 widescreen presentation title slide, left side clean white/navy with bold modern typography "${topic}" and gold pill badges, right side realistic 3D architectural rendering of modern futuristic institution building under bright blue sky with professional people walking toward entrance, elegant dark navy and golden ribbon footer bar, studio quality lighting.`,
   });
 
-  // SLIDE 2: Dasar Pendirian (4 Numbered Cards + Right Column "CORE" Highlight Box)
+  // SLIDE 2: Dasar & Latar Belakang (4 Numbered Cards + Right Column "CORE" Highlight Box)
   slides.push({
     slideNo: 2,
-    type: 'Dasar Pendirian & Core Pillar',
-    eyebrow: 'DASAR & LATAR BELAKANG',
-    title: 'Dasar Pendirian & Modal Strategis',
-    subtitle: 'Menguatkan kesinambungan dakwah pendidikan dan merespon potensi pertumbuhan',
-    layout: 'Grid 2-Column: Left Side 4 Numbered Cards (01-04); Right Side Dark Navy High-Contrast "CORE" Card with Yellow Badge',
+    type: 'Dasar Pemikiran & Core Pillar',
+    eyebrow: 'LANDASAN STRATEGIS & MODALITAS',
+    title: 'Dasar Pemikiran & Modal Strategis',
+    subtitle: 'Mengoptimalkan momentum pertumbuhan dan merespon kebutuhan pasar secara terukur',
+    layout: 'Grid 2-Kolom: Sisi Kiri 4 Kartu Bernomor (01-04); Sisi Kanan Kartu Sorot "CORE" Berkontras Tinggi dengan Badge Kuning',
     bullets: [
-      '01. Kesinambungan Jenjang: Lanjutan strategis dari jenjang dasar/menengah agar pembinaan tidak terputus.',
-      '02. Modal Kepercayaan Lembaga: Rekam jejak unggul belasan tahun yang diakui masyarakat.',
-      '03. Blueprint Pengembangan Jangka Panjang: Bagian dari visi besar mencetak institusi pendidikan rujukan.',
-      '04. Skema Boarding Membuka Pasar: Menjangkau calon siswa potensial lintas daerah tanpa batas lokal.',
+      '01. Kesinambungan Program: Integrasi berjenjang agar pembinaan dan pengembangan kompetensi berjalan berkelanjutan.',
+      '02. Modal Kepercayaan Lembaga: Rekam jejak unggul dan reputasi positif yang telah terbangun kuat di mata stakeholder.',
+      '03. Blueprint Jangka Panjang: Bagian terencana dari visi besar mencetak entitas percontohan yang adaptif terhadap masa depan.',
+      '04. Skalabilitas & Jangkauan Pasar: Model yang teruji membuka potensi audiens dan target peserta lintas wilayah.',
     ],
     coreHighlight: {
-      tag: 'CORE',
-      body: 'Tidak hanya menambah unit baru, tapi menyiapkan jenjang strategis untuk melahirkan kader berilmu, beriman, berkarya, dan siap memimpin masa depan.',
-      output: 'Output Akhir: Qur\'an + PTN + Skill Digital',
+      tag: 'CORE PRINCIPLE',
+      body: 'Bukan sekadar menambah aktivitas baru, melainkan membangun ekosistem terpadu yang menghasilkan lulusan/output unggul, berkarakter, dan berdaya saing global.',
+      output: 'Output Akhir: Kompetensi Teruji + Karakter Kokoh + Portofolio Nyata',
     },
-    speakerNotes: 'Dasar pendirian ini bertumpu pada 4 pilar modal strategis. Kuncinya ada pada kotak CORE di kanan: kita tidak sekadar membangun fisik, tetapi menyiapkan ekosistem kaderisasi yang terintegrasi.',
-    visualPrompt: `16:9 presentation slide, top gold header "Dasar Pendirian", left side 4 clean horizontal cards with yellow/gold circular number badges (01, 02, 03, 04) with bold titles, right side a prominent tall dark navy blue card labeled CORE with golden badge and yellow output chip, crisp typography, clean background.`,
+    speakerNotes: 'Dasar pemikiran ini bertumpu pada 4 modal strategis utama. Di kotak CORE sebelah kanan terlihat intinya: fokus kita adalah menciptakan nilai tambah yang konkret dan terukur bagi semua pihak.',
+    visualPrompt: `16:9 presentation slide, top header with gold tag "LANDASAN STRATEGIS", left side 4 clean horizontal cards with yellow/gold circular number badges (01, 02, 03, 04) with bold titles, right side a prominent tall dark navy blue card labeled CORE with golden badge and yellow output chip, crisp typography, clean background.`,
   });
 
   // SLIDE 3: Tantangan & Solusi (2x2 Grid + Bottom Full-Width Resolution Banner)
   slides.push({
     slideNo: 3,
-    type: 'Tantangan & Solusi (2x2 Grid)',
+    type: 'Tantangan Lapangan & Solusi Terarah (2x2 Grid)',
     eyebrow: 'ANALISIS TANTANGAN & FORMULASI',
     title: 'Tantangan Lapangan & Solusi Terarah',
-    subtitle: 'Kunci bertahan: diferensiasi nyata, terukur, dan pembiayaan yang realistis',
-    layout: '2x2 Problem Grid Cards (01-04) + Full-Width Dark Navy Solution Banner at Bottom with Gold Badge',
+    subtitle: 'Kunci keberhasilan eksekusi: diferensiasi nyata, indikator terukur, dan pembiayaan realistis',
+    layout: '2x2 Problem Grid Cards (01-04) + Full-Width Dark Navy Solution Banner di Bagian Bawah dengan Badge Emas',
     bullets: [
-      '01. Kepercayaan Orang Tua: Kekhawatiran jaminan tembus PTN favorit.',
-      '02. Kematangan Pasar Baru: Edukasi nilai tambah di tahun-tahun awal operasional.',
-      '03. Beban Operasional Boarding: Pengelolaan biaya asrama, pembina, dan guru berkualitas.',
-      '04. Keterbatasan Jam Formal: Optimalisasi kurikulum non-formal lewat IT Club, bootcamp, dan projek nyata.',
+      '01. Kesiapan Pasar & Edukasi: Membangun pemahaman audiens terhadap nilai tambah unik di fase awal.',
+      '02. Standarisasi Kualitas Output: Menjamin konsistensi pencapaian target kompetensi di setiap tahapan.',
+      '03. Efisiensi Biaya Operasional: Mengelola alokasi anggaran dan sumber daya secara ramping (lean model).',
+      '04. Optimalisasi Waktu & Kurikulum: Menyeimbangkan teori formal dengan projek praktis dan studi kasus nyata.',
     ],
     solutionBanner: {
       badge: 'Diferensiasi = Terlihat, Terukur, dan Realistis',
-      text: 'Institusi diposisikan sebagai sekolah unggul yang tetap kuat di PTN dan Tahfizh, plus memiliki skill digital implementatif yang menghasilkan portofolio nyata siswa.',
+      text: 'Menghadirkan ekosistem pembelajaran dan eksekusi yang menghasilkan bukti nyata (portofolio konkret), didukung mentor berpengalaman dan kemitraan industri.',
     },
-    speakerNotes: 'Menghadapi 4 tantangan utama di lapangan, solusi kita bukan bertarung di hal konvensional, melainkan menyajikan diferensiasi yang terlihat hasilnya dan langsung dirasakan orang tua.',
+    speakerNotes: 'Setiap tantangan lapangan telah kami petakan dengan mitigasi yang jelas. Kuncinya ada pada banner solusi di bawah: menghadirkan diferensiasi yang terlihat hasilnya secara nyata.',
     visualPrompt: `16:9 infographic slide, top gold title "Tantangan Lapangan", 2x2 grid of modern rounded cards with red/navy numbered circles, bottom full-width deep navy banner with gold pill badge "Diferensiasi = Terlihat, Terukur" and white solution summary text.`,
   });
 
-  // SLIDE 4: 3-Pillar Positioning (3 Vertical Numbered Columns + Value Positioning Box)
+  // SLIDE 4: 3-Pilar Positioning (3 Vertical Numbered Columns + Value Positioning Box)
   slides.push({
     slideNo: 4,
-    type: 'Pillar Positioning (3 Columns)',
+    type: '3 Pilar Positioning & Value Proposition',
     eyebrow: 'VALUE POSITIONING',
     title: '3 Pilar Utama Positioning',
-    subtitle: 'Integrasi holistik antara karakter spiritual, akademis, dan keahlian digital masa depan',
-    layout: '3 Vertical Numbered Cards (1, 2, 3) with Center Card Highlighted in Deep Blue + Bottom Value Statement Box',
+    subtitle: 'Kombinasi seimbang antara fondasi karakter, keunggulan keilmuan, dan keahlian terapan',
+    layout: '3 Kolom Kartu Vertikal Bernomor (1, 2, 3) dengan Kartu Tengah Disorot Navy Gelap + Kotak Value Positioning di Bawah',
     bullets: [
-      'Pilar 1 (QUR\'AN & ADAB): Target tahfizh terukur, pembinaan karakter, adab harian, ibadah, dan kepemimpinan islami.',
-      'Pilar 2 (AKADEMIK & PTN): Kurikulum nasional integratif, pemetaan jurusan sejak dini, bimbingan intensif try-out masuk PTN.',
-      'Pilar 3 (SKILL IT & DIGITAL): Desain, Pemrograman, dan AI melalui Mulok, IT Club, projek portofolio, dan sertifikasi.',
+      'Pilar 1 (KARAKTER & INTEGRITAS): Pembentukan disiplin, kepemimpinan etis, etika profesional, dan tanggung jawab sosial.',
+      'Pilar 2 (KOMPETENSI AKADEMIK / INTI): Penguasaan kurikulum standar tinggi, pemecahan masalah kritis, dan kesiapan kompetisi global.',
+      'Pilar 3 (KETERAMPILAN DIGITAL & PRAKTIS): Penguasaan software tools, otomasi alur kerja, dan kemampuan memproduksi karya nyata.',
     ],
-    valueStatement: 'Membentuk generasi Qur\'ani, unggul akademik, siap tembus PTN, dan memiliki skill digital yang menghasilkan karya nyata.',
-    speakerNotes: 'Positioning kita berdiri di atas 3 pilar seimbang: Qur\'an, Akademik PTN, dan Skill IT. Ketiganya tidak saling meniadakan tetapi saling menguatkan nilai jual siswa.',
+    valueStatement: 'Mencetak generasi dan talenta masa depan yang berintegritas tinggi, unggul secara keilmuan, dan memiliki keahlian teknis bernilai jual.',
+    speakerNotes: 'Positioning kita berdiri di atas 3 pilar yang saling melengkapi. Pilar karakter sebagai pondasi, pilar kompetensi sebagai tiang, dan pilar keahlian praktis sebagai nilai jual langsung.',
     visualPrompt: `16:9 presentation slide showing 3 tall elegant vertical cards: Left card white with circle '1', Center card highlighted dark navy blue with circle '2' in gold, Right card white with circle '3', bottom wide card with golden label "Value Positioning", modern minimalist corporate style.`,
   });
 
-  // SLIDE 5: Kerangka Kurikulum Bertahap (3-Year Vertical Pipeline)
+  // SLIDE 5: Kerangka Alur Bertahap (3-Stage Timeline Columns)
   slides.push({
     slideNo: 5,
-    type: 'Kurikulum & Alur 3 Tahun',
-    eyebrow: 'FRAMEWORK PEMBELAJARAN',
-    title: 'Kurikulum Bertahap Kelas X - XII',
-    subtitle: 'Alur 3 tahun: Fundamental, Spesialisasi & Portofolio, lalu Fokus PTN dan Mentoring',
-    layout: '3 Vertical Timeline Columns (Kelas X, Kelas XI, Kelas XII) with Bottom OUTPUT Badges + Footnote Banner',
+    type: 'Kerangka Alur & Roadmap Bertahap',
+    eyebrow: 'FRAMEWORK IMPLEMENTASI',
+    title: 'Alur Pembelajaran & Eksekusi 3 Tahap',
+    subtitle: 'Pendekatan berjenjang: Fondasi Dasar, Spesialisasi Terarah, lalu Akselerasi Output',
+    layout: '3 Kolom Timeline Vertikal (Tahap 1, Tahap 2, Tahap 3) dengan Badge OUTPUT Spesifik di Dasar Kolom',
     bullets: [
-      'Kelas X (Fundamental Digital): Literasi data, etika digital, logika, dasar desain, pemrograman dasar, dasar AI. [OUTPUT: Portofolio awal + 3 karya]',
-      'Kelas XI (Spesialisasi & Projek): Masuk IT Club pilihan (Desain/Coding/AI), bootcamp intensif, projek mitra nyata. [OUTPUT: 1 produk digital layak tampil/jual]',
-      'Kelas XII (PTN & Finalisasi): Bimbingan intensif PTN, tahfizh target akhir, finalisasi portofolio, dan mentoring adik kelas. [OUTPUT: Siap PTN + Portofolio rapi]',
+      'Tahap 1 (Fondasi & Literasi Dasar): Pemahaman prinsip inti, logika berpikir, pengenalan tools standar, dan etika kerja. [OUTPUT: 3 Karya Fondasi Awal]',
+      'Tahap 2 (Spesialisasi & Projek Nyata): Penjurusan minat mendalam, simulasi studi kasus industri, dan pengerjaan projek mitra. [OUTPUT: 1 Produk/Solusi Siap Pakai]',
+      'Tahap 3 (Finalisasi & Mentoring): Portofolio showcase, sertifikasi kompetensi, persiapan jenjang karir/lanjutan, dan mentoring adik tingkat. [OUTPUT: Portofolio Lengkap + Siap Terjun]',
     ],
-    footnote: 'Catatan Strategis: Tahun ketiga tidak dibebani projek IT berat agar prioritas utama kelulusan dan PTN tercapai 100%.',
-    speakerNotes: 'Desain kurikulum ini bertahap dan realistis. Di kelas 10 mereka membangun pondasi, kelas 11 memproduksi karya nyata, dan kelas 12 fokus total pada persiapan masuk PTN.',
-    visualPrompt: `16:9 presentation slide showing 3 vertical curriculum roadmap columns with dark navy pill headers (Kelas X, Kelas XI, Kelas XII), bullet points, and highlighted bottom rectangular OUTPUT boxes, bottom note banner in soft grey.`,
+    footnote: 'Catatan Strategis: Beban kerja dirancang proporsional agar target capaian utama di setiap fase tercapai 100% tanpa risiko kejenuhan.',
+    speakerNotes: 'Framework ini menjamin setiap peserta melewati proses pematangan bertahap. Di tahap akhir, mereka tidak hanya memiliki sertifikat tetapi portofolio riil.',
+    visualPrompt: `16:9 presentation slide showing 3 vertical curriculum roadmap columns with dark navy pill headers (Fase 1, Fase 2, Fase 3), bullet points, and highlighted bottom rectangular OUTPUT boxes, bottom note banner in soft grey.`,
   });
 
-  // SLIDE 6: Jalur Spesialisasi IT Club (3 Tracks: Desain, Pemrograman, AI)
+  // SLIDE 6: Jalur Peminatan / Track Spesialisasi
   slides.push({
     slideNo: 6,
-    type: 'Jalur Spesialisasi (D, P, A)',
-    eyebrow: 'PILIHAN SPESIALISASI IT CLUB',
-    title: '3 Jalur Peminatan IT Terapan',
-    subtitle: 'Setiap siswa memilih 1 jalur keahlian digital terapan yang sesuai minat dan potensi',
-    layout: '3-Column Track Cards with Circular Letter Icons (D, P, A) + Sub-Skill Badges & Bottom Accomodation Banner',
+    type: 'Jalur Peminatan Keahlian (A, B, C)',
+    eyebrow: 'PILIHAN SPESIALISASI TERAPAN',
+    title: 'Jalur Keahlian Terapan Sesuai Potensi',
+    subtitle: 'Memberikan ruang fokus bagi setiap individu untuk mengasah keahlian unggulan spesifik',
+    layout: '3 Kartu Jalur dengan Badge Huruf Besar Berlingkar (A, B, C) + Sub-Skill Chips & Target Luaran',
     bullets: [
-      'Jalur D (DESAIN): Materi visual, konten promosi, branding UMKM, poster kegiatan. (Sub-skill: Poster, Feed Promosi, Branding Sederhana)',
-      'Jalur P (PEMROGRAMAN): Website sederhana, landing page PPDB, sistem data ringan, form interaktif. (Sub-skill: Web Profil, Landing Page, Database Ringan)',
-      'Jalur A (AI & OTOMASI): AI produktivitas, pembuatan konten, chatbot FAQ, otomasi administrasi, riset. (Sub-skill: Chatbot FAQ, Template AI, Asisten Kerja)',
+      'Jalur A (CREATIVE & DESIGN): Identitas visual, media promosi, konten digital, dan user interface design. (Sub-skill: Brand Visuals, Social Media Feed, UI Wireframe)',
+      'Jalur B (TECH & DEVELOPMENT): Pembuatan aplikasi web, landing page interaktif, basis data ringan, dan integrasi sistem. (Sub-skill: Web App, Landing Page, Automations)',
+      'Jalur C (AI & PRODUCTIVITY): AI workflow optimization, chatbot interaktif, data analysis, dan riset berbasis generative AI. (Sub-skill: Chatbot AI, Workflow Prompts, Data Insights)',
     ],
-    speakerNotes: 'Di IT Club, siswa difokuskan pada 1 dari 3 jalur praktis: Desain, Pemrograman, atau AI. Setiap jalur menghasilkan aset digital yang langsung bisa digunakan.',
-    visualPrompt: `16:9 infographic slide, 3 vertical cards featuring large circular badge letters (D in gold, P in navy blue, A in green), descriptive text, and pill badges for each sub-topic, clean minimalist aesthetic.`,
+    speakerNotes: 'Setiap peserta diarahkan memilih 1 jalur spesialisasi utama agar fokus belajarnya tajam dan menghasilkan karya yang mendalam.',
+    visualPrompt: `16:9 infographic slide, 3 vertical cards featuring large circular badge letters (A in gold, B in navy blue, C in green), descriptive text, and pill badges for each sub-topic, clean minimalist aesthetic.`,
   });
 
-  // SLIDE 7: Projek Portofolio 4 Kuadran (Sekolah, UMKM, Masjid, Siswa)
+  // SLIDE 7: Projek Portofolio 4 Kuadran
   slides.push({
     slideNo: 7,
-    type: 'Projek Portofolio 4 Kuadran',
+    type: 'Portofolio Karya Nyata (4 Kuadran)',
     eyebrow: 'PORTOFOLIO BERNILAI JUAL',
-    title: 'Penerapan Karya Portofolio Nyata',
-    subtitle: 'Skill digital harus terlihat dalam karya konkret, bukan sekadar teori di kelas',
-    layout: '4-Quadrant Cards (Sekolah, UMKM, Masjid/Dakwah, Siswa Pribadi) + Target Minimal Siswa Bar at Bottom',
+    title: 'Penerapan Karya Nyata & Dampak Langsung',
+    subtitle: 'Keahlian dibuktikan melalui hasil karya konkret yang dapat diuji dan bermanfaat bagi publik',
+    layout: '4 Kuadran Kartu Modern (Internal, Kemitraan UMKM, Sosial & Komunitas, Portofolio Mandiri) + Bar Target Capaian di Bawah',
     bullets: [
-      '1. Sekolah & Yayasan: Website PPDB online, desain brosur pendaftaran, feed media sosial, chatbot informasi.',
-      '2. UMKM & Komunitas: Landing page usaha lokal, katalog digital, desain promosi produk, form pemesanan online.',
-      '3. Masjid & Dakwah: Poster kajian, website agenda kegiatan masjid, template dakwah digital, laporan kegiatan.',
-      '4. Siswa Pribadi: Website portofolio pribadi, showcase karya desain/coding, artikel ilmiah, sertifikat kompetensi.',
+      '1. Kebutuhan Internal & Organisasi: Sistem informasi terpadu, media promosi resmi, template operasional, dan materi publikasi.',
+      '2. Kemitraan UMKM & Usaha Lokal: Pembuatan katalog digital, branding kemasan produk, dan landing page penjualan.',
+      '3. Sosial & Komunitas Publik: Media dakwah/edukasi, website informasi kegiatan sosial, dan publikasi komunitas.',
+      '4. Portofolio & Personal Branding: Website portofolio mandiri, showcase hasil karya digital, dan sertifikat kompetensi terverifikasi.',
     ],
-    targetBar: 'Target Minimal Siswa: Kelas X = 3 karya awal | Kelas XI = 1 produk siap jual | Kelas XII = Portofolio final siap kuliah & personal branding.',
-    speakerNotes: 'Portofolio ini yang membuktikan kualitas lulusan kepada wali murid dan perguruan tinggi. Karya siswa langsung dipakai oleh yayasan, UMKM sekitar, dan masjid.',
+    targetBar: 'Standar Target Capaian: Fase 1 = 3 Karya Fondasi | Fase 2 = 1 Produk Teruji | Fase 3 = Portofolio Lengkap Siap Industri.',
+    speakerNotes: 'Karya nyata ini yang membedakan program kita dengan yang lain. Hasil kerja peserta langsung digunakan oleh organisasi, UMKM, dan masyarakat.',
     visualPrompt: `16:9 presentation slide, 4 quadrant modern white cards with gold/navy icons, bottom dark navy target banner with golden text summarizing student output milestones.`,
   });
 
-  // SLIDE 8: Simulasi Anggaran & SDM Minimal (Corporate Financial Table)
+  // SLIDE 8: Simulasi Anggaran & SDM Ramping (Corporate Table)
   slides.push({
     slideNo: 8,
-    type: 'Simulasi Anggaran & SDM',
+    type: 'Simulasi Pembiayaan & SDM Operasional',
     eyebrow: 'STRUKTUR ANGGARAN & EFISIENSI',
     title: 'Simulasi Pembiayaan & SDM Tahun Pertama',
-    subtitle: 'Pola awal realistis: perkuat tim internal, mentor eksternal secukupnya, optimalkan mitra',
-    layout: 'Financial Simulation Table (Komponen, Pola/Siswa, Estimasi) + Right Side Principles Card + Bottom Total Row',
+    subtitle: 'Pola operasional ramping (lean model): maksimalkan tim internal, libatkan mentor praktisi',
+    layout: 'Tabel Finansial Data Bersih di Sisi Kiri + Kartu Prinsip Efisiensi di Sisi Kanan + Baris Total Emas',
     bullets: [
-      'Koordinator Program IT (Internal Yayasan) = Rp0 / included',
-      'Guru Muatan Lokal IT (Internal / Guru TIK) = Estimasi Rp18.000.000 / th',
-      'Mentor IT Club Desain, Coding, AI (Freelance / Mitra Praktisi) = @Rp12.000.000 / th',
-      'Narasumber Tamu & Workshop Khusus (4x setahun) = Rp2.000.000 / th',
-      'TOTAL ANGGARAN SDM IT MINIMAL = Rp56.000.000 / tahun',
+      'Koordinator Program & Manajerial (Internal Organisasi) = Alokasi Terpadu / Included',
+      'Instruktur / Tenaga Ahli Utama (Tim Internal Inti) = Estimasi Rp18.000.000 / th',
+      'Mentor Praktisi Spesialisasi (Freelance / Kemitraan) = Estimasi Rp36.000.000 / th (3 Mentor)',
+      'Narasumber Tamu & Workshop Khusus (4 Sesi Per Tahun) = Rp2.000.000 / th',
+      'TOTAL ALOKASI SDM MINIMAL TAHUN PERTAMA = Rp56.000.000 / tahun',
     ],
     principles: [
-      '1. Jangan semua dijadikan pegawai tetap; manfaatkan praktisi freelance & kemitraan.',
-      '2. Mentor hadir pada sesi IT Club, bimbingan projek, dan bootcamp.',
-      '3. Guru internal dilatih agar program tetap berjalan berkesinambungan.',
+      '1. Jangan semua dijadikan beban tetap; optimalkan skema kemitraan praktisi.',
+      '2. Mentor fokus hadir pada sesi klinik projek, bootcamp intensif, dan evaluasi.',
+      '3. Transfer knowledge ke tim internal agar institusi memiliki kemandirian jangka panjang.',
     ],
-    speakerNotes: 'Dari sisi pembiayaan, kita menggunakan pola ramping (lean model). Kita tidak merekrut banyak pegawai tetap, melainkan menggandeng mentor praktisi freelance.',
-    visualPrompt: `16:9 corporate financial slide, clean data table on left with blue header and gold total row, right side dark navy callout card with yellow title "Prinsip SDM Tahun Pertama" and numbered checklist.`,
+    speakerNotes: 'Dari aspek finansial, kita mengusung prinsip lean execution. Alokasi SDM dibuat sangat efisien dengan menggandeng praktisi industri secara fleksibel.',
+    visualPrompt: `16:9 corporate financial slide, clean data table on left with blue header and gold total row, right side dark navy callout card with yellow title "Prinsip Efisiensi Biaya" and numbered checklist.`,
   });
 
-  // SLIDE 9: Simulasi Biaya Siswa & Target Pendanaan (Financial Projection)
+  // SLIDE 9: Proyeksi Pendanaan & Skema Keberlanjutan
   slides.push({
     slideNo: 9,
-    type: 'Simulasi Biaya & Beasiswa',
-    eyebrow: 'PROYEKSI KEUANGAN & BEASISWA',
-    title: 'Simulasi Biaya & Target Pendanaan Awal',
-    subtitle: 'Angka kerja awal untuk 25 siswa (1 kelas) dengan skema subsidi dan beasiswa berjenjang',
-    layout: 'Dual-Table Layout: Komponen Biaya Siswa vs Kategori Skema Masuk + 4 Key Financial Badges at Bottom',
+    type: 'Proyeksi Pendanaan & Target Alokasi',
+    eyebrow: 'PROYEKSI KEUANGAN & SPONSORSHIP',
+    title: 'Proyeksi Kebutuhan & Target Pendanaan Awal',
+    subtitle: 'Perhitungan kebutuhan investasi awal, operasional tahun pertama, dan skema kemitraan pendanaan',
+    layout: 'Dual-Table Layout: Komponen Alokasi Utama vs Sumber Pendanaan + 4 Kartu Metrik Finansial di Bawah',
     bullets: [
-      'Total Kebutuhan Biaya 25 Siswa = Rp950.000.000',
-      'Estimasi Dana Masuk Siswa Mandiri (Alumni & Non-Alumni) = Rp171.000.000',
-      'Kekurangan Subsidi / Beasiswa = Rp779.000.000',
-      'Investasi Infrastruktur IT Awal = Rp49.100.000',
+      'Total Kebutuhan Biaya Operasional Penuh (Batch Awal) = Rp950.000.000',
+      'Estimasi Penerimaan Mandiri & Registrasi = Rp171.000.000',
+      'Alokasi Skema Beasiswa / Subsidi Kemitraan = Rp779.000.000',
+      'Investasi Infrastruktur & Perangkat Awal = Rp49.100.000',
       'TOTAL TARGET KEBUTUHAN PENDANAAN AWAL = Rp828.100.000 (Target Sponsor: Rp800 - 900 Juta)',
     ],
-    speakerNotes: 'Berikut simulasi kebutuhan dana untuk 25 siswa awal. Target fundraising dan kemitraan yayasan dipatok di kisaran Rp800 hingga Rp900 juta untuk menjamin operasional penuh 1 tahun.',
+    speakerNotes: 'Berikut proyeksi kebutuhan dana tahun pertama. Target kemitraan dan sponsorship dipatok pada angka Rp800-900 juta untuk mengamankan operasional penuh.',
     visualPrompt: `16:9 financial projection presentation slide with clean tables, 4 colorful bottom metric cards (Dark Blue, Emerald Green, Coral Red, Gold) showing key financial totals, professional BCG style.`,
   });
 
-  // SLIDE 10: Roadmap Implementasi 4 Tahap & Action Items (Keputusan Rapat)
+  // SLIDE 10: Roadmap Eksekusi 4 Tahap & Agenda Keputusan
   slides.push({
     slideNo: 10,
-    type: 'Roadmap & Action Items',
+    type: 'Roadmap Eksekusi & Agenda Keputusan',
     eyebrow: 'ROADMAP IMPLEMENTASI & KEPUTUSAN',
-    title: 'Roadmap Eksekusi & Agenda Keputusan',
-    subtitle: 'Agar konsep tidak berhenti sebagai wacana, dibutuhkan kesepakatan tahap awal yang terukur',
-    layout: '4 Milestone Cards (0-3 Bln, 3-6 Bln, 6-12 Bln, Thn 2) + Dark Action Checklist Card + Bottom Golden Ribbon Takeaway',
+    title: 'Roadmap Eksekusi & Agenda Keputusan Rapat',
+    subtitle: 'Agar proposal tidak berhenti sebagai wacana, dibutuhkan kesepakatan langkah awal yang terukur',
+    layout: '4 Kartu Milestone Horizontal di Atas + Kotak Checklist Gelap "Yang Harus Segera Disepakati" di Tengah + Pita Emas Penutup',
     bullets: [
-      'Fase 1 (0-3 Bulan): Finalisasi konsep kurikulum, target output, skema beasiswa, dan paket promosi awal.',
-      'Fase 2 (3-6 Bulan): Persiapan modul IT dasar, setup LMS/Website PPDB, MoU mentor mitra, seleksi calon siswa.',
-      'Fase 3 (6-12 Bulan): Tahun pertama berjalan, Mulok & IT Club aktif, portofolio awal siswa, monitoring wali murid.',
-      'Fase 4 (Tahun Kedua): Akselerasi portofolio, bootcamp lanjutan, sertifikasi internasional, dan showcase karya publik.',
+      'Fase 1 (Bulan 0 - 3): Finalisasi konsep kurikulum, target luaran, skema pendanaan, dan materi sosialisasi.',
+      'Fase 2 (Bulan 3 - 6): Persiapan modul teknis, setup infrastruktur/LMS, MoU mentor mitra, dan rekrutmen peserta.',
+      'Fase 3 (Bulan 6 - 12): Program berjalan, pendampingan projek, pembuatan portofolio awal, dan evaluasi berkala.',
+      'Fase 4 (Tahun Kedua): Akselerasi kompetensi lanjutan, uji sertifikasi, pameran karya publik (showcase), dan ekspansi skala.',
     ],
     actionChecklist: [
-      '1. Menyetujui positioning institusi berbasis Qur\'an, PTN, dan software skill IT terapan.',
-      '2. Menyetujui pembukaan 3 jalur IT Club awal: Desain, Pemrograman, dan AI.',
-      '3. Menyetujui skema beasiswa awal serta target fundraising sponsor Rp500jt - Rp800jt.',
-      '4. Membentuk tim taskforce kecil untuk kurikulum, kemitraan, promosi, dan SPMB.',
+      '1. Menyetujui positioning program berbasis integritas, keunggulan inti, dan portofolio keahlian terapan.',
+      '2. Menyetujui pembukaan 3 jalur peminatan spesialisasi awal.',
+      '3. Menyetujui target penggalangan kemitraan dan sponsor tahap awal.',
+      '4. Membentuk tim taskforce kecil untuk penyiapan kurikulum, operasional, dan kemitraan strategis.',
     ],
-    goldenTakeaway: 'Mulai dari yang sederhana, berjalan konsisten, lalu naik kelas secara bertahap.',
-    speakerNotes: 'Sebagai penutup, ada 4 poin keputusan yang kami ajukan untuk disepakati hari ini. Prinsip kita: mulai sederhana, jalan konsisten, lalu naik kelas bertahap.',
+    goldenTakeaway: 'Mulai dari yang terencana dan sederhana, jalankan secara konsisten, lalu bertumbuh secara bertahap.',
+    speakerNotes: 'Sebagai penutup, ada 4 poin keputusan yang kami ajukan hari ini. Prinsip kita: mulai terencana, jalankan konsisten, lalu naik kelas secara bertahap.',
     visualPrompt: `16:9 presentation slide showing 4 horizontal roadmap milestones at top with dark blue badge headers, a large dark navy container at middle labeled "Yang Harus Segera Disepakati" with 4 golden check items, bottom warm gold ribbon with inspirational quote, executive finish.`,
   });
 
-  // Generate Master Markdown Prompt for AI (ChatGPT / Gemini / Grok / Claude)
+  // Master Prompt for AI Deck Generators
   const markdownPrompt = `# MASTER PROMPT: EXECUTIVE 16:9 PRESENTATION DECK GENERATOR
-**Standar Desain**: Masterclass Robbani & McKinsey Executive Style
+**Standar Desain**: Masterclass Executive Layout (McKinsey & BCG Style)
 **Topik Presentasi**: ${topic}
-**Presenter / Tim**: ${presenter || 'Tim Inisiator'}
-**Target Audiens**: ${audience || 'Stakeholder & Dewan Pembina'}
-**Gaya Visual**: ${styleObj.name} (Navy #002D62, Gold #EAAA00, Clean White #FFFFFF)
+**Presenter / Tim**: ${presenter || 'Tim Penyusun'}
+**Target Audiens**: ${audience || 'Pemangku Kepentingan'}
+**Gaya Visual**: ${styleObj.name}
 **Jumlah Slide**: ${slides.length} Slide Lengkap
 
 ---
@@ -263,17 +263,17 @@ ${includeVisualPrompts ? `- **AI Image Prompt (16:9)**: \`\`\`${s.visualPrompt}\
 
 ---
 
-## PETUNJUK EXPORT & IMPLEMENTASI KE POWERPOINT / CANVA / GAMMA
-1. **Rasio**: Wajib gunakan aspect ratio 16:9 Widescreen.
+## PETUNJUK IMPLEMENTASI DESAIN KE POWERPOINT / CANVA / GAMMA
+1. **Rasio Tampilan**: Wajib menggunakan format Widescreen 16:9.
 2. **Palet Warna Utama**:
-   - Primary Deep: Navy Blue \`#002D62\` (Elemen kartu core, banner solusi, dan footer branding)
-   - Secondary Accent: Warm Gold / Amber \`#EAAA00\` (Nomor urut, badge circular, dan border penekanan)
-   - Neutral Light: Pure White \`#FFFFFF\` & Soft Ice Grey \`#F4F7FA\` (Dasar kartu dan kanvas bersih)
-   - Text Dark: Slate Navy \`#0F172A\` (Teks judul tebal dan konten mudah dibaca)
-3. **Tipografi**:
-   - Headings: Bold Sans-Serif (Inter / Montserrat / Plus Jakarta Sans) 900 weight.
-   - Body: Clean readable Sans-Serif 400-600 weight.
-4. **Visual Imagery**: Gunakan gambar fotorealistik berkualitas studio tanpa watermark untuk area split hero.`;
+   - Primary Deep: Navy Blue \`#002D62\` (Elemen kartu core, banner solusi, badge tebal, dan footer)
+   - Secondary Accent: Warm Gold \`#EAAA00\` (Nomor urut, badge sorot, dan border penekanan)
+   - Neutral Background: Pure White \`#FFFFFF\` & Soft Ice Grey \`#F4F7FA\` (Kanvas bersih mudah dibaca)
+   - Teks Utama: Slate Navy \`#0F172A\` (Tipografi tebal dengan kontras tinggi)
+3. **Hierarki Tipografi**:
+   - Judul Slide: Bold Sans-Serif (Inter / Montserrat / Plus Jakarta Sans) 900 weight.
+   - Body & Poin: Clean Sans-Serif 500-600 weight.
+4. **Visual Imagery**: Gunakan gambar fotorealistik 3D atau foto profesional tanpa watermark.`;
 
   return {
     slides,
