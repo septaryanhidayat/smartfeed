@@ -6,7 +6,7 @@ window.__AF_CONFIG = {
 
    /* -- 1. BRANDING --------------------------------------------------- */
    brandName: "Smart Feed",              // nama brandmu (kata terakhir tampil warna aksen)
-   tagline: "AI Design Studio",           // teks kecil di bawah logo
+   tagline: "AI Studio",           // teks kecil di bawah logo
    logoUrl: "/landing/brand/logo.png",    // timpa file logo di folder ini, atau isi URL gambar
 
    /* -- 1b. WARNA (opsional) - kosongkan "" = pakai bawaan -------------

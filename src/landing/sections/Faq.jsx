@@ -12,8 +12,8 @@ const FAQS = [
     a: `Tidak. Itu justru masalah yang ${CONFIG.brandName} selesaikan. Cukup pilih kategori industri, isi nama produk, pilih warna brand, selebihnya engine yang kerjain. Pemula total pun bisa pakai hari pertama.`,
   },
   {
-    q: 'Format dan rasio apa saja yang bisa dihasilkan?',
-    a: 'Semua format komersial yang biasa dipakai: feed Instagram 1:1, story / reels / TikTok / shorts 9:16, thumbnail YouTube 16:9, dan typography ads 4:5. Tinggal pilih sesuai kebutuhan upload.',
+    q: 'Format, modul, dan rasio apa saja yang bisa dihasilkan?',
+    a: 'Lengkap untuk segala kebutuhan: Feed Instagram 1:1, Story / Reels / TikTok 9:16, YouTube Thumbnail & Storyboard 16:9, Typography Ads & Carousel 4:5, Naskah Berita Jurnalistik 5W+1H, Menu F&B A4/Poster, hingga Slicer ZIP untuk 9-Grid & Carousel.',
   },
   {
     q: 'Apakah ada biaya bulanan?',
