@@ -50,10 +50,10 @@ export const CONFIG = {
   price:        pick(cfg.price, '149.000'),
   priceStrike:  pick(cfg.priceStrike, '499.000'),
   affiliatePerSignup: Number(pick(cfg.affiliatePerSignup, 25000)),
-  enableFreeTrainingClaim: cfg.enableFreeTrainingClaim !== false,
+  enableFreeTrainingClaim: isTruthy(cfg.enableFreeTrainingClaim, true),
 
   // ── Tier 2: Lisensi Reseller (hak jual kembali, profit 100%) ──
-  showResellerTier:   cfg.showResellerTier !== false,        // true = tampilkan kartu reseller
+  showResellerTier:   isTruthy(cfg.showResellerTier, false),        // true = tampilkan kartu reseller
   resellerPrice:      pick(cfg.resellerPrice, '290.000'),
   resellerStrike:     pick(cfg.resellerStrike, '1.500.000'),
   resellerPaymentUrl: pick(cfg.resellerPaymentUrl, '/checkout?plan=reseller'),

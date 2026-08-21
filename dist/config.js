@@ -37,15 +37,20 @@ window.__AF_CONFIG = {
    facebookUrl: "https://www.facebook.com/berandateknologidigital",
    facebookHandle: "Beranda Teknologi Digital",
 
-   /* -- 3. HARGA (tampilan teks) -------------------------------------- */
-   price: "149.000",            // harga tampil untuk tes
-   priceStrike: "499.000",    // harga coret
-   affiliatePerSignup: 25000, // komisi affiliate per pendaftaran (angka, tanpa kutip)
-   enableFreeTrainingClaim: true, // true = tampilkan link/tombol klaim gratis peserta pelatihan
+    /* -- 3. HARGA (tampilan teks) -------------------------------------- */
+    price: "149.000",            // harga tampil untuk tes
+    priceStrike: "499.000",    // harga coret
+    affiliatePerSignup: 25000, // komisi affiliate per pendaftaran (angka, tanpa kutip)
 
-   /* -- 3b. TIER LISENSI RESELLER ------------------------------------
-      false = sembunyikan kartu "Jual Ulang" (untuk situs jualan biasa). */
-   showResellerTier: false,
+    /* -- 3b. LINK KLAIM GRATIS PESERTA PELATIHAN ------------------------
+       Bisa diisi: true / "on" (Buka pendaftaran) atau false / "off" (Tutup pendaftaran).
+       - true / "on"   : Tampilkan link/tombol klaim akses gratis di landing page
+       - false / "off" : Sembunyikan & tutup semua link pendaftaran peserta gratis */
+    enableFreeTrainingClaim: true,
+
+    /* -- 3c. TIER LISENSI RESELLER ------------------------------------
+       false = sembunyikan kartu "Jual Ulang" (untuk situs jualan biasa). */
+    showResellerTier: false,
 
    /* -- 4. PENDAFTARAN & LOGIN via GOOGLE SPREADSHEET ----------------
       a. sheetWebhookUrl: URL Google Apps Script Web App untuk otomatis mencatat
