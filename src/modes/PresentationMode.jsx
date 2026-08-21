@@ -3,7 +3,7 @@ import {
   Presentation, Sparkles, LayoutTemplate, Layers, Palette, Users, BookOpen,
   ChevronLeft, ChevronRight, Copy, Check, Download, Wand2, Mic, Eye, FileText, MonitorPlay,
   CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, Shuffle, Briefcase,
-  Code2, ExternalLink, Library, Rocket, Clock, Globe, BarChart3, HelpCircle, ChevronDown, CheckSquare, Square
+  Code2, ExternalLink, Library, Rocket, Clock, Globe, BarChart3, HelpCircle, ChevronDown, CheckSquare, Square, RotateCcw
 } from 'lucide-react';
 import {
   PRESENTATION_TYPES,
@@ -15,7 +15,7 @@ import {
   PRESENTATION_TONES,
   PRESENTATION_DEMOS,
 } from '../data/presentationOptions.js';
-import { buildPresentation } from '../prompts/buildPresentation.js';
+import { buildPresentation, INITIAL_PRESENTATION } from '../prompts/buildPresentation.js';
 
 export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
@@ -27,18 +27,18 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   const outputRef = useRef(null);
 
   const {
-    topic = 'Strategi buat konten mudah dan menarik',
-    type = 'Edukasi / Workshop',
-    audience = 'Kreator pemula atau yang mau mulai ngonten',
+    topic = '',
+    type = 'Pitching ke Investor',
+    audience = '',
     slideCount = 6,
     duration = '5-10 menit',
     language = 'Indonesia',
-    keyPoints = '- tipe-tipe konten\n- contoh kreator yang mudah ditiru\n- trend\n- konten yang bermanfaat',
+    keyPoints = '',
     dataEvidence = '',
-    mainCta = 'Ikut komunitas yang siap mendukung pertumbuhan mu',
-    designStyle = 'Kreatif & Playful',
-    colorScheme = 'Putih, Orange, Kuning, Hijau',
-    visualElements = ['Infografis & Diagram', 'Ikon Vektor', 'Foto HD', 'Timeline', 'Comparison Table'],
+    mainCta = '',
+    designStyle = 'Profesional & Minimalis',
+    colorScheme = '',
+    visualElements = ['Infografis & Diagram', 'Ikon Vektor', 'Grafik & Chart'],
     tone = 'Percaya Diri',
     extraNotes = '',
   } = state || {};
@@ -60,8 +60,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     bullets: [],
     eyebrow: (type || 'PRESENTASI EKSEKUTIF').toUpperCase(),
     title: topic || 'Slide Title',
-    subtitle: `Disusun untuk: ${audience}`,
-    categoryChips: ['STRATEGI', 'KONTEN', 'KOMUNITAS']
+    subtitle: `Disusun untuk: ${audience || 'Target Audiens'}`,
+    categoryChips: ['STRATEGI', 'EKSEKUTIF', 'AKSI']
   };
 
   const bullets = Array.isArray(currentSlide?.bullets) ? currentSlide.bullets : [];
@@ -125,6 +125,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     }
   };
 
+  const handleClear = () => {
+    if (onSetState) {
+      onSetState({ ...INITIAL_PRESENTATION });
+      setActiveSlideIndex(0);
+    }
+  };
+
   const toggleVisualElement = (elem) => {
     if (!onChangeField) return;
     const current = Array.isArray(visualElements) ? [...visualElements] : [];
@@ -154,14 +161,37 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   return (
     <div className="space-y-5 w-full">
 
-      {/* ── TOP PRESETS BAR (CLEAN HORIZONTAL SCROLL ON MOBILE) ── */}
+      {/* ── TOP PRESETS & ACTION TOOLBAR (CLEAN HORIZONTAL SCROLL ON MOBILE) ── */}
       <div className="surface p-3 sm:p-3.5 rounded-xl border border-border flex items-center justify-between gap-2 overflow-hidden shadow-xs">
         <div className="flex items-center gap-1.5 shrink-0 text-text font-bold text-xs">
           <Sparkles className="w-3.5 h-3.5 text-accent" />
-          <span className="hidden sm:inline">Kasus Demo:</span>
+          <span className="hidden sm:inline">Pilihan Demo:</span>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar py-0.5 min-w-0 flex-1 justify-end">
+          {/* Tombol Clear / Kosongkan Form */}
+          <button
+            type="button"
+            onClick={handleClear}
+            className="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 shrink-0 transition flex items-center gap-1.5 cursor-pointer"
+            title="Kosongkan seluruh isian form"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Kosongkan</span>
+          </button>
+
+          {/* Tombol Acak Demo */}
+          <button
+            type="button"
+            onClick={handleRandomizeDemo}
+            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-400 shrink-0 transition flex items-center gap-1.5 cursor-pointer"
+            title="Acak contoh presentasi"
+          >
+            <Shuffle className="w-3.5 h-3.5" />
+            <span>Acak Demo</span>
+          </button>
+
+          {/* Chips Demo Presets */}
           {PRESENTATION_DEMOS.map((demo, idx) => (
             <button
               key={idx}
@@ -176,16 +206,6 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <span>{demo.tag}</span>
             </button>
           ))}
-
-          <button
-            type="button"
-            onClick={handleRandomizeDemo}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-400 shrink-0 transition flex items-center gap-1.5 cursor-pointer"
-            title="Acak contoh presentasi"
-          >
-            <Shuffle className="w-3.5 h-3.5" />
-            <span>Acak Template</span>
-          </button>
         </div>
       </div>
 
@@ -197,9 +217,20 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
           {/* BAGIAN 1 — IDENTITAS PRESENTASI */}
           <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-sky-400 flex items-center gap-2 border-b border-border pb-2">
-              <span className="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-extrabold text-[10px]">1</span>
-              <span>BAGIAN 1 — IDENTITAS PRESENTASI</span>
+            <div className="text-xs font-bold tracking-wider uppercase text-sky-400 flex items-center justify-between border-b border-border pb-2">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-extrabold text-[10px]">1</span>
+                <span>BAGIAN 1 — IDENTITAS PRESENTASI</span>
+              </div>
+              {topic && (
+                <button
+                  type="button"
+                  onClick={() => onChangeField && onChangeField('topic', '')}
+                  className="text-[10px] text-text-dim hover:text-red-400 font-normal cursor-pointer"
+                >
+                  Bersihkan
+                </button>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -212,7 +243,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={topic || ''}
                   onChange={(e) => onChangeField && onChangeField('topic', e.target.value)}
-                  placeholder="contoh: Strategi buat konten mudah dan menarik"
+                  placeholder="Ketik topik presentasi (atau klik tombol Demo di atas)..."
                   className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -249,7 +280,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={audience || ''}
                   onChange={(e) => onChangeField && onChangeField('audience', e.target.value)}
-                  placeholder="contoh: Kreator pemula atau yang mau mulai ngonten"
+                  placeholder="contoh: Investor, Calon Klien, Tim Internal, Pelajar..."
                   className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -328,9 +359,20 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
           {/* BAGIAN 2 — KONTEN & PESAN */}
           <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-emerald-400 flex items-center gap-2 border-b border-border pb-2">
-              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-extrabold text-[10px]">2</span>
-              <span>BAGIAN 2 — KONTEN &amp; PESAN</span>
+            <div className="text-xs font-bold tracking-wider uppercase text-emerald-400 flex items-center justify-between border-b border-border pb-2">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-extrabold text-[10px]">2</span>
+                <span>BAGIAN 2 — KONTEN &amp; PESAN</span>
+              </div>
+              {keyPoints && (
+                <button
+                  type="button"
+                  onClick={() => onChangeField && onChangeField('keyPoints', '')}
+                  className="text-[10px] text-text-dim hover:text-red-400 font-normal cursor-pointer"
+                >
+                  Bersihkan
+                </button>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -344,7 +386,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   rows={4}
                   value={keyPoints || ''}
                   onChange={(e) => onChangeField && onChangeField('keyPoints', e.target.value)}
-                  placeholder="- tipe-tipe konten&#10;- contoh kreator yang mudah ditiru&#10;- trend&#10;- konten yang bermanfaat"
+                  placeholder="- Masalah utama / latar belakang&#10;- Solusi atau inovasi yang ditawarkan&#10;- Langkah implementasi&#10;- Manfaat bagi audiens..."
                   className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none leading-relaxed"
                 />
               </div>
@@ -358,7 +400,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={dataEvidence || ''}
                   onChange={(e) => onChangeField && onChangeField('dataEvidence', e.target.value)}
-                  placeholder="Contoh: 80% audiens memutuskan di 3 detik pertama, pertumbuhan 30% YoY"
+                  placeholder="Contoh: Pertumbuhan 35% YoY, 1.200 klien aktif, survei kepuasan 90%..."
                   className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -372,7 +414,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={mainCta || ''}
                   onChange={(e) => onChangeField && onChangeField('mainCta', e.target.value)}
-                  placeholder="contoh: Ikut komunitas yang siap mendukung pertumbuhan mu"
+                  placeholder="contoh: Menyetujui alokasi dana, bergabung ke program, jadwalkan meeting lanjutan..."
                   className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -413,13 +455,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               {/* 11. Skema Warna */}
               <div>
                 <label className="block text-xs font-bold text-text mb-1">
-                  11. Skema Warna Utama
+                  11. Skema Warna Utama (Opsional)
                 </label>
                 <input
                   type="text"
                   value={colorScheme || ''}
                   onChange={(e) => onChangeField && onChangeField('colorScheme', e.target.value)}
-                  placeholder="contoh: Putih, Orange, Kuning, Hijau"
+                  placeholder="contoh: Navy, Gold, Putih (atau kosongkan untuk mengikuti gaya desain)"
                   className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -493,7 +535,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={extraNotes || ''}
                   onChange={(e) => onChangeField && onChangeField('extraNotes', e.target.value)}
-                  placeholder="contoh: Terapkan gaya bercerita santai yang memotivasi pemula"
+                  placeholder="contoh: Tekankan ROI cepat dan kemudahan adopsi bagi pemula..."
                   className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -688,7 +730,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                     {currentSlide?.eyebrow || 'MAGIC PRESENTATION'}
                   </div>
                   <h3 className="text-sm sm:text-base font-black text-white leading-tight mt-0.5 truncate">
-                    {currentSlide?.title || topic}
+                    {currentSlide?.title || topic || 'Judul Slide Presentasi'}
                   </h3>
                 </div>
 
@@ -705,13 +747,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   <div className="grid grid-cols-[1.2fr_0.9fr] gap-3 items-center h-full">
                     <div className="space-y-1.5">
                       <div className="text-sm sm:text-base font-black leading-tight text-white line-clamp-2">
-                        {topic}
+                        {topic || 'Judul / Topik Presentasi'}
                       </div>
                       <p className="text-[9px] sm:text-[10px] text-white/80 line-clamp-2 leading-relaxed">
                         {currentSlide?.subtitle}
                       </p>
                       <div className="flex flex-wrap gap-1 pt-0.5">
-                        {(currentSlide?.categoryChips || ['STRATEGI', 'KONTEN', 'KOMUNITAS']).map((chip, cIdx) => (
+                        {(currentSlide?.categoryChips || ['STRATEGI', 'EKSEKUTIF', 'AKSI']).map((chip, cIdx) => (
                           <span key={cIdx} className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
                             {chip}
                           </span>
@@ -744,7 +786,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
               {/* Bottom Ribbon */}
               <div className="border-t border-white/10 pt-1.5 flex items-center justify-between text-[8px] text-white/60 font-mono">
-                <span className="truncate">{topic} | {audience}</span>
+                <span className="truncate">{topic || 'Smart Feed'} | {audience || 'Eksekutif'}</span>
                 <span className="text-[#10B981] font-bold shrink-0">1 Slide 1 Pesan</span>
               </div>
             </div>
