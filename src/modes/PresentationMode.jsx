@@ -4,7 +4,7 @@ import {
   ChevronLeft, ChevronRight, Copy, Check, Download, Wand2, Mic, Eye, FileText, MonitorPlay,
   CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, Shuffle, Briefcase,
   Code2, ExternalLink, Library, Rocket, Clock, Globe, BarChart3, HelpCircle, ChevronDown, CheckSquare, Square, RotateCcw,
-  BookMarked
+  BookMarked, Paintbrush
 } from 'lucide-react';
 import {
   PRESENTATION_TYPES,
@@ -21,7 +21,7 @@ import PresentationDemoModal from '../components/PresentationDemoModal.jsx';
 
 export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
-  const [outputTab, setOutputTab] = useState('prompt'); // 'prompt' | 'gamma' | 'vba' | 'notebooklm'
+  const [outputTab, setOutputTab] = useState('canva'); // 'canva' | 'prompt' | 'gamma' | 'vba' | 'notebooklm'
   const [copied, setCopied] = useState(false);
   const [copiedVisual, setCopiedVisual] = useState(false);
   const [generatedToast, setGeneratedToast] = useState(false);
@@ -51,11 +51,11 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
       return buildPresentation(state);
     } catch (e) {
       console.warn('[PresentationMode] build error', e);
-      return { slides: [], notebookLmDoc: '', gammaOutline: '', vbaMacro: '', markdownPrompt: '', magicPrompt: '' };
+      return { slides: [], notebookLmDoc: '', gammaOutline: '', vbaMacro: '', markdownPrompt: '', magicPrompt: '', canvaMagicPrompt: '' };
     }
   }, [state]);
 
-  const { slides = [], notebookLmDoc = '', gammaOutline = '', vbaMacro = '', markdownPrompt = '', magicPrompt = '' } = result || {};
+  const { slides = [], notebookLmDoc = '', gammaOutline = '', vbaMacro = '', markdownPrompt = '', magicPrompt = '', canvaMagicPrompt = '' } = result || {};
 
   const safeIndex = Math.min(Math.max(activeSlideIndex, 0), Math.max((slides?.length || 1) - 1, 0));
   const currentSlide = (slides && slides[safeIndex]) || {
@@ -71,6 +71,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
   const getCurrentOutputContent = () => {
     switch (outputTab) {
+      case 'canva':
+        return canvaMagicPrompt || '';
       case 'gamma':
         return gammaOutline || '';
       case 'vba':
@@ -100,7 +102,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   const handleDownload = () => {
     const content = getCurrentOutputContent();
     const ext = outputTab === 'vba' ? 'vba.txt' : 'md';
-    const prefix = outputTab === 'vba' ? 'PowerPoint-Macro' : outputTab === 'gamma' ? 'Gamma-Canva-Outline' : outputTab === 'notebooklm' ? 'NotebookLM-Source' : 'Magic-Prompt-Deck';
+    const prefix = outputTab === 'vba' ? 'PowerPoint-Macro' : outputTab === 'canva' ? 'Canva-Magic-Design-Prompt' : outputTab === 'gamma' ? 'Gamma-Canva-Outline' : outputTab === 'notebooklm' ? 'NotebookLM-Source' : 'Magic-Prompt-Deck';
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -550,7 +552,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={extraNotes || ''}
                   onChange={(e) => onChangeField && onChangeField('extraNotes', e.target.value)}
-                  placeholder="contoh: Diformat agar pas untuk Docs-to-Deck Canva & Gamma..."
+                  placeholder="contoh: Diformat agar pas untuk Canva & Gamma..."
                   className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -594,20 +596,36 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               </div>
             )}
 
-            {/* 4 Engine Tabs */}
-            <div className="grid grid-cols-2 gap-2">
+            {/* 5 Engine Tabs (With Canva Magic Design as First Tab!) */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => setOutputTab('prompt')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
-                  outputTab === 'prompt'
-                    ? 'bg-sky-500/15 border-sky-500 text-text font-bold shadow-xs'
+                onClick={() => setOutputTab('canva')}
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                  outputTab === 'canva'
+                    ? 'bg-sky-500/20 border-sky-400 text-text font-bold shadow-xs ring-1 ring-sky-500/40'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
                 <div className="flex items-center gap-1.5 text-xs text-sky-400 font-black">
-                  <FileText className="w-4 h-4" />
-                  <span>Magic Prompt AI</span>
+                  <Paintbrush className="w-3.5 h-3.5" />
+                  <span>Canva Magic AI</span>
+                </div>
+                <div className="text-[10px] text-text-dim mt-0.5">Template Search Box</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOutputTab('prompt')}
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                  outputTab === 'prompt'
+                    ? 'bg-purple-500/20 border-purple-400 text-text font-bold shadow-xs ring-1 ring-purple-500/40'
+                    : 'bg-bg-panel border-border text-text-mut hover:text-text'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 text-xs text-purple-400 font-black">
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Mega Prompt AI</span>
                 </div>
                 <div className="text-[10px] text-text-dim mt-0.5">ChatGPT, Claude, Gemini</div>
               </button>
@@ -615,15 +633,15 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={() => setOutputTab('gamma')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
                   outputTab === 'gamma'
-                    ? 'bg-purple-500/15 border-purple-500 text-text font-bold shadow-xs'
+                    ? 'bg-emerald-500/20 border-emerald-400 text-text font-bold shadow-xs ring-1 ring-emerald-500/40'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-xs text-purple-400 font-black">
-                  <Rocket className="w-4 h-4" />
-                  <span>Canva / Gamma</span>
+                <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-black">
+                  <Rocket className="w-3.5 h-3.5" />
+                  <span>Gamma / Outline</span>
                 </div>
                 <div className="text-[10px] text-text-dim mt-0.5">1-click outline slide</div>
               </button>
@@ -631,14 +649,14 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={() => setOutputTab('vba')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
                   outputTab === 'vba'
-                    ? 'bg-emerald-500/15 border-emerald-500 text-text font-bold shadow-xs'
+                    ? 'bg-amber-500/20 border-amber-400 text-text font-bold shadow-xs ring-1 ring-amber-500/40'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-black">
-                  <Code2 className="w-4 h-4" />
+                <div className="flex items-center gap-1.5 text-xs text-amber-400 font-black">
+                  <Code2 className="w-3.5 h-3.5" />
                   <span>PowerPoint VBA</span>
                 </div>
                 <div className="text-[10px] text-text-dim mt-0.5">Script Alt+F11 otomatis</div>
@@ -647,19 +665,35 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={() => setOutputTab('notebooklm')}
-                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer sm:col-span-2 ${
                   outputTab === 'notebooklm'
-                    ? 'bg-amber-500/15 border-amber-500 text-text font-bold shadow-xs'
+                    ? 'bg-rose-500/20 border-rose-400 text-text font-bold shadow-xs ring-1 ring-rose-500/40'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-xs text-amber-400 font-black">
-                  <Library className="w-4 h-4" />
-                  <span>NotebookLM Doc</span>
+                <div className="flex items-center gap-1.5 text-xs text-rose-400 font-black">
+                  <Library className="w-3.5 h-3.5" />
+                  <span>NotebookLM Source Document</span>
                 </div>
-                <div className="text-[10px] text-text-dim mt-0.5">Source doc audio podcast</div>
+                <div className="text-[10px] text-text-dim mt-0.5">Dokumen lengkap untuk generate audio podcast &amp; tanya-jawab AI</div>
               </button>
             </div>
+
+            {/* Special Instruction Tip Banner for Canva Magic Design */}
+            {outputTab === 'canva' && (
+              <div className="p-3 rounded-xl bg-sky-500/10 border border-sky-500/30 text-[11px] text-sky-300 space-y-1">
+                <div className="font-extrabold flex items-center gap-1.5 text-sky-200">
+                  <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                  <span>Cara Pakai di Canva Magic Design (Gratis &amp; Pas Karakter):</span>
+                </div>
+                <ol className="list-decimal list-inside space-y-0.5 text-[10px] text-sky-300/90 leading-relaxed">
+                  <li>Salin prompt ringkas di bawah ini.</li>
+                  <li>Buka Canva &gt; Buat <strong>Presentasi (16:9)</strong>.</li>
+                  <li>Di panel kiri, klik tab <strong>Desain</strong> &gt; ketik/paste prompt ini ke kolom pencarian template Canva.</li>
+                  <li>Canva Magic Design akan langsung menghasilkan template slide presentasi gratis yang sesuai tema!</li>
+                </ol>
+              </div>
+            )}
 
             {/* Action Bar (Copy + Download) */}
             <div className="flex items-center gap-2 pt-0.5">
@@ -676,7 +710,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 ) : (
                   <>
                     <Copy className="w-4 h-4" />
-                    <span>Salin Format {outputTab === 'prompt' ? 'Magic Prompt AI' : outputTab === 'gamma' ? 'Outline Canva/Gamma' : outputTab === 'vba' ? 'Script VBA PowerPoint' : 'Dokumen NotebookLM'}</span>
+                    <span>Salin Format {outputTab === 'canva' ? 'Canva Magic AI' : outputTab === 'prompt' ? 'Mega Prompt AI' : outputTab === 'gamma' ? 'Outline Gamma' : outputTab === 'vba' ? 'Script VBA PowerPoint' : 'Dokumen NotebookLM'}</span>
                   </>
                 )}
               </button>
@@ -696,7 +730,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             <div className="relative">
               <textarea
                 readOnly
-                rows={13}
+                rows={outputTab === 'canva' ? 5 : 12}
                 value={getCurrentOutputContent()}
                 className="w-full p-3.5 rounded-xl bg-bg-deep border border-border font-mono text-[11px] text-text leading-relaxed resize-y focus:outline-none focus:border-accent selection:bg-accent selection:text-white"
               />

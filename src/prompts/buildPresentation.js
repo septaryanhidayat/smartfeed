@@ -531,10 +531,16 @@ ${s.goldenTakeaway ? `- **Pesan Kunci:** ${s.goldenTakeaway}\n` : ''}- **Naskah 
 ---
 *Dokumen ini diformat khusus untuk diunggah sebagai Source Document ke Google NotebookLM untuk menghasilkan Audio Overview / Podcast / Deep Dive Q&A.*`;
 
+  // 5. CANVA MAGIC DESIGN SHORT PROMPT (KHUSUS KOTAK PENCARIAN MAGIC DESIGN CANVA)
+  const canvaMagicPrompt = isRoadmapAi
+    ? `Presentasi 16:9 modern dark tech profesional tentang Roadmap AI 2026: Panduan Praktisi, T-C-E-I Prompting, Multimodal AI, dan Autonomous AI Agent 24/7. Warna Deep Navy & Neon Cyan, diagram alur, dan infografis eksekutif.`
+    : `Presentasi 16:9 gaya ${designStyle.toLowerCase()} tentang "${displayTopic}" untuk ${displayAudience}. Menjelaskan ${pointsList.slice(0, 2).join(', ')}. Warna ${displayColorScheme}, tata letak minimalis dan infografis modern.`;
+
   return {
     slides,
     magicPrompt,
     markdownPrompt: magicPrompt,
+    canvaMagicPrompt,
     gammaOutline,
     vbaMacro,
     notebookLmDoc,
