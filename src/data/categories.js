@@ -66,6 +66,57 @@ function cat(id, label, icon, brand, headline, tagline, description, cta, featur
 }
 
 export const CATEGORIES = [
+  cat('qris_bi_sultra', 'BI Sultra — Akselerasi QRIS', 'TrendingUp',
+    'Bank Indonesia Sultra', 'Akselerasi QRIS Sultra — Juara 2 Nasional', 'Transaksi Praktis · Merchant Tembus 120%',
+    'Program QRIS Jelajah Kuliner Indonesia mendorong lonjakan adopsi merchant UMKM hingga 120% target dengan kenaikan volume transaksi 38,6%.',
+    'Daftar QRIS Sekarang',
+    ['Juara 2 Nasional', 'Merchant 120% Target', 'Volume Naik 38,6%'],
+    'DIGITAL PAYMENT SULTRA', 'Akselerasi QRIS 2026',
+    '#002D62', '#EAAA00',
+    {
+      banner: { style: 'Minimal Clean', lighting: 'Studio Light', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Curious', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Corporate Executive', energy: 'Premium', layout: 'Minimal Elite' },
+      copywriting: {
+        angle: 'Bujuk pelaku usaha dan UMKM di Kendari/Sultra untuk pasang QRIS dengan formula AIDA. Tonjolkan data volume transaksi naik 38,6% dan kemudahan tanpa uang kembalian.',
+        summary: 'Bank Indonesia Sultra — Akselerasi QRIS Sultra. Merchant tanpa QRIS berisiko kehilangan pelanggan digital zaman now.',
+      }
+    }),
+
+  cat('belanja_bijak_sultra', 'BI Sultra — Belanja Bijak', 'ShoppingBag',
+    'BI Sultra Peduli', 'Kampanye Belanja Bijak — Jaga Stabilitas Pangan', 'Cerdas Belanja · Inflasi Terkendali 2,45%',
+    'Edukasi publik untuk berbelanja sesuai kebutuhan, mencari substitusi pangan bergizi (seperti Ikan Layang), dan menghindari panic buying.',
+    'Pelajari Panduan Bijak',
+    ['Inflasi Terjaga 2,45%', 'Substitusi Bergizi', 'Anti Panic Buying'],
+    'BELANJA BIJAK SULTRA', 'Jaga Stabilitas Pangan',
+    '#059669', '#fef3c7',
+    {
+      banner: { style: 'Editorial Magazine', lighting: 'Natural Soft' },
+      thumbnail: { style: 'MrBeast', mood: 'Excited', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Editorial Bold', energy: 'Bold Impact', layout: 'Centered Hero' },
+      copywriting: {
+        angle: 'Edukasi ibu rumah tangga dan masyarakat luas tentang cara belanja hemat dan cerdas saat harga bumbu dapur naik.',
+        summary: 'Kampanye Belanja Bijak BI Sultra — Tekan laju inflasi dengan substitusi pangan cerdas dan Bangga Pakai Rupiah.',
+      }
+    }),
+
+  cat('expo_umkm_sultra', 'BI Sultra — Expo UMKM & Kuliner', 'Sparkles',
+    'Festival Kuliner Sultra', 'Expo UMKM Sultra — Kredit Tumbuh 12,7%', 'Pemberdayaan UMKM · Kuliner Lokal Naik Kelas',
+    'Dukungan penuh Bank Indonesia Sulawesi Tenggara bagi produk tenun, kopi, dan kuliner khas daerah dengan fasilitas transaksi digital dan pembiayaan terpadu.',
+    'Kunjungi Festival & Belanja',
+    ['Kredit Tumbuh 12,7%', 'Diskon Pembayaran QRIS', 'Produk Unggulan Sultra'],
+    'FESTIVAL KULINER SULTRA', 'Bangga Produk Lokal 2026',
+    '#7c3aed', '#fbbf24',
+    {
+      banner: { style: 'Festive & Vibrant', lighting: 'Golden Hour' },
+      thumbnail: { style: 'Pro Clean', mood: 'Shock', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Luxury Fashion', energy: 'Energetic', layout: 'Diagonal Flow' },
+      copywriting: {
+        angle: 'Ajak warga Kendari hadir di Festival Kuliner Sultra dan dukung produk lokal binaan BI dengan diskon belanja via QRIS.',
+        summary: 'Expo UMKM BI Sultra — Nikmati diskon belanja kuliner & tenun lokal dengan pembayaran nontunai QRIS.',
+      }
+    }),
+
   cat('mobil', 'Mobil / Otomotif', 'Car',
     'AutoLux', 'New Sedan 2026 — Performa Maksimal', 'Hybrid Engine · 1500cc Turbo',
     'Mobil sedan terbaru dengan teknologi hybrid hemat BBM dan performa kelas Eropa.',

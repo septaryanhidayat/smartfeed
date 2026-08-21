@@ -87,6 +87,17 @@ export const PRESENTATION_STYLES = [
 
 export const PRESENTATION_DEMOS = [
   {
+    id: 'demo_bi_sultra',
+    tag: '🏛️ BI Sultra: Inflasi & QRIS',
+    topic: 'Sinergi BI Sultra: Mengawal Inflasi & Memperkuat Digitalisasi',
+    presenter: 'Kantor Perwakilan Bank Indonesia Sulawesi Tenggara',
+    audience: 'TPID, Pemerintah Daerah, Perbankan & Mitra Strategis',
+    useCase: 'corporate_strategy',
+    style: 'executive_navy_gold',
+    slideCount: 10,
+    keyPoints: 'Evaluasi inflasi terjaga di 2,45% (yoy), efektivitas kampanye Belanja Bijak dan substitusi pangan lokal (Ikan Layang), keberhasilan Juara 2 Lomba Akuisisi QRIS Nasional 2025 dengan capaian 120% target merchant, pertumbuhan kredit UMKM 12,7%, dan 4 langkah strategis akselerasi ekonomi digital Sultra.',
+  },
+  {
     id: 'demo_institution',
     tag: '🏛️ Institusi & Lembaga',
     topic: 'Proposal Pendirian Akademi Teknologi & Vokasi Digital Modern',

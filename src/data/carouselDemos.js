@@ -2,6 +2,37 @@
 // Tiap preset mengikuti key dari INITIAL_CAROUSEL (buildCarousel.js).
 
 export const CAROUSEL_DEMOS = [
+  // ── BI SULTRA & EKONOMI MAKRO ──
+  {
+    id: 'news-belanja-bijak-bi',
+    label: 'BI Sultra — Belanja Bijak',
+    icon: 'TrendingUp',
+    tag: 'Edukasi · 5 slide',
+    preset: {
+      templateType: 'news', totalSlides: '5',
+      newsContent: 'Bank Indonesia Sulawesi Tenggara menggalakkan kampanye Belanja Bijak guna menstabilkan harga pangan dan menjaga daya beli masyarakat. Saat harga cabai rawit dan bawang merah mengalami fluktuasi, masyarakat diajak mencari alternatif pangan bergizi seperti Ikan Layang yang harganya justru mengalami deflasi -1,28%. Hindari panic buying, utamakan belanja sesuai kebutuhan, dan dukung stabilitas ekonomi daerah dengan Bangga Pakai Rupiah!',
+      mediaName: '@bank_indonesia_sultra', ctaText: 'Simpan & Praktikkan',
+      coverLayout: 'image-full', aspectRatio: '4:5 (Portrait)', visualStyle: 'Bold Modern',
+      newsTextColor: '#ffffff', newsMoodColor: '#002D62', newsTextBgAuto: true, newsTextBg: '#001D42',
+    },
+  },
+  {
+    id: 'promo-qris-sultra',
+    label: 'QRIS — Jelajah Kuliner Sultra',
+    icon: 'Sparkles',
+    tag: 'Digital · 5 slide',
+    preset: {
+      templateType: 'promo', totalSlides: '5',
+      brandName: 'BI Sultra x Kuliner Lokal', productName: 'QRIS Jelajah Kuliner Sultra',
+      productCategory: 'Fintech & UMKM', productDescription: 'Eksplorasi ragam kuliner khas Kendari dan Sulawesi Tenggara dengan kemudahan pembayaran non-tunai QRIS cepat, mudah, murah, aman, dan handal (CeMUAMAH).',
+      mainBenefit: 'Transaksi non-tunai instan bebas repot uang kembalian + Promo Cashback UMKM', problemSolved: 'Antrean kasir lama dan pedagang kehabisan uang kembalian pecahan kecil',
+      targetAudience: 'Masyarakat umum, pemburu kuliner, dan pelaku UMKM Kendari', platform: 'Instagram', aspectRatio: '4:5 (Portrait)',
+      visualStyle: 'Vibrant Gradient', colorMood: 'Vibrant', toneCopywriting: 'Persuasive',
+      ctaText: 'Scan QRIS Sekarang',
+      slide1Headline: 'Jelajah Kuliner Enak Sultra Gak Perlu Pusing Bawa Dompet!',
+      slide1Subheadline: 'Tinggal Scan QRIS, Nikmati Lezatnya Kuliner Lokal Sultra →',
+    },
+  },
   // ── NEWS (Berita) — cukup isi berita; warna slide 1 sudah diset ──
   {
     id: 'news-energi',
