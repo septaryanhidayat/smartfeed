@@ -6,7 +6,7 @@ import {
 import { CONFIG, brandParts } from '../config.js';
 import SafeImage from '../landing/primitives/SafeImage.jsx';
 
-// Active payment channels strictly matching user's TriPay dashboard & File 1
+// Active payment channels matching user's TriPay dashboard & File 1
 const PAYMENT_OPTIONS = [
   {
     category: 'QRIS (Semua Bank & E-Wallet)',
@@ -148,48 +148,48 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-bg text-text flex flex-col justify-between selection:bg-accent/20">
       
-      {/* Header Bersih & Ringkas */}
-      <header className="border-b border-border/80 bg-bg-panel/90 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-lg mx-auto px-4 h-15 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-2.5">
-            <span className="w-8 h-8 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center shadow-sm">
+      {/* Header Elegan & Proporsional */}
+      <header className="border-b border-border/80 bg-bg-panel/95 backdrop-blur-md sticky top-0 z-30 shadow-xs">
+        <div className="max-w-xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-3">
+            <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center shadow-sm shrink-0">
               <SafeImage
                 src={CONFIG.logoUrl}
                 alt={CONFIG.brandName}
-                className="w-6 h-6 object-contain"
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
               />
             </span>
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-bold text-text">
+              <span className="text-base sm:text-lg font-black text-text tracking-tight">
                 {brandParts().lead && <>{brandParts().lead} </>}
                 <span className="text-accent">{brandParts().accent}</span>
               </span>
-              <span className="text-[9px] mono text-text-dim uppercase tracking-wider">
-                Checkout Pembayaran
+              <span className="text-[10px] sm:text-[11px] mono text-text-dim uppercase tracking-wider font-semibold">
+                Checkout Pembayaran Resmi
               </span>
             </div>
           </a>
 
           <a
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-mut hover:text-accent transition px-3 py-1.5 rounded-lg border border-border/60 hover:bg-bg-elev"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-text-mut hover:text-accent transition px-3.5 py-2 rounded-xl border border-border/80 hover:bg-bg-elev shadow-2xs"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-4 h-4" />
             <span>Kembali</span>
           </a>
         </div>
       </header>
 
       {/* Main Content Area (Focused Mobile-First Container) */}
-      <main className="flex-1 py-5 px-3 sm:px-4">
-        <div className="max-w-lg mx-auto w-full space-y-4">
+      <main className="flex-1 py-6 sm:py-8 px-3 sm:px-4">
+        <div className="max-w-lg mx-auto w-full space-y-4 sm:space-y-5">
           
           {/* Header Title */}
-          <div className="text-center space-y-1 py-1">
-            <h1 className="text-xl sm:text-2xl font-black text-text tracking-tight">
+          <div className="text-center space-y-1.5 py-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight">
               Selesaikan Pembayaran
             </h1>
-            <p className="text-xs text-text-mut">
+            <p className="text-xs sm:text-sm text-text-mut max-w-sm mx-auto">
               Akses seumur hidup ke <strong>SmartFeed AI Studio (20 Engine)</strong>.
             </p>
           </div>
@@ -226,7 +226,7 @@ export default function Checkout() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Nama lengkap Anda..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
                   />
                 </div>
 
@@ -241,7 +241,7 @@ export default function Checkout() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="nama@gmail.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
                   />
                   <span className="text-[10px] text-text-dim mt-1 block">
                     Link aktivasi & akun login studio otomatis dikirim ke email ini.
@@ -259,7 +259,7 @@ export default function Checkout() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="081234567890"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
                   />
                 </div>
               </div>
@@ -290,7 +290,7 @@ export default function Checkout() {
                         <div
                           key={item.id}
                           onClick={() => handleSelectMethod(item.id)}
-                          className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
+                          className={`p-3 sm:p-3.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
                             isSelected
                               ? 'border-accent bg-accent-sm/80 shadow-xs ring-1 ring-accent'
                               : 'border-border/70 bg-bg-deep/60 hover:bg-bg-elev'
@@ -304,7 +304,7 @@ export default function Checkout() {
                             </div>
 
                             <div className="min-w-0">
-                              <div className="text-xs font-bold text-text flex items-center gap-1.5">
+                              <div className="text-xs sm:text-sm font-bold text-text flex items-center gap-1.5">
                                 <span>{item.name}</span>
                                 {item.popular && (
                                   <span className="text-[8px] mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold">
@@ -312,17 +312,17 @@ export default function Checkout() {
                                   </span>
                                 )}
                               </div>
-                              <div className="text-[10px] text-text-mut truncate mt-0.5">{item.desc}</div>
+                              <div className="text-[10px] sm:text-[11px] text-text-mut truncate mt-0.5">{item.desc}</div>
                             </div>
                           </div>
 
                           {/* Logo Channel Standar & Setara (Ukuran Sama Rata) */}
                           <div className="shrink-0 pl-1.5 flex items-center justify-end">
-                            <div className="h-9 w-[86px] sm:w-[96px] px-2 py-1 rounded-lg bg-white border border-neutral-200 shadow-2xs flex items-center justify-center overflow-hidden">
+                            <div className="h-10 w-[96px] sm:w-[104px] px-2 py-1 rounded-xl bg-white border border-neutral-200/90 shadow-2xs flex items-center justify-center overflow-hidden">
                               <img
                                 src={item.logo}
                                 alt={item.name}
-                                className="max-h-6 max-w-full w-auto object-contain"
+                                className="max-h-7 max-w-full w-auto object-contain"
                                 loading="lazy"
                               />
                             </div>
@@ -344,7 +344,7 @@ export default function Checkout() {
                 </span>
               </div>
 
-              <div className="space-y-1.5 text-xs">
+              <div className="space-y-1.5 text-xs sm:text-sm">
                 <div className="flex justify-between text-text">
                   <span>SmartFeed AI Studio (20 Engine)</span>
                   <span className="mono font-semibold whitespace-nowrap">Rp {priceStrikeNum}</span>
@@ -353,7 +353,7 @@ export default function Checkout() {
                   <span>Diskon Promo Early Access</span>
                   <span className="mono whitespace-nowrap">- Rp 250.000</span>
                 </div>
-                <div className="flex justify-between text-text-mut text-[11px]">
+                <div className="flex justify-between text-text-mut text-[11px] sm:text-xs">
                   <span>Biaya Transaksi Payment Gateway</span>
                   <span className="text-emerald-400 font-semibold whitespace-nowrap">Gratis (Rp 0)</span>
                 </div>
@@ -365,7 +365,7 @@ export default function Checkout() {
                   <div className="text-xs sm:text-sm font-bold text-text">Total Pembayaran</div>
                   <div className="text-[10px] text-text-dim">Akses seumur hidup tanpa langganan</div>
                 </div>
-                <div className="text-xl sm:text-2xl font-black text-accent mono whitespace-nowrap shrink-0">
+                <div className="text-2xl sm:text-3xl font-black text-accent mono whitespace-nowrap shrink-0">
                   Rp {priceNum}
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function Checkout() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full btn-cta text-sm !py-3.5 justify-center shadow-[0_8px_25px_rgba(var(--accent-rgb),0.35)] mt-1 cursor-pointer"
+                className="w-full btn-cta text-sm sm:text-base !py-3.5 sm:!py-4 justify-center shadow-[0_8px_25px_rgba(var(--accent-rgb),0.35)] mt-1 cursor-pointer"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
@@ -391,7 +391,7 @@ export default function Checkout() {
               </button>
 
               <div className="pt-1 text-center">
-                <div className="flex items-center justify-center gap-1.5 text-[10px] text-text-dim mono">
+                <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] text-text-dim mono">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                   <span>Transaksi Resmi Berizin Bank Indonesia via TriPay</span>
                 </div>
