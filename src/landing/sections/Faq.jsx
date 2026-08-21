@@ -17,7 +17,7 @@ const FAQS = [
   },
   {
     q: 'Apakah ada biaya bulanan?',
-    a: `Tidak. ${CONFIG.brandName} adalah sekali bayar (Rp ${CONFIG.price} selama early access) untuk akses penuh seumur hidup. Tidak ada paywall, tidak ada limit harian.`,
+    a: `Tidak. ${CONFIG.brandName} adalah sekali bayar untuk akses penuh seumur hidup tanpa biaya langganan bulanan. Tidak ada paywall, tidak ada limit harian.`,
   },
   {
     q: 'Apakah saya dapat update mode baru di masa depan?',

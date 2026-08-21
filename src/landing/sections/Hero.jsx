@@ -45,7 +45,7 @@ export default function Hero({ onOpenAccess }) {
               className="btn-cta cursor-pointer text-center"
             >
               <Sparkles className="w-4 h-4" />
-              Dapatkan Akses — Rp {CONFIG.price || '149.000'}
+              Dapatkan Akses Sekarang
               <ArrowRight className="w-4 h-4" />
             </a>
             <a href="#contoh" className="btn-cta-ghost">

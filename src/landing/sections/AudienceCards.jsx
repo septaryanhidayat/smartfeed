@@ -1,4 +1,4 @@
-import { Store, Megaphone, GraduationCap, Camera, Building2, Briefcase } from 'lucide-react';
+import { Store, Megaphone, GraduationCap, Camera, Building2, Briefcase, Newspaper, School, Radio } from 'lucide-react';
 import { CONFIG } from '../../config.js';
 
 const PERSONAS = [
@@ -11,17 +11,17 @@ const PERSONAS = [
   {
     icon: Megaphone,
     title: 'Performance Marketer',
-    body: 'Bikin 20 variasi creative test untuk A/B Meta Ads dalam satu sore.',
+    body: 'Bikin 20 variasi creative test untuk A/B Meta & TikTok Ads dalam satu sore.',
   },
   {
     icon: Camera,
-    title: 'Content Creator',
-    body: 'Thumbnail YouTube dan cover TikTok yang konsisten gaya, gak mati ide.',
+    title: 'Content Creator & Affiliate',
+    body: 'Thumbnail YouTube, cover TikTok, dan storyboard video affiliate yang konsisten.',
   },
   {
     icon: GraduationCap,
     title: 'Course Creator & Mentor',
-    body: 'Banner promosi kelas, ebook cover, slide pembuka, semua dari satu studio.',
+    body: 'Banner promosi kelas, ebook cover, carousel edukasi, semua dari satu studio.',
   },
   {
     icon: Building2,
@@ -33,6 +33,21 @@ const PERSONAS = [
     title: 'Reseller & Dropshipper',
     body: 'Asset visual untuk tiap SKU baru tanpa nambah biaya produksi konten.',
   },
+  {
+    icon: Newspaper,
+    title: 'Jurnalis & Media Redaksi',
+    body: 'Produksi kilat kartu breaking news, naskah 5W+1H, quote tokoh, dan cek fakta hoaks.',
+  },
+  {
+    icon: School,
+    title: 'Sekolah, Kampus & Pengajar',
+    body: 'Pamflet kegiatan, pengumuman akademik, materi ajar visual, dan publikasi event kampus.',
+  },
+  {
+    icon: Radio,
+    title: 'Humas / PR & Komunikasi Publik',
+    body: 'Siaran pers resmi, infografis kebijakan publik, edukasi warga, dan klarifikasi isu cepat.',
+  },
 ];
 
 export default function AudienceCards() {
@@ -42,7 +57,7 @@ export default function AudienceCards() {
         <div className="max-w-2xl reveal">
           <span className="eyebrow"><span className="dot" /> dipakai oleh</span>
           <h2 className="h-section mt-4">
-            {CONFIG.brandName} dibuat untuk <span className="text-grad-red">enam tipe orang</span> ini.
+            {CONFIG.brandName} dibuat untuk <span className="text-grad-red">sembilan tipe pengguna</span> ini.
           </h2>
           <p className="mt-4 text-text-mut">
             Kalau salah satu deskripsi di bawah terdengar seperti kamu, {CONFIG.brandName}
@@ -57,10 +72,10 @@ export default function AudienceCards() {
               <div
                 key={p.title}
                 className="soft-border card-lift p-5 relative reveal"
-                style={{ animationDelay: `${i * 70}ms` }}
+                style={{ animationDelay: `${i * 60}ms` }}
               >
                 {p.tag && (
-                  <span className="absolute top-3 right-3 text-[8px] mono uppercase tracking-widest bg-accent text-white px-1.5 py-0.5 rounded">
+                  <span className="absolute top-3 right-3 text-[8px] mono uppercase tracking-widest bg-accent text-white px-1.5 py-0.5 rounded font-bold">
                     {p.tag}
                   </span>
                 )}

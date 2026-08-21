@@ -80,6 +80,7 @@ export const MENU_FB_PREVIEWS = {
 export const JOURNALISM_PREVIEWS = {
   breakingNews: '/landing/journalism/breaking-news.jpg',
   quoteTokoh:   '/landing/journalism/quote-tokoh.jpg',
+  factCheck:    '/landing/journalism/fact-check.jpg',
 };
 
 export const BRAND_LOGO    = '/landing/brand/logo.png';

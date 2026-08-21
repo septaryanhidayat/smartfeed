@@ -132,7 +132,7 @@ export default function MenuFBShowcase() {
             <div className="text-center sm:text-left">
               <div className="text-base font-bold text-text">Punya brand F&B? Generate menu poster premium sekarang.</div>
               <div className="text-xs text-text-mut mt-1">
-                Akses 9 template Menu F&B + 9 mode kreatif lainnya (Banner · YT · Ads · Copy · Face Card ★ + 4 Affiliate Tools) dengan Early Access Rp {CONFIG.price}.
+                Dapatkan akses penuh ke 9 template Menu F&B dan 18 engine kreatif lainnya di SmartFeed Studio.
               </div>
             </div>
             <a href="#harga" className="btn-cta !text-sm shrink-0">

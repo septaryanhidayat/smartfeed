@@ -176,7 +176,7 @@ const ALL_MODES = [
     ratio: '1:1 Fact Card',
     icon: ShieldAlert,
     variant: 51,
-    img: '/landing/ads-categories/cat-12.jpg',
+    img: JOURNALISM_PREVIEWS.factCheck,
     bullets: ['Stempel putusan verifikasi fakta', 'Poin klarifikasi & kronologi', 'Sumber rujukan resmi & anti-hoaks'],
   },
 

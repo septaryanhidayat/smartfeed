@@ -33,10 +33,10 @@ export default function FinalCta({ onOpenAccess }) {
             href={CTA_HREF}
             target="_blank"
             rel="noreferrer"
-            className="btn-cta !text-base !px-8 !py-4 text-center"
+            className="btn-cta text-base sm:text-lg !py-3.5 !px-8 shadow-[0_10px_35px_rgba(var(--accent-rgb),0.35)]"
           >
             <Sparkles className="w-5 h-5" />
-            Dapatkan Akses Sekarang — Rp {CONFIG.price || '149.000'}
+            Dapatkan Akses Sekarang
             <ArrowRight className="w-5 h-5" />
           </a>
         </div>
