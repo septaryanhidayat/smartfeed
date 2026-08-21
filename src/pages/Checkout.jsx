@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   ShieldCheck, Lock, ArrowRight, ArrowLeft,
-  RefreshCw, AlertCircle, Sparkles, Building2, Wallet, QrCode, Check
+  RefreshCw, AlertCircle, Sparkles, Building2, Wallet, QrCode, Check, CheckCircle2, Copy, LogIn
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import SafeImage from '../landing/primitives/SafeImage.jsx';
@@ -58,25 +58,25 @@ const PAYMENT_OPTIONS = [
     ],
   },
   {
-    category: 'E-Wallet Langsung',
+    category: 'E-Wallet (Aplikasi Dompet Digital)',
     icon: Wallet,
     items: [
       {
         id: 'SHOPEEPAY',
         name: 'ShopeePay',
-        desc: 'Bayar langsung via aplikasi Shopee',
+        desc: 'Aplikasi Shopee / ShopeePay',
         logo: '/payment-icons/shopeepay.png',
       },
       {
         id: 'DANA',
         name: 'DANA',
-        desc: 'Bayar via saldo akun DANA',
+        desc: 'Aplikasi Dompet Digital DANA',
         logo: '/payment-icons/dana.png',
       },
       {
         id: 'OVO',
         name: 'OVO',
-        desc: 'Push notifikasi pembayaran ke OVO',
+        desc: 'Aplikasi Dompet Digital OVO',
         logo: '/payment-icons/ovo.png',
       },
     ],
@@ -93,6 +93,14 @@ export default function Checkout() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [copiedPass, setCopiedPass] = useState(false);
+
+  // Check if returning from a successful TriPay payment
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+  const isPaidReturn = searchParams && (searchParams.get('status') === 'paid' || searchParams.get('status') === 'success');
+  const returnRef = searchParams ? (searchParams.get('ref') || searchParams.get('reference') || '') : '';
+  const returnEmail = searchParams ? (searchParams.get('email') || '') : '';
+  const returnName = searchParams ? (searchParams.get('name') || '') : '';
 
   const parseNum = (val) => parseInt(String(val).replace(/\D/g, ''), 10) || 0;
   const priceInt = parseNum(CONFIG.price);
@@ -110,6 +118,12 @@ export default function Checkout() {
 
   const handleSelectMethod = (id) => {
     setFormData((prev) => ({ ...prev, paymentMethod: id }));
+  };
+
+  const handleCopyPassword = () => {
+    navigator.clipboard.writeText('SmartFeedOKE');
+    setCopiedPass(true);
+    setTimeout(() => setCopiedPass(false), 2000);
   };
 
   const handleSubmit = async (e) => {
@@ -151,6 +165,112 @@ export default function Checkout() {
     }
   };
 
+  // SUCCESS SCREEN (Setelah Selesai Bayar di TriPay)
+  if (isPaidReturn) {
+    return (
+      <div className="min-h-screen bg-bg text-text flex flex-col justify-between selection:bg-accent/20">
+        <header className="border-b border-border/80 bg-bg-panel/95 backdrop-blur-md sticky top-0 z-30 shadow-xs">
+          <div className="max-w-xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
+            <a href="/" className="flex items-center gap-3">
+              <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center shadow-sm shrink-0">
+                <SafeImage
+                  src={CONFIG.logoUrl}
+                  alt={CONFIG.brandName}
+                  className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
+                />
+              </span>
+              <div className="flex flex-col leading-tight">
+                <span className="text-base sm:text-lg font-black text-text tracking-tight">
+                  {brandParts().lead && <>{brandParts().lead} </>}
+                  <span className="text-accent">{brandParts().accent}</span>
+                </span>
+                <span className="text-[10px] sm:text-[11px] mono text-emerald-400 uppercase tracking-wider font-semibold">
+                  ● Pembayaran Sukses
+                </span>
+              </div>
+            </a>
+          </div>
+        </header>
+
+        <main className="flex-1 py-8 sm:py-12 px-4 flex items-center justify-center">
+          <div className="max-w-lg w-full surface p-6 sm:p-8 rounded-3xl border border-emerald-500/30 shadow-[0_20px_60px_-15px_rgba(16,185,129,0.2)] text-center space-y-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-500/15 border-2 border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(16,185,129,0.3)] animate-bounce">
+              <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-bold mono uppercase tracking-wider">
+                Transaksi Berhasil Diverifikasi
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-black text-text">
+                Selamat Datang di SmartFeed Studio! 🎉
+              </h1>
+              <p className="text-xs sm:text-sm text-text-mut max-w-sm mx-auto">
+                {returnName ? `Hai ${returnName}, ` : ''}Akses seumur hidup (lifetime) ke 20 Engine Kreatif AI Anda telah aktif permanen.
+              </p>
+            </div>
+
+            {/* Login Credentials Box */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-bg-deep border border-border text-left space-y-3">
+              <div className="text-xs font-bold text-text flex items-center gap-1.5 border-b border-border/60 pb-2">
+                <Lock className="w-3.5 h-3.5 text-accent" />
+                <span>Detail Akun Login Anda</span>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between items-center">
+                  <span className="text-text-dim">Email Terdaftar:</span>
+                  <span className="font-bold text-accent mono">{returnEmail || 'Email Anda'}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-text-dim">Password Login:</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono bg-bg-panel px-2 py-0.5 rounded text-emerald-400 font-bold border border-border">
+                      SmartFeedOKE
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleCopyPassword}
+                      className="p-1 rounded hover:bg-bg-elev text-text-mut hover:text-text cursor-pointer"
+                      title="Salin password"
+                    >
+                      {copiedPass ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+                {returnRef && (
+                  <div className="flex justify-between items-center text-[11px] text-text-dim pt-1 border-t border-border/40">
+                    <span>ID Transaksi:</span>
+                    <span className="mono">{returnRef}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Direct Login CTA Button */}
+            <a
+              href="/app"
+              className="w-full btn-cta text-sm sm:text-base !py-4 justify-center shadow-[0_10px_30px_rgba(var(--accent-rgb),0.4)] cursor-pointer"
+            >
+              <LogIn className="w-5 h-5" />
+              <span>Buka Studio SmartFeed Sekarang</span>
+              <ArrowRight className="w-5 h-5" />
+            </a>
+
+            <p className="text-[11px] text-text-dim leading-relaxed">
+              Detail akun &amp; instruksi juga telah dikirimkan ke email <strong>{returnEmail || 'Anda'}</strong>. Jika butuh bantuan, hubungi WhatsApp <strong>0896-9524-9089</strong>.
+            </p>
+          </div>
+        </main>
+
+        <footer className="border-t border-border/60 py-4 text-center text-xs text-text-dim">
+          © {new Date().getFullYear()} {CONFIG.companyName}. Hak cipta dilindungi.
+        </footer>
+      </div>
+    );
+  }
+
+  // STANDARD CHECKOUT FORM
   return (
     <div className="min-h-screen bg-bg text-text flex flex-col justify-between selection:bg-accent/20">
       
@@ -200,30 +320,23 @@ export default function Checkout() {
             </p>
           </div>
 
+          {/* Form Utama */}
           <form onSubmit={handleSubmit} className="space-y-4">
             
-            {/* Box 1: Data Penerima Akses */}
-            <div className="bg-bg-panel border border-border rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
-              <div className="flex items-center gap-2 border-b border-border/60 pb-2.5">
-                <span className="w-5 h-5 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold shrink-0">
-                  1
+            {/* Card 1: Data Pembeli */}
+            <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
+                <span className="text-xs font-bold text-text uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-accent" />
+                  1. Informasi Pembeli
                 </span>
-                <h2 className="text-xs sm:text-sm font-bold text-text">
-                  Data Penerima Akses
-                </h2>
+                <span className="text-[10px] mono text-text-dim">Wajib Diisi</span>
               </div>
-
-              {errorMessage && (
-                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-400 flex items-center gap-2 font-medium">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
 
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Nama Lengkap <span className="text-red-400">*</span>
+                    Nama Lengkap <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -231,14 +344,14 @@ export default function Checkout() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Nama lengkap Anda..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
+                    placeholder="Contoh: Ryan Hidayat"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text focus:border-accent focus:outline-none transition"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Alamat Email Aktif <span className="text-red-400">*</span>
+                    Alamat Email (Untuk Login Studio) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -246,17 +359,17 @@ export default function Checkout() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="nama@gmail.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
+                    placeholder="Contoh: ryan@email.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text focus:border-accent focus:outline-none transition"
                   />
                   <span className="text-[10px] text-text-dim mt-1 block">
-                    Link aktivasi & akun login studio otomatis dikirim ke email ini.
+                    Email ini otomatis didaftarkan sebagai akun login Anda.
                   </span>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Nomor WhatsApp / HP <span className="text-red-400">*</span>
+                    Nomor WhatsApp <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"
@@ -264,90 +377,100 @@ export default function Checkout() {
                     required
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="081234567890"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
+                    placeholder="Contoh: 081234567890"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text focus:border-accent focus:outline-none transition"
                   />
+                  <span className="text-[10px] text-text-dim mt-1 block">
+                    Untuk notifikasi invoice dan bantuan support.
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Box 2: Metode Pembayaran (Clean Radio List dengan Logo Setara & Rapi) */}
-            <div className="bg-bg-panel border border-border rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
-              <div className="flex items-center gap-2 border-b border-border/60 pb-2.5">
-                <span className="w-5 h-5 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold shrink-0">
-                  2
-                </span>
-                <h2 className="text-xs sm:text-sm font-bold text-text">
-                  Pilih Metode Pembayaran
-                </h2>
-              </div>
-
-              {PAYMENT_OPTIONS.map((group, gIdx) => (
-                <div key={gIdx} className="space-y-2">
-                  <div className="text-[10px] sm:text-[11px] font-bold text-text-mut uppercase tracking-wider flex items-center gap-1.5">
-                    <group.icon className="w-3.5 h-3.5 text-accent" />
-                    <span>{group.category}</span>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    {group.items.map((item) => {
-                      const isSelected = formData.paymentMethod === item.id;
-                      return (
-                        <div
-                          key={item.id}
-                          onClick={() => handleSelectMethod(item.id)}
-                          className={`p-3 sm:p-3.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
-                            isSelected
-                              ? 'border-accent bg-accent-sm/80 shadow-xs ring-1 ring-accent'
-                              : 'border-border/70 bg-bg-deep/60 hover:bg-bg-elev'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                              isSelected ? 'border-accent bg-accent text-white' : 'border-border bg-bg-panel'
-                            }`}>
-                              {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                            </div>
-
-                            <div className="min-w-0">
-                              <div className="text-xs sm:text-sm font-bold text-text flex items-center gap-1.5">
-                                <span>{item.name}</span>
-                                {item.popular && (
-                                  <span className="text-[8px] mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold">
-                                    Otomatis
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-[10px] sm:text-[11px] text-text-mut truncate mt-0.5">{item.desc}</div>
-                            </div>
-                          </div>
-
-                          {/* Logo Channel Standar & Setara (Ukuran Sama Rata) */}
-                          <div className="shrink-0 pl-1.5 flex items-center justify-end">
-                            <div className="h-10 w-[96px] sm:w-[104px] px-2 py-1 rounded-xl bg-white border border-neutral-200/90 shadow-2xs flex items-center justify-center overflow-hidden">
-                              <img
-                                src={item.logo}
-                                alt={item.name}
-                                className="max-h-7 max-w-full w-auto object-contain"
-                                loading="lazy"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Box 3: Ringkasan Tagihan & Tombol Bayar */}
-            <div className="bg-bg-panel border border-border rounded-2xl p-4 sm:p-5 shadow-md space-y-3.5">
+            {/* Card 2: Pilihan Metode Pembayaran */}
+            <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5">
               <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
-                <span className="text-xs font-bold text-text">Ringkasan Tagihan</span>
-                <span className="text-[9px] mono px-2 py-0.5 rounded-full bg-accent/15 text-accent font-bold">
-                  SEKALI BAYAR
+                <span className="text-xs font-bold text-text uppercase tracking-wider flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  2. Pilih Metode Pembayaran
                 </span>
+                <span className="text-[10px] mono text-emerald-400 font-bold">Otomatis Terverifikasi</span>
+              </div>
+
+              <div className="space-y-3">
+                {PAYMENT_OPTIONS.map((cat, cIdx) => (
+                  <div key={cIdx} className="space-y-1.5">
+                    <div className="text-[11px] font-bold text-text-mut flex items-center gap-1.5 pt-1">
+                      <cat.icon className="w-3.5 h-3.5 text-accent" />
+                      <span>{cat.category}</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-1.5">
+                      {cat.items.map((method) => {
+                        const isSelected = formData.paymentMethod === method.id;
+                        return (
+                          <button
+                            key={method.id}
+                            type="button"
+                            onClick={() => handleSelectMethod(method.id)}
+                            className={`w-full p-2.5 sm:p-3 rounded-xl border text-left flex items-center justify-between gap-3 transition cursor-pointer ${
+                              isSelected
+                                ? 'bg-accent/10 border-accent shadow-xs ring-1 ring-accent/30'
+                                : 'bg-bg-deep border-border/80 hover:bg-bg-elev hover:border-border'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              {/* Logo Container Rata & Proporsional */}
+                              <div className="h-10 w-[96px] sm:w-[104px] rounded-lg bg-white p-1.5 flex items-center justify-center shrink-0 border border-neutral-200/80 shadow-2xs">
+                                <img
+                                  src={method.logo}
+                                  alt={method.name}
+                                  className="h-full w-full object-contain"
+                                />
+                              </div>
+
+                              <div className="min-w-0">
+                                <div className="text-xs sm:text-sm font-bold text-text truncate flex items-center gap-1.5">
+                                  <span>{method.name}</span>
+                                  {method.popular && (
+                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold mono">
+                                      Tercepat
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[10px] sm:text-[11px] text-text-dim truncate">
+                                  {method.desc}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="shrink-0 pl-1">
+                              <span
+                                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center ${
+                                  isSelected
+                                    ? 'bg-accent border-accent text-white'
+                                    : 'border-border bg-bg-panel'
+                                }`}
+                              >
+                                {isSelected && <Check className="w-3 h-3" />}
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Card 3: Ringkasan & Total Biaya */}
+            <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <span className="text-xs font-bold text-text uppercase tracking-wider">
+                  3. Ringkasan Pesanan
+                </span>
+                <span className="text-[10px] mono text-accent font-bold">Lifetime Deal</span>
               </div>
 
               <div className="space-y-1.5 text-xs sm:text-sm">
@@ -401,9 +524,16 @@ export default function Checkout() {
               <div className="pt-1 text-center">
                 <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] text-text-dim mono">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Transaksi Resmi Berizin Bank Indonesia via TriPay</span>
+                  <span>Jalur Enkripsi 256-Bit Aman via TriPay Resmi</span>
                 </div>
               </div>
+
+              {errorMessage && (
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-400 flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
             </div>
 
           </form>
@@ -411,20 +541,9 @@ export default function Checkout() {
         </div>
       </main>
 
-      {/* Footer Minimalis */}
-      <footer className="border-t border-border/80 bg-bg-deep/60 py-6 text-center text-xs text-text-dim space-y-2 px-4">
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-text-mut">
-          <a href="/tentang-kami" className="hover:text-accent transition">Tentang Kami</a>
-          <span>·</span>
-          <a href="/kebijakan-privasi" className="hover:text-accent transition">Kebijakan Privasi</a>
-          <span>·</span>
-          <a href="/syarat-ketentuan" className="hover:text-accent transition">Syarat & Ketentuan</a>
-          <span>·</span>
-          <a href="/kontak" className="hover:text-accent transition">Hubungi Kami</a>
-        </div>
-        <p className="text-[10px]">
-          © {new Date().getFullYear()} {CONFIG.brandName} by {CONFIG.companyName}. Bantuan CS WA: <strong className="text-text">{CONFIG.contactPhoneDisplay}</strong>
-        </p>
+      {/* Footer Ringkas */}
+      <footer className="border-t border-border/60 py-4 text-center text-xs text-text-dim">
+        © {new Date().getFullYear()} {CONFIG.companyName}. Hak cipta dilindungi.
       </footer>
 
     </div>

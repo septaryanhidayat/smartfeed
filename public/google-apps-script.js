@@ -1,35 +1,25 @@
 /**
  * ==============================================================================
- * SMARTFEED — GOOGLE APPS SCRIPT WEBHOOK & ANTI-DUPLICATE DATABASE HANDLER
+ * SMARTFEED — GOOGLE APPS SCRIPT WEBHOOK, AUTO-EMAIL & DATABASE HANDLER (V3.0)
  * ==============================================================================
  * 
- * CARA PAKAI DI GOOGLE SPREADSHEET:
- * 1. Buka Google Spreadsheet Anda (tempat menyimpan email login SmartFeed).
+ * CARA MEMASANG / UPDATE DI GOOGLE SPREADSHEET:
+ * 1. Buka Google Spreadsheet Anda.
  * 2. Klik menu: Extensions (Ekstensi) > Apps Script.
- * 3. Hapus semua kode lama, lalu Paste SEMUA kode di bawah ini.
+ * 3. Hapus semua isi kode lama, lalu PASTE SEMUA kode di bawah ini.
  * 4. Klik icon Save (Simpan).
- * 5. Klik tombol: Deploy (Terapkan) > New Deployment (Terapkan Baru).
- * 6. Pilih tipe: Web App.
- *    - Description: SmartFeed Webhook v2 (Anti Duplicate)
- *    - Execute as: Me (email akun Anda)
- *    - Who has access: Anyone (Siapa saja)
- * 7. Klik Deploy dan salin URL Web App yang dihasilkan.
- * 
- * FITUR UTAMA:
- * - Anti-Double Record: Email yang sama TIDAK AKAN PERNAH dicatat dobel.
- * - Auto-Deduplication: Jika sudah terdaftar, data hanya diperbarui (update).
- * - Multi-Tab Otomatis:
- *     * Tab "Users" : Menyimpan daftar akun aktif (untuk login & CSV).
- *     * Tab "Transactions" : Menyimpan riwayat pembayaran TriPay resmi.
- *     * Tab "Activity_Logs" : Menyimpan log aktivitas studio tanpa mengotori tab Users.
- * - Fungsi Pembersihan: Tersedia tombol run "cleanupDuplicates()" untuk menghapus data duplikat lama.
+ * 5. Klik tombol: Deploy (Terapkan) > Manage Deployments (Kelola Penerapan).
+ * 6. Klik icon Pensil (Edit) pada deployment aktif:
+ *    - Version: New Version (Versi baru).
+ *    - Execute as: Me.
+ *    - Who has access: Anyone (Siapa saja).
+ * 7. Klik Deploy.
  * ==============================================================================
  */
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
-    // Kunci proses selama max 15 detik untuk mencegah tabrakan data serentak (race condition)
     lock.waitLock(15000);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({
@@ -53,13 +43,17 @@ function doPost(e) {
     var email = (data.email || data.customer_email || '').toString().toLowerCase().trim();
     var name = (data.name || data.customer_name || '').toString().trim();
     var phone = (data.phone || data.customer_phone || '').toString().trim();
+    var amount = data.amount || data.total_amount || 0;
+    var paymentMethod = data.payment_method || data.payment_name || 'TriPay';
+    var merchantRef = data.merchant_ref || data.reference || ('TRX-' + new Date().getTime());
     var now = new Date();
 
     // ─────────────────────────────────────────────────────────────
     // 1. EVENT TRIPAY PAYMENT SUCCESS
     // ─────────────────────────────────────────────────────────────
     if (eventType === 'tripay_payment_success' || data.status === 'PAID') {
-      // Simpan / Update di Sheet "Users"
+      
+      // A. Simpan ke Tab "Users"
       var userSheet = getOrCreateSheet(ss, 'Users', ['Email', 'Nama', 'No HP', 'Status', 'Metode Bayar', 'Tanggal Daftar', 'Terakhir Aktif']);
       if (email) {
         saveOrUpdateUser(userSheet, {
@@ -67,35 +61,51 @@ function doPost(e) {
           name: name,
           phone: phone,
           status: 'Active',
-          source: data.payment_method || data.payment_name || 'TriPay',
+          source: paymentMethod,
           created_at: now,
           last_active: now
         });
       }
 
-      // Catat di Sheet "Transactions"
+      // B. Sinkronkan juga ke Tab Pertama (Sheet1 / gid=0) agar CSV Publish selalu update
+      var firstSheet = ss.getSheets()[0];
+      if (firstSheet && firstSheet.getName() !== 'Transactions' && firstSheet.getName() !== 'Activity_Logs') {
+        saveOrUpdateUser(firstSheet, {
+          email: email,
+          name: name,
+          phone: phone,
+          status: 'Active',
+          source: paymentMethod,
+          created_at: now,
+          last_active: now
+        });
+      }
+
+      // C. Simpan ke Tab "Transactions"
       var trxSheet = getOrCreateSheet(ss, 'Transactions', ['Merchant Ref', 'Reference', 'Email', 'Nama', 'No HP', 'Nominal', 'Metode Bayar', 'Waktu Bayar', 'Status']);
-      var ref = data.merchant_ref || data.reference || ('TRX-' + now.getTime());
-      
-      // Cek apakah transaksi sudah pernah dicatat (anti-double trx)
-      if (!isTransactionExists(trxSheet, ref)) {
+      if (!isTransactionExists(trxSheet, merchantRef)) {
         trxSheet.appendRow([
           data.merchant_ref || '-',
           data.reference || '-',
           email,
           name,
           phone,
-          data.amount || data.total_amount || 0,
-          data.payment_method || data.payment_name || '-',
+          amount,
+          paymentMethod,
           now,
           'PAID'
         ]);
       }
 
+      // D. Kirim Email Notifikasi Akses Otomatis ke Pembeli
+      if (email && email.includes('@')) {
+        sendBuyerWelcomeEmail(email, name, amount, paymentMethod, merchantRef);
+      }
+
       lock.releaseLock();
       return ContentService.createTextOutput(JSON.stringify({
         success: true,
-        message: 'TriPay payment recorded and user activated without duplicates.'
+        message: 'TriPay payment recorded, user activated, and welcome email sent.'
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
@@ -122,6 +132,20 @@ function doPost(e) {
         last_active: now
       });
 
+      // Sinkron ke tab pertama
+      var firstSheet = ss.getSheets()[0];
+      if (firstSheet && firstSheet.getName() !== 'Transactions' && firstSheet.getName() !== 'Activity_Logs') {
+        saveOrUpdateUser(firstSheet, {
+          email: email,
+          name: name,
+          phone: phone,
+          status: 'Active',
+          source: data.source || 'Registrasi',
+          created_at: now,
+          last_active: now
+        });
+      }
+
       lock.releaseLock();
       return ContentService.createTextOutput(JSON.stringify({
         success: true,
@@ -131,7 +155,7 @@ function doPost(e) {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // 3. EVENT ACTIVITY LOGS (TIDAK MENGOTORI SHEET USERS)
+    // 3. EVENT ACTIVITY LOGS
     // ─────────────────────────────────────────────────────────────
     if (eventType === 'activity') {
       var logSheet = getOrCreateSheet(ss, 'Activity_Logs', ['Waktu', 'Email', 'Nama', 'Aksi', 'Tool / Mode', 'Detail']);
@@ -144,9 +168,8 @@ function doPost(e) {
         data.details || '-'
       ]);
 
-      // Update kolom Terakhir Aktif di sheet Users jika user terdaftar
       if (email && email !== 'anonim') {
-        var userSheet = ss.getSheetByName('Users');
+        var userSheet = ss.getSheetByName('Users') || ss.getSheets()[0];
         if (userSheet) {
           updateUserLastActive(userSheet, email, now);
         }
@@ -159,7 +182,7 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Default Fallback: catat user jika ada email
+    // Default fallback jika ada email
     if (email) {
       var userSheet = getOrCreateSheet(ss, 'Users', ['Email', 'Nama', 'No HP', 'Status', 'Sumber', 'Tanggal Daftar', 'Terakhir Aktif']);
       saveOrUpdateUser(userSheet, {
@@ -200,13 +223,49 @@ function doGet(e) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// HELPER FUNCTIONS (ANTI-DUPLICATE CORE)
+// KIRIM EMAIL OTOMATIS KE PEMBELI (WELCOME EMAIL)
 // ─────────────────────────────────────────────────────────────
+function sendBuyerWelcomeEmail(email, name, amount, method, ref) {
+  try {
+    var subject = '🎉 Pembayaran Berhasil! Akses SmartFeed AI Studio Anda Sudah Aktif';
+    var displayName = name ? name : 'Sahabat SmartFeed';
+    var formattedAmount = Number(amount).toLocaleString('id-ID');
 
-/**
- * Menyimpan user baru atau mengupdate user jika email sudah ada.
- * Mengembalikan true jika user baru, false jika user lama diupdate.
- */
+    var htmlBody = ''
+      + '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0c0d12; color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #27272a;">'
+      + '  <div style="background: linear-gradient(135deg, #ef4444, #991b1b); padding: 30px 24px; text-align: center;">'
+      + '    <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff;">SmartFeed AI Studio</h1>'
+      + '    <p style="margin: 6px 0 0; font-size: 14px; color: #fecaca;">Akses Seumur Hidup (Lifetime) · 20 Engine Kreatif</p>'
+      + '  </div>'
+      + '  <div style="padding: 28px 24px; background-color: #12131a;">'
+      + '    <p style="font-size: 16px; color: #f4f4f5; margin-top: 0;">Halo <strong>' + displayName + '</strong>,</p>'
+      + '    <p style="font-size: 14px; color: #a1a1aa; line-height: 1.6;">Terima kasih atas pembelian Anda! Pembayaran sebesar <strong>Rp ' + formattedAmount + '</strong> via <strong>' + method + '</strong> (Ref: ' + ref + ') telah kami terima dan diverifikasi secara otomatis.</p>'
+      + '    <div style="background-color: #1a1b26; border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin: 24px 0;">'
+      + '      <h3 style="margin: 0 0 12px; font-size: 15px; color: #60a5fa;">🔑 Detail Akses Login Anda:</h3>'
+      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Email:</strong> <span style="color: #fbbf24;">' + email + '</span></p>'
+      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Password Default:</strong> <span style="font-family: monospace; background: #27272a; padding: 2px 6px; border-radius: 4px; color: #4ade80;">SmartFeedOKE</span></p>'
+      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Status:</strong> <span style="color: #4ade80; font-weight: bold;">Aktif Permanen</span></p>'
+      + '    </div>'
+      + '    <div style="text-align: center; margin: 30px 0;">'
+      + '      <a href="https://smartfeed.berandadigital.net/app" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: bold; font-size: 15px; display: inline-block;">🚀 Masuk ke Studio SmartFeed Sekarang</a>'
+      + '    </div>'
+      + '    <p style="font-size: 12px; color: #71717a; line-height: 1.5; border-top: 1px solid #27272a; padding-top: 16px;">Jika ada kendala login atau pertanyaan teknis, silakan hubungi tim support kami via WhatsApp di <strong>0896-9524-9089</strong> atau email <strong>info@berandadigital.net</strong>.</p>'
+      + '  </div>'
+      + '</div>';
+
+    MailApp.sendEmail({
+      to: email,
+      subject: subject,
+      htmlBody: htmlBody
+    });
+  } catch (emailErr) {
+    Logger.log('Gagal kirim email: ' + emailErr.toString());
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// HELPER FUNCTIONS
+// ─────────────────────────────────────────────────────────────
 function saveOrUpdateUser(sheet, user) {
   var lastRow = sheet.getLastRow();
   var email = user.email.toLowerCase().trim();
@@ -216,19 +275,17 @@ function saveOrUpdateUser(sheet, user) {
     for (var i = 0; i < emailsRange.length; i++) {
       var rowEmail = (emailsRange[i][0] || '').toString().toLowerCase().trim();
       if (rowEmail === email) {
-        // User SUDAH ADA -> UPDATE baris (Jangan buat baris baru!)
         var rowNumber = i + 2;
         if (user.name) sheet.getRange(rowNumber, 2).setValue(user.name);
         if (user.phone) sheet.getRange(rowNumber, 3).setValue(user.phone);
         sheet.getRange(rowNumber, 4).setValue('Active');
         if (user.source) sheet.getRange(rowNumber, 5).setValue(user.source);
         sheet.getRange(rowNumber, 7).setValue(user.last_active);
-        return false; // Bukan user baru
+        return false;
       }
     }
   }
 
-  // User BELUM ADA -> Tambahkan baris baru
   sheet.appendRow([
     email,
     user.name || '',
@@ -238,12 +295,9 @@ function saveOrUpdateUser(sheet, user) {
     user.created_at,
     user.last_active
   ]);
-  return true; // User baru
+  return true;
 }
 
-/**
- * Update waktu terakhir aktif user tanpa membuat baris baru.
- */
 function updateUserLastActive(sheet, email, time) {
   var lastRow = sheet.getLastRow();
   if (lastRow <= 1) return;
@@ -256,9 +310,6 @@ function updateUserLastActive(sheet, email, time) {
   }
 }
 
-/**
- * Cek apakah referensi transaksi sudah pernah dicatat.
- */
 function isTransactionExists(sheet, ref) {
   var lastRow = sheet.getLastRow();
   if (lastRow <= 1) return false;
@@ -271,9 +322,6 @@ function isTransactionExists(sheet, ref) {
   return false;
 }
 
-/**
- * Mengambil sheet yang ada atau membuat baru dengan header otomatis.
- */
 function getOrCreateSheet(ss, name, headers) {
   var sheet = ss.getSheetByName(name);
   if (!sheet) {
@@ -285,46 +333,4 @@ function getOrCreateSheet(ss, name, headers) {
     }
   }
   return sheet;
-}
-
-/**
- * ==============================================================================
- * FUNGSI PEMBERSIH DUPLIKAT SEKALI KLIK (RUN FUNCTION)
- * ==============================================================================
- * Jalankan fungsi ini dari Google Apps Script Editor untuk membersihkan
- * semua data email ganda/dobel yang sudah terlanjur ada di sheet Anda!
- */
-function cleanupDuplicates() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName('Users') || ss.getSheets()[0];
-  var lastRow = sheet.getLastRow();
-  if (lastRow <= 2) {
-    Logger.log('Data terlalu sedikit untuk dibersihkan.');
-    return;
-  }
-
-  var data = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues();
-  var seenEmails = {};
-  var cleanRows = [];
-  var duplicatesCount = 0;
-
-  for (var i = 0; i < data.length; i++) {
-    var email = (data[i][0] || '').toString().toLowerCase().trim();
-    if (!email || !email.includes('@')) continue;
-
-    if (!seenEmails[email]) {
-      seenEmails[email] = true;
-      cleanRows.push(data[i]);
-    } else {
-      duplicatesCount++;
-    }
-  }
-
-  if (duplicatesCount > 0) {
-    sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
-    sheet.getRange(2, 1, cleanRows.length, cleanRows[0].length).setValues(cleanRows);
-    Logger.log('BERHASIL! ' + duplicatesCount + ' data duplikat telah dibersihkan. Tersisa ' + cleanRows.length + ' akun unik.');
-  } else {
-    Logger.log('Tidak ditemukan data duplikat. Database sudah bersih!');
-  }
 }

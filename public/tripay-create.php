@@ -95,7 +95,7 @@ $payload = [
             'quantity' => 1
         ]
     ],
-    'return_url'     => 'https://smartfeed.berandadigital.net/checkout?ref=' . $merchantRef . '&status=pending',
+    'return_url'     => 'https://smartfeed.berandadigital.net/checkout?ref=' . $merchantRef . '&status=paid&email=' . urlencode($email) . '&name=' . urlencode($name),
     'expired_time'   => time() + (24 * 60 * 60), // 24 jam
     'signature'      => $signature
 ];
