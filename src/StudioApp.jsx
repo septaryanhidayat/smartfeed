@@ -490,7 +490,7 @@ function AuthedApp() {
               <ImageSlicerMode />
             </main>
           ) : mode === 'presentation' ? (
-            <main className="flex-1 min-w-0 overflow-y-auto p-4 lg:p-6 max-w-7xl mx-auto w-full">
+            <main className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 lg:p-6 w-full max-w-[1750px] mx-auto">
               <div className="mb-4">
                 <h1 className="text-xl font-bold">{t.name}</h1>
                 <p className="text-xs text-text-mut mt-1">{t.desc}</p>
