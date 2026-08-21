@@ -7,6 +7,15 @@ import { HistoryProvider } from './context/HistoryContext.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import './index.css';
 
+// Segera hilangkan initial-loader agar tidak pernah stuck di layar loading/logo
+try {
+  const loader = document.getElementById('initial-loader');
+  if (loader) {
+    loader.style.display = 'none';
+    loader.remove();
+  }
+} catch (e) {}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
@@ -21,16 +30,16 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>,
 );
 
-// Tandai React sudah mount — dipakai watchdog di index.html (anti splash selamanya).
+// Tandai React sudah mount — dipakai watchdog di index.html
 window.__AF_MOUNTED = true;
 
-// Remove the initial Hero skeleton once React has rendered first paint.
-// Smooth fade-out so transition to the real React Hero is seamless.
-requestAnimationFrame(() => {
-  const initial = document.getElementById('initial-hero')
-    || document.getElementById('initial-loader'); // legacy fallback
-  if (initial) {
-    initial.classList.add('is-hiding');
-    setTimeout(() => initial.remove(), 350);
-  }
-});
+// Extra safety removal
+setTimeout(() => {
+  try {
+    const loader = document.getElementById('initial-loader');
+    if (loader) {
+      loader.style.display = 'none';
+      loader.remove();
+    }
+  } catch (e) {}
+}, 50);
