@@ -33,7 +33,14 @@ export const CONFIG = {
   chatgptUrl: pick(cfg.chatgptUrl, 'https://chatgpt.com/'),
   gptUrl:     pick(cfg.gptUrl, ''),
 
-  // ── Social (footer) ───────────────────────────────────────
+  // ── Social & Company Info (footer & legal) ────────────────
+  companyName:     pick(cfg.companyName, 'Beranda Teknologi Digital'),
+  companyUrl:      pick(cfg.companyUrl, 'https://berandadigital.net'),
+  contactEmail:    pick(cfg.contactEmail, 'info@berandadigital.net'),
+  contactPhone:    pick(cfg.contactPhone, '089695249089'),
+  contactPhoneDisplay: pick(cfg.contactPhoneDisplay, '0896-9524-9089'),
+  contactAddress:  pick(cfg.contactAddress, 'Jalan Sarjana Blok A, Kelurahan Timbangan, Kecamatan Indralaya Utara, Kabupaten Ogan Ilir, Sumatera Selatan, 30862'),
+
   instagramUrl:    pick(cfg.instagramUrl, 'https://www.instagram.com/berandadigital_net/'),
   instagramHandle: pick(cfg.instagramHandle, '@berandadigital_net'),
   facebookUrl:     pick(cfg.facebookUrl, 'https://www.facebook.com/berandateknologidigital'),

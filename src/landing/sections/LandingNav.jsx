@@ -49,8 +49,8 @@ export default function LandingNav({ onOpenAccess }) {
             <span className="text-base font-bold">
               {brandParts().lead && <>{brandParts().lead} </>}<span className="text-accent">{brandParts().accent}</span>
             </span>
-            <span className="text-[8px] mono uppercase tracking-[0.18em] text-text-dim">
-              instant design studio
+            <span className="text-[8px] mono uppercase tracking-[0.14em] text-text-dim">
+              by {CONFIG.companyName}
             </span>
           </span>
         </a>

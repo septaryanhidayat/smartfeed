@@ -23,7 +23,15 @@ window.__AF_CONFIG = {
    chatgptUrl: "https://chatgpt.com/",
    gptUrl: "",
 
-   /* -- 2b. SOCIAL (footer) ------------------------------------------- */
+   /* -- 2b. INFORMASI PERUSAHAAN & KONTAK ---------------------------- */
+   companyName: "Beranda Teknologi Digital",
+   companyUrl: "https://berandadigital.net",
+   contactEmail: "info@berandadigital.net",
+   contactPhone: "089695249089",
+   contactPhoneDisplay: "0896-9524-9089",
+   contactAddress: "Jalan Sarjana Blok A, Kelurahan Timbangan, Kecamatan Indralaya Utara, Kabupaten Ogan Ilir, Sumatera Selatan, 30862",
+
+   /* -- 2c. SOCIAL (footer) ------------------------------------------- */
    instagramUrl: "https://www.instagram.com/berandadigital_net/",
    instagramHandle: "@berandadigital_net",
    facebookUrl: "https://www.facebook.com/berandateknologidigital",
