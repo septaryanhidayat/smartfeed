@@ -133,7 +133,7 @@ export default function AffiliateShowcase() {
             <div className="text-center sm:text-left">
               <div className="text-base font-bold text-text">Jualan affiliate? Generate visual produknya sekarang.</div>
               <div className="text-xs text-text-mut mt-1">
-                Dapatkan akses penuh ke suite Affiliate Video dan seluruh 19 engine kreatif di SmartFeed Studio.
+                Dapatkan akses penuh ke suite Affiliate Video dan seluruh 20 engine kreatif di SmartFeed Studio.
               </div>
             </div>
             <a href="#harga" className="btn-cta !text-sm shrink-0">

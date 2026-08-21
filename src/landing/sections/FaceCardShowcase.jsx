@@ -95,7 +95,7 @@ export default function FaceCardShowcase() {
             <div className="text-center sm:text-left">
               <div className="text-base font-bold text-text">Mau coba Face Card sekarang?</div>
               <div className="text-xs text-text-mut mt-1">
-                Dapatkan akses penuh ke seluruh 19 engine kreatif di SmartFeed Studio sekarang.
+                Dapatkan akses penuh ke seluruh 20 engine kreatif di SmartFeed Studio sekarang.
               </div>
             </div>
             <a href="#harga" className="btn-cta !text-sm shrink-0">

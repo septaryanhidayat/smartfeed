@@ -44,13 +44,13 @@ function useKuota() {
 }
 
 const INCLUDED = [
-  'Akses Penuh 19 Engine Kreatif AI (Banner, Carousel, 9-Feed Konsisten, Image Slicer, YouTube Thumbnail, Typography Ads, Copywriting, Face Card, Menu F&B, dll)',
+  'Akses Penuh 20 Engine Kreatif AI (Slide PPT Deck, Banner, Carousel, 9-Feed Konsisten, Image Slicer, YouTube Thumbnail, Typography Ads, Copywriting, Face Card, Menu F&B, dll)',
   'Suite Jurnalisme & Redaksi Media (Artikel Berita 5W+1H, Breaking News Card, Quote Tokoh, Cek Fakta / Fact Check)',
   'Suite Affiliate & Video Creator (Naskah Video & VO, Storyboard 16:9, Review Banner, Virtual Try-On, Logo & Mockup, UGC Hooks)',
   'Smart Grid & Image Slicer Tool (Potong 9-Grid/Carousel & Unduh ZIP Otomatis)',
   '50+ Kategori Preset Industri & Bisnis Siap Pakai',
   'Unlimited Render Prompt AI tanpa batas kuota harian',
-  'Multi-Format Rasio Gambar (1:1 Feed · 9:16 Story/Reels/TikTok · 16:9 Banner/YT · 4:5 Portrait · A4 Poster & Dokumen)',
+  'Multi-Format Rasio Gambar (1:1 Feed · 9:16 Story/Reels/TikTok · 16:9 Banner/YT/PPT · 4:5 Portrait · A4 Poster & Dokumen)',
   'Update Fitur & Engine AI Baru Selamanya (Full Lifetime)',
   'Akses Dashboard Studio Instan via Web',
 ];
@@ -77,7 +77,7 @@ export default function Pricing({ onOpenAccess }) {
             <br />Tanpa Biaya Bulanan.
           </h2>
           <p className="mt-4 text-text-mut max-w-xl mx-auto">
-            Dapatkan akses penuh ke seluruh 19 engine generator konten dan studio visual AI profesional untuk melejitkan branding dan omset bisnis Anda.
+            Dapatkan akses penuh ke seluruh 20 engine generator konten dan studio visual AI profesional untuk melejitkan branding dan omset bisnis Anda.
           </p>
         </div>
 

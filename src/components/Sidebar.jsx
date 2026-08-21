@@ -5,7 +5,7 @@ import {
   Wand2, Settings, PlayCircle, Sparkles, DollarSign, GalleryHorizontalEnd, HandCoins,
   Sparkles as LogoIcon, Shirt, Star, Film, ChevronRight, ChevronDown, Store, Grid3x3, LogOut,
   PanelLeftClose, PanelLeftOpen, Sun, Moon, Layers, Newspaper, MessageSquareQuote, ShieldAlert,
-  Scissors, BookOpenText, Clapperboard
+  Scissors, BookOpenText, Clapperboard, Presentation
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -13,16 +13,17 @@ import { useTheme } from '../context/ThemeContext.jsx';
 import { showConfirmLogout } from '../utils/alerts.js';
 
 const MODES = [
-  { id: 'banner',      icon: Image,                label: 'Design Feeds',       badge: '' },
-  { id: 'carousel',    icon: GalleryHorizontalEnd, label: 'Carousel Feeds',     badge: '' },
-  { id: 'gridfeed',    icon: Grid3x3,              label: '9 Feed Konsisten',   badge: 'Hot' },
-  { id: 'imageslicer', icon: Scissors,             label: 'Grid & Image Slicer', badge: 'New' },
-  { id: 'videoscript', icon: Clapperboard,         label: 'Naskah Video & Storyboard', badge: 'New' },
-  { id: 'thumbnail',   icon: Youtube,              label: 'YouTube Thumbnail',  badge: '' },
-  { id: 'typography',  icon: Megaphone,            label: 'Ads Design',         badge: '' },
-  { id: 'copywriting', icon: PencilLine,           label: 'Copy Writing',       badge: '' },
-  { id: 'facecard',    icon: ScanFace,             label: 'Face Card',          badge: '' },
-  { id: 'menufb',      icon: UtensilsCrossed,      label: 'Menu F&B',           badge: 'New' },
+  { id: 'banner',       icon: Image,                label: 'Design Feeds',       badge: '' },
+  { id: 'carousel',     icon: GalleryHorizontalEnd, label: 'Carousel Feeds',     badge: '' },
+  { id: 'gridfeed',     icon: Grid3x3,              label: '9 Feed Konsisten',   badge: 'Hot' },
+  { id: 'imageslicer',  icon: Scissors,             label: 'Grid & Image Slicer', badge: 'New' },
+  { id: 'videoscript',  icon: Clapperboard,         label: 'Naskah Video & Storyboard', badge: 'New' },
+  { id: 'presentation', icon: Presentation,         label: 'Slide & PPT Deck',   badge: 'New' },
+  { id: 'thumbnail',    icon: Youtube,              label: 'YouTube Thumbnail',  badge: '' },
+  { id: 'typography',   icon: Megaphone,            label: 'Ads Design',         badge: '' },
+  { id: 'copywriting',  icon: PencilLine,           label: 'Copy Writing',       badge: '' },
+  { id: 'facecard',     icon: ScanFace,             label: 'Face Card',          badge: '' },
+  { id: 'menufb',       icon: UtensilsCrossed,      label: 'Menu F&B',           badge: 'New' },
 ];
 
 const JOURNALISM_MODES = [

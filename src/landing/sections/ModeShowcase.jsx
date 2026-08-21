@@ -2,15 +2,15 @@ import { useState } from 'react';
 import {
   LayoutPanelTop, Grid3x3, GalleryHorizontalEnd, Scissors, Youtube, Megaphone,
   PencilLine, ScanFace, UtensilsCrossed, BookOpenText, Newspaper, MessageSquareQuote,
-  ShieldAlert, Clapperboard, Film, Star, Shirt, Sparkles, Wand2, ArrowUpRight, Check
+  ShieldAlert, Clapperboard, Film, Star, Shirt, Sparkles, Wand2, ArrowUpRight, Check, Presentation
 } from 'lucide-react';
 import SampleAdCard from '../primitives/SampleAdCard.jsx';
 import SafeImage from '../primitives/SafeImage.jsx';
 import { MODE_PREVIEWS, FACE_CARD_PREVIEWS, MENU_FB_PREVIEWS, JOURNALISM_PREVIEWS } from '../data/galleryManifest.js';
 
 const CATEGORIES = [
-  { id: 'all', label: 'Semua Engine (19)' },
-  { id: 'visual', label: '🎨 Desain & Visual (8)' },
+  { id: 'all', label: 'Semua Engine (20)' },
+  { id: 'visual', label: '🎨 Desain & Slide (9)' },
   { id: 'media', label: '📰 Jurnalisme & Berita (4)' },
   { id: 'affiliate', label: '🎬 Affiliate & Video (6)' },
   { id: 'culinary', label: '🍜 Menu F&B (1)' },
@@ -253,6 +253,18 @@ const ALL_MODES = [
     img: '/landing/ads-9x16/vert-01.jpg',
     bullets: ['Angle naskah UGC otentik', 'Hook emosional penahan scroll', 'Direct call to action ke checkout'],
   },
+  {
+    category: 'visual',
+    code: 'M20',
+    name: 'Slide & PPT Deck Generator',
+    badge: 'New',
+    desc: 'Susun struktur presentasi 16:9 widescreen, outline slide-by-slide, speaker notes, dan AI visual prompt untuk Pitch Deck, Proposal, Edukasi, dan Webinar.',
+    ratio: '16:9 Slide Deck',
+    icon: Presentation,
+    variant: 41,
+    img: '/landing/ads-16x9/yt-01.jpg',
+    bullets: ['Format 16:9 Widescreen HD siap ekspor', 'Auto outline, bullet points & speaker notes', 'Untuk Pitch Deck, Proposal, Webinar & SOP'],
+  },
 ];
 
 export default function ModeShowcase() {
@@ -267,9 +279,9 @@ export default function ModeShowcase() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="max-w-3xl reveal">
-          <span className="eyebrow"><span className="dot" /> 19 engine ai · 1 studio visual</span>
+          <span className="eyebrow"><span className="dot" /> 20 engine ai · 1 studio visual</span>
           <h2 className="h-section mt-4">
-            Sembilan Belas <span className="text-grad-red">Engine AI Kreatif</span> untuk Segala Kebutuhan Konten Anda.
+            Dua Puluh <span className="text-grad-red">Engine AI Kreatif</span> untuk Segala Kebutuhan Konten Anda.
           </h2>
           <p className="mt-4 text-text-mut leading-relaxed">
             Bukan satu template generator generik. Setiap modul memiliki logic, arsitektur prompt, dan pipeline visual khusus agar output yang dihasilkan presisi, estetik, dan siap tayang tanpa editing manual.

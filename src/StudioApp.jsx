@@ -39,6 +39,7 @@ import FactCheckMode from './modes/FactCheckMode.jsx';
 import ArticleMode from './modes/ArticleMode.jsx';
 import VideoScriptMode from './modes/VideoScriptMode.jsx';
 import ImageSlicerMode from './modes/ImageSlicerMode.jsx';
+import PresentationMode from './modes/PresentationMode.jsx';
 import VideoScriptDemoModal from './components/VideoScriptDemoModal.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
 import { generateCarouselPrompts, INITIAL_CAROUSEL } from './prompts/buildCarousel.js';
@@ -57,6 +58,7 @@ import { buildQuoteCard, INITIAL_QUOTE_CARD } from './prompts/buildQuoteCard.js'
 import { buildFactCheck, INITIAL_FACT_CHECK } from './prompts/buildFactCheck.js';
 import { buildArticle, INITIAL_ARTICLE_STATE } from './prompts/buildArticle.js';
 import { buildVideoScript, INITIAL_VIDEOSCRIPT_STATE } from './prompts/buildVideoScript.js';
+import { buildPresentation, INITIAL_PRESENTATION } from './prompts/buildPresentation.js';
 import { SUB_TYPES as FACECARD_SUB_TYPES } from './data/faceCardOptions.js';
 import { useHistory } from './context/HistoryContext.jsx';
 
@@ -88,10 +90,11 @@ const TITLES = {
   tryonaffiliate:      { name: 'Try-On Produk Affiliate', desc: 'Buat konsep try-on / wear-test produk. Pakai foto produk + ikuti video tutorial untuk hasilkan visual konversi tinggi.' },
   reviewaffiliate:     { name: 'Review Produk Affiliate', desc: 'Buat konsep BANNER review produk high-converting. Pakai foto produk, produk dijaga sama persis.' },
   storyboardaffiliate: { name: 'Storyboard Affiliate', desc: 'Buat konsep storyboard video: scene-by-scene + caption + shot list otomatis. Pakai foto produk + ikuti video tutorial.' },
+  presentation:        { name: 'Slide & PPT Deck Generator', desc: 'Susun struktur presentasi 16:9 widescreen, outline slide-by-slide, speaker notes & AI visual prompt siap ekspor ke PowerPoint/Canva/Gamma.' },
 };
 
 const HAS_MOCKUP = {
-  banner: true, carousel: true, gridfeed: false, imageslicer: false, videoscript: false,
+  banner: true, carousel: true, gridfeed: false, imageslicer: false, videoscript: false, presentation: false,
   thumbnail: true, typography: true, copywriting: false, facecard: false, menufb: false, article: false,
   newscard: false, quotecard: false, factcheck: false,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
@@ -147,6 +150,7 @@ function AuthedApp() {
   const [tryonAff, dispatchTryonAff]               = useReducer(modeReducer, INITIAL_TRYON_AFFILIATE);
   const [reviewAff, dispatchReviewAff]             = useReducer(modeReducer, INITIAL_REVIEW_AFFILIATE);
   const [storyboardAff, dispatchStoryboardAff]     = useReducer(modeReducer, INITIAL_STORYBOARD_AFFILIATE);
+  const [presentation, dispatchPresentation]       = useReducer(modeReducer, INITIAL_PRESENTATION);
 
   const activeState =
     mode === 'banner'              ? banner :
@@ -165,6 +169,7 @@ function AuthedApp() {
     mode === 'tryonaffiliate'      ? tryonAff :
     mode === 'reviewaffiliate'     ? reviewAff :
     mode === 'storyboardaffiliate' ? storyboardAff :
+    mode === 'presentation'        ? presentation :
     copywriting;
   const deferredState = useDeferredValue(activeState);
 
@@ -186,6 +191,7 @@ function AuthedApp() {
     if (mode === 'tryonaffiliate')      return buildTryOnAffiliate(deferredState);
     if (mode === 'reviewaffiliate')     return buildReviewAffiliate(deferredState);
     if (mode === 'storyboardaffiliate') return buildStoryboardAffiliate(deferredState);
+    if (mode === 'presentation')        return buildPresentation(deferredState).masterPrompt;
     return null;
   }, [mode, deferredState]);
 
@@ -216,6 +222,7 @@ function AuthedApp() {
     if (mode === 'tryonaffiliate')      return activeState.product_name || 'Try-On Affiliate Prompt';
     if (mode === 'reviewaffiliate')     return activeState.product_name || 'Review Affiliate Prompt';
     if (mode === 'storyboardaffiliate') return activeState.product_name || 'Storyboard Affiliate Prompt';
+    if (mode === 'presentation')        return activeState.topic || 'Slide Presentation Deck';
     return 'Prompt';
   })();
 
@@ -448,6 +455,18 @@ function AuthedApp() {
           {mode === 'imageslicer' ? (
             <main className="flex-1 min-w-0 overflow-y-auto p-4 lg:p-6 max-w-7xl mx-auto w-full">
               <ImageSlicerMode />
+            </main>
+          ) : mode === 'presentation' ? (
+            <main className="flex-1 min-w-0 overflow-y-auto p-4 lg:p-6 max-w-7xl mx-auto w-full">
+              <div className="mb-4">
+                <h1 className="text-xl font-bold">{t.name}</h1>
+                <p className="text-xs text-text-mut mt-1">{t.desc}</p>
+              </div>
+              <PresentationMode
+                state={presentation}
+                onChangeField={(field, value) => dispatchPresentation({ type: 'SET_FIELD', field, value })}
+                onSetState={(preset) => dispatchPresentation({ type: 'LOAD_DEMO', preset })}
+              />
             </main>
           ) : (
             <>
