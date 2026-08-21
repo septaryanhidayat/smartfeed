@@ -148,7 +148,7 @@ export default function Pricing({ onOpenAccess }) {
                   className="btn-cta !text-base !px-8 !py-4 text-center"
                 >
                   <Sparkles className="w-4.5 h-4.5" />
-                  Ambil Promo Sekarang — Rp {CONFIG.price || '249.000'}
+                  Ambil Promo Sekarang — Rp {CONFIG.price || '149.000'}
                   <ArrowRight className="w-4.5 h-4.5" />
                 </a>
                 

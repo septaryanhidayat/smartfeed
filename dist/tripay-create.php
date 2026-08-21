@@ -48,7 +48,7 @@ if (substr($phone, 0, 2) === '62') {
 }
 
 // Tentukan amount & nama produk
-$amount = 249000;
+$amount = 149000;
 $productName = 'SmartFeed AI Studio (Lifetime Access - 20 Engine Kreatif)';
 
 if ($plan === 'reseller') {
