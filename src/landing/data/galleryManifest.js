@@ -77,4 +77,9 @@ export const MENU_FB_PREVIEWS = {
   bunyaKitchen:  '/landing/menu-fb/rice-bowl-modern.jpg',
 };
 
+export const JOURNALISM_PREVIEWS = {
+  breakingNews: '/landing/journalism/breaking-news.jpg',
+  quoteTokoh:   '/landing/journalism/quote-tokoh.jpg',
+};
+
 export const BRAND_LOGO    = '/landing/brand/logo.png';

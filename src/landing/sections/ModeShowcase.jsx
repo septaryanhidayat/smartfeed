@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import SampleAdCard from '../primitives/SampleAdCard.jsx';
 import SafeImage from '../primitives/SafeImage.jsx';
-import { MODE_PREVIEWS, FACE_CARD_PREVIEWS, MENU_FB_PREVIEWS } from '../data/galleryManifest.js';
+import { MODE_PREVIEWS, FACE_CARD_PREVIEWS, MENU_FB_PREVIEWS, JOURNALISM_PREVIEWS } from '../data/galleryManifest.js';
 
 const CATEGORIES = [
   { id: 'all', label: 'Semua Engine (19)' },
@@ -152,7 +152,7 @@ const ALL_MODES = [
     ratio: '1:1 · 4:5 Media',
     icon: Newspaper,
     variant: 45,
-    img: '/landing/ads-categories/cat-10.jpg',
+    img: JOURNALISM_PREVIEWS.breakingNews,
     bullets: ['Format media berita kredibel', 'Badge rubrik & tanggal peristiwa', 'Tipografi headline tegas & padat'],
   },
   {
@@ -164,7 +164,7 @@ const ALL_MODES = [
     ratio: '1:1 · 4:5 Quote',
     icon: MessageSquareQuote,
     variant: 48,
-    img: '/landing/ads-categories/cat-11.jpg',
+    img: JOURNALISM_PREVIEWS.quoteTokoh,
     bullets: ['Kutipan narasumber berwibawa', 'Gelar, jabatan & afiliasi resmi', 'Desain aesthetic & viral di Twitter/IG'],
   },
   {
