@@ -90,7 +90,7 @@ const TITLES = {
   tryonaffiliate:      { name: 'Try-On Produk Affiliate', desc: 'Buat konsep try-on / wear-test produk. Pakai foto produk + ikuti video tutorial untuk hasilkan visual konversi tinggi.' },
   reviewaffiliate:     { name: 'Review Produk Affiliate', desc: 'Buat konsep BANNER review produk high-converting. Pakai foto produk, produk dijaga sama persis.' },
   storyboardaffiliate: { name: 'Storyboard Affiliate', desc: 'Buat konsep storyboard video: scene-by-scene + caption + shot list otomatis. Pakai foto produk + ikuti video tutorial.' },
-  presentation:        { name: 'Slide & PPT Deck Generator', desc: 'Susun struktur presentasi 16:9 widescreen, outline slide-by-slide, speaker notes & AI visual prompt siap ekspor ke PowerPoint/Canva/Gamma.' },
+  presentation:        { name: 'Magic Prompt Presentasi PPT (Beta)', desc: 'Generate prompt master, outline slide, visual AI & speaker notes berbasis prinsip presentasi terbaik.' },
 };
 
 const HAS_MOCKUP = {

@@ -1,155 +1,136 @@
-export const PRESENTATION_USE_CASES = [
-  {
-    id: 'executive_concept',
-    name: '🏛️ Proposal Pendirian Institusi & Lembaga (Executive Layout)',
-    desc: 'Struktur masterclass: Cover Hero Split, Dasar Pendirian & Core Box, Tantangan 2x2 + Banner Solusi, 3-Pilar Positioning, Kurikulum 3 Tahap, Tabel Anggaran, dan Roadmap Eksekusi.',
-    defaultSlides: 10,
-  },
-  {
-    id: 'pitch_deck',
-    name: '🚀 Startup Pitch Deck & Investor Presentation',
-    desc: 'Struktur standar VC: Problem & Pain Point, Solusi & Produk, Market Size (TAM/SAM/SOM), Business Model, Traction, Tabel Proyeksi Keuangan, dan Funding Ask.',
-    defaultSlides: 10,
-  },
-  {
-    id: 'corporate_strategy',
-    name: '📈 Rencana Strategis Bisnis & Transformasi Perusahaan',
-    desc: 'Struktur korporat: Executive Summary, Analisis Pasar & Respon, 3 Pilar Transformasi, Portofolio Inisiatif, Tabel Capex/Opex, dan Agenda Keputusan Direksi.',
-    defaultSlides: 10,
-  },
-  {
-    id: 'company_profile',
-    name: '🏢 Company Profile & Penawaran Kerjasama B2B',
-    desc: 'Profil perusahaan, portofolio layanan, metodologi kerja, diferensiasi unggulan, studi kasus klien, dan skema kemitraan.',
-    defaultSlides: 8,
-  },
-  {
-    id: 'education_webinar',
-    name: '🎓 Materi Edukasi, Kuliah & Webinar Masterclass',
-    desc: 'Struktur pengajaran runtut: Agenda, konsep dasar, visual breakdown, studi kasus nyata, latihan implementasi, dan kesimpulan materi.',
-    defaultSlides: 10,
-  },
-  {
-    id: 'kpi_budget_report',
-    name: '📊 Laporan Anggaran, Finansial & Evaluasi Kinerja',
-    desc: 'Executive summary, tabel simulasi biaya, proyeksi cashflow, analisis bottleneck, dan strategi alokasi sumber daya.',
-    defaultSlides: 8,
-  },
+/**
+ * Magic Prompt Presentasi PPT (Beta) Options & Presets
+ * Berdasarkan prinsip-prinsip desain presentasi terbaik:
+ * 1. Satu Slide Satu Pesan
+ * 2. Prinsip 5-5-5 (Maksimal 5 baris, 5 kata/baris)
+ * 3. Struktur Logis (Opening, Problem, Solution, Evidence, CTA)
+ * 4. Data & Bukti Terukur
+ * 5. Visual Berkualitas & High Contrast
+ */
+
+export const PRESENTATION_TYPES = [
+  'Pitching ke Investor',
+  'Presentasi ke Klien',
+  'Edukasi / Workshop',
+  'Training Internal',
+  'Seminar / Konferensi',
+  'Laporan Performa Bisnis',
+  'Proposal Proyek',
+  'Webinar Online',
 ];
 
-export const PRESENTATION_STYLES = [
-  {
-    id: 'executive_navy_gold',
-    name: 'Executive Navy & Warm Gold (Masterclass Classic)',
-    desc: 'Standar presentasi eksekutif: Dasar putih/soft-grey bersih, header & kartu navy pekat (#002D62), aksen emas hangat (#EAAA00), dan pita branding bawah elegan.',
-    bg: '#ffffff',
-    text: '#0f172a',
-    accent: '#EAAA00',
-    badge: '#002D62',
-  },
-  {
-    id: 'minimal_clean',
-    name: 'Minimalist Clean (Modern Monochrome & Sapphire)',
-    desc: 'Dominan putih bersih, tipografi sans-serif tegas, spasi lega, visual monokrom dengan aksen safir profesional.',
-    bg: '#ffffff',
-    text: '#0f172a',
-    accent: '#2563eb',
-    badge: '#1e293b',
-  },
-  {
-    id: 'dark_tech',
-    name: 'Dark Futuristic (High-Tech & Cyber Obsidian)',
-    desc: 'Background gelap pekat (#090D16), aksen neon emerald/cyan, kartu kontras tinggi, dan nuansa visual inovatif masa depan.',
-    bg: '#090d16',
-    text: '#f8fafc',
-    accent: '#10b981',
-    badge: '#1e293b',
-  },
-  {
-    id: 'corporate_emerald',
-    name: 'Corporate Emerald & Slate (Institusi & Keberlanjutan)',
-    desc: 'Palet hijau emerald prestisius dipadu slate abu-abu dan putih, memberikan kesan kredibel, bertumbuh, dan stabil.',
-    bg: '#f8fafc',
-    text: '#064e3b',
-    accent: '#059669',
-    badge: '#065f46',
-  },
-  {
-    id: 'luxury_gold',
-    name: 'Luxury Charcoal & Platinum Gold',
-    desc: 'Kombinasi hitam arang elegan dengan sentuhan emas platinum, ideal untuk brand eksklusif dan investor tingkat tinggi.',
-    bg: '#121212',
-    text: '#fafafa',
-    accent: '#eab308',
-    badge: '#27272a',
-  },
+export const PRESENTATION_SLIDE_OPTIONS = [
+  { value: 6, label: '5-7 slide (ringkas)' },
+  { value: 10, label: '10-12 slide (standar)' },
+  { value: 16, label: '15-20 slide (detail)' },
+  { value: 24, label: '20-30 slide (komprehensif)' },
+];
+
+export const PRESENTATION_DURATIONS = [
+  '5-10 menit',
+  '10-15 menit',
+  '20-30 menit',
+  '45-60 menit',
+  '90 menit+',
+];
+
+export const PRESENTATION_LANGUAGES = [
+  'Indonesia',
+  'Inggris',
+  'Bilingual',
+];
+
+export const PRESENTATION_DESIGN_STYLES = [
+  { id: 'profesional_minimalis', label: 'Profesional & Minimalis', color: 'Navy + Gold' },
+  { id: 'modern_bold', label: 'Modern & Bold', color: 'Sapphire + Coral' },
+  { id: 'startup_inovatif', label: 'Startup Inovatif', color: 'Dark Tech + Emerald Neon' },
+  { id: 'korporat_formal', label: 'Korporat Formal', color: 'Slate Grey + Deep Blue' },
+  { id: 'kreatif_playful', label: 'Kreatif & Playful', color: 'Pastel + Vibrant Purple' },
+  { id: 'dark_elegan', label: 'Dark & Elegan', color: 'Obsidian + Warm Amber' },
+  { id: 'clean_edukatif', label: 'Clean & Edukatif', color: 'Teal + White Minimal' },
+];
+
+export const PRESENTATION_VISUAL_ELEMENTS = [
+  'Infografis & Diagram',
+  'Ikon Vektor',
+  'Grafik & Chart',
+  'Foto HD',
+  'Timeline',
+  'Mockup Produk',
+  'Testimonial',
+  'Comparison Table',
+];
+
+export const PRESENTATION_TONES = [
+  'Percaya Diri',
+  'Data-driven',
+  'Storytelling',
+  'Simple & Clear',
+  'Inspiratif',
+  'Teknis & Detail',
+];
+
+export const PRESENTATION_PRINCIPLES = [
+  'Satu Slide Satu Pesan',
+  'Prinsip 5-5-5',
+  'Struktur Logis',
+  'Data & Bukti',
+  'Visual Berkualitas',
 ];
 
 export const PRESENTATION_DEMOS = [
   {
+    id: 'demo_growth_startup',
+    tag: '🚀 Startup Growth',
+    topic: 'Strategi Growth Hacking untuk Startup SaaS B2B',
+    type: 'Pitching ke Investor',
+    audience: 'Investor Series A, Tim Marketing, CEO Startup',
+    slideCount: 10,
+    duration: '10-15 menit',
+    language: 'Indonesia',
+    keyPoints: '- Masalah utama: Customer Acquisition Cost (CAC) industri SaaS naik 60%\n- Solusi: Framework Growth Flywheel berbasis Product-Led Growth (PLG)\n- Ukuran pasar & peluang di Asia Tenggara (TAM $12B)\n- Model monetisasi & proyeksi recurring revenue (ARR)\n- Traction saat ini: 1.200 pengguna aktif berbayar, NPS 72\n- Dana yang dibutuhkan $500K untuk ekspansi tim engineer dan akuisisi',
+    dataEvidence: 'Market size $12B, growth rate 35% YoY, 1.200 pengguna aktif, CAC payback period 4 bulan, NPS score 72.',
+    mainCta: 'Investor commit funding $500K untuk ekspansi regional 12 bulan ke depan.',
+    designStyle: 'Startup Inovatif',
+    colorScheme: 'Obsidian Black + Emerald Neon + Pure White',
+    visualElements: ['Infografis & Diagram', 'Grafik & Chart', 'Mockup Produk', 'Comparison Table'],
+    tone: 'Data-driven',
+    extraNotes: 'Nama startup: CloudPulse.ai. Deck sebelumnya terlalu teknis, ingin dibuat lebih fokus pada traction dan unit economics.',
+  },
+  {
     id: 'demo_bi_sultra',
     tag: '🏛️ BI Sultra: Inflasi & QRIS',
     topic: 'Sinergi BI Sultra: Mengawal Inflasi & Memperkuat Digitalisasi',
-    presenter: 'Kantor Perwakilan Bank Indonesia Sulawesi Tenggara',
+    type: 'Laporan Performa Bisnis',
     audience: 'TPID, Pemerintah Daerah, Perbankan & Mitra Strategis',
-    useCase: 'corporate_strategy',
-    style: 'executive_navy_gold',
     slideCount: 10,
-    keyPoints: 'Evaluasi inflasi terjaga di 2,45% (yoy), efektivitas kampanye Belanja Bijak dan substitusi pangan lokal (Ikan Layang), keberhasilan Juara 2 Lomba Akuisisi QRIS Nasional 2025 dengan capaian 120% target merchant, pertumbuhan kredit UMKM 12,7%, dan 4 langkah strategis akselerasi ekonomi digital Sultra.',
+    duration: '20-30 menit',
+    language: 'Indonesia',
+    keyPoints: '- Evaluasi inflasi daerah terjaga di angka 2,45% (yoy)\n- Efektivitas kampanye Belanja Bijak dan substitusi pangan lokal (Ikan Layang)\n- Prestasi Juara 2 Lomba Akuisisi QRIS Nasional 2025 dengan merchant tembus 120% target\n- Pertumbuhan pembiayaan kredit UMKM positif di level 12,7%\n- 4 langkah strategis akselerasi ekonomi digital Sulawesi Tenggara',
+    dataEvidence: 'Inflasi 2,45% yoy, merchant QRIS 120% dari target, volume transaksi naik 38,6%, pertumbuhan kredit UMKM 12,7%, deflasi ikan layang -1,28%.',
+    mainCta: 'Persetujuan roadmap bersama TPID & Pemda untuk integrasi transaksi nontunai di seluruh pasar tradisional.',
+    designStyle: 'Profesional & Minimalis',
+    colorScheme: 'Navy Blue (#002D62) + Warm Gold (#EAAA00) + Clean White',
+    visualElements: ['Infografis & Diagram', 'Grafik & Chart', 'Timeline', 'Ikon Vektor'],
+    tone: 'Percaya Diri',
+    extraNotes: 'Tekankan sinergi multipihak dan apresiasi bagi UMKM lokal binaan.',
   },
   {
     id: 'demo_institution',
-    tag: '🏛️ Institusi & Lembaga',
+    tag: '🏛️ Proposal Lembaga',
     topic: 'Proposal Pendirian Akademi Teknologi & Vokasi Digital Modern',
-    presenter: 'Tim Inisiator & Perumus Visi',
-    audience: 'Dewan Pembina, Pengurus Yayasan & Mitra Strategis',
-    useCase: 'executive_concept',
-    style: 'executive_navy_gold',
+    type: 'Proposal Proyek',
+    audience: 'Dewan Pembina, Pengurus Yayasan & Mitra Industri',
     slideCount: 10,
-    keyPoints: 'Integrasi Kurikulum Industri + Pembinaan Karakter Unggul + Software Skill Terapan (UI/UX, Full-Stack, AI), model boarding school memperluas jangkauan pasar, simulasi pembiayaan 50 siswa awal, roadmap implementasi 4 tahap menuju akreditasi unggul.',
-  },
-  {
-    id: 'demo_startup',
-    tag: '🚀 Startup Pitch Deck',
-    topic: 'NextGen AI: Autonomous Content Engine Platform for B2B Brands',
-    presenter: 'Founding Team (CEO & CTO)',
-    audience: 'Venture Capital, Angel Investors & Partner Korporasi',
-    useCase: 'pitch_deck',
-    style: 'dark_tech',
-    slideCount: 10,
-    keyPoints: '20 engine AI kreatif terintegrasi, mengatasi mahalnya biaya agensi konten, TAM $45B di pasar APAC, model monetisasi SaaS B2B + Lifetime Deal, pertumbuhan pengguna 340% YoY, kebutuhan pendanaan $500K untuk akselerasi fitur video & ekspansi pasar regional.',
-  },
-  {
-    id: 'demo_corporate',
-    tag: '📈 Strategi Bisnis',
-    topic: 'Rencana Strategis Ekspansi Bisnis & Transformasi Digital 2026-2028',
-    presenter: 'Divisi Corporate Strategy & Planning',
-    audience: 'Board of Directors & Dewan Komisaris',
-    useCase: 'corporate_strategy',
-    style: 'corporate_emerald',
-    slideCount: 10,
-    keyPoints: 'Evaluasi pencapaian revenue 2025, 3 pilar transformasi (otomasi operasional, ekspansi kanal digital omnichannel, penguatan kapabilitas SDM), alokasi Capex Rp1.2 Miliar, mitigasi risiko fluktuasi pasar, target peningkatan market share 25% dalam 24 bulan.',
-  },
-  {
-    id: 'demo_agency',
-    tag: '🏢 B2B Proposal',
-    topic: 'Executive Proposal: Solusi Komprehensif Rebranding & Digital Marketing',
-    presenter: 'Creative Director & Lead Consultant',
-    audience: 'Management Team & Chief Marketing Officer (CMO)',
-    useCase: 'company_profile',
-    style: 'minimal_clean',
-    slideCount: 8,
-    keyPoints: 'Analisis positioning brand kompetitor, paket layanan 360 branding (Identitas visual, produksi konten AI harian, optimasi performa iklan), studi kasus kenaikan ROI klien 4.2x, timeline kerja 6 bulan, estimasi retainer fee transparan.',
-  },
-  {
-    id: 'demo_webinar',
-    tag: '🎓 Edukasi & Kuliah',
-    topic: 'Masterclass: Pemanfaatan AI Generatif untuk Efisiensi Bisnis 10x Lipat',
-    presenter: 'AI Specialist & Praktisi Industri',
-    audience: 'Praktisi Bisnis, Digital Marketer & Pelaku UMKM',
-    useCase: 'education_webinar',
-    style: 'executive_navy_gold',
-    slideCount: 10,
-    keyPoints: 'Fundamental AI terapan, perbandingan tools AI teks vs visual, framework pembuatan prompt presisi tinggi, studi kasus otomatisasi pembuatan 100 konten dalam 1 jam, latihan langsung peserta, etika dan copyright AI.',
+    duration: '20-30 menit',
+    language: 'Indonesia',
+    keyPoints: '- Kesenjangan skill digital lulusan dengan kebutuhan industri software global\n- 3 jalur spesialisasi: Fullstack AI, UI/UX Engineering, Cloud Data\n- Model kurikulum berbasis portofolio nyata dan magang terpadu\n- Simulasi kelayakan anggaran 50 siswa angkatan pertama\n- Roadmap 4 tahap menuju akreditasi unggul',
+    dataEvidence: 'Kebutuhan talenta digital nasional 600.000/tahun, target penyerapan kerja 90% dalam 6 bulan pascakelulusan.',
+    mainCta: 'Dewan Pembina menyetujui alokasi dana pendirian fasilitas laboratorium dan pembukaan pendaftaran awal.',
+    designStyle: 'Korporat Formal',
+    colorScheme: 'Executive Navy (#002D62) + Royal Gold (#EAAA00)',
+    visualElements: ['Infografis & Diagram', 'Timeline', 'Foto HD', 'Comparison Table'],
+    tone: 'Inspiratif',
+    extraNotes: 'Fokus pada pembangunan karakter berintegritas dan keunggulan kompetensi terapan.',
   },
 ];

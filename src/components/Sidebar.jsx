@@ -18,7 +18,7 @@ const MODES = [
   { id: 'gridfeed',     icon: Grid3x3,              label: '9 Feed Konsisten',   badge: 'Hot' },
   { id: 'imageslicer',  icon: Scissors,             label: 'Grid & Image Slicer', badge: 'New' },
   { id: 'videoscript',  icon: Clapperboard,         label: 'Naskah Video & Storyboard', badge: 'New' },
-  { id: 'presentation', icon: Presentation,         label: 'Slide & PPT Deck',   badge: 'New' },
+  { id: 'presentation', icon: Presentation,         label: 'Slide & PPT Deck',   badge: 'Beta' },
   { id: 'thumbnail',    icon: Youtube,              label: 'YouTube Thumbnail',  badge: '' },
   { id: 'typography',   icon: Megaphone,            label: 'Ads Design',         badge: '' },
   { id: 'copywriting',  icon: PencilLine,           label: 'Copy Writing',       badge: '' },
