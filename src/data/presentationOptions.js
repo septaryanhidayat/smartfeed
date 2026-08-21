@@ -22,8 +22,9 @@ export const PRESENTATION_TYPES = [
 export const PRESENTATION_SLIDE_OPTIONS = [
   { value: 6, label: '5–7 Slide (Ringkas)' },
   { value: 10, label: '10–12 Slide (Standar)' },
-  { value: 16, label: '15–20 Slide (Detail)' },
-  { value: 24, label: '20–30 Slide (Lengkap)' },
+  { value: 15, label: '15 Slide (Roadmap Lengkap)' },
+  { value: 20, label: '16–20 Slide (Detail)' },
+  { value: 24, label: '20–30 Slide (Komprehensif)' },
 ];
 
 export const PRESENTATION_DURATIONS = [
@@ -41,9 +42,9 @@ export const PRESENTATION_LANGUAGES = [
 ];
 
 export const PRESENTATION_DESIGN_STYLES = [
+  { id: 'startup_inovatif', label: 'Startup Inovatif', color: 'Dark Tech + Emerald Neon' },
   { id: 'profesional_minimalis', label: 'Profesional & Minimalis', color: 'Navy + Gold' },
   { id: 'modern_bold', label: 'Modern & Bold', color: 'Sapphire + Coral' },
-  { id: 'startup_inovatif', label: 'Startup Inovatif', color: 'Dark Tech + Emerald Neon' },
   { id: 'korporat_formal', label: 'Korporat Formal', color: 'Slate Grey + Deep Blue' },
   { id: 'kreatif_playful', label: 'Kreatif & Playful', color: 'Pastel + Vibrant Purple' },
   { id: 'dark_elegan', label: 'Dark & Elegan', color: 'Obsidian + Warm Amber' },
@@ -62,11 +63,11 @@ export const PRESENTATION_VISUAL_ELEMENTS = [
 ];
 
 export const PRESENTATION_TONES = [
+  'Inspiratif',
   'Percaya Diri',
   'Data-driven',
   'Storytelling',
   'Simple & Clear',
-  'Inspiratif',
   'Teknis & Detail',
 ];
 
@@ -79,6 +80,24 @@ export const PRESENTATION_PRINCIPLES = [
 ];
 
 export const PRESENTATION_DEMOS = [
+  {
+    id: 'demo_roadmap_ai_2026',
+    tag: '🌊 Roadmap AI 2026 (T-C-E-I)',
+    topic: 'Roadmap AI 2026: Panduan Bertahan di Tengah Tsunami Digital',
+    type: 'Edukasi / Workshop',
+    audience: 'Profesional, Kreator Konten, Freelancer & Pebisnis',
+    slideCount: 15,
+    duration: '20-30 menit',
+    language: 'Indonesia',
+    keyPoints: '- Realita 2026: Tsunami digital ratusan tools baru vs Fokus alur kerja nyata\n- Evolusi AI: Machine Learning (Pencarian) -> Generative AI / LLM (Pencipta) -> Multimodal AI (Gemini 2.5, GPT-4o)\n- Aturan Emas 2026: Fokus pada Workflow & Integrasi Bisnis, bukan FOMO & Hype tools baru\n- Anatomi Tech-Stack Praktisi: ChatGPT/Claude (Naskah) + ElevenLabs (Voice) + Midjourney/Flux (Visual) + Veo 3/Runway (Animasi)\n- Prompting sebagai Bahasa Pemrograman Masa Depan: Menerjemahkan strategi bisnis ke komando mesin\n- Metode T-C-E-I: Task (Peran & Format), Context (Latar Belakang & Data), Evaluate (Validasi Akurasi & Human-in-the-Loop), Iterate (Penyempurnaan Berkelanjutan)\n- Komparasi Prompt Amatir vs Prompt T-C Eksekutif (Bisnis & ROI)\n- Kalibrasi Eksekusi: Fase Evaluasi & Human-in-the-Loop untuk mencegah halusinasi AI\n- Era AI Agent: Dari Chatbot Asisten Pasif menuju AI Agent Otonom 24/7\n- Anatomi Pembentuk AI Agent: Otak (LLM), Memory Base, Tools Integrasi (CRM/Email/API), Protokol Suara & Teks\n- Analisis Diagnostik: Perbedaan Mendasar LLM Tradisional vs AI Agent Otonom\n- Ekosistem Kerja 2026: Manusia (Visi Strategis) -> Metode T-C-E-I -> AI Agent & Multimodal -> ROI & Efisiensi Skala\n- Kecepatan Adaptasi: Waktu diukur dalam Minggu (Weeks), bukan Tahun (Years)\n- Cetak Biru Aksi: 01. Kuasai Satu Fondasi -> 02. Implementasi T-C-E-I -> 03. Audisi Ekosistem -> 04. Eksplorasi Automasi Agent',
+    dataEvidence: '91% kegagalan pemanfaatan AI karena prompt amatir tanpa konteks bisnis, AI Agent menghemat 70% waktu operasional berulang, adopsi tools terfokus menghasilkan ROI 3.8x lebih tinggi.',
+    mainCta: 'Amankan posisi Anda di era baru: Terapkan kerangka T-C-E-I hari ini dan jadilah arsitek alur kerja AI Anda sendiri.',
+    designStyle: 'Startup Inovatif',
+    colorScheme: 'Deep Tech Navy (#060B17) + Electric Purple (#7C3AED) + Cyan (#06B6D4) + Clean White',
+    visualElements: ['Infografis & Diagram', 'Timeline', 'Ikon Vektor', 'Comparison Table', 'Foto HD'],
+    tone: 'Inspiratif',
+    extraNotes: 'Diformat khusus agar estetik dan konsisten saat di-import ke Canva Presentation / Gamma. Gunakan struktur 1 slide 1 pesan dengan penekanan visual 3D modern.',
+  },
   {
     id: 'demo_growth_startup',
     tag: '🚀 Startup Growth',
