@@ -26,29 +26,42 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     style = 'executive_navy_gold',
     slideCount = 10,
     keyPoints = 'Integrasi Kurikulum Industri + Pembinaan Karakter Unggul + Software Skill Terapan (UI/UX, Full-Stack, AI), model boarding school memperluas jangkauan pasar, simulasi pembiayaan 50 siswa awal, roadmap implementasi 4 tahap menuju akreditasi unggul.',
-    includeSpeakerNotes = true,
-    includeVisualPrompts = true,
   } = state || {};
 
   const result = useMemo(() => {
-    return buildPresentation(state);
+    try {
+      return buildPresentation(state);
+    } catch (e) {
+      console.warn('[PresentationMode] build error', e);
+      return { slides: [], notebookLmDoc: '', gammaOutline: '', vbaMacro: '', markdownPrompt: '' };
+    }
   }, [state]);
 
-  const { slides, notebookLmDoc, gammaOutline, vbaMacro, markdownPrompt } = result;
+  const { slides = [], notebookLmDoc = '', gammaOutline = '', vbaMacro = '', markdownPrompt = '' } = result || {};
 
-  const currentSlide = slides[activeSlideIndex] || slides[0] || {};
+  const safeIndex = Math.min(Math.max(activeSlideIndex, 0), Math.max((slides?.length || 1) - 1, 0));
+  const currentSlide = (slides && slides[safeIndex]) || {
+    slideNo: 1,
+    bullets: [],
+    eyebrow: 'EXECUTIVE PROPOSAL',
+    title: topic || 'Slide Title',
+    subtitle: '',
+    categoryChips: ['STRATEGI', 'INOVASI', 'OPERASIONAL', 'TEKNOLOGI', 'EKSEKUSI']
+  };
+
+  const bullets = Array.isArray(currentSlide?.bullets) ? currentSlide.bullets : [];
 
   const getCurrentOutputContent = () => {
     switch (outputTab) {
       case 'notebooklm':
-        return notebookLmDoc;
+        return notebookLmDoc || '';
       case 'gamma':
-        return gammaOutline;
+        return gammaOutline || '';
       case 'vba':
-        return vbaMacro;
+        return vbaMacro || '';
       case 'prompt':
       default:
-        return markdownPrompt;
+        return markdownPrompt || '';
     }
   };
 
@@ -81,7 +94,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   };
 
   const handleLoadDemo = (demo) => {
-    if (onSetState) {
+    if (onSetState && demo) {
       onSetState(demo);
       setActiveSlideIndex(0);
     }
@@ -91,8 +104,10 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     if (!onSetState || PRESENTATION_DEMOS.length === 0) return;
     const randomIndex = Math.floor(Math.random() * PRESENTATION_DEMOS.length);
     const picked = PRESENTATION_DEMOS[randomIndex];
-    onSetState(picked);
-    setActiveSlideIndex(0);
+    if (picked) {
+      onSetState(picked);
+      setActiveSlideIndex(0);
+    }
   };
 
   return (
@@ -163,8 +178,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 </label>
                 <input
                   type="text"
-                  value={topic}
-                  onChange={(e) => onChangeField('topic', e.target.value)}
+                  value={topic || ''}
+                  onChange={(e) => onChangeField && onChangeField('topic', e.target.value)}
                   placeholder="Contoh: Proposal Pendirian Akademi Vokasi Digital Modern"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
@@ -177,8 +192,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   </label>
                   <input
                     type="text"
-                    value={presenter}
-                    onChange={(e) => onChangeField('presenter', e.target.value)}
+                    value={presenter || ''}
+                    onChange={(e) => onChangeField && onChangeField('presenter', e.target.value)}
                     placeholder="Tim Penyusun"
                     className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                   />
@@ -190,8 +205,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   </label>
                   <input
                     type="text"
-                    value={audience}
-                    onChange={(e) => onChangeField('audience', e.target.value)}
+                    value={audience || ''}
+                    onChange={(e) => onChangeField && onChangeField('audience', e.target.value)}
                     placeholder="Dewan Direksi & Stakeholder"
                     className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                   />
@@ -204,8 +219,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                     Tipe Struktur Dokumen
                   </label>
                   <select
-                    value={useCase}
-                    onChange={(e) => onChangeField('useCase', e.target.value)}
+                    value={useCase || 'executive_concept'}
+                    onChange={(e) => onChangeField && onChangeField('useCase', e.target.value)}
                     className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                   >
                     {PRESENTATION_USE_CASES.map((u) => (
@@ -219,8 +234,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                     Gaya Visual &amp; Palet Warna
                   </label>
                   <select
-                    value={style}
-                    onChange={(e) => onChangeField('style', e.target.value)}
+                    value={style || 'executive_navy_gold'}
+                    onChange={(e) => onChangeField && onChangeField('style', e.target.value)}
                     className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                   >
                     {PRESENTATION_STYLES.map((s) => (
@@ -236,8 +251,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 </label>
                 <textarea
                   rows={3}
-                  value={keyPoints}
-                  onChange={(e) => onChangeField('keyPoints', e.target.value)}
+                  value={keyPoints || ''}
+                  onChange={(e) => onChangeField && onChangeField('keyPoints', e.target.value)}
                   placeholder="Ketik poin penting yang ingin ditekankan (model kurikulum, keunggulan diferensiasi, target pendanaan, dll)..."
                   className="w-full px-3 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
@@ -246,14 +261,14 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <div>
                 <div className="flex items-center justify-between text-xs font-semibold text-text mb-1">
                   <span>Jumlah Slide</span>
-                  <span className="mono text-accent font-bold">{slideCount} Slide</span>
+                  <span className="mono text-accent font-bold">{slideCount || 10} Slide</span>
                 </div>
                 <input
                   type="range"
                   min="4"
                   max="12"
-                  value={slideCount}
-                  onChange={(e) => onChangeField('slideCount', Number(e.target.value))}
+                  value={slideCount || 10}
+                  onChange={(e) => onChangeField && onChangeField('slideCount', Number(e.target.value))}
                   className="w-full accent-[var(--accent)]"
                 />
               </div>
@@ -397,7 +412,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           <div className="flex items-center justify-between bg-bg-panel border border-border px-4 py-2.5 rounded-xl">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-text">
-                Slide {activeSlideIndex + 1} dari {slides.length}
+                Slide {safeIndex + 1} dari {Math.max(slides.length, 1)}
               </span>
               <span className="text-[10px] mono px-2 py-0.5 rounded-full bg-accent/15 text-accent font-bold">
                 16:9 Widescreen Layout
@@ -407,7 +422,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
-                disabled={activeSlideIndex === 0}
+                disabled={safeIndex === 0}
                 onClick={() => setActiveSlideIndex((prev) => Math.max(prev - 1, 0))}
                 className="p-1.5 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text"
               >
@@ -415,8 +430,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               </button>
               <button
                 type="button"
-                disabled={activeSlideIndex === slides.length - 1}
-                onClick={() => setActiveSlideIndex((prev) => Math.min(prev + 1, slides.length - 1))}
+                disabled={safeIndex >= slides.length - 1}
+                onClick={() => setActiveSlideIndex((prev) => Math.min(prev + 1, Math.max(slides.length - 1, 0)))}
                 className="p-1.5 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -431,13 +446,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
               <div>
                 <div className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#EAAA00]">
-                  {currentSlide.eyebrow || 'EXECUTIVE PRESENTATION'}
+                  {currentSlide?.eyebrow || 'EXECUTIVE PRESENTATION'}
                 </div>
                 <h3 className="text-base sm:text-xl font-black text-white leading-tight mt-0.5">
-                  {currentSlide.title}
+                  {currentSlide?.title || topic}
                 </h3>
                 <p className="text-[10px] sm:text-xs text-white/70 mt-0.5">
-                  {currentSlide.subtitle}
+                  {currentSlide?.subtitle || ''}
                 </p>
               </div>
 
@@ -454,7 +469,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             <div className="flex-1 py-4 flex flex-col justify-center">
               
               {/* Archetype 1: Cover Hero (Split layout preview) */}
-              {currentSlide.slideNo === 1 && (
+              {(currentSlide?.slideNo === 1 || safeIndex === 0) && (
                 <div className="grid grid-cols-[1.2fr_1fr] gap-4 items-center h-full">
                   <div className="space-y-3">
                     <div className="inline-block px-2.5 py-0.5 rounded-full bg-[#EAAA00] text-[#002D62] text-[9px] font-black uppercase tracking-widest">
@@ -464,11 +479,11 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                       {topic}
                     </div>
                     <p className="text-[10px] sm:text-xs text-white/80 leading-relaxed line-clamp-2">
-                      {currentSlide.subtitle}
+                      {currentSlide?.subtitle || 'Membangun Ekosistem Berkelanjutan & Berdaya Saing'}
                     </p>
                     {/* Category Badges */}
                     <div className="flex flex-wrap gap-1.5 pt-1">
-                      {(currentSlide.categoryChips || ['STRATEGI', 'INOVASI', 'OPERASIONAL', 'TEKNOLOGI', 'EKSEKUSI']).map((chip, cIdx) => (
+                      {(currentSlide?.categoryChips || ['STRATEGI', 'INOVASI', 'OPERASIONAL', 'TEKNOLOGI', 'EKSEKUSI']).map((chip, cIdx) => (
                         <span key={cIdx} className="text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded bg-[#002D62] border border-amber-500/40 text-[#EAAA00]">
                           {chip}
                         </span>
@@ -484,16 +499,16 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               )}
 
               {/* Archetype 2: 4-Cards + Core Box */}
-              {currentSlide.slideNo === 2 && (
+              {currentSlide?.slideNo === 2 && (
                 <div className="grid grid-cols-[1.3fr_0.9fr] gap-3 items-stretch">
                   <div className="grid grid-cols-1 gap-1.5">
-                    {currentSlide.bullets.slice(0, 4).map((b, bIdx) => (
+                    {bullets.slice(0, 4).map((b, bIdx) => (
                       <div key={bIdx} className="p-2 rounded-lg bg-white/5 border border-white/10 flex items-start gap-2">
                         <span className="w-5 h-5 rounded-full bg-[#EAAA00] text-[#002D62] flex items-center justify-center text-[9px] font-black shrink-0 mt-0.5">
                           0{bIdx + 1}
                         </span>
                         <div className="text-[10px] text-white leading-tight">
-                          {b.replace(/^\d+\.\s*/, '')}
+                          {String(b || '').replace(/^\d+\.\s*/, '')}
                         </div>
                       </div>
                     ))}
@@ -501,51 +516,51 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   <div className="rounded-xl bg-[#002D62] border-2 border-[#EAAA00] p-3 flex flex-col justify-between text-center">
                     <div className="text-xs font-black text-[#EAAA00] tracking-widest uppercase">CORE</div>
                     <p className="text-[9px] sm:text-[10px] text-white leading-relaxed font-semibold">
-                      {currentSlide.coreHighlight?.body || 'Membangun ekosistem terpadu berdaya saing tinggi.'}
+                      {currentSlide?.coreHighlight?.body || 'Membangun ekosistem terpadu berdaya saing tinggi.'}
                     </p>
                     <div className="bg-[#EAAA00] text-[#002D62] text-[8px] sm:text-[9px] font-black py-1 px-2 rounded">
-                      {currentSlide.coreHighlight?.output || 'Output Teruji + Portofolio Nyata'}
+                      {currentSlide?.coreHighlight?.output || 'Output Teruji + Portofolio Nyata'}
                     </div>
                   </div>
                 </div>
               )}
 
               {/* Archetype 3: 2x2 Problem Grid + Solution Banner */}
-              {currentSlide.slideNo === 3 && (
+              {currentSlide?.slideNo === 3 && (
                 <div className="space-y-2.5">
                   <div className="grid grid-cols-2 gap-2">
-                    {currentSlide.bullets.slice(0, 4).map((b, bIdx) => (
+                    {bullets.slice(0, 4).map((b, bIdx) => (
                       <div key={bIdx} className="p-2 rounded-lg bg-white/5 border border-white/10 flex items-start gap-2">
                         <span className="w-4 h-4 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-[8px] font-black shrink-0">
                           0{bIdx + 1}
                         </span>
-                        <span className="text-[9px] text-white leading-tight">{b.replace(/^\d+\.\s*/, '')}</span>
+                        <span className="text-[9px] text-white leading-tight">{String(b || '').replace(/^\d+\.\s*/, '')}</span>
                       </div>
                     ))}
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#002D62] border border-[#EAAA00]/40 flex flex-col gap-1">
                     <span className="text-[8px] font-black uppercase tracking-wider text-[#EAAA00]">
-                      {currentSlide.solutionBanner?.badge || 'Solusi Diferensiasi'}
+                      {currentSlide?.solutionBanner?.badge || 'Solusi Diferensiasi'}
                     </span>
                     <p className="text-[9px] text-white/90 leading-tight">
-                      {currentSlide.solutionBanner?.text || 'Diferensiasi nyata yang terlihat hasilnya dan terukur dampaknya.'}
+                      {currentSlide?.solutionBanner?.text || 'Diferensiasi nyata yang terlihat hasilnya dan terukur dampaknya.'}
                     </p>
                   </div>
                 </div>
               )}
 
               {/* Other Archetypes: Standard List with Visual Cards */}
-              {currentSlide.slideNo > 3 && (
+              {currentSlide?.slideNo > 3 && (
                 <div className="space-y-2">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {currentSlide.bullets.map((b, bIdx) => (
+                    {bullets.map((b, bIdx) => (
                       <div key={bIdx} className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-start gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-[#EAAA00] shrink-0 mt-0.5" />
                         <span className="text-[10px] text-white leading-relaxed">{b}</span>
                       </div>
                     ))}
                   </div>
-                  {currentSlide.goldenTakeaway && (
+                  {currentSlide?.goldenTakeaway && (
                     <div className="p-2 rounded-lg bg-[#EAAA00]/15 border border-[#EAAA00]/40 text-center text-[10px] font-bold text-[#EAAA00]">
                       ★ {currentSlide.goldenTakeaway}
                     </div>
@@ -565,24 +580,24 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
           {/* Slide Navigation Thumbnails */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            {slides.map((s, idx) => (
+            {(slides || []).map((s, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => setActiveSlideIndex(idx)}
                 className={`px-3 py-2 rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1.5 border cursor-pointer ${
-                  activeSlideIndex === idx
+                  safeIndex === idx
                     ? 'bg-[#002D62] text-[#EAAA00] border-[#EAAA00] shadow-sm'
                     : 'bg-bg-panel text-text-mut border-border hover:bg-bg-elev'
                 }`}
               >
-                <span>Slide {s.slideNo}</span>
+                <span>Slide {s?.slideNo || idx + 1}</span>
               </button>
             ))}
           </div>
 
           {/* AI Image Prompt Drawer for the Active Slide */}
-          {currentSlide.visualPrompt && (
+          {currentSlide?.visualPrompt && (
             <div className="surface p-4 rounded-xl border border-border space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-text flex items-center gap-1.5">
@@ -605,7 +620,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           )}
 
           {/* Speaker Notes */}
-          {currentSlide.speakerNotes && (
+          {currentSlide?.speakerNotes && (
             <div className="surface p-3.5 rounded-xl border border-border text-xs space-y-1">
               <div className="font-bold text-text flex items-center gap-1.5 text-[11px]">
                 <Mic className="w-3.5 h-3.5 text-accent" />
