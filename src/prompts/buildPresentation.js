@@ -65,6 +65,15 @@ export function buildPresentation(state) {
     ? keyPoints.split('\n').map((l) => l.trim().replace(/^[-•*]\s*/, '')).filter(Boolean)
     : [];
 
+  const pointsList = rawLines.length > 0
+    ? rawLines
+    : [
+        'Latar belakang masalah & urgensi solusi',
+        'Pilar strategi utama dan langkah implementasi',
+        'Bukti traksi, data validasi & hasil terukur',
+        'Rencana aksi dan call to action penutup',
+      ];
+
   const isRoadmapAi = topic?.toLowerCase().includes('roadmap ai');
 
   const slides = [];
