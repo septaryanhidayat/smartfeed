@@ -1,101 +1,86 @@
 import { useState } from 'react';
 import {
-  ShieldCheck, Lock, CheckCircle2, ArrowRight, ArrowLeft,
-  Zap, RefreshCw, AlertCircle, Sparkles, Building2, Wallet, QrCode
+  ShieldCheck, Lock, CheckCircle2, ArrowRight,
+  RefreshCw, AlertCircle, Sparkles, Building2, Wallet, QrCode, Check
 } from 'lucide-react';
 import LegalLayout from './LegalLayout.jsx';
 import { CONFIG } from '../config.js';
 
-// Official SVG Brand Logos for high sharpness & zero dependencies
-function ChannelLogo({ id, className = "h-5 w-auto" }) {
-  switch (id) {
-    case 'QRIS':
-      return (
-        <svg viewBox="0 0 120 45" className={className} fill="currentColor">
-          <rect width="120" height="45" rx="6" fill="#EA1D2C" />
-          <text x="60" y="30" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="24" textAnchor="middle" letterSpacing="1">QRIS</text>
-        </svg>
-      );
-    case 'BCAVA':
-      return (
-        <svg viewBox="0 0 100 40" className={className}>
-          <rect width="100" height="40" rx="6" fill="#0060AF" />
-          <text x="50" y="27" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="22" textAnchor="middle" fontStyle="italic">BCA</text>
-        </svg>
-      );
-    case 'BNIVA':
-      return (
-        <svg viewBox="0 0 100 40" className={className}>
-          <rect width="100" height="40" rx="6" fill="#005E6A" />
-          <text x="42" y="27" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="21" textAnchor="middle">BNI</text>
-          <text x="75" y="27" fill="#F15A24" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="16" textAnchor="middle">46</text>
-        </svg>
-      );
-    case 'BRIVA':
-      return (
-        <svg viewBox="0 0 100 40" className={className}>
-          <rect width="100" height="40" rx="6" fill="#00529C" />
-          <text x="50" y="27" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="20" textAnchor="middle">BRI</text>
-        </svg>
-      );
-    case 'MANDIRIVA':
-      return (
-        <svg viewBox="0 0 110 40" className={className}>
-          <rect width="110" height="40" rx="6" fill="#002D62" />
-          <text x="48" y="26" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="800" fontSize="17" textAnchor="middle">mandiri</text>
-          <path d="M88 12 Q96 18 102 12 Q98 24 88 12" fill="#F8B133" />
-        </svg>
-      );
-    case 'BSIVA':
-      return (
-        <svg viewBox="0 0 100 40" className={className}>
-          <rect width="100" height="40" rx="6" fill="#00A39D" />
-          <text x="50" y="27" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="21" textAnchor="middle">BSI</text>
-        </svg>
-      );
-    case 'OVO':
-      return (
-        <svg viewBox="0 0 100 40" className={className}>
-          <rect width="100" height="40" rx="6" fill="#4C2A86" />
-          <text x="50" y="27" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="22" textAnchor="middle" letterSpacing="1">OVO</text>
-        </svg>
-      );
-    case 'DANA':
-      return (
-        <svg viewBox="0 0 100 40" className={className}>
-          <rect width="100" height="40" rx="6" fill="#118EEA" />
-          <text x="50" y="27" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="20" textAnchor="middle" letterSpacing="1">DANA</text>
-        </svg>
-      );
-    case 'SHOPEEPAY':
-      return (
-        <svg viewBox="0 0 120 40" className={className}>
-          <rect width="120" height="40" rx="6" fill="#EE4D2D" />
-          <text x="60" y="26" fill="#ffffff" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="800" fontSize="16" textAnchor="middle">ShopeePay</text>
-        </svg>
-      );
-    default:
-      return null;
-  }
-}
-
-// Hanya channel yang AKTIF di TriPay merchant Beranda Teknologi Digital
-const CHANNELS_QRIS = [
-  { id: 'QRIS', name: 'QRIS (Semua Bank & E-Wallet)', desc: 'BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay', tag: 'Populer' },
-];
-
-const CHANNELS_EWALLET = [
-  { id: 'SHOPEEPAY', name: 'ShopeePay', desc: 'Bayar langsung via aplikasi Shopee / ShopeePay' },
-  { id: 'OVO', name: 'OVO', desc: 'Notifikasi pembayaran push langsung ke aplikasi OVO' },
-  { id: 'DANA', name: 'DANA', desc: 'Bayar cepat & aman lewat akun DANA' },
-];
-
-const CHANNELS_VA = [
-  { id: 'BCAVA', name: 'BCA Virtual Account', desc: 'BCA Mobile, myBCA, KlikBCA, ATM BCA' },
-  { id: 'BRIVA', name: 'BRI Virtual Account (BRIVA)', desc: 'BRImo, Internet Banking BRI, ATM BRI' },
-  { id: 'MANDIRIVA', name: 'Mandiri Virtual Account', desc: 'Livin\' by Mandiri, ATM Mandiri' },
-  { id: 'BNIVA', name: 'BNI Virtual Account', desc: 'BNI Mobile Banking, ATM BNI' },
-  { id: 'BSIVA', name: 'BSI Virtual Account', desc: 'BSI Mobile, Net Banking BSI, ATM BSI' },
+// Payment channels mapping directly to /payment-icons/*.svg
+const PAYMENT_OPTIONS = [
+  {
+    group: 'QRIS (Semua Bank & E-Wallet)',
+    icon: QrCode,
+    items: [
+      {
+        id: 'QRIS',
+        name: 'QRIS (Instant Settlement)',
+        desc: 'BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay, LinkAja',
+        logo: '/payment-icons/qris.svg',
+        popular: true,
+      },
+    ],
+  },
+  {
+    group: 'E-Wallet',
+    icon: Wallet,
+    items: [
+      {
+        id: 'SHOPEEPAY',
+        name: 'ShopeePay',
+        desc: 'Bayar via aplikasi Shopee',
+        logo: '/payment-icons/shopeepay.svg',
+      },
+      {
+        id: 'OVO',
+        name: 'OVO',
+        desc: 'Push notifikasi ke aplikasi OVO',
+        logo: '/payment-icons/ovo.svg',
+      },
+      {
+        id: 'DANA',
+        name: 'DANA',
+        desc: 'Bayar via saldo DANA',
+        logo: '/payment-icons/dana.svg',
+      },
+    ],
+  },
+  {
+    group: 'Virtual Account Bank',
+    icon: Building2,
+    items: [
+      {
+        id: 'BCAVA',
+        name: 'BCA Virtual Account',
+        desc: 'BCA Mobile, myBCA, KlikBCA, ATM BCA',
+        logo: '/payment-icons/bca.svg',
+      },
+      {
+        id: 'BRIVA',
+        name: 'BRI Virtual Account',
+        desc: 'BRImo, Internet Banking, ATM BRI',
+        logo: '/payment-icons/bri.svg',
+      },
+      {
+        id: 'MANDIRIVA',
+        name: 'Mandiri Virtual Account',
+        desc: 'Livin\' by Mandiri, ATM Mandiri',
+        logo: '/payment-icons/mandiri.svg',
+      },
+      {
+        id: 'BNIVA',
+        name: 'BNI Virtual Account',
+        desc: 'BNI Mobile Banking, ATM BNI',
+        logo: '/payment-icons/bni.svg',
+      },
+      {
+        id: 'BSIVA',
+        name: 'BSI Virtual Account',
+        desc: 'BSI Mobile, ATM BSI',
+        logo: '/payment-icons/bsi.svg',
+      },
+    ],
+  },
 ];
 
 export default function Checkout() {
@@ -125,8 +110,8 @@ export default function Checkout() {
     e.preventDefault();
     setErrorMessage('');
 
-    if (!formData.name || !formData.email || !formData.phone) {
-      setErrorMessage('Lengkapi nama, email, dan nomor WhatsApp Anda.');
+    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+      setErrorMessage('Mohon lengkapi Nama, Email, dan Nomor WhatsApp Anda.');
       return;
     }
 
@@ -137,9 +122,9 @@ export default function Checkout() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
           method: formData.paymentMethod,
           plan: 'lifetime',
         }),
@@ -148,39 +133,41 @@ export default function Checkout() {
       const json = await res.json();
 
       if (json.success && json.data && json.data.checkout_url) {
-        // Langsung arahkan pembeli ke halaman resmi pembayaran TriPay!
+        // Langsung redirect ke halaman resmi pembayaran TriPay!
         window.location.href = json.data.checkout_url;
       } else {
-        setErrorMessage(json.message || 'Gagal membuat tagihan TriPay. Silakan coba lagi.');
+        setErrorMessage(json.message || 'Gagal membuat tagihan TriPay. Silakan periksa kembali data Anda.');
         setIsLoading(false);
       }
     } catch (err) {
       console.error('TriPay API Error:', err);
-      setErrorMessage('Kendala koneksi ke gateway pembayaran. Silakan coba sesaat lagi.');
+      setErrorMessage('Kendala koneksi ke gateway TriPay. Silakan coba kembali.');
       setIsLoading(false);
     }
   };
 
   return (
     <LegalLayout
-      title="Checkout Sederhana & Aman"
+      title="Checkout Pembayaran"
       subtitle="Dapatkan akses seumur hidup ke SmartFeed AI Studio (20 Engine Kreatif)."
     >
       <div className="max-w-4xl mx-auto">
-        <form onSubmit={handleSubmit} className="grid md:grid-cols-[1.25fr_1fr] gap-6 sm:gap-8 items-start">
+        <form onSubmit={handleSubmit} className="grid lg:grid-cols-[1.3fr_1fr] gap-6 sm:gap-8 items-start">
           
-          {/* KOLOM KIRI: Data Diri & Pilihan Channel TriPay */}
+          {/* KOLOM KIRI: Data Pembeli & Pilihan Channel */}
           <div className="space-y-6">
             
-            {/* Step 1: Data Pembeli */}
-            <div className="surface p-5 sm:p-6 rounded-2xl border border-border space-y-4">
-              <div className="flex items-center gap-2 border-b border-border pb-3">
-                <span className="w-6 h-6 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold">1</span>
-                <h3 className="text-sm font-bold text-text">Informasi Penerima Akses</h3>
+            {/* 1. Data Diri */}
+            <div className="bg-bg-panel border border-border/80 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
+              <div className="flex items-center gap-2.5 border-b border-border/60 pb-3">
+                <span className="w-6 h-6 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  1
+                </span>
+                <h3 className="text-sm font-bold text-text">Data Penerima Akses</h3>
               </div>
 
               {errorMessage && (
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-400 flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-xs text-red-400 flex items-center gap-2 font-medium">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
@@ -189,7 +176,7 @@ export default function Checkout() {
               <div className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Nama Lengkap *
+                    Nama Lengkap <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
@@ -197,14 +184,14 @@ export default function Checkout() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Nama lengkap Anda..."
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                    placeholder="Contoh: Budi Pratama"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Alamat Email Aktif *
+                    Alamat Email Aktif <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="email"
@@ -212,8 +199,8 @@ export default function Checkout() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="nama@email.com"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                    placeholder="nama@gmail.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
                   />
                   <span className="text-[10px] text-text-dim mt-1 block">
                     Link aktivasi & akun studio otomatis dikirim ke email ini.
@@ -222,7 +209,7 @@ export default function Checkout() {
 
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Nomor WhatsApp / HP *
+                    Nomor WhatsApp / Handphone <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="tel"
@@ -231,171 +218,99 @@ export default function Checkout() {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="081234567890"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text placeholder:text-text-dim focus:border-accent focus:bg-bg-panel focus:outline-none transition"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Step 2: Pilih Channel Pembayaran (Hanya yang Aktif) */}
-            <div className="surface p-5 sm:p-6 rounded-2xl border border-border space-y-5">
-              <div className="flex items-center gap-2 border-b border-border pb-3">
-                <span className="w-6 h-6 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold">2</span>
+            {/* 2. Metode Pembayaran */}
+            <div className="bg-bg-panel border border-border/80 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
+              <div className="flex items-center gap-2.5 border-b border-border/60 pb-3">
+                <span className="w-6 h-6 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold shrink-0">
+                  2
+                </span>
                 <h3 className="text-sm font-bold text-text">Pilih Metode Pembayaran</h3>
               </div>
 
-              {/* Sub-Group 1: QRIS */}
-              <div className="space-y-2">
-                <div className="text-[11px] font-bold text-text-dim uppercase tracking-wider flex items-center gap-1.5">
-                  <QrCode className="w-3.5 h-3.5 text-accent" />
-                  QRIS (Scan & Bayar Instan)
-                </div>
-                {CHANNELS_QRIS.map((ch) => {
-                  const isSelected = formData.paymentMethod === ch.id;
-                  return (
-                    <div
-                      key={ch.id}
-                      onClick={() => handleSelectMethod(ch.id)}
-                      className={`p-3 sm:p-3.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
-                        isSelected
-                          ? 'border-accent bg-accent-sm shadow-[0_0_15px_rgba(var(--accent-rgb),0.15)] ring-1 ring-accent'
-                          : 'border-border bg-bg-deep hover:bg-bg-elev'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <input
-                          type="radio"
-                          name="paymentMethod"
-                          value={ch.id}
-                          checked={isSelected}
-                          onChange={() => handleSelectMethod(ch.id)}
-                          className="text-accent focus:ring-accent"
-                        />
-                        <div className="min-w-0">
-                          <div className="text-xs font-bold text-text flex items-center gap-2">
-                            <span>{ch.name}</span>
-                            {ch.tag && (
-                              <span className="text-[9px] mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold">
-                                {ch.tag}
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-[10px] text-text-mut truncate mt-0.5">{ch.desc}</div>
-                        </div>
-                      </div>
-                      <div className="shrink-0 pl-2">
-                        <ChannelLogo id={ch.id} className="h-6 w-auto" />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              {PAYMENT_OPTIONS.map((group, gIdx) => (
+                <div key={gIdx} className="space-y-2.5">
+                  <div className="text-[11px] font-bold text-text-mut uppercase tracking-wider flex items-center gap-1.5 pt-1">
+                    <group.icon className="w-3.5 h-3.5 text-accent" />
+                    <span>{group.group}</span>
+                  </div>
 
-              {/* Sub-Group 2: E-Wallet */}
-              <div className="space-y-2 pt-2 border-t border-border">
-                <div className="text-[11px] font-bold text-text-dim uppercase tracking-wider flex items-center gap-1.5">
-                  <Wallet className="w-3.5 h-3.5 text-accent" />
-                  E-Wallet Langsung
-                </div>
-                <div className="grid sm:grid-cols-1 gap-2">
-                  {CHANNELS_EWALLET.map((ch) => {
-                    const isSelected = formData.paymentMethod === ch.id;
-                    return (
-                      <div
-                        key={ch.id}
-                        onClick={() => handleSelectMethod(ch.id)}
-                        className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
-                          isSelected
-                            ? 'border-accent bg-accent-sm shadow-sm ring-1 ring-accent'
-                            : 'border-border bg-bg-deep hover:bg-bg-elev'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            value={ch.id}
-                            checked={isSelected}
-                            onChange={() => handleSelectMethod(ch.id)}
-                            className="text-accent focus:ring-accent"
-                          />
-                          <div className="min-w-0">
-                            <div className="text-xs font-bold text-text">{ch.name}</div>
-                            <div className="text-[10px] text-text-mut truncate mt-0.5">{ch.desc}</div>
+                  <div className="space-y-2">
+                    {group.items.map((item) => {
+                      const isSelected = formData.paymentMethod === item.id;
+                      return (
+                        <div
+                          key={item.id}
+                          onClick={() => handleSelectMethod(item.id)}
+                          className={`p-3 sm:p-3.5 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
+                            isSelected
+                              ? 'border-accent bg-accent-sm shadow-sm ring-1 ring-accent'
+                              : 'border-border/70 bg-bg-deep hover:bg-bg-elev hover:border-border'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                              isSelected ? 'border-accent bg-accent text-white' : 'border-border bg-bg-panel'
+                            }`}>
+                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                            </div>
+
+                            <div className="min-w-0">
+                              <div className="text-xs font-bold text-text flex items-center gap-2">
+                                <span>{item.name}</span>
+                                {item.popular && (
+                                  <span className="text-[9px] mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold">
+                                    Populer
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-text-mut truncate mt-0.5">{item.desc}</div>
+                            </div>
+                          </div>
+
+                          {/* Official Logo Container */}
+                          <div className="shrink-0 pl-2">
+                            <div className="h-8 min-w-[56px] px-2 rounded-lg bg-white border border-neutral-200/80 shadow-xs flex items-center justify-center">
+                              <img
+                                src={item.logo}
+                                alt={item.name}
+                                className="h-5 w-auto max-w-[64px] object-contain"
+                                loading="lazy"
+                              />
+                            </div>
                           </div>
                         </div>
-                        <div className="shrink-0 pl-2">
-                          <ChannelLogo id={ch.id} className="h-5 w-auto" />
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-
-              {/* Sub-Group 3: Virtual Account Bank */}
-              <div className="space-y-2 pt-2 border-t border-border">
-                <div className="text-[11px] font-bold text-text-dim uppercase tracking-wider flex items-center gap-1.5">
-                  <Building2 className="w-3.5 h-3.5 text-accent" />
-                  Virtual Account Bank (Transfer Bebas Biaya)
-                </div>
-                <div className="space-y-2">
-                  {CHANNELS_VA.map((ch) => {
-                    const isSelected = formData.paymentMethod === ch.id;
-                    return (
-                      <div
-                        key={ch.id}
-                        onClick={() => handleSelectMethod(ch.id)}
-                        className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between gap-3 ${
-                          isSelected
-                            ? 'border-accent bg-accent-sm shadow-sm ring-1 ring-accent'
-                            : 'border-border bg-bg-deep hover:bg-bg-elev'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <input
-                            type="radio"
-                            name="paymentMethod"
-                            value={ch.id}
-                            checked={isSelected}
-                            onChange={() => handleSelectMethod(ch.id)}
-                            className="text-accent focus:ring-accent"
-                          />
-                          <div className="min-w-0">
-                            <div className="text-xs font-bold text-text">{ch.name}</div>
-                            <div className="text-[10px] text-text-mut truncate mt-0.5">{ch.desc}</div>
-                          </div>
-                        </div>
-                        <div className="shrink-0 pl-2">
-                          <ChannelLogo id={ch.id} className="h-5 w-auto" />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
+              ))}
             </div>
 
           </div>
 
-          {/* KOLOM KANAN: Ringkasan & Tombol Bayar Langsung */}
-          <div className="space-y-5 lg:sticky lg:top-24">
+          {/* KOLOM KANAN: Ringkasan Pesanan & Tombol Submit */}
+          <div className="space-y-4 lg:sticky lg:top-24">
             
-            <div className="surface p-6 rounded-2xl border border-border shadow-xl space-y-4">
-              <div className="flex items-center justify-between border-b border-border pb-3">
-                <span className="text-xs font-bold text-text">Ringkasan Pembelian</span>
-                <span className="text-[9px] mono px-2 py-0.5 rounded-full bg-accent/20 text-accent font-bold">LIFETIME</span>
+            <div className="bg-bg-panel border border-border/80 rounded-2xl p-6 shadow-md space-y-4">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <span className="text-xs font-bold text-text">Ringkasan Pesanan</span>
+                <span className="text-[9px] mono px-2 py-0.5 rounded-full bg-accent/15 text-accent font-bold">LIFETIME</span>
               </div>
 
-              <div className="space-y-2.5 text-xs">
+              <div className="space-y-2 text-xs">
                 <div className="flex justify-between text-text font-semibold">
                   <span>SmartFeed AI Studio (20 Engine)</span>
-                  <span>Rp {priceStrikeNum}</span>
+                  <span className="mono">Rp {priceStrikeNum}</span>
                 </div>
                 <div className="flex justify-between text-emerald-400 font-semibold">
                   <span>Diskon Promo Akses</span>
-                  <span>- Rp 250.000</span>
+                  <span className="mono">- Rp 250.000</span>
                 </div>
                 <div className="flex justify-between text-text-mut text-[11px]">
                   <span>Biaya Transaksi</span>
@@ -403,7 +318,7 @@ export default function Checkout() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-border flex justify-between items-baseline">
+              <div className="pt-3 border-t border-border/60 flex justify-between items-baseline">
                 <div>
                   <div className="text-xs font-bold text-text">Total Bayar</div>
                   <div className="text-[10px] text-text-dim">Sekali bayar seumur hidup</div>
@@ -413,42 +328,42 @@ export default function Checkout() {
                 </div>
               </div>
 
-              {/* Submit CTA Button */}
+              {/* Submit CTA */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full btn-cta text-sm !py-3.5 justify-center shadow-[0_10px_30px_rgba(var(--accent-rgb),0.35)] mt-2"
+                className="w-full btn-cta text-sm !py-3.5 justify-center shadow-[0_8px_25px_rgba(var(--accent-rgb),0.35)] mt-2 cursor-pointer"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    Menuju TriPay...
+                    Menghubungkan ke TriPay...
                   </span>
                 ) : (
                   <>
                     <Lock className="w-4 h-4" />
-                    <span>Bayar Sekarang — Rp {priceNum}</span>
+                    <span>Lanjut ke Pembayaran TriPay</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
 
-              <div className="pt-2 text-center">
+              <div className="pt-1 text-center">
                 <div className="flex items-center justify-center gap-1.5 text-[10px] text-text-dim mono">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Diproses Resmi via TriPay (Berizin Bank Indonesia)</span>
+                  <span>Transaksi Resmi Berizin Bank Indonesia via TriPay</span>
                 </div>
               </div>
             </div>
 
-            {/* Jaminan & Bantuan */}
-            <div className="surface bg-bg-panel/40 p-4 rounded-xl border border-border text-xs space-y-2 text-text-mut">
+            {/* Merchant Identity & Support */}
+            <div className="bg-bg-deep border border-border/70 p-4 rounded-xl text-xs space-y-1.5 text-text-mut">
               <div className="font-bold text-text flex items-center gap-1.5 text-[11px]">
                 <Sparkles className="w-3.5 h-3.5 text-accent" />
-                Akses Instan & Bantuan Cepat:
+                Aktivasi Otomatis & CS:
               </div>
               <p className="text-[11px] leading-relaxed">
-                Setelah pembayaran selesai di TriPay, akun studio langsung aktif otomatis. Butuh bantuan? WA ke <strong className="text-text">{CONFIG.contactPhoneDisplay}</strong>.
+                Akun studio langsung aktif setelah pembayaran diverifikasi oleh TriPay. Bantuan cepat WA: <strong className="text-text">{CONFIG.contactPhoneDisplay}</strong>.
               </p>
             </div>
 
