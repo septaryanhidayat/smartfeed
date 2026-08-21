@@ -47,14 +47,35 @@ if (substr($phone, 0, 2) === '62') {
     $phone = '0' . substr($phone, 2);
 }
 
-// Tentukan amount & nama produk (1000 untuk testing)
-$amount = 1000;
-$productName = 'SmartFeed AI Studio (Lifetime Access - 20 Engine Kreatif)';
+// Fungsi membaca nominal harga secara otomatis dari config.js
+function getSmartFeedAmount($plan = 'lifetime') {
+    if ($plan === 'reseller') {
+        $configFile = __DIR__ . '/config.js';
+        if (file_exists($configFile)) {
+            $js = file_get_contents($configFile);
+            if (preg_match('/resellerPrice\s*:\s*["\']([0-9.]+)["\']/', $js, $matches)) {
+                $cleaned = (int)str_replace('.', '', $matches[1]);
+                if ($cleaned > 0) return $cleaned;
+            }
+        }
+        return 290000;
+    }
 
-if ($plan === 'reseller') {
-    $amount = 290000;
-    $productName = 'SmartFeed AI Studio + Lisensi Reseller 100% Profit';
+    $configFile = __DIR__ . '/config.js';
+    if (file_exists($configFile)) {
+        $js = file_get_contents($configFile);
+        if (preg_match('/price\s*:\s*["\']([0-9.]+)["\']/', $js, $matches)) {
+            $cleaned = (int)str_replace('.', '', $matches[1]);
+            if ($cleaned > 0) return $cleaned;
+        }
+    }
+    return 1000;
 }
+
+$amount = getSmartFeedAmount($plan);
+$productName = ($plan === 'reseller') 
+    ? 'SmartFeed AI Studio + Lisensi Reseller 100% Profit' 
+    : 'SmartFeed AI Studio (Lifetime Access - 20 Engine Kreatif)';
 
 $merchantRef = 'SF-' . time() . '-' . rand(100, 999);
 $signature = hash_hmac('sha256', TRIPAY_MERCHANT_CODE . $merchantRef . $amount, TRIPAY_PRIVATE_KEY);

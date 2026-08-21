@@ -94,8 +94,14 @@ export default function Checkout() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const parseNum = (val) => parseInt(String(val).replace(/\D/g, ''), 10) || 0;
+  const priceInt = parseNum(CONFIG.price);
+  const strikeInt = parseNum(CONFIG.priceStrike);
+  const discountInt = Math.max(strikeInt - priceInt, 0);
+
   const priceNum = CONFIG.price || '1.000';
   const priceStrikeNum = CONFIG.priceStrike || '499.000';
+  const discountFormatted = discountInt > 0 ? discountInt.toLocaleString('id-ID') : '0';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -349,10 +355,12 @@ export default function Checkout() {
                   <span>SmartFeed AI Studio (20 Engine)</span>
                   <span className="mono font-semibold whitespace-nowrap">Rp {priceStrikeNum}</span>
                 </div>
-                <div className="flex justify-between text-emerald-400 font-semibold">
-                  <span>Diskon Promo Uji Coba</span>
-                  <span className="mono whitespace-nowrap">- Rp 498.000</span>
-                </div>
+                {discountInt > 0 && (
+                  <div className="flex justify-between text-emerald-400 font-semibold">
+                    <span>Diskon Promo Akses</span>
+                    <span className="mono whitespace-nowrap">- Rp {discountFormatted}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-text-mut text-[11px] sm:text-xs">
                   <span>Biaya Transaksi Payment Gateway</span>
                   <span className="text-emerald-400 font-semibold whitespace-nowrap">Gratis (Rp 0)</span>
