@@ -276,11 +276,16 @@
         if (!window.__AF_MOUNTED) {
           var el = document.getElementById('initial-loader');
           if (el) {
+            var isFileProto = window.location.protocol === 'file:';
             el.innerHTML =
-              '<div style="text-align:center;font-family:Inter,system-ui,sans-serif;color:#fff;padding:0 24px">' +
-              '<div style="font-size:15px;font-weight:700;margin-bottom:6px">Koneksi lambat atau gagal memuat</div>' +
-              '<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px">Periksa koneksi internetmu, lalu coba lagi.</div>' +
-              '<button onclick="location.reload()" style="background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:0;border-radius:10px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer">&#8635; Muat Ulang</button>' +
+              '<div style="text-align:center;font-family:Inter,system-ui,sans-serif;color:#fff;padding:0 24px;max-width:480px;margin:0 auto">' +
+              (isFileProto
+                ? '<div style="font-size:16px;font-weight:700;margin-bottom:8px;color:#f87171">Tidak Bisa Dibuka Langsung via file:///</div>' +
+                  '<div style="font-size:13px;color:rgba(255,255,255,.8);margin-bottom:16px;line-height:1.5">Browser memblokir modul JavaScript jika file HTML di-klik dua kali langsung dari folder. Jalankan via server lokal (<b>npm run dev</b> atau <b>Live Server</b>) atau upload ke hosting/cPanel.</div>'
+                : '<div style="font-size:15px;font-weight:700;margin-bottom:6px">Koneksi lambat atau gagal memuat</div>' +
+                  '<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px">Periksa koneksi internetmu, lalu coba lagi.</div>' +
+                  '<button onclick="location.reload()" style="background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:0;border-radius:10px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer">&#8635; Muat Ulang</button>'
+              ) +
               '</div>';
           }
         }
