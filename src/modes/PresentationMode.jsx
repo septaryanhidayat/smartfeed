@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import {
   Presentation, Sparkles, LayoutTemplate, Layers, Palette, Users, BookOpen,
   ChevronLeft, ChevronRight, Copy, Check, Download, Wand2, Mic, Eye, FileText, MonitorPlay,
   CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, Shuffle, Briefcase,
-  Code2, ExternalLink, Library, Rocket, Clock, Globe, BarChart3, HelpCircle, ChevronDown, CheckSquare, Square
+  Code2, ExternalLink, Library, Rocket, Clock, Globe, BarChart3, HelpCircle, ChevronDown, CheckSquare, Square,
+  AlignLeft, Play
 } from 'lucide-react';
 import {
   PRESENTATION_TYPES,
@@ -23,22 +24,24 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [outputTab, setOutputTab] = useState('prompt'); // 'prompt' | 'gamma' | 'vba' | 'notebooklm'
   const [copied, setCopied] = useState(false);
   const [copiedVisual, setCopiedVisual] = useState(false);
-  const [generatedFlash, setGeneratedFlash] = useState(false);
+  const [generatedToast, setGeneratedToast] = useState(false);
+
+  const outputRef = useRef(null);
 
   const {
-    topic = 'Strategi Growth Hacking untuk Startup SaaS B2B',
-    type = 'Pitching ke Investor',
-    audience = 'Investor Series A, Tim Marketing, CEO Startup',
-    slideCount = 10,
-    duration = '10-15 menit',
+    topic = 'Strategi buat konten mudah dan menarik',
+    type = 'Edukasi / Workshop',
+    audience = 'Kreator pemula atau yang mau mulai ngonten',
+    slideCount = 6,
+    duration = '5-10 menit',
     language = 'Indonesia',
-    keyPoints = '- Masalah utama: Customer Acquisition Cost (CAC) industri SaaS naik 60%\n- Solusi: Framework Growth Flywheel berbasis Product-Led Growth (PLG)\n- Ukuran pasar & peluang di Asia Tenggara (TAM $12B)\n- Model monetisasi & proyeksi recurring revenue (ARR)\n- Traction saat ini: 1.200 pengguna aktif berbayar, NPS 72\n- Dana yang dibutuhkan $500K untuk ekspansi tim engineer dan akuisisi',
-    dataEvidence = 'Market size $12B, growth rate 35% YoY, 1.200 pengguna aktif, CAC payback period 4 bulan, NPS score 72.',
-    mainCta = 'Investor commit funding $500K untuk ekspansi regional 12 bulan ke depan.',
-    designStyle = 'Startup Inovatif',
-    colorScheme = 'Obsidian Black (#0A0F1D) + Emerald Neon (#10B981) + Pure White',
-    visualElements = ['Infografis & Diagram', 'Grafik & Chart', 'Mockup Produk', 'Comparison Table'],
-    tone = 'Data-driven',
+    keyPoints = '- tipe-tipe konten\n- contoh kreator yang mudah ditiru\n- trend\n- konten yang bermanfaat',
+    dataEvidence = '',
+    mainCta = 'Ikut komunitas yang siap mendukung pertumbuhan mu',
+    designStyle = 'Kreatif & Playful',
+    colorScheme = 'Putih, Orange, Kuning, Hijau',
+    visualElements = ['Infografis & Diagram', 'Ikon Vektor', 'Foto HD', 'Timeline', 'Comparison Table'],
+    tone = 'Percaya Diri',
     extraNotes = '',
   } = state || {};
 
@@ -60,7 +63,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     eyebrow: (type || 'PRESENTASI EKSEKUTIF').toUpperCase(),
     title: topic || 'Slide Title',
     subtitle: `Disusun untuk: ${audience}`,
-    categoryChips: ['STRATEGI', 'DATA', 'INOVASI', 'EKSEKUSI']
+    categoryChips: ['STRATEGI', 'KONTEN', 'KOMUNITAS']
   };
 
   const bullets = Array.isArray(currentSlide?.bullets) ? currentSlide.bullets : [];
@@ -136,49 +139,30 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     onChangeField('visualElements', current);
   };
 
-  const handleTriggerGenerate = () => {
-    setGeneratedFlash(true);
-    setTimeout(() => setGeneratedFlash(false), 1500);
+  const handleGenerateClick = () => {
+    // 1. Copy generated prompt to clipboard
+    navigator.clipboard.writeText(getCurrentOutputContent());
+    setCopied(true);
+    setGeneratedToast(true);
+    setTimeout(() => {
+      setCopied(false);
+      setGeneratedToast(false);
+    }, 3000);
+
+    // 2. Scroll smoothly to output area on desktop/mobile
+    if (outputRef.current) {
+      outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
-    <div className="space-y-8 pb-12">
-      
-      {/* ── HEADER BADGE & BANNER ── */}
-      <div className="text-center max-w-3xl mx-auto space-y-3 pt-2">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/15 border border-accent/30 text-accent text-xs font-black uppercase tracking-wider">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>✦ MAGIC PROMPT GENERATOR</span>
-          <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-extrabold text-[10px] border border-amber-500/30">BETA</span>
-        </div>
+    <div className="space-y-6">
 
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
-          <span className="bg-gradient-to-r from-sky-400 via-accent to-emerald-400 bg-clip-text text-transparent">Magic Prompt</span> Presentasi PPT
-        </h1>
-
-        <p className="text-xs sm:text-sm text-text-mut leading-relaxed max-w-2xl mx-auto">
-          Isi form di bawah, lalu klik <strong className="text-white">Generate</strong> untuk mendapatkan prompt lengkap siap pakai berdasarkan prinsip-prinsip desain presentasi terbaik.
-        </p>
-
-        {/* 5 Presentation Principles Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-          {PRESENTATION_PRINCIPLES.map((pr, idx) => (
-            <span
-              key={idx}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-panel border border-border/80 text-[11px] font-semibold text-text-mut"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>{pr}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* ── TOP PRESET & RANDOMIZE BAR ── */}
-      <div className="surface p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-border shadow-xs max-w-6xl mx-auto">
+      {/* ── TOP PRESET & PRINCIPLES BAR ── */}
+      <div className="surface p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 border border-border shadow-xs">
         <div className="flex items-center gap-2">
-          <Presentation className="w-4 h-4 text-accent" />
-          <span className="text-xs font-bold text-text">Pilih Kasus Demo Siap Pakai:</span>
+          <Sparkles className="w-4 h-4 text-accent" />
+          <span className="text-xs font-bold text-text">Preset Kasus Cepat:</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -201,7 +185,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             type="button"
             onClick={handleRandomizeDemo}
             className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 transition flex items-center gap-1.5 cursor-pointer"
-            title="Acak template presentasi"
+            title="Acak contoh presentasi"
           >
             <Shuffle className="w-3.5 h-3.5" />
             <span>Acak Template</span>
@@ -209,20 +193,20 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
         </div>
       </div>
 
-      {/* ── 2-COLUMN MAIN STUDIO LAYOUT: FORM INPUT (LEFT) + OUTPUT EXPORTER (RIGHT) ── */}
-      <div className="grid lg:grid-cols-[1.1fr_1.15fr] gap-8 items-start max-w-6xl mx-auto">
+      {/* ── 2-COLUMN MAIN STUDIO LAYOUT: FORM INPUT (LEFT) + OUTPUT PROMPT PANEL (RIGHT) ── */}
+      <div className="grid lg:grid-cols-[1.05fr_1.15fr] gap-6 items-start">
         
         {/* LEFT COLUMN: 4 SECTION STRUCTURED MAGIC FORM */}
-        <div className="space-y-6">
+        <div className="space-y-5">
 
           {/* BAGIAN 1 — IDENTITAS PRESENTASI */}
-          <div className="surface p-5 sm:p-6 rounded-2xl border border-border space-y-4 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-sky-400 flex items-center gap-2 border-b border-border pb-2.5">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-sky-400 flex items-center gap-2 border-b border-border pb-2">
               <span className="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-extrabold text-[11px]">1</span>
               <span>BAGIAN 1 — IDENTITAS PRESENTASI</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* 1. Judul / Topik */}
               <div>
                 <label className="block text-xs font-bold text-text mb-1">
@@ -232,7 +216,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={topic || ''}
                   onChange={(e) => onChangeField && onChangeField('topic', e.target.value)}
-                  placeholder="contoh: Strategi Growth Hacking untuk Startup SaaS B2B"
+                  placeholder="contoh: Strategi buat konten mudah dan menarik"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
@@ -269,8 +253,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={audience || ''}
                   onChange={(e) => onChangeField && onChangeField('audience', e.target.value)}
-                  placeholder="contoh: Investor Series A, tim marketing, CEO startup"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="contoh: Kreator pemula atau yang mau mulai ngonten"
+                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
 
@@ -348,68 +332,68 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           </div>
 
           {/* BAGIAN 2 — KONTEN & PESAN */}
-          <div className="surface p-5 sm:p-6 rounded-2xl border border-border space-y-4 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-emerald-400 flex items-center gap-2 border-b border-border pb-2.5">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-emerald-400 flex items-center gap-2 border-b border-border pb-2">
               <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-extrabold text-[11px]">2</span>
               <span>BAGIAN 2 — KONTEN &amp; PESAN</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* 7. Poin Utama */}
               <div>
-                <label className="block text-xs font-bold text-text mb-1">
+                <label className="block text-xs font-bold text-text mb-0.5">
                   7. Poin Utama yang Harus Disampaikan
                 </label>
-                <div className="text-[10px] text-text-dim mb-1">Tuliskan 4-6 poin kunci yang wajib ada dalam presentasi</div>
+                <div className="text-[10px] text-text-dim mb-1">Tuliskan 3-5 poin kunci yang wajib ada dalam presentasi</div>
                 <textarea
                   rows={4}
                   value={keyPoints || ''}
                   onChange={(e) => onChangeField && onChangeField('keyPoints', e.target.value)}
-                  placeholder="- Masalah utama di industri&#10;- Solusi inovatif yang ditawarkan&#10;- Model bisnis & traction&#10;- Roadmap implementasi"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none leading-relaxed"
+                  placeholder="- tipe-tipe konten&#10;- contoh kreator yang mudah ditiru&#10;- trend&#10;- konten yang bermanfaat"
+                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none leading-relaxed"
                 />
               </div>
 
               {/* 8. Data / Bukti / Statistik */}
               <div>
-                <label className="block text-xs font-bold text-text mb-1">
-                  8. Data / Bukti / Statistik yang Akan Digunakan
+                <label className="block text-xs font-bold text-text mb-0.5">
+                  8. Data / Bukti / Statistik (Opsional)
                 </label>
-                <div className="text-[10px] text-text-dim mb-1">Sebutkan data spesifik, hasil riset, atau angka yang ingin dimasukkan</div>
-                <textarea
-                  rows={2}
+                <div className="text-[10px] text-text-dim mb-1">Angka atau hasil riset yang ingin dimasukkan</div>
+                <input
+                  type="text"
                   value={dataEvidence || ''}
                   onChange={(e) => onChangeField && onChangeField('dataEvidence', e.target.value)}
-                  placeholder="Contoh: Market size $5B, growth rate 30% YoY, 1.200 pengguna aktif, NPS score 72..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none leading-relaxed"
+                  placeholder="Contoh: 80% audiens memutuskan di 3 detik pertama, pertumbuhan 30% YoY"
+                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
 
               {/* 9. Pesan Utama / CTA */}
               <div>
-                <label className="block text-xs font-bold text-text mb-1">
+                <label className="block text-xs font-bold text-text mb-0.5">
                   9. Pesan Utama / Call to Action
                 </label>
-                <div className="text-[10px] text-text-dim mb-1">Apa yang ingin audiens lakukan atau diputuskan setelah melihat presentasi ini?</div>
+                <div className="text-[10px] text-text-dim mb-1">Apa yang ingin audiens lakukan setelah melihat presentasi ini?</div>
                 <input
                   type="text"
                   value={mainCta || ''}
                   onChange={(e) => onChangeField && onChangeField('mainCta', e.target.value)}
-                  placeholder="contoh: Investor commit funding $500K, Klien setuju pilot project 3 bulan"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="contoh: Ikut komunitas yang siap mendukung pertumbuhan mu"
+                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
           {/* BAGIAN 3 — GAYA DESAIN VISUAL */}
-          <div className="surface p-5 sm:p-6 rounded-2xl border border-border space-y-4 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-amber-400 flex items-center gap-2 border-b border-border pb-2.5">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-amber-400 flex items-center gap-2 border-b border-border pb-2">
               <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-extrabold text-[11px]">3</span>
               <span>BAGIAN 3 — GAYA DESAIN VISUAL</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* 10. Gaya / Tone Desain */}
               <div>
                 <label className="block text-xs font-bold text-text mb-1.5">
@@ -442,8 +426,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={colorScheme || ''}
                   onChange={(e) => onChangeField && onChangeField('colorScheme', e.target.value)}
-                  placeholder="contoh: Biru langit + hitam, Navy + kuning neon, Emerald + slate..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="contoh: Putih, Orange, Kuning, Hijau"
+                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
 
@@ -460,7 +444,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                         key={idx}
                         type="button"
                         onClick={() => toggleVisualElement(elem)}
-                        className={`px-3 py-1.5 rounded-xl text-[11px] font-semibold border transition flex items-center gap-1.5 cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-xl text-[10px] font-semibold border transition flex items-center gap-1.5 cursor-pointer ${
                           isSelected
                             ? 'bg-accent/20 text-accent border-accent font-bold shadow-xs'
                             : 'bg-bg-deep text-text-mut border-border/80 hover:text-text'
@@ -477,13 +461,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           </div>
 
           {/* BAGIAN 4 — INSTRUKSI TAMBAHAN (OPSIONAL) */}
-          <div className="surface p-5 sm:p-6 rounded-2xl border border-border space-y-4 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-purple-400 flex items-center gap-2 border-b border-border pb-2.5">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-purple-400 flex items-center gap-2 border-b border-border pb-2">
               <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-extrabold text-[11px]">4</span>
-              <span>BAGIAN 4 — INSTRUKSI TAMBAHAN (OPSIONAL)</span>
+              <span>BAGIAN 4 — GAYA BAHASA &amp; CATATAN</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* 13. Tone / Gaya Bahasa */}
               <div>
                 <label className="block text-xs font-bold text-text mb-1.5">
@@ -510,14 +494,14 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               {/* 14. Informasi Tambahan */}
               <div>
                 <label className="block text-xs font-bold text-text mb-1">
-                  14. Informasi Tambahan / Konteks Khusus
+                  14. Catatan Tambahan Khusus (Opsional)
                 </label>
-                <textarea
-                  rows={2}
+                <input
+                  type="text"
                   value={extraNotes || ''}
                   onChange={(e) => onChangeField && onChangeField('extraNotes', e.target.value)}
-                  placeholder="contoh: Nama perusahaan PT Maju Digital, industri fintech, sudah ada deck sebelumnya yg ingin di-refresh, dll."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none leading-relaxed"
+                  placeholder="contoh: Terapkan gaya bercerita santai yang memotivasi pemula"
+                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -526,31 +510,39 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           {/* MAIN GENERATE MAGIC PROMPT CTA BUTTON */}
           <button
             type="button"
-            onClick={handleTriggerGenerate}
-            className={`w-full py-4 px-6 rounded-2xl font-black text-sm text-white shadow-xl transition transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer ${
-              generatedFlash
-                ? 'bg-emerald-500 ring-4 ring-emerald-500/30'
-                : 'bg-gradient-to-r from-sky-500 via-accent to-emerald-500 hover:opacity-95'
-            }`}
+            onClick={handleGenerateClick}
+            className="w-full py-4 px-6 rounded-2xl font-black text-sm text-white shadow-xl transition transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-sky-500 via-accent to-emerald-500 hover:opacity-95 hover:shadow-accent/20"
           >
-            <Sparkles className="w-5 h-5 animate-spin" style={{ animationDuration: '4s' }} />
-            <span>✦ Generate Magic Prompt Presentasi</span>
+            <Sparkles className="w-5 h-5 animate-pulse" />
+            <span>✦ Generate Magic Prompt Presentasi (Salin Otomatis)</span>
           </button>
 
         </div>
 
-        {/* RIGHT COLUMN: MULTI-ENGINE EXPORT TABS + 16:9 LIVE CANVAS PREVIEW */}
-        <div className="space-y-6">
+        {/* RIGHT COLUMN: REALTIME PROMPT OUTPUT PANEL + TABS + SLIDE PREVIEW */}
+        <div ref={outputRef} className="space-y-5">
 
-          {/* FORMAT TABS EXPORTER (MAGIC PROMPT, GAMMA, VBA, NOTEBOOKLM) */}
-          <div className="surface p-5 rounded-2xl border border-border space-y-4 shadow-sm">
-            <div className="text-xs font-bold text-text flex items-center justify-between border-b border-border pb-2.5">
+          {/* FORMAT TABS EXPORTER */}
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-4 shadow-sm">
+            
+            {/* Header Result */}
+            <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-accent" />
-                <span>Format Output Siap Pakai:</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="text-xs font-extrabold text-text uppercase tracking-wider">
+                  Hasil Output Prompt &amp; Ekspor:
+                </span>
               </div>
               <span className="text-[10px] mono px-2 py-0.5 rounded bg-accent/15 text-accent font-bold">16:9 Widescreen</span>
             </div>
+
+            {/* Toast Banner When Clicked Generate */}
+            {generatedToast && (
+              <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-xs font-bold flex items-center gap-2 animate-bounce">
+                <Check className="w-4 h-4 text-emerald-400" />
+                <span>Magic Prompt Berhasil Dibuat &amp; Tersalin ke Clipboard!</span>
+              </div>
+            )}
 
             {/* 4 Engine Tabs */}
             <div className="grid grid-cols-2 gap-2">
@@ -583,7 +575,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   <Rocket className="w-3.5 h-3.5" />
                   <span>Gamma / Canva</span>
                 </div>
-                <div className="text-[10px] text-text-dim mt-0.5">1-click import outline slide</div>
+                <div className="text-[10px] text-text-dim mt-0.5">1-click outline slide</div>
               </button>
 
               <button
@@ -619,40 +611,40 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               </button>
             </div>
 
-            {/* Quick guide alert */}
+            {/* Quick guide text */}
             <div className="p-3 rounded-xl bg-bg-deep border border-border text-[11px] text-text-mut leading-relaxed">
               {outputTab === 'prompt' && (
                 <div>
-                  🪄 <strong>Cara Pakai</strong>: Salin seluruh Magic Prompt ini, lalu paste ke <strong>ChatGPT 4o, Claude 3.5 Sonnet, atau Gemini Pro</strong> untuk langsung menghasilkan naskah presentasi berstandar McKinsey/BCG lengkap dengan AI Image Prompt &amp; Speaker Notes!
+                  🪄 <strong>Cara Pakai</strong>: Salin seluruh teks di bawah ini, lalu paste ke <strong>ChatGPT 4o, Claude 3.5 Sonnet, atau Gemini Pro</strong> untuk mendapatkan naskah presentasi lengkap dengan AI Image Prompt &amp; Speaker Notes!
                 </div>
               )}
               {outputTab === 'gamma' && (
                 <div>
-                  🚀 <strong>Cara Pakai di Gamma.app / Canva</strong>: Buka <a href="https://gamma.app" target="_blank" rel="noreferrer" className="text-accent underline">gamma.app</a> &gt; Klik <em>Create New</em> &gt; <em>Paste in Text</em> &gt; Paste outline ini &gt; Pilih tema desain. Gamma akan membuat slide 16:9 beresolusi tinggi otomatis!
+                  🚀 <strong>Cara Pakai di Gamma.app / Canva</strong>: Buka <a href="https://gamma.app" target="_blank" rel="noreferrer" className="text-accent underline">gamma.app</a> &gt; Klik <em>Create New</em> &gt; <em>Paste in Text</em> &gt; Paste outline ini &gt; Pilih tema desain.
                 </div>
               )}
               {outputTab === 'vba' && (
                 <div>
-                  💻 <strong>Cara Pakai di Microsoft PowerPoint</strong>: Buka PowerPoint kosong &gt; Tekan <code>Alt + F11</code> &gt; Klik <code>Insert &gt; Module</code> &gt; Paste kode VBA ini &gt; Tekan <code>F5</code>. PowerPoint akan membuat seluruh slide 16:9 langsung di aplikasi tanpa corrupt!
+                  💻 <strong>Cara Pakai di Microsoft PowerPoint</strong>: Buka PowerPoint kosong &gt; Tekan <code>Alt + F11</code> &gt; Klik <code>Insert &gt; Module</code> &gt; Paste kode VBA ini &gt; Tekan <code>F5</code>.
                 </div>
               )}
               {outputTab === 'notebooklm' && (
                 <div>
-                  🎙️ <strong>Cara Pakai di Google NotebookLM</strong>: Download file .MD ini, lalu buka <a href="https://notebooklm.google.com" target="_blank" rel="noreferrer" className="text-accent underline">notebooklm.google.com</a> dan upload sebagai <em>Source Document</em> untuk membuat <strong>Podcast Diskusi AI (Audio Overview)</strong> dan FAQ cerdas otomatis!
+                  🎙️ <strong>Cara Pakai di Google NotebookLM</strong>: Download file .MD ini, lalu buka <a href="https://notebooklm.google.com" target="_blank" rel="noreferrer" className="text-accent underline">notebooklm.google.com</a> dan upload sebagai <em>Source Document</em> untuk membuat <strong>Audio Overview (Podcast AI)</strong>!
                 </div>
               )}
             </div>
 
-            {/* Copy & Download Action Buttons */}
-            <div className="space-y-2 pt-1">
+            {/* Action Bar (Copy + Download) */}
+            <div className="flex items-center gap-2 pt-1">
               <button
                 type="button"
                 onClick={handleCopy}
-                className="w-full btn-cta text-xs !py-3 justify-center shadow-md cursor-pointer"
+                className="flex-1 btn-cta text-xs !py-2.5 justify-center shadow-md cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4" />
+                    <Check className="w-4 h-4 text-emerald-300" />
                     <span>Konten {outputTab.toUpperCase()} Tersalin!</span>
                   </>
                 ) : (
@@ -666,24 +658,37 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={handleDownload}
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-bg-deep hover:bg-bg-elev text-xs font-bold text-text flex items-center justify-center gap-2 transition cursor-pointer"
+                className="px-3.5 py-2.5 rounded-xl border border-border bg-bg-deep hover:bg-bg-elev text-xs font-bold text-text flex items-center justify-center gap-1.5 transition cursor-pointer"
+                title="Download file"
               >
                 <Download className="w-4 h-4 text-accent" />
-                <span>Download File ({outputTab === 'vba' ? '.VBA / .TXT' : '.MD'})</span>
+                <span>Unduh</span>
               </button>
+            </div>
+
+            {/* REALTIME VISIBLE PROMPT TEXT AREA (SCROLLABLE & READABLE) */}
+            <div className="relative">
+              <div className="absolute top-2.5 right-3 text-[10px] text-text-dim mono uppercase select-none">
+                {outputTab === 'vba' ? 'VBA Script' : 'Markdown Prompt'}
+              </div>
+              <textarea
+                readOnly
+                rows={14}
+                value={getCurrentOutputContent()}
+                className="w-full p-4 rounded-xl bg-bg-deep border border-border font-mono text-[11px] text-text-mut leading-relaxed resize-y focus:outline-none focus:border-accent selection:bg-accent selection:text-white"
+              />
             </div>
           </div>
 
           {/* 16:9 LIVE INTERACTIVE MASTERCLASS DECK CANVAS */}
-          <div className="space-y-3">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5 shadow-sm">
+            
             {/* Header Canvas Control */}
-            <div className="flex items-center justify-between bg-bg-panel border border-border px-4 py-2.5 rounded-xl">
+            <div className="flex items-center justify-between border-b border-border pb-2.5">
               <div className="flex items-center gap-2">
+                <MonitorPlay className="w-4 h-4 text-accent" />
                 <span className="text-xs font-bold text-text">
-                  Slide {safeIndex + 1} dari {Math.max(slides.length, 1)}
-                </span>
-                <span className="text-[10px] mono px-2 py-0.5 rounded-full bg-accent/15 text-accent font-bold">
-                  16:9 Canvas
+                  Pratinjau Layout Slide ({safeIndex + 1} dari {Math.max(slides.length, 1)})
                 </span>
               </div>
 
@@ -692,83 +697,78 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="button"
                   disabled={safeIndex === 0}
                   onClick={() => setActiveSlideIndex((prev) => Math.max(prev - 1, 0))}
-                  className="p-1.5 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
+                  className="p-1 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
                 <button
                   type="button"
                   disabled={safeIndex >= slides.length - 1}
                   onClick={() => setActiveSlideIndex((prev) => Math.min(prev + 1, Math.max(slides.length - 1, 0)))}
-                  className="p-1.5 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
+                  className="p-1 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
             {/* 16:9 Slide Canvas */}
-            <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-neutral-800 bg-[#0A0F1D] text-white flex flex-col justify-between p-6 sm:p-8 font-sans select-none">
+            <div className="relative aspect-video w-full rounded-xl overflow-hidden shadow-xl border border-neutral-800 bg-[#0A0F1D] text-white flex flex-col justify-between p-5 sm:p-6 font-sans select-none">
               
               {/* Top Bar on Slide */}
-              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
+              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-2">
                 <div>
-                  <div className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-[#10B981]">
+                  <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-[#10B981]">
                     {currentSlide?.eyebrow || 'MAGIC PRESENTATION'}
                   </div>
-                  <h3 className="text-base sm:text-lg font-black text-white leading-tight mt-0.5 line-clamp-1">
+                  <h3 className="text-sm sm:text-base font-black text-white leading-tight mt-0.5 line-clamp-1">
                     {currentSlide?.title || topic}
                   </h3>
-                  <p className="text-[10px] sm:text-xs text-white/70 mt-0.5 line-clamp-1">
-                    {currentSlide?.subtitle || ''}
-                  </p>
                 </div>
 
-                <div className="shrink-0 flex items-center gap-1.5 bg-[#002D62] px-2.5 py-1 rounded-lg border border-emerald-500/30">
-                  <Briefcase className="w-3.5 h-3.5 text-[#10B981]" />
-                  <span className="text-[9px] font-black text-white tracking-wider uppercase">
+                <div className="shrink-0 flex items-center gap-1 bg-[#002D62] px-2 py-0.5 rounded border border-emerald-500/30">
+                  <span className="text-[8px] font-black text-white tracking-wider uppercase">
                     {type || 'EXECUTIVE'}
                   </span>
                 </div>
               </div>
 
               {/* Slide Body */}
-              <div className="flex-1 py-3 flex flex-col justify-center">
+              <div className="flex-1 py-2 flex flex-col justify-center">
                 {safeIndex === 0 ? (
                   <div className="grid grid-cols-[1.2fr_0.9fr] gap-3 items-center h-full">
-                    <div className="space-y-2">
-                      <div className="text-base sm:text-xl font-black leading-tight text-white line-clamp-2">
+                    <div className="space-y-1.5">
+                      <div className="text-sm sm:text-base font-black leading-tight text-white line-clamp-2">
                         {topic}
                       </div>
-                      <p className="text-[10px] text-white/80 line-clamp-2 leading-relaxed">
+                      <p className="text-[9px] sm:text-[10px] text-white/80 line-clamp-2 leading-relaxed">
                         {currentSlide?.subtitle}
                       </p>
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {(currentSlide?.categoryChips || ['STRATEGI', 'DATA', 'INOVASI', 'EKSEKUSI']).map((chip, cIdx) => (
-                          <span key={cIdx} className="text-[8px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
+                      <div className="flex flex-wrap gap-1 pt-0.5">
+                        {(currentSlide?.categoryChips || ['STRATEGI', 'KONTEN', 'KOMUNITAS']).map((chip, cIdx) => (
+                          <span key={cIdx} className="text-[8px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
                             {chip}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <div className="h-full rounded-xl bg-gradient-to-tr from-[#002D62] to-[#047857] border border-white/15 p-3 flex flex-col items-center justify-center text-center">
-                      <Sparkles className="w-8 h-8 text-[#10B981] mb-1.5 animate-pulse" />
-                      <div className="text-[10px] font-bold text-white">Visual 3D Photorealistic</div>
-                      <div className="text-[8px] text-white/60">High-Impact 16:9 Presentation</div>
+                    <div className="h-full rounded-lg bg-gradient-to-tr from-[#002D62] to-[#047857] border border-white/15 p-2 flex flex-col items-center justify-center text-center">
+                      <Sparkles className="w-6 h-6 text-[#10B981] mb-1 animate-pulse" />
+                      <div className="text-[9px] font-bold text-white">Visual 3D Photorealistic</div>
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-1.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                       {bullets.map((b, bIdx) => (
-                        <div key={bIdx} className="p-2 rounded-xl bg-white/5 border border-white/10 flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
-                          <span className="text-[10px] text-white leading-relaxed line-clamp-3">{b}</span>
+                        <div key={bIdx} className="p-1.5 rounded-lg bg-white/5 border border-white/10 flex items-start gap-1.5">
+                          <CheckCircle2 className="w-3 h-3 text-[#10B981] shrink-0 mt-0.5" />
+                          <span className="text-[9px] text-white leading-relaxed line-clamp-2">{b}</span>
                         </div>
                       ))}
                     </div>
                     {currentSlide?.goldenTakeaway && (
-                      <div className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-center text-[10px] font-bold text-emerald-300">
+                      <div className="p-1.5 rounded bg-emerald-500/15 border border-emerald-500/40 text-center text-[9px] font-bold text-emerald-300">
                         ★ {currentSlide.goldenTakeaway}
                       </div>
                     )}
@@ -777,20 +777,20 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               </div>
 
               {/* Bottom Ribbon */}
-              <div className="border-t border-white/10 pt-2 flex items-center justify-between text-[8px] sm:text-[9px] text-white/60 font-mono">
+              <div className="border-t border-white/10 pt-1.5 flex items-center justify-between text-[8px] text-white/60 font-mono">
                 <span className="truncate">{topic} | {audience}</span>
-                <span className="text-[#10B981] font-bold shrink-0">1 Slide 1 Pesan · Data &amp; Bukti</span>
+                <span className="text-[#10B981] font-bold shrink-0">1 Slide 1 Pesan</span>
               </div>
             </div>
 
             {/* Slide Navigation Thumbnails */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
               {(slides || []).map((s, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setActiveSlideIndex(idx)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition flex items-center gap-1 border cursor-pointer ${
+                  className={`px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 transition flex items-center gap-1 border cursor-pointer ${
                     safeIndex === idx
                       ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500 shadow-sm'
                       : 'bg-bg-panel text-text-mut border-border hover:bg-bg-elev'
@@ -803,22 +803,22 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
             {/* AI Image Prompt Drawer */}
             {currentSlide?.visualPrompt && (
-              <div className="surface p-4 rounded-xl border border-border space-y-2">
+              <div className="surface p-3 rounded-xl border border-border space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-text flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-accent" />
+                  <span className="text-[11px] font-bold text-text flex items-center gap-1.5">
+                    <Sparkles className="w-3 h-3 text-accent" />
                     AI Image Prompt Slide Ini (16:9 Midjourney/Flux)
                   </span>
                   <button
                     type="button"
                     onClick={handleCopyVisual}
-                    className="px-2.5 py-1 rounded-lg bg-accent/15 text-accent hover:bg-accent/25 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                    className="px-2 py-0.5 rounded bg-accent/15 text-accent hover:bg-accent/25 text-[10px] font-bold flex items-center gap-1 transition cursor-pointer"
                   >
                     {copiedVisual ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    <span>{copiedVisual ? 'Tersalin' : 'Salin Prompt Visual'}</span>
+                    <span>{copiedVisual ? 'Tersalin' : 'Salin Prompt'}</span>
                   </button>
                 </div>
-                <div className="p-3 rounded-lg bg-bg-deep border border-border/80 text-[11px] mono text-text-mut leading-relaxed select-all">
+                <div className="p-2 rounded bg-bg-deep border border-border/80 text-[10px] mono text-text-mut leading-relaxed select-all">
                   {currentSlide.visualPrompt}
                 </div>
               </div>
@@ -826,12 +826,12 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
 
             {/* Speaker Notes */}
             {currentSlide?.speakerNotes && (
-              <div className="surface p-3.5 rounded-xl border border-border text-xs space-y-1">
-                <div className="font-bold text-text flex items-center gap-1.5 text-[11px]">
-                  <Mic className="w-3.5 h-3.5 text-accent" />
+              <div className="surface p-3 rounded-xl border border-border text-xs space-y-0.5">
+                <div className="font-bold text-text flex items-center gap-1.5 text-[10px]">
+                  <Mic className="w-3 h-3 text-accent" />
                   Catatan Pembicara (Speaker Notes):
                 </div>
-                <p className="text-text-mut text-[11px] leading-relaxed italic">
+                <p className="text-text-mut text-[10px] leading-relaxed italic">
                   "{currentSlide.speakerNotes}"
                 </p>
               </div>
