@@ -41,6 +41,7 @@ import VideoScriptMode from './modes/VideoScriptMode.jsx';
 import ImageSlicerMode from './modes/ImageSlicerMode.jsx';
 import PresentationMode from './modes/PresentationMode.jsx';
 import VideoScriptDemoModal from './components/VideoScriptDemoModal.jsx';
+import PresentationDemoModal from './components/PresentationDemoModal.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
 import { generateCarouselPrompts, INITIAL_CAROUSEL } from './prompts/buildCarousel.js';
 import { buildGridFeed, INITIAL_GRIDFEED } from './prompts/buildGridFeed.js';
@@ -336,6 +337,15 @@ function AuthedApp() {
     }, 600);
   };
 
+  const handlePresentationDemoPick = (demo) => {
+    setLoadingDemo({ label: demo.tag, icon: 'Presentation' });
+    logActivity('DEMO', { tool: 'presentation', details: demo.topic });
+    setTimeout(() => {
+      dispatchPresentation({ type: 'RESET_TO', state: { ...INITIAL_PRESENTATION, ...demo } });
+      setLoadingDemo(null);
+    }, 600);
+  };
+
   const handleGenerate = async () => {
     // Verifikasi real-time: pastikan akun masih ada di spreadsheet
     if (checkSessionLive) {
@@ -589,9 +599,11 @@ function AuthedApp() {
         <StatusBar mode={mode} />
       </div>
 
-      {/* Modals — Affiliate, Journalism, Video Script & Carousel modes pakai picker khusus */}
+      {/* Modals — Affiliate, Journalism, Video Script, Presentation & Carousel modes pakai picker khusus */}
       {mode === 'carousel' ? (
         <CarouselDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleCarouselDemoPick} />
+      ) : mode === 'presentation' ? (
+        <PresentationDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handlePresentationDemoPick} currentTopic={presentation.topic} />
       ) : mode === 'menufb' ? (
         <MenuFBDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleMenuFBDemoPick} />
       ) : mode === 'videoscript' ? (

@@ -3,7 +3,8 @@ import {
   Presentation, Sparkles, LayoutTemplate, Layers, Palette, Users, BookOpen,
   ChevronLeft, ChevronRight, Copy, Check, Download, Wand2, Mic, Eye, FileText, MonitorPlay,
   CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, Shuffle, Briefcase,
-  Code2, ExternalLink, Library, Rocket, Clock, Globe, BarChart3, HelpCircle, ChevronDown, CheckSquare, Square, RotateCcw
+  Code2, ExternalLink, Library, Rocket, Clock, Globe, BarChart3, HelpCircle, ChevronDown, CheckSquare, Square, RotateCcw,
+  BookMarked
 } from 'lucide-react';
 import {
   PRESENTATION_TYPES,
@@ -16,6 +17,7 @@ import {
   PRESENTATION_DEMOS,
 } from '../data/presentationOptions.js';
 import { buildPresentation, INITIAL_PRESENTATION } from '../prompts/buildPresentation.js';
+import PresentationDemoModal from '../components/PresentationDemoModal.jsx';
 
 export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
@@ -23,6 +25,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [copied, setCopied] = useState(false);
   const [copiedVisual, setCopiedVisual] = useState(false);
   const [generatedToast, setGeneratedToast] = useState(false);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
 
   const outputRef = useRef(null);
 
@@ -36,10 +39,10 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     keyPoints = '',
     dataEvidence = '',
     mainCta = '',
-    designStyle = 'Profesional & Minimalis',
+    designStyle = 'Startup Inovatif',
     colorScheme = '',
-    visualElements = ['Infografis & Diagram', 'Ikon Vektor', 'Grafik & Chart'],
-    tone = 'Percaya Diri',
+    visualElements = ['Infografis & Diagram', 'Timeline', 'Ikon Vektor', 'Comparison Table', 'Foto HD'],
+    tone = 'Inspiratif',
     extraNotes = '',
   } = state || {};
 
@@ -97,7 +100,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   const handleDownload = () => {
     const content = getCurrentOutputContent();
     const ext = outputTab === 'vba' ? 'vba.txt' : 'md';
-    const prefix = outputTab === 'vba' ? 'PowerPoint-Macro' : outputTab === 'gamma' ? 'Gamma-Outline' : outputTab === 'notebooklm' ? 'NotebookLM-Source' : 'Magic-Prompt-Deck';
+    const prefix = outputTab === 'vba' ? 'PowerPoint-Macro' : outputTab === 'gamma' ? 'Gamma-Canva-Outline' : outputTab === 'notebooklm' ? 'NotebookLM-Source' : 'Magic-Prompt-Deck';
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -161,51 +164,63 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   return (
     <div className="space-y-5 w-full">
 
-      {/* ── TOP PRESETS & ACTION TOOLBAR (CLEAN HORIZONTAL SCROLL ON MOBILE) ── */}
-      <div className="surface p-3 sm:p-3.5 rounded-xl border border-border flex items-center justify-between gap-2 overflow-hidden shadow-xs">
-        <div className="flex items-center gap-1.5 shrink-0 text-text font-bold text-xs">
-          <Sparkles className="w-3.5 h-3.5 text-accent" />
-          <span className="hidden sm:inline">Pilihan Demo:</span>
-        </div>
-
-        <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar py-0.5 min-w-0 flex-1 justify-end">
-          {/* Tombol Clear / Kosongkan Form */}
+      {/* ── TOP ACTION BAR (KATALOG DEMO MODAL + ACAK + KOSONGKAN) ── */}
+      <div className="surface p-3 sm:p-4 rounded-2xl border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+        
+        {/* Left: Quick Actions */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Main Modal Trigger */}
           <button
             type="button"
-            onClick={handleClear}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 shrink-0 transition flex items-center gap-1.5 cursor-pointer"
-            title="Kosongkan seluruh isian form"
+            onClick={() => setDemoModalOpen(true)}
+            className="px-3.5 py-2 rounded-xl text-xs font-black bg-accent text-white shadow-sm hover:opacity-95 transition flex items-center gap-2 cursor-pointer active:scale-98"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Kosongkan</span>
+            <BookMarked className="w-4 h-4" />
+            <span>Katalog Demo (9 Template)</span>
           </button>
 
-          {/* Tombol Acak Demo */}
+          {/* Random Demo */}
           <button
             type="button"
             onClick={handleRandomizeDemo}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-400 shrink-0 transition flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-2 rounded-xl text-xs font-extrabold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-400 transition flex items-center gap-1.5 cursor-pointer active:scale-98"
             title="Acak contoh presentasi"
           >
             <Shuffle className="w-3.5 h-3.5" />
             <span>Acak Demo</span>
           </button>
 
-          {/* Chips Demo Presets */}
-          {PRESENTATION_DEMOS.map((demo, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => handleLoadDemo(demo)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold border shrink-0 transition flex items-center gap-1 cursor-pointer ${
-                topic === demo.topic
-                  ? 'bg-accent text-white border-accent shadow-sm'
-                  : 'bg-bg-panel hover:bg-bg-elev border-border text-text-mut hover:text-text'
-              }`}
-            >
-              <span>{demo.tag}</span>
-            </button>
-          ))}
+          {/* Clear Form */}
+          <button
+            type="button"
+            onClick={handleClear}
+            className="px-3 py-2 rounded-xl text-xs font-bold bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 transition flex items-center gap-1.5 cursor-pointer active:scale-98"
+            title="Kosongkan seluruh isian form"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Kosongkan</span>
+          </button>
+        </div>
+
+        {/* Right / Bottom on Mobile: Touch-scrollable quick chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scroll-smooth pb-1 pt-0.5 max-w-full">
+          {PRESENTATION_DEMOS.map((demo, idx) => {
+            const isSelected = topic === demo.topic;
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleLoadDemo(demo)}
+                className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold border shrink-0 transition flex items-center gap-1 cursor-pointer ${
+                  isSelected
+                    ? 'bg-accent/20 text-accent border-accent font-black shadow-xs'
+                    : 'bg-bg-panel hover:bg-bg-elev border-border text-text-mut hover:text-text'
+                }`}
+              >
+                <span>{demo.tag}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -216,8 +231,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
         <div className="space-y-4 w-full">
 
           {/* BAGIAN 1 — IDENTITAS PRESENTASI */}
-          <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-sky-400 flex items-center justify-between border-b border-border pb-2">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-sky-400 flex items-center justify-between border-b border-border pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-extrabold text-[10px]">1</span>
                 <span>BAGIAN 1 — IDENTITAS PRESENTASI</span>
@@ -243,8 +258,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={topic || ''}
                   onChange={(e) => onChangeField && onChangeField('topic', e.target.value)}
-                  placeholder="Ketik topik presentasi (atau klik tombol Demo di atas)..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="Ketik topik presentasi (atau pilih Katalog Demo di atas)..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
 
@@ -261,7 +276,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                       onClick={() => onChangeField && onChangeField('type', tItem)}
                       className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
                         type === tItem
-                          ? 'bg-sky-500/20 text-sky-400 border-sky-500/60 shadow-xs'
+                          ? 'bg-sky-500/20 text-sky-400 border-sky-500/60 shadow-xs font-extrabold'
                           : 'bg-bg-deep text-text-mut border-border/80 hover:border-border hover:text-text'
                       }`}
                     >
@@ -281,7 +296,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   value={audience || ''}
                   onChange={(e) => onChangeField && onChangeField('audience', e.target.value)}
                   placeholder="contoh: Investor, Calon Klien, Tim Internal, Pelajar..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
 
@@ -290,7 +305,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 <label className="block text-xs font-bold text-text mb-1.5">
                   4. Jumlah Slide
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5">
                   {PRESENTATION_SLIDE_OPTIONS.map((sOpt, idx) => (
                     <button
                       key={idx}
@@ -298,7 +313,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                       onClick={() => onChangeField && onChangeField('slideCount', sOpt.value)}
                       className={`py-2 px-1 rounded-lg text-[11px] font-bold border text-center transition cursor-pointer ${
                         Number(slideCount) === sOpt.value
-                          ? 'bg-sky-500/20 text-sky-400 border-sky-500/60 shadow-xs'
+                          ? 'bg-sky-500/20 text-sky-400 border-sky-500/60 shadow-xs font-black'
                           : 'bg-bg-deep text-text-mut border-border/80 hover:text-text'
                       }`}
                     >
@@ -320,9 +335,9 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                         key={idx}
                         type="button"
                         onClick={() => onChangeField && onChangeField('duration', dItem)}
-                        className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition cursor-pointer ${
+                        className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition cursor-pointer ${
                           duration === dItem
-                            ? 'bg-sky-500/20 text-sky-400 border-sky-500/60'
+                            ? 'bg-sky-500/20 text-sky-400 border-sky-500/60 font-black'
                             : 'bg-bg-deep text-text-mut border-border/80 hover:text-text'
                         }`}
                       >
@@ -342,9 +357,9 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                         key={idx}
                         type="button"
                         onClick={() => onChangeField && onChangeField('language', lItem)}
-                        className={`py-1 rounded-lg text-[10px] font-bold border text-center transition cursor-pointer ${
+                        className={`py-1.5 rounded-lg text-[10px] font-bold border text-center transition cursor-pointer ${
                           language === lItem
-                            ? 'bg-sky-500/20 text-sky-400 border-sky-500/60'
+                            ? 'bg-sky-500/20 text-sky-400 border-sky-500/60 font-black'
                             : 'bg-bg-deep text-text-mut border-border/80 hover:text-text'
                         }`}
                       >
@@ -358,8 +373,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           </div>
 
           {/* BAGIAN 2 — KONTEN & PESAN */}
-          <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-emerald-400 flex items-center justify-between border-b border-border pb-2">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-emerald-400 flex items-center justify-between border-b border-border pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-extrabold text-[10px]">2</span>
                 <span>BAGIAN 2 — KONTEN &amp; PESAN</span>
@@ -381,7 +396,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 <label className="block text-xs font-bold text-text mb-0.5">
                   7. Poin Utama yang Harus Disampaikan
                 </label>
-                <div className="text-[10px] text-text-dim mb-1">Tuliskan 3-5 poin kunci yang wajib ada dalam presentasi</div>
+                <div className="text-[10px] text-text-dim mb-1">Tuliskan poin kunci yang wajib ada dalam presentasi</div>
                 <textarea
                   rows={4}
                   value={keyPoints || ''}
@@ -400,8 +415,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={dataEvidence || ''}
                   onChange={(e) => onChangeField && onChangeField('dataEvidence', e.target.value)}
-                  placeholder="Contoh: Pertumbuhan 35% YoY, 1.200 klien aktif, survei kepuasan 90%..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="Contoh: 91% kegagalan AI karena prompt amatir, hemat waktu 70%..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
 
@@ -414,16 +429,16 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={mainCta || ''}
                   onChange={(e) => onChangeField && onChangeField('mainCta', e.target.value)}
-                  placeholder="contoh: Menyetujui alokasi dana, bergabung ke program, jadwalkan meeting lanjutan..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="contoh: Terapkan kerangka T-C-E-I hari ini dan jadilah arsitek alur kerja Anda..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
           {/* BAGIAN 3 — GAYA DESAIN VISUAL */}
-          <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-amber-400 flex items-center gap-2 border-b border-border pb-2">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-amber-400 flex items-center gap-2 border-b border-border pb-2.5">
               <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-extrabold text-[10px]">3</span>
               <span>BAGIAN 3 — GAYA DESAIN VISUAL</span>
             </div>
@@ -442,7 +457,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                       onClick={() => onChangeField && onChangeField('designStyle', dStyle.label)}
                       className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold border transition cursor-pointer ${
                         designStyle === dStyle.label
-                          ? 'bg-amber-500/20 text-amber-400 border-amber-500/60 shadow-xs'
+                          ? 'bg-amber-500/20 text-amber-400 border-amber-500/60 shadow-xs font-black'
                           : 'bg-bg-deep text-text-mut border-border/80 hover:text-text'
                       }`}
                     >
@@ -461,8 +476,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={colorScheme || ''}
                   onChange={(e) => onChangeField && onChangeField('colorScheme', e.target.value)}
-                  placeholder="contoh: Navy, Gold, Putih (atau kosongkan untuk mengikuti gaya desain)"
-                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="contoh: Deep Tech Navy, Electric Purple, Cyan, Putih"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
 
@@ -479,13 +494,13 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                         key={idx}
                         type="button"
                         onClick={() => toggleVisualElement(elem)}
-                        className={`p-1.5 rounded-lg text-[10px] font-bold border transition flex items-center gap-1.5 cursor-pointer ${
+                        className={`p-2 rounded-lg text-[10px] font-bold border transition flex items-center gap-1.5 cursor-pointer ${
                           isSelected
-                            ? 'bg-accent/20 text-accent border-accent shadow-xs'
+                            ? 'bg-accent/20 text-accent border-accent shadow-xs font-black'
                             : 'bg-bg-deep text-text-mut border-border/80 hover:text-text'
                         }`}
                       >
-                        {isSelected ? <CheckSquare className="w-3 h-3 text-accent shrink-0" /> : <Square className="w-3 h-3 text-text-dim shrink-0" />}
+                        {isSelected ? <CheckSquare className="w-3.5 h-3.5 text-accent shrink-0" /> : <Square className="w-3.5 h-3.5 text-text-dim shrink-0" />}
                         <span className="truncate">{elem}</span>
                       </button>
                     );
@@ -496,8 +511,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           </div>
 
           {/* BAGIAN 4 — INSTRUKSI TAMBAHAN */}
-          <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3 shadow-sm">
-            <div className="text-xs font-bold tracking-wider uppercase text-purple-400 flex items-center gap-2 border-b border-border pb-2">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3 shadow-sm">
+            <div className="text-xs font-bold tracking-wider uppercase text-purple-400 flex items-center gap-2 border-b border-border pb-2.5">
               <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-extrabold text-[10px]">4</span>
               <span>BAGIAN 4 — GAYA BAHASA &amp; CATATAN</span>
             </div>
@@ -514,9 +529,9 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                       key={idx}
                       type="button"
                       onClick={() => onChangeField && onChangeField('tone', tItem)}
-                      className={`p-1.5 rounded-lg text-[11px] font-bold border text-center transition cursor-pointer ${
+                      className={`p-2 rounded-lg text-[11px] font-bold border text-center transition cursor-pointer ${
                         tone === tItem
-                          ? 'bg-purple-500/20 text-purple-400 border-purple-500/60 shadow-xs'
+                          ? 'bg-purple-500/20 text-purple-400 border-purple-500/60 shadow-xs font-black'
                           : 'bg-bg-deep text-text-mut border-border/80 hover:text-text'
                       }`}
                     >
@@ -535,8 +550,8 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="text"
                   value={extraNotes || ''}
                   onChange={(e) => onChangeField && onChangeField('extraNotes', e.target.value)}
-                  placeholder="contoh: Tekankan ROI cepat dan kemudahan adopsi bagi pemula..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
+                  placeholder="contoh: Diformat agar pas untuk Docs-to-Deck Canva & Gamma..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs text-text focus:border-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -546,7 +561,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           <button
             type="button"
             onClick={handleGenerateClick}
-            className="w-full py-3.5 px-5 rounded-xl font-extrabold text-sm text-white shadow-md transition transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-sky-500 via-accent to-emerald-500 hover:opacity-95"
+            className="w-full py-4 px-5 rounded-2xl font-black text-sm text-white shadow-lg transition transform active:scale-98 flex items-center justify-center gap-2 cursor-pointer bg-gradient-to-r from-sky-500 via-accent to-emerald-500 hover:opacity-95"
           >
             <Sparkles className="w-4 h-4 animate-pulse" />
             <span>✦ Generate Magic Prompt Presentasi (Salin Otomatis)</span>
@@ -558,40 +573,40 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
         <div ref={outputRef} className="space-y-4 w-full">
 
           {/* FORMAT TABS EXPORTER */}
-          <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3.5 shadow-sm">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5 shadow-sm">
             
             {/* Header Result */}
             <div className="flex items-center justify-between border-b border-border pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                <span className="text-xs font-extrabold text-text uppercase tracking-wider">
+                <span className="text-xs font-black text-text uppercase tracking-wider">
                   Hasil Output Prompt &amp; Ekspor:
                 </span>
               </div>
-              <span className="text-[10px] mono px-2 py-0.5 rounded bg-accent/15 text-accent font-bold">16:9 Widescreen</span>
+              <span className="text-[10px] mono px-2.5 py-0.5 rounded-full bg-accent/15 text-accent font-bold">16:9 Widescreen</span>
             </div>
 
             {/* Toast Banner When Clicked Generate */}
             {generatedToast && (
-              <div className="p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-xs font-bold flex items-center gap-2 animate-bounce">
+              <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-xs font-bold flex items-center gap-2 animate-bounce">
                 <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>Magic Prompt Berhasil Dibuat &amp; Tersalin ke Clipboard!</span>
               </div>
             )}
 
             {/* 4 Engine Tabs */}
-            <div className="grid grid-cols-2 gap-1.5">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setOutputTab('prompt')}
-                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
                   outputTab === 'prompt'
                     ? 'bg-sky-500/15 border-sky-500 text-text font-bold shadow-xs'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-xs text-sky-400 font-bold">
-                  <FileText className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1.5 text-xs text-sky-400 font-black">
+                  <FileText className="w-4 h-4" />
                   <span>Magic Prompt AI</span>
                 </div>
                 <div className="text-[10px] text-text-dim mt-0.5">ChatGPT, Claude, Gemini</div>
@@ -600,15 +615,15 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={() => setOutputTab('gamma')}
-                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
                   outputTab === 'gamma'
                     ? 'bg-purple-500/15 border-purple-500 text-text font-bold shadow-xs'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-xs text-purple-400 font-bold">
-                  <Rocket className="w-3.5 h-3.5" />
-                  <span>Gamma / Canva</span>
+                <div className="flex items-center gap-1.5 text-xs text-purple-400 font-black">
+                  <Rocket className="w-4 h-4" />
+                  <span>Canva / Gamma</span>
                 </div>
                 <div className="text-[10px] text-text-dim mt-0.5">1-click outline slide</div>
               </button>
@@ -616,30 +631,30 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={() => setOutputTab('vba')}
-                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
                   outputTab === 'vba'
                     ? 'bg-emerald-500/15 border-emerald-500 text-text font-bold shadow-xs'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold">
-                  <Code2 className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-black">
+                  <Code2 className="w-4 h-4" />
                   <span>PowerPoint VBA</span>
                 </div>
-                <div className="text-[10px] text-text-dim mt-0.5">Script Alt+F11 bebas corrupt</div>
+                <div className="text-[10px] text-text-dim mt-0.5">Script Alt+F11 otomatis</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setOutputTab('notebooklm')}
-                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                className={`p-3 rounded-xl border text-left transition cursor-pointer ${
                   outputTab === 'notebooklm'
                     ? 'bg-amber-500/15 border-amber-500 text-text font-bold shadow-xs'
                     : 'bg-bg-panel border-border text-text-mut hover:text-text'
                 }`}
               >
-                <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold">
-                  <Library className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1.5 text-xs text-amber-400 font-black">
+                  <Library className="w-4 h-4" />
                   <span>NotebookLM Doc</span>
                 </div>
                 <div className="text-[10px] text-text-dim mt-0.5">Source doc audio podcast</div>
@@ -651,7 +666,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={handleCopy}
-                className="flex-1 btn-cta text-xs !py-2.5 justify-center shadow-sm cursor-pointer"
+                className="flex-1 btn-cta text-xs !py-3 justify-center shadow-sm cursor-pointer font-bold"
               >
                 {copied ? (
                   <>
@@ -661,7 +676,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                 ) : (
                   <>
                     <Copy className="w-4 h-4" />
-                    <span>Salin Format {outputTab === 'prompt' ? 'Magic Prompt AI' : outputTab === 'gamma' ? 'Outline Gamma' : outputTab === 'vba' ? 'Script VBA PowerPoint' : 'Dokumen NotebookLM'}</span>
+                    <span>Salin Format {outputTab === 'prompt' ? 'Magic Prompt AI' : outputTab === 'gamma' ? 'Outline Canva/Gamma' : outputTab === 'vba' ? 'Script VBA PowerPoint' : 'Dokumen NotebookLM'}</span>
                   </>
                 )}
               </button>
@@ -669,7 +684,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
               <button
                 type="button"
                 onClick={handleDownload}
-                className="px-3.5 py-2.5 rounded-xl border border-border bg-bg-deep hover:bg-bg-elev text-xs font-bold text-text flex items-center justify-center gap-1.5 transition cursor-pointer"
+                className="px-4 py-3 rounded-xl border border-border bg-bg-deep hover:bg-bg-elev text-xs font-bold text-text flex items-center justify-center gap-1.5 transition cursor-pointer"
                 title="Download file"
               >
                 <Download className="w-4 h-4 text-accent" />
@@ -689,7 +704,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           </div>
 
           {/* 16:9 LIVE SLIDE PREVIEW */}
-          <div className="surface p-4 sm:p-5 rounded-xl border border-border space-y-3 shadow-sm">
+          <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3 shadow-sm">
             
             {/* Header Canvas Control */}
             <div className="flex items-center justify-between border-b border-border pb-2.5">
@@ -705,17 +720,17 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   type="button"
                   disabled={safeIndex === 0}
                   onClick={() => setActiveSlideIndex((prev) => Math.max(prev - 1, 0))}
-                  className="p-1 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
+                  className="p-1.5 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
                 >
-                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   disabled={safeIndex >= slides.length - 1}
                   onClick={() => setActiveSlideIndex((prev) => Math.min(prev + 1, Math.max(slides.length - 1, 0)))}
-                  className="p-1 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
+                  className="p-1.5 rounded-lg border border-border hover:bg-bg-elev disabled:opacity-40 disabled:cursor-not-allowed text-text cursor-pointer"
                 >
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -800,7 +815,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
                   onClick={() => setActiveSlideIndex(idx)}
                   className={`px-2.5 py-1 rounded-lg text-[10px] font-bold shrink-0 transition flex items-center gap-1 border cursor-pointer ${
                     safeIndex === idx
-                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500 shadow-sm'
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500 shadow-sm font-bold'
                       : 'bg-bg-panel text-text-mut border-border hover:bg-bg-elev'
                   }`}
                 >
@@ -850,6 +865,14 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
         </div>
 
       </div>
+
+      {/* MODAL PILIH KATALOG DEMO PRESENTASI */}
+      <PresentationDemoModal
+        open={demoModalOpen}
+        onClose={() => setDemoModalOpen(false)}
+        onPick={handleLoadDemo}
+        currentTopic={topic}
+      />
 
     </div>
   );
