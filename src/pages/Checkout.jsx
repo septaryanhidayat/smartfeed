@@ -135,49 +135,19 @@ export default function Checkout() {
 
       const json = await res.json();
 
-      if (json.success && json.data) {
+      if (json.success && json.data && json.data.checkout_url) {
+        // Langsung redirect ke halaman checkout resmi TriPay
+        window.location.href = json.data.checkout_url;
+        return;
+      } else if (json.success && json.data) {
         setTripayData(json.data);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        // Fallback simulated payment order jika offline / dev
-        const fallbackRef = `SF-${Date.now().toString().slice(-6)}`;
-        setTripayData({
-          reference: fallbackRef,
-          merchant_ref: fallbackRef,
-          payment_name: PAYMENT_METHODS.find((m) => m.id === formData.paymentMethod)?.name || formData.paymentMethod,
-          amount: 249000,
-          pay_code: formData.paymentMethod === 'QRIS' ? '' : '8806' + formData.phone.slice(-8),
-          qr_url: formData.paymentMethod === 'QRIS' ? '/landing/brand/logo.png' : '',
-          checkout_url: 'https://smartfeed.berandadigital.net/checkout',
-          instructions: [
-            {
-              title: 'Pembayaran ' + formData.paymentMethod,
-              steps: [
-                'Buka aplikasi m-Banking atau e-Wallet pilihan Anda.',
-                'Pilih menu Transfer / Bayar / Scan QRIS.',
-                'Masukkan kode pembayaran atau scan kode QR yang tampil.',
-                'Pastikan nama merchant tertera BERANDA TEKNOLOGI DIGITAL.',
-                'Konfirmasi pembayaran dan simpan bukti transaksi.',
-              ],
-            },
-          ],
-        });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setErrorMessage(json.message || 'Gagal terhubung ke TriPay. Silakan coba lagi atau hubungi CS.');
       }
     } catch (err) {
       console.error('TriPay API Error:', err);
-      // Fallback display
-      const fallbackRef = `SF-${Date.now().toString().slice(-6)}`;
-      setTripayData({
-        reference: fallbackRef,
-        merchant_ref: fallbackRef,
-        payment_name: formData.paymentMethod,
-        amount: 249000,
-        pay_code: '8806' + formData.phone.slice(-8),
-        checkout_url: 'https://smartfeed.berandadigital.net/checkout',
-        instructions: [],
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setErrorMessage('Terjadi kendala jaringan saat menghubungi TriPay. Silakan periksa koneksi Anda.');
     } finally {
       setIsLoading(false);
     }
