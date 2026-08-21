@@ -82,7 +82,7 @@ export const VISUAL_STYLES = [
 export const LOGO_BRAND_CATEGORIES = [
   'skincare', 'beauty', 'fashion', 'coffee', 'food and beverage',
   'herbal', 'fitness', 'digital product', 'AI tools', 'property',
-  'automotive', 'travel', 'education', 'finance', 'crypto',
+  'automotive', 'travel', 'education', 'finance', 'software',
   'gadget', 'home living', 'baby product', 'pet product',
   'luxury product', 'local UMKM brand',
 ];

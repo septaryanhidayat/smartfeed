@@ -26,7 +26,7 @@ const SUBS = [
 ];
 
 const CATEGORIES = [
-  'SKIN', 'AUDIO', 'COFFEE', 'WEAR', 'TECH', 'FOOD', 'CRYPTO', 'GAMES', 'COURSE',
+  'SKIN', 'AUDIO', 'COFFEE', 'WEAR', 'TECH', 'FOOD', 'SOFTWARE', 'GAMES', 'COURSE',
 ];
 
 export default function SampleAdCard({ ratio = '1/1', variant = 1, label }) {
