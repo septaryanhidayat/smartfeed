@@ -320,7 +320,7 @@ Program ini mengintegrasikan 3 dimensi keunggulan:
 
   // 2. FORMAT GAMMA.APP / SLIDES AI OUTLINE
   const gammaOutline = `# ${topic}
-## ${currentSlide.subtitle || 'Executive Strategic Presentation Deck'}
+## ${slides[0]?.subtitle || 'Executive Strategic Presentation Deck'}
 
 ${slides.map((s) => `
 ---
