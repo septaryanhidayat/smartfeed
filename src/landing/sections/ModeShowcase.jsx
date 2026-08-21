@@ -140,7 +140,7 @@ const ALL_MODES = [
     ratio: 'Doc 5W+1H',
     icon: BookOpenText,
     variant: 42,
-    img: '/landing/ads-categories/cat-09.jpg',
+    img: JOURNALISM_PREVIEWS.articleNews,
     bullets: ['Struktur piramida terbalik 5W+1H', 'Opsi Straight News, Feature & Opini', 'Format press release siap rilis'],
   },
   {

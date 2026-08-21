@@ -78,6 +78,7 @@ export const MENU_FB_PREVIEWS = {
 };
 
 export const JOURNALISM_PREVIEWS = {
+  articleNews:  '/landing/journalism/article-news.jpg',
   breakingNews: '/landing/journalism/breaking-news.jpg',
   quoteTokoh:   '/landing/journalism/quote-tokoh.jpg',
   factCheck:    '/landing/journalism/fact-check.jpg',
