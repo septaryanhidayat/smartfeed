@@ -1,5 +1,5 @@
 /**
- * Smart Feed — Magic Prompt Presentasi PPT (Beta) Engine
+ * Smart Feed — Magic Prompt Presentasi PPT & AI Deck Engine
  * Menghasilkan output prompt presentasi PowerPoint & Canva berbasis 10 prinsip desain terbaik:
  * 1. Satu Slide, Satu Pesan Utama
  * 2. Prinsip 5-5-5
@@ -403,102 +403,61 @@ export function buildPresentation(state) {
     });
   }
 
-  // 1. MASTER MAGIC PROMPT (FORMAT BLUEPRINT PERSIS REFERENSI)
-  const magicPrompt = `Buatkan slide presentasi PowerPoint tentang "${displayTopic}"
+  // 1. MASTER ULTRA-RICH MAGIC PROMPT (KOMPREHENSIF DENGAN RIBUAN KARAKTER DETAIL SLIDE-BY-SLIDE)
+  const magicPrompt = `Act as an Elite Presentation Designer, Keynote Strategist, and Content Architect.
+Buatkan materi dan instruksi slide presentasi PowerPoint/Canva berkelas dunia tentang "${displayTopic}".
 
-Buatkan outline lengkap slide presentasi PowerPoint dengan detail berikut:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+I. PARAMETER DASAR PRESENTASI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Topik / Judul Utama : ${displayTopic}
+• Jenis Presentasi    : ${type}
+• Target Audiens      : ${displayAudience}
+• Total Slide         : ${slides.length} Slide Deck (${slideCountLabel})
+• Durasi Sesi         : ${duration}
+• Bahasa Pengantar    : ${language === 'Indonesia' ? 'Bahasa Indonesia' : language === 'Inggris' ? 'Bahasa Inggris' : 'Bilingual (Indonesia / Inggris)'}
+• Gaya Visual         : ${designStyle}
+• Skema Warna Utama   : ${displayColorScheme}
+• Elemen Visual Kunci : ${visualElementsList}
+• Tone Komunikasi     : ${tone}
+${extraNotes ? `• Catatan Khusus      : ${extraNotes}\n` : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+II. 10 ATURAN EMAS DESAIN PRESENTASI (STANDAR WCAG AA & CANVA READY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. SATU SLIDE, SATU PESAN UTAMA: Tidak menumpuk ide berbeda dalam satu slide.
+2. PRINSIP 5-5-5: Maksimal 5 bullet per slide, maks 5 kata per bullet point.
+3. BULLET POINTS EFEKTIF: Gunakan kata kerja aksi aktif dan format terstruktur.
+4. DATA & BUKTI: Sajikan fakta terverifikasi dan metrik kuantitatif terukur.
+5. STRUKTUR LOGIS: Hook Masalah -> Akar Masalah -> Solusi & Framework -> Validasi -> Call to Action.
+6. DESAIN KONSISTEN: Pertahankan hierarki font, spacing, dan palet warna.
+7. KONTRAS TINGGI: Rasio kontras teks minimal 4.5:1 untuk keterbacaan proyektor dan layar ponsel.
+8. HIERARKI TYPOGRAPHY: Judul 36-44pt, Subjudul 24-28pt, Body/Bullet 18-24pt.
+9. VISUAL STORYTELLING: Setiap slide wajib memiliki konsep visual 16:9 yang jelas.
+10. WHITE SPACE: Sisakan 30-40% ruang kosong agar slide tidak sesak dan terasa premium.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-INFORMASI DASAR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• Judul / Topik     : ${displayTopic}
-• Jenis Presentasi  : ${type}
-• Target Audiens    : ${displayAudience}
-• Jumlah Slide      : ${slides.length} slide (${slideCountLabel})
-• Durasi            : ${duration}
-• Bahasa            : ${language === 'Indonesia' ? 'Bahasa Indonesia' : language === 'Inggris' ? 'Bahasa Inggris' : 'Bilingual (Indonesia / Inggris)'}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+III. CETAK BIRU SLIDE-BY-SLIDE (EXECUTIVE CONTENT BLUEPRINT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${slides.map((s) => `[SLIDE ${s.slideNo}: ${s.title.toUpperCase()}]
+• Kategori / Eyebrow : ${s.eyebrow}
+• Pesan Utama        : ${s.subtitle || s.title}
+• Tata Letak (Layout): ${s.layout || 'Split Grid 2-Kolom Berimbang dengan Box Sorot'}
+• Konten Teks Kunci  :
+${s.bullets.map((b) => `  - ${b}`).join('\n')}
+${s.goldenTakeaway ? `• Golden Takeaway    : ★ "${s.goldenTakeaway}"\n` : ''}• Konsep Visual 16:9 : ${s.visualPrompt}
+• Catatan Presenter  : "${s.speakerNotes}"
+`).join('\n────────────────────────────────────────────────────────────\n')}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-KONTEN & PESAN UTAMA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Poin-poin kunci yang harus disampaikan:
-${pointsList.map((l) => (l.startsWith('-') ? l : `- ${l}`)).join('\n')}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IV. CALL TO ACTION & LANGKAH PENUTUP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pesan penutup yang harus ditegaskan kepada audiens:
+"${displayCta}"
 
-${dataEvidence ? `Data / Bukti / Statistik yang akan digunakan:\n${dataEvidence}\n\n` : ''}Call to Action akhir presentasi:
-→ ${displayCta}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PRINSIP DESAIN YANG HARUS DITERAPKAN (CANVA & POWERPOINT READY)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Terapkan prinsip-prinsip berikut secara ketat pada setiap slide:
-
-1. SATU SLIDE, SATU PESAN UTAMA
-   Setiap slide hanya mengkomunikasikan satu ide pokok. Tidak ada dua gagasan 
-   utama dalam satu slide. Buat judul slide mencerminkan pesan tersebut.
-
-2. PRINSIP 5-5-5
-   Maksimum 5 bullet points per slide, maksimum 5 kata per bullet point, 
-   dan tidak lebih dari 5 slide berturut-turut dengan format teks penuh.
-
-3. BULLET POINTS EFEKTIF
-   Gunakan bullet points hanya untuk daftar atau rincian penting. Buat setiap 
-   poin ringkas, padat, dan diawali kata kerja aksi jika memungkinkan.
-
-4. BERBASIS DATA DAN BUKTI
-   Sertakan data, fakta, atau studi kasus yang relevan pada slide yang 
-   membutuhkan penguatan argumen. Tampilkan angka kunci secara menonjol.
-
-5. STRUKTUR LOGIS
-   Alur presentasi harus runtut dan mengalir:
-   - Pembuka (Hook & Konteks)
-   - Isi (Masalah → Solusi → Bukti/Data → Manfaat)
-   - Penutup (Ringkasan & Call to Action yang jelas)
-
-6. DESAIN SIMPEL DAN KONSISTEN
-   Gunakan tata letak yang bersih, tidak berantakan. Pertahankan konsistensi 
-   warna, font, dan gaya visual dari slide pertama hingga terakhir.
-
-7. KONTRAS TINGGI
-   Pastikan teks mudah dibaca dengan kontras yang kuat antara warna teks 
-   dan latar belakang (minimal rasio kontras 4.5:1 / standar WCAG AA).
-
-8. FONT MUDAH DIBACA
-   Gunakan maksimal 2 jenis font (satu untuk judul, satu untuk isi). 
-   Ukuran font: Judul 36–44 pt, Subjudul 24–28 pt, Isi/Bullet 18–24 pt.
-
-9. VISUAL BERKUALITAS TINGGI
-   Sertakan saran penempatan elemen visual yang relevan untuk setiap slide:
-   (${visualElementsList}).
-
-10. MANFAATKAN WHITE SPACE
-    Berikan ruang kosong yang cukup di sekitar teks dan elemen visual. 
-    Jangan penuhi seluruh area slide. White space membuat slide terlihat 
-    profesional dan tidak melelahkan mata.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-FORMAT OUTPUT YANG DIMINTA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Untuk SETIAP slide, berikan rincian dengan format berikut:
-
-[Slide X: Judul Slide yang Menarik]
-• Pesan Utama   : [1 kalimat pesan inti slide ini]
-• Konten Teks   :
-  - [Poin 1 - ringkas & padat]
-  - [Poin 2 - ringkas & padat]
-  - [Poin 3 - ringkas & padat]
-• Elemen Visual : [Saran visual spesifik: jenis chart / ikon / foto / diagram]
-• AI Image Prompt: [Prompt lengkap format 16:9 untuk generate gambar AI di Midjourney/Flux/DALL-E]
-• Catatan Presenter: [Poin bicara 2-3 kalimat untuk presenter saat menampilkan slide ini]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PANDUAN TAMBAHAN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• Gaya / Tone Desain : ${designStyle}
-• Skema Warna Utama  : ${displayColorScheme}
-• Elemen Visual Kunci: ${visualElementsList}
-• Tone / Gaya Bahasa : ${tone}${extraNotes ? `\n• Catatan Khusus      : ${extraNotes}` : ''}
-
-Buatkan outline slide ini dengan lengkap, terstruktur, dan siap pakai!`;
+Tugas Anda:
+1. Perluas narasi slide di atas jika dibutuhkan tambahan penjelasan kontekstual.
+2. Pertahankan akurasi metode T-C-E-I dan terminologi teknologi 2026.
+3. Format output siap disalin ke slide builder (Canva, Gamma, PowerPoint, Keynote).`;
 
   // 2. GAMMA & CANVA (DOCS TO DECK) OPTIMIZED OUTLINE
   const gammaOutline = `# ${displayTopic}
@@ -512,7 +471,7 @@ ${s.goldenTakeaway ? `* ⭐ **Golden Takeaway:** ${s.goldenTakeaway}` : ''}
 * 🎙️ **Catatan Presenter:** ${s.speakerNotes}
 `).join('\n---\n\n')}
 
-*Catatan untuk Canva: Salin teks di atas, buka Canva -> 'Docs to Deck' (Konversi Dokumen ke Presentasi), lalu pilih template tema '${designStyle}'.*`;
+*Petunjuk Canva Gratis (Tanpa Bayar): Buat Desain Presentasi 16:9 Baru di Canva -> Pilih Template Gratis -> Salin judul dan poin slide di atas per halaman!*`;
 
   // 3. VBA MACRO SCRIPT FOR POWERPOINT
   const vbaMacro = `' ====================================================================
