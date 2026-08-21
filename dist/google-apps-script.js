@@ -1,9 +1,9 @@
 /**
  * ==============================================================================
- * SMARTFEED — GOOGLE APPS SCRIPT WEBHOOK, AUTO-EMAIL & DATABASE HANDLER (V3.0)
+ * SMARTFEED — GOOGLE APPS SCRIPT WEBHOOK, AUTO-EMAIL & DATABASE HANDLER (V3.2)
  * ==============================================================================
  * 
- * CARA MEMASANG / UPDATE DI GOOGLE SPREADSHEET:
+ * CARA UPDATE DI GOOGLE SPREADSHEET:
  * 1. Buka Google Spreadsheet Anda.
  * 2. Klik menu: Extensions (Ekstensi) > Apps Script.
  * 3. Hapus semua isi kode lama, lalu PASTE SEMUA kode di bawah ini.
@@ -18,6 +18,27 @@
  */
 
 function doPost(e) {
+  return handleIncomingWebhook(e, true);
+}
+
+function doGet(e) {
+  // Jika ada parameter email yang dikirim via GET, proses simpan data & kirim email
+  if (e && e.parameter && (e.parameter.email || e.parameter.customer_email)) {
+    return handleIncomingWebhook(e, false);
+  }
+
+  // Jika GET biasa tanpa parameter (misal untuk cek status webhook)
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var userSheet = ss.getSheetByName('Users') || ss.getSheets()[0];
+  var count = userSheet ? Math.max(0, userSheet.getLastRow() - 1) : 0;
+  return ContentService.createTextOutput(JSON.stringify({
+    status: 'SmartFeed Database Webhook is Online',
+    total_active_users: count,
+    timestamp: new Date().toISOString()
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function handleIncomingWebhook(e, isPost) {
   var lock = LockService.getScriptLock();
   try {
     lock.waitLock(15000);
@@ -30,13 +51,22 @@ function doPost(e) {
 
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var rawData = e.postData ? e.postData.contents : '';
+    var rawData = (e && e.postData) ? e.postData.contents : '';
     var data = {};
 
-    try {
-      data = JSON.parse(rawData);
-    } catch (parseErr) {
-      data = e.parameter || {};
+    if (rawData) {
+      try {
+        data = JSON.parse(rawData);
+      } catch (parseErr) {
+        data = {};
+      }
+    }
+
+    // Merge dengan query parameters jika ada
+    if (e && e.parameter) {
+      for (var k in e.parameter) {
+        if (!data[k]) data[k] = e.parameter[k];
+      }
     }
 
     var eventType = data.type || data.event || 'register';
@@ -48,44 +78,52 @@ function doPost(e) {
     var merchantRef = data.merchant_ref || data.reference || ('TRX-' + new Date().getTime());
     var now = new Date();
 
-    // ─────────────────────────────────────────────────────────────
-    // 1. EVENT TRIPAY PAYMENT SUCCESS
-    // ─────────────────────────────────────────────────────────────
-    if (eventType === 'tripay_payment_success' || data.status === 'PAID') {
-      
-      // A. Simpan ke Tab "Users"
-      var userSheet = getOrCreateSheet(ss, 'Users', ['Email', 'Nama', 'No HP', 'Status', 'Metode Bayar', 'Tanggal Daftar', 'Terakhir Aktif']);
-      if (email) {
-        saveOrUpdateUser(userSheet, {
-          email: email,
-          name: name,
-          phone: phone,
-          status: 'Active',
-          source: paymentMethod,
-          created_at: now,
-          last_active: now
-        });
-      }
+    if (!email || !email.includes('@')) {
+      lock.releaseLock();
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        message: 'Email tidak valid atau kosong.'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
 
-      // B. Sinkronkan juga ke Tab Pertama (Sheet1 / gid=0) agar CSV Publish selalu update
-      var firstSheet = ss.getSheets()[0];
-      if (firstSheet && firstSheet.getName() !== 'Transactions' && firstSheet.getName() !== 'Activity_Logs') {
-        saveOrUpdateUser(firstSheet, {
-          email: email,
-          name: name,
-          phone: phone,
-          status: 'Active',
-          source: paymentMethod,
-          created_at: now,
-          last_active: now
-        });
-      }
+    // ─────────────────────────────────────────────────────────────
+    // 1. SIMPAN KE TAB "Users" (UNTUK MANAJEMEN USER)
+    // ─────────────────────────────────────────────────────────────
+    var userSheet = getOrCreateSheet(ss, 'Users', ['Email', 'Nama', 'No HP', 'Status', 'Metode Bayar', 'Tanggal Daftar', 'Terakhir Aktif']);
+    saveOrUpdateUser(userSheet, {
+      email: email,
+      name: name,
+      phone: phone,
+      status: 'Active',
+      source: paymentMethod,
+      created_at: now,
+      last_active: now
+    });
 
-      // C. Simpan ke Tab "Transactions"
+    // ─────────────────────────────────────────────────────────────
+    // 2. SIMPAN JUGA KE TAB PERTAMA (Sheet1 / gid=0) AGAR CSV PUBLISH SELALU AKTIF
+    // ─────────────────────────────────────────────────────────────
+    var firstSheet = ss.getSheets()[0];
+    if (firstSheet && firstSheet.getName() !== 'Transactions' && firstSheet.getName() !== 'Activity_Logs') {
+      saveOrUpdateUser(firstSheet, {
+        email: email,
+        name: name,
+        phone: phone,
+        status: 'Active',
+        source: paymentMethod,
+        created_at: now,
+        last_active: now
+      });
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // 3. CATAT TRANSAKSI JIKA EVENT TRIPAY / STATUS PAID
+    // ─────────────────────────────────────────────────────────────
+    if (eventType === 'tripay_payment_success' || data.status === 'PAID' || eventType === 'paid') {
       var trxSheet = getOrCreateSheet(ss, 'Transactions', ['Merchant Ref', 'Reference', 'Email', 'Nama', 'No HP', 'Nominal', 'Metode Bayar', 'Waktu Bayar', 'Status']);
       if (!isTransactionExists(trxSheet, merchantRef)) {
         trxSheet.appendRow([
-          data.merchant_ref || '-',
+          data.merchant_ref || merchantRef,
           data.reference || '-',
           email,
           name,
@@ -97,109 +135,17 @@ function doPost(e) {
         ]);
       }
 
-      // D. Kirim Email Notifikasi Akses Otomatis ke Pembeli
-      if (email && email.includes('@')) {
-        sendBuyerWelcomeEmail(email, name, amount, paymentMethod, merchantRef);
-      }
-
-      lock.releaseLock();
-      return ContentService.createTextOutput(JSON.stringify({
-        success: true,
-        message: 'TriPay payment recorded, user activated, and welcome email sent.'
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    // ─────────────────────────────────────────────────────────────
-    // 2. EVENT REGISTER / KLAIM AKSES
-    // ─────────────────────────────────────────────────────────────
-    if (eventType === 'register') {
-      if (!email) {
-        lock.releaseLock();
-        return ContentService.createTextOutput(JSON.stringify({
-          success: false,
-          message: 'Email wajib disertakan.'
-        })).setMimeType(ContentService.MimeType.JSON);
-      }
-
-      var userSheet = getOrCreateSheet(ss, 'Users', ['Email', 'Nama', 'No HP', 'Status', 'Sumber', 'Tanggal Daftar', 'Terakhir Aktif']);
-      var isNew = saveOrUpdateUser(userSheet, {
-        email: email,
-        name: name,
-        phone: phone,
-        status: 'Active',
-        source: data.source || 'Registrasi',
-        created_at: now,
-        last_active: now
-      });
-
-      // Sinkron ke tab pertama
-      var firstSheet = ss.getSheets()[0];
-      if (firstSheet && firstSheet.getName() !== 'Transactions' && firstSheet.getName() !== 'Activity_Logs') {
-        saveOrUpdateUser(firstSheet, {
-          email: email,
-          name: name,
-          phone: phone,
-          status: 'Active',
-          source: data.source || 'Registrasi',
-          created_at: now,
-          last_active: now
-        });
-      }
-
-      lock.releaseLock();
-      return ContentService.createTextOutput(JSON.stringify({
-        success: true,
-        is_new: isNew,
-        message: isNew ? 'Akun baru berhasil didaftarkan.' : 'Akun sudah terdaftar (data diperbarui).'
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    // ─────────────────────────────────────────────────────────────
-    // 3. EVENT ACTIVITY LOGS
-    // ─────────────────────────────────────────────────────────────
-    if (eventType === 'activity') {
-      var logSheet = getOrCreateSheet(ss, 'Activity_Logs', ['Waktu', 'Email', 'Nama', 'Aksi', 'Tool / Mode', 'Detail']);
-      logSheet.appendRow([
-        now,
-        email || 'anonim',
-        name || '-',
-        data.action || '-',
-        data.tool || '-',
-        data.details || '-'
-      ]);
-
-      if (email && email !== 'anonim') {
-        var userSheet = ss.getSheetByName('Users') || ss.getSheets()[0];
-        if (userSheet) {
-          updateUserLastActive(userSheet, email, now);
-        }
-      }
-
-      lock.releaseLock();
-      return ContentService.createTextOutput(JSON.stringify({
-        success: true,
-        message: 'Activity log saved.'
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    // Default fallback jika ada email
-    if (email) {
-      var userSheet = getOrCreateSheet(ss, 'Users', ['Email', 'Nama', 'No HP', 'Status', 'Sumber', 'Tanggal Daftar', 'Terakhir Aktif']);
-      saveOrUpdateUser(userSheet, {
-        email: email,
-        name: name,
-        phone: phone,
-        status: 'Active',
-        source: data.source || 'Webhook',
-        created_at: now,
-        last_active: now
-      });
+      // ─────────────────────────────────────────────────────────────
+      // 4. KIRIM EMAIL NOTIFIKASI AKSES OTOMATIS KE INBOX PEMBELI
+      // ─────────────────────────────────────────────────────────────
+      sendBuyerWelcomeEmail(email, name, amount, paymentMethod, merchantRef);
     }
 
     lock.releaseLock();
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
-      message: 'Request processed.'
+      email: email,
+      message: 'Data berhasil disimpan ke Spreadsheet dan notifikasi email telah diproses.'
     })).setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
@@ -211,25 +157,14 @@ function doPost(e) {
   }
 }
 
-function doGet(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var userSheet = ss.getSheetByName('Users') || ss.getSheets()[0];
-  var count = userSheet ? Math.max(0, userSheet.getLastRow() - 1) : 0;
-  return ContentService.createTextOutput(JSON.stringify({
-    status: 'SmartFeed Database Webhook is Online',
-    total_active_users: count,
-    timestamp: new Date().toISOString()
-  })).setMimeType(ContentService.MimeType.JSON);
-}
-
 // ─────────────────────────────────────────────────────────────
-// KIRIM EMAIL OTOMATIS KE PEMBELI (WELCOME EMAIL)
+// PENGIRIMAN EMAIL OTOMATIS KE PEMBELI (WELCOME EMAIL)
 // ─────────────────────────────────────────────────────────────
 function sendBuyerWelcomeEmail(email, name, amount, method, ref) {
   try {
-    var subject = '🎉 Pembayaran Berhasil! Akses SmartFeed AI Studio Anda Sudah Aktif';
+    var subject = '🎉 Akses SmartFeed AI Studio Anda Sudah Aktif!';
     var displayName = name ? name : 'Sahabat SmartFeed';
-    var formattedAmount = Number(amount).toLocaleString('id-ID');
+    var formattedAmount = (amount && Number(amount) > 0) ? Number(amount).toLocaleString('id-ID') : '1.000';
 
     var htmlBody = ''
       + '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0c0d12; color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #27272a;">'
@@ -239,12 +174,12 @@ function sendBuyerWelcomeEmail(email, name, amount, method, ref) {
       + '  </div>'
       + '  <div style="padding: 28px 24px; background-color: #12131a;">'
       + '    <p style="font-size: 16px; color: #f4f4f5; margin-top: 0;">Halo <strong>' + displayName + '</strong>,</p>'
-      + '    <p style="font-size: 14px; color: #a1a1aa; line-height: 1.6;">Terima kasih atas pembelian Anda! Pembayaran sebesar <strong>Rp ' + formattedAmount + '</strong> via <strong>' + method + '</strong> (Ref: ' + ref + ') telah kami terima dan diverifikasi secara otomatis.</p>'
+      + '    <p style="font-size: 14px; color: #a1a1aa; line-height: 1.6;">Terima kasih! Pembayaran Anda sebesar <strong>Rp ' + formattedAmount + '</strong> via <strong>' + (method || 'TriPay') + '</strong> telah berhasil diverifikasi.</p>'
       + '    <div style="background-color: #1a1b26; border: 1px solid #3b82f6; border-radius: 12px; padding: 20px; margin: 24px 0;">'
       + '      <h3 style="margin: 0 0 12px; font-size: 15px; color: #60a5fa;">🔑 Detail Akses Login Anda:</h3>'
-      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Email:</strong> <span style="color: #fbbf24;">' + email + '</span></p>'
-      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Password Default:</strong> <span style="font-family: monospace; background: #27272a; padding: 2px 6px; border-radius: 4px; color: #4ade80;">SmartFeedOKE</span></p>'
-      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Status:</strong> <span style="color: #4ade80; font-weight: bold;">Aktif Permanen</span></p>'
+      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Email:</strong> <span style="color: #fbbf24; font-weight: bold;">' + email + '</span></p>'
+      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Password Default:</strong> <span style="font-family: monospace; background: #27272a; padding: 3px 8px; border-radius: 4px; color: #4ade80; font-weight: bold;">SmartFeedOKE</span></p>'
+      + '      <p style="margin: 6px 0; font-size: 14px; color: #ffffff;"><strong>Status Akun:</strong> <span style="color: #4ade80; font-weight: bold;">Aktif Permanen (Lifetime)</span></p>'
       + '    </div>'
       + '    <div style="text-align: center; margin: 30px 0;">'
       + '      <a href="https://smartfeed.berandadigital.net/app" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: bold; font-size: 15px; display: inline-block;">🚀 Masuk ke Studio SmartFeed Sekarang</a>'
@@ -264,7 +199,7 @@ function sendBuyerWelcomeEmail(email, name, amount, method, ref) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS (ANTI-DUPLICATE)
 // ─────────────────────────────────────────────────────────────
 function saveOrUpdateUser(sheet, user) {
   var lastRow = sheet.getLastRow();
@@ -296,18 +231,6 @@ function saveOrUpdateUser(sheet, user) {
     user.last_active
   ]);
   return true;
-}
-
-function updateUserLastActive(sheet, email, time) {
-  var lastRow = sheet.getLastRow();
-  if (lastRow <= 1) return;
-  var emailsRange = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
-  for (var i = 0; i < emailsRange.length; i++) {
-    if ((emailsRange[i][0] || '').toString().toLowerCase().trim() === email) {
-      sheet.getRange(i + 2, 7).setValue(time);
-      break;
-    }
-  }
 }
 
 function isTransactionExists(sheet, ref) {

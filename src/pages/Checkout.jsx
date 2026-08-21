@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ShieldCheck, Lock, ArrowRight, ArrowLeft,
   RefreshCw, AlertCircle, Sparkles, Building2, Wallet, QrCode, Check, CheckCircle2, Copy, LogIn
@@ -110,6 +110,32 @@ export default function Checkout() {
   const priceNum = CONFIG.price || '1.000';
   const priceStrikeNum = CONFIG.priceStrike || '499.000';
   const discountFormatted = discountInt > 0 ? discountInt.toLocaleString('id-ID') : '0';
+
+  // Double Safety Net: Sinkronkan otomatis ke Google Sheet saat mendarat di halaman sukses
+  useEffect(() => {
+    if (isPaidReturn && returnEmail && CONFIG.sheetWebhookUrl) {
+      try {
+        const payload = JSON.stringify({
+          event: 'tripay_payment_success',
+          status: 'PAID',
+          merchant_ref: returnRef || ('SF-RET-' + Date.now()),
+          email: returnEmail,
+          name: returnName || '',
+          amount: priceInt,
+          source: 'TriPay Checkout Return'
+        });
+
+        fetch(CONFIG.sheetWebhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload
+        }).catch(() => {});
+      } catch (err) {
+        console.warn('[checkout] sync err', err);
+      }
+    }
+  }, [isPaidReturn, returnEmail, returnRef, returnName, priceInt]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

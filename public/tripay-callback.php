@@ -13,6 +13,10 @@ $rawPayload = file_get_contents('php://input');
 $signatureHeader = $_SERVER['HTTP_X_CALLBACK_SIGNATURE'] ?? '';
 $eventHeader = $_SERVER['HTTP_X_CALLBACK_EVENT'] ?? '';
 
+// Log incoming callback untuk audit
+$logFile = __DIR__ . '/tripay-log.txt';
+$timestamp = date('Y-m-d H:i:s');
+
 if (empty($rawPayload)) {
     echo json_encode([
         'success' => true,
@@ -25,6 +29,7 @@ if (empty($rawPayload)) {
 $expectedSignature = hash_hmac('sha256', $rawPayload, TRIPAY_PRIVATE_KEY);
 
 if (!hash_equals($expectedSignature, $signatureHeader)) {
+    @file_put_contents($logFile, "[$timestamp] [ERROR] Invalid Signature. Header: $signatureHeader\n", FILE_APPEND);
     http_response_code(400);
     echo json_encode([
         'success' => false,
@@ -39,16 +44,25 @@ if ($eventHeader === 'payment_status') {
     $status = strtoupper($data['status'] ?? '');
     
     if ($status === 'PAID') {
-        // Teruskan data pembeli ke Google Spreadsheet Webhook untuk aktivasi otomatis
+        $customerEmail = trim($data['customer_email'] ?? '');
+        $customerName  = trim($data['customer_name'] ?? '');
+        $customerPhone = trim($data['customer_phone'] ?? '');
+        $amount        = $data['total_amount'] ?? $data['amount'] ?? 0;
+        $paymentMethod = $data['payment_method'] ?? $data['payment_name'] ?? 'TriPay';
+        $merchantRef   = $data['merchant_ref'] ?? '';
+        $reference     = $data['reference'] ?? '';
+
+        // 1. Kirim via POST dengan CURLOPT_POSTREDIR untuk menangani 302 redirect Google Apps Script
         $forwardPayload = json_encode([
             'event'          => 'tripay_payment_success',
-            'merchant_ref'   => $data['merchant_ref'] ?? '',
-            'reference'      => $data['reference'] ?? '',
-            'name'           => $data['customer_name'] ?? '',
-            'email'          => $data['customer_email'] ?? '',
-            'phone'          => $data['customer_phone'] ?? '',
-            'amount'         => $data['total_amount'] ?? $data['amount'] ?? 0,
-            'payment_method' => $data['payment_method'] ?? $data['payment_name'] ?? '',
+            'merchant_ref'   => $merchantRef,
+            'reference'      => $reference,
+            'name'           => $customerName,
+            'email'          => $customerEmail,
+            'phone'          => $customerPhone,
+            'amount'         => $amount,
+            'payment_method' => $paymentMethod,
+            'status'         => 'PAID',
             'paid_at'        => $data['paid_at'] ?? time(),
             'raw'            => $data
         ]);
@@ -62,11 +76,39 @@ if ($eventHeader === 'payment_status') {
             'Content-Length: ' . strlen($forwardPayload)
         ]);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        if (defined('CURLOPT_POSTREDIR')) {
+            curl_setopt($ch, CURLOPT_POSTREDIR, 3); // Preserve POST on 301 & 302 redirects
+        }
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         
         $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        // 2. Secondary Safety Net: Fallback via GET jika POST terhalang redirect
+        $queryParams = http_build_query([
+            'event'          => 'tripay_payment_success',
+            'merchant_ref'   => $merchantRef,
+            'reference'      => $reference,
+            'name'           => $customerName,
+            'email'          => $customerEmail,
+            'phone'          => $customerPhone,
+            'amount'         => $amount,
+            'payment_method' => $paymentMethod,
+            'status'         => 'PAID'
+        ]);
+
+        $fallbackUrl = GOOGLE_SCRIPT_WEBHOOK . (strpos(GOOGLE_SCRIPT_WEBHOOK, '?') !== false ? '&' : '?') . $queryParams;
+        $chFallback = curl_init($fallbackUrl);
+        curl_setopt($chFallback, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($chFallback, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($chFallback, CURLOPT_TIMEOUT, 15);
+        curl_setopt($chFallback, CURLOPT_SSL_VERIFYPEER, true);
+        $fallbackResult = curl_exec($chFallback);
+        curl_close($chFallback);
+
+        @file_put_contents($logFile, "[$timestamp] [SUCCESS PAID] Ref: $merchantRef | Email: $customerEmail | POST Result (HTTP $httpCode): $result | Fallback Result: $fallbackResult\n", FILE_APPEND);
     }
 
     echo json_encode([
@@ -76,7 +118,6 @@ if ($eventHeader === 'payment_status') {
     exit;
 }
 
-// Untuk event lainnya
 echo json_encode([
     'success' => true,
     'message' => 'Event acknowledged'
