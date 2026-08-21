@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import {
   Presentation, Sparkles, LayoutTemplate, Layers, Palette, Users, BookOpen,
   ChevronLeft, ChevronRight, Copy, Check, Download, Wand2, Mic, Eye, FileText, MonitorPlay,
-  CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, Shuffle, Briefcase
+  CheckCircle2, Target, Award, ArrowRight, TrendingUp, ShieldCheck, Flame, Compass, Shuffle, Briefcase,
+  Code2, ExternalLink, Library, Rocket
 } from 'lucide-react';
 import {
   PRESENTATION_USE_CASES,
@@ -13,6 +14,7 @@ import { buildPresentation } from '../prompts/buildPresentation.js';
 
 export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [outputTab, setOutputTab] = useState('notebooklm'); // 'notebooklm' | 'gamma' | 'vba' | 'prompt'
   const [copied, setCopied] = useState(false);
   const [copiedVisual, setCopiedVisual] = useState(false);
 
@@ -32,12 +34,26 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
     return buildPresentation(state);
   }, [state]);
 
-  const { slides, styleObj, useCaseObj, markdownPrompt } = result;
+  const { slides, notebookLmDoc, gammaOutline, vbaMacro, markdownPrompt } = result;
 
   const currentSlide = slides[activeSlideIndex] || slides[0] || {};
 
+  const getCurrentOutputContent = () => {
+    switch (outputTab) {
+      case 'notebooklm':
+        return notebookLmDoc;
+      case 'gamma':
+        return gammaOutline;
+      case 'vba':
+        return vbaMacro;
+      case 'prompt':
+      default:
+        return markdownPrompt;
+    }
+  };
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(markdownPrompt);
+    navigator.clipboard.writeText(getCurrentOutputContent());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -51,11 +67,15 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
   };
 
   const handleDownload = () => {
-    const blob = new Blob([markdownPrompt], { type: 'text/markdown;charset=utf-8;' });
+    let content = getCurrentOutputContent();
+    let ext = outputTab === 'vba' ? 'vba.txt' : 'md';
+    let prefix = outputTab === 'notebooklm' ? 'NotebookLM-Source' : outputTab === 'gamma' ? 'Gamma-Outline' : outputTab === 'vba' ? 'PowerPoint-Macro' : 'Slide-Deck';
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Slide-Deck-${(topic || 'presentation').replace(/\s+/g, '-').toLowerCase()}.md`;
+    link.download = `${prefix}-${(topic || 'presentation').replace(/\s+/g, '-').toLowerCase()}.${ext}`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -86,10 +106,10 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
           </span>
           <div>
             <div className="text-xs font-bold text-text flex items-center gap-1.5">
-              <span>Pilihan Template Layout Eksekutif</span>
+              <span>Studio Presentasi &amp; Dokumen Sumber NotebookLM</span>
               <span className="text-[9px] px-1.5 py-0.2 rounded bg-accent/20 text-accent font-bold mono">M20</span>
             </div>
-            <div className="text-[10px] text-text-dim">Pilih template layout atau klik acak untuk inspirasi struktur presentasi</div>
+            <div className="text-[10px] text-text-dim">Format siap pakai untuk Google NotebookLM, Gamma.app, Canva, dan PowerPoint VBA</div>
           </div>
         </div>
 
@@ -125,7 +145,7 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
       {/* Main Studio Layout: Controls (Left) + 16:9 Masterclass Live Deck (Right) */}
       <div className="grid lg:grid-cols-[1fr_1.35fr] gap-6 items-start">
         
-        {/* LEFT COLUMN: Input Configuration */}
+        {/* LEFT COLUMN: Input Configuration & Multi-Engine Exporter */}
         <div className="space-y-4">
           <div className="surface p-5 rounded-2xl border border-border space-y-4">
             <div className="text-xs font-bold text-text flex items-center justify-between border-b border-border pb-2.5">
@@ -240,35 +260,134 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             </div>
           </div>
 
-          {/* Master Action Buttons */}
-          <div className="surface p-4 rounded-2xl border border-border space-y-2.5">
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="w-full btn-cta text-xs !py-3 justify-center shadow-md cursor-pointer"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  <span>Prompt Master Tersalin!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4" />
-                  <span>Salin Prompt Master Presentasi (AI Deck)</span>
-                </>
-              )}
-            </button>
+          {/* TARGET OUTPUT FORMAT SELECTOR (NOTEBOOKLM, GAMMA, VBA, PROMPT) */}
+          <div className="surface p-4 rounded-2xl border border-border space-y-3">
+            <div className="text-xs font-bold text-text flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-accent" />
+              <span>Pilih Format Ekspor AI yang Diinginkan:</span>
+            </div>
 
-            <button
-              type="button"
-              onClick={handleDownload}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-bg-deep hover:bg-bg-elev text-xs font-bold text-text flex items-center justify-center gap-2 transition cursor-pointer"
-            >
-              <Download className="w-4 h-4 text-accent" />
-              <span>Download Struktur Slide (.MD)</span>
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setOutputTab('notebooklm')}
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                  outputTab === 'notebooklm'
+                    ? 'bg-accent/15 border-accent text-text font-bold shadow-xs'
+                    : 'bg-bg-panel border-border text-text-mut hover:text-text hover:bg-bg-elev'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 text-xs">
+                  <Library className="w-3.5 h-3.5 text-amber-400" />
+                  <span>NotebookLM Doc</span>
+                </div>
+                <div className="text-[10px] text-text-dim mt-0.5">Format riset, podcast & brief</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOutputTab('gamma')}
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                  outputTab === 'gamma'
+                    ? 'bg-accent/15 border-accent text-text font-bold shadow-xs'
+                    : 'bg-bg-panel border-border text-text-mut hover:text-text hover:bg-bg-elev'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 text-xs">
+                  <Rocket className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Gamma.app / Canva</span>
+                </div>
+                <div className="text-[10px] text-text-dim mt-0.5">1-click import slide otomatis</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOutputTab('vba')}
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                  outputTab === 'vba'
+                    ? 'bg-accent/15 border-accent text-text font-bold shadow-xs'
+                    : 'bg-bg-panel border-border text-text-mut hover:text-text hover:bg-bg-elev'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 text-xs">
+                  <Code2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>PowerPoint VBA</span>
+                </div>
+                <div className="text-[10px] text-text-dim mt-0.5">Alt+F11 bebas korup file</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOutputTab('prompt')}
+                className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                  outputTab === 'prompt'
+                    ? 'bg-accent/15 border-accent text-text font-bold shadow-xs'
+                    : 'bg-bg-panel border-border text-text-mut hover:text-text hover:bg-bg-elev'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 text-xs">
+                  <FileText className="w-3.5 h-3.5 text-blue-400" />
+                  <span>Prompt AI Master</span>
+                </div>
+                <div className="text-[10px] text-text-dim mt-0.5">ChatGPT, Claude, Gemini</div>
+              </button>
+            </div>
+
+            {/* Quick guide alert based on selected tab */}
+            <div className="p-3 rounded-xl bg-bg-deep border border-border text-[11px] text-text-mut leading-relaxed">
+              {outputTab === 'notebooklm' && (
+                <div>
+                  💡 <strong>Cara Pakai di Google NotebookLM</strong>: Download file .MD ini, lalu buka <a href="https://notebooklm.google.com" target="_blank" rel="noreferrer" className="text-accent underline">notebooklm.google.com</a> dan upload sebagai <em>Source</em>. NotebookLM akan membuatkan <strong>Audio Overview (Podcast Diskusi AI)</strong>, Tanya Jawab Cerdas, dan Ringkasan Eksekutif super mendalam!
+                </div>
+              )}
+              {outputTab === 'gamma' && (
+                <div>
+                  💡 <strong>Cara Pakai di Gamma.app</strong>: Buka <a href="https://gamma.app" target="_blank" rel="noreferrer" className="text-accent underline">gamma.app</a> &gt; Klik <em>Create New</em> &gt; <em>Paste in Text</em> &gt; Paste outline ini &gt; Pilih tema desain. Gamma akan membuat 10 slide visual 16:9 beresolusi tinggi otomatis tanpa error!
+                </div>
+              )}
+              {outputTab === 'vba' && (
+                <div>
+                  💡 <strong>Cara Pakai di Microsoft PowerPoint</strong>: Buka PowerPoint kosong &gt; Tekan <code>Alt + F11</code> &gt; Klik <code>Insert &gt; Module</code> &gt; Paste kode VBA ini &gt; Tekan <code>F5</code>. PowerPoint akan membuat seluruh slide 16:9 dengan warna navy &amp; gold resmi langsung di aplikasi tanpa corrupt!
+                </div>
+              )}
+              {outputTab === 'prompt' && (
+                <div>
+                  💡 <strong>Cara Pakai di AI Chatbot</strong>: Paste prompt lengkap ini ke ChatGPT 4o, Claude 3.5 Sonnet, atau Gemini Pro untuk menghasilkan naskah presentasi, transkrip pidato, maupun visual prompt lengkap.
+                </div>
+              )}
+            </div>
+
+            {/* Master Action Buttons */}
+            <div className="space-y-2 pt-1">
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="w-full btn-cta text-xs !py-3 justify-center shadow-md cursor-pointer"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>Konten {outputTab.toUpperCase()} Tersalin!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span>Salin Format {outputTab === 'notebooklm' ? 'Dokumen NotebookLM' : outputTab === 'gamma' ? 'Outline Gamma.app' : outputTab === 'vba' ? 'Script VBA PowerPoint' : 'Prompt Master AI'}</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="w-full px-4 py-2.5 rounded-xl border border-border bg-bg-deep hover:bg-bg-elev text-xs font-bold text-text flex items-center justify-center gap-2 transition cursor-pointer"
+              >
+                <Download className="w-4 h-4 text-accent" />
+                <span>Download File ({outputTab === 'vba' ? '.TXT / .VBA' : '.MD'})</span>
+              </button>
+            </div>
           </div>
+
         </div>
 
         {/* RIGHT COLUMN: 16:9 Live Masterclass Slide Deck Canvas */}

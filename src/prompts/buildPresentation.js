@@ -235,7 +235,244 @@ export function buildPresentation(state) {
     visualPrompt: `16:9 presentation slide showing 4 horizontal roadmap milestones at top with dark blue badge headers, a large dark navy container at middle labeled "Yang Harus Segera Disepakati" with 4 golden check items, bottom warm gold ribbon with inspirational quote, executive finish.`,
   });
 
-  // Master Prompt for AI Deck Generators
+  // 1. FORMAT NOTEBOOKLM (DEEP EXECUTIVE BRIEFING DOCUMENT)
+  const notebookLmDoc = `# DOKUMEN SUMBER EKSEKUTIF (NOTEBOOKLM BRIEFING DOC)
+**Judul Dokumen**: ${topic}
+**Inisiator / Presenter**: ${presenter || 'Tim Penyusun'}
+**Target Stakeholder**: ${audience || 'Pemangku Kepentingan'}
+**Kategori**: ${useCaseObj.name}
+**Tanggal Formulasi**: ${new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}
+
+---
+
+## 1. RINGKASAN EKSEKUTIF (EXECUTIVE SUMMARY)
+Inisiatif **"${topic}"** dirancang sebagai respons strategis terhadap dinamika kebutuhan masa depan. Dokumen ini merangkum formulasi komprehensif mulai dari pemetaan tantangan lapangan, 3 pilar positioning diferensiasi, kerangka kurikulum/alur bertahap, simulasi pembiayaan ramping (lean operational model), proyeksi kebutuhan pendanaan, hingga roadmap implementasi 4 tahap dan agenda persetujuan rapat.
+
+**Poin-Poin Kunci & Penekanan**:
+${keyPoints ? keyPoints.split(',').map(p => `- ${p.trim()}`).join('\n') : '- Pendekatan terencana, eksekusi lean, berorientasi output nyata dan portofolio terukur.'}
+
+---
+
+## 2. LANDASAN STRATEGIS & ANALISIS TANTANGAN
+### Modalitas & Dasar Pemikiran:
+1. **Kesinambungan Ekosistem**: Membangun kesinambungan pembinaan berjenjang agar pengembangan kompetensi berjalan berkelanjutan.
+2. **Modal Kepercayaan & Reputasi**: Memanfaatkan reputasi positif yang telah terbangun kuat sebagai fondasi penerimaan pasar.
+3. **Blueprint Jangka Panjang**: Bagian terencana dari visi besar mencetak entitas percontohan yang adaptif terhadap masa depan.
+4. **Skalabilitas Model**: Menjangkau audiens potensial yang lebih luas dengan model operasional yang teruji.
+
+### Matriks Tantangan & Solusi Diferensiasi:
+* **Tantangan 1 (Edukasi Pasar)**: Perlunya sosialisasi yang masif mengenai nilai tambah unik sejak fase awal.
+* **Tantangan 2 (Konsistensi Kualitas Output)**: Menjaga standar capaian di setiap modul agar setiap individu menghasilkan portofolio riil.
+* **Tantangan 3 (Efisiensi Biaya Operasional)**: Menjaga rasio biaya operasional tetap ramping tanpa menurunkan mutu layanan.
+* **Solusi Terarah**: Diferensiasi yang terlihat hasilnya, terukur indikatornya, dan realistis alokasi pembiayaannya.
+
+---
+
+## 3. FORMULASI 3 PILAR UTAMA POSITIONING
+Program ini mengintegrasikan 3 dimensi keunggulan:
+1. **Pilar 1: Karakter & Integritas**: Pembentukan disiplin, kepemimpinan etis, etika profesional, dan komitmen moral.
+2. **Pilar 2: Keunggulan Kompetensi Inti**: Penguasaan kurikulum standar tinggi, pemecahan masalah kritis, dan kesiapan kompetisi.
+3. **Pilar 3: Keahlian Digital & Terapan**: Penguasaan software tools modern, otomasi kerja, dan kemampuan memproduksi karya nyata bernilai jual.
+
+---
+
+## 4. KERANGKA ALUR IMPLEMENTASI & JALUR PEMINATAN
+### Alur 3 Tahap:
+* **Tahap 1 (Fondasi & Literasi Dasar)**: Penguasaan konsep dasar, logika berpikir, dan tools standar. (*Target Luaran: 3 Karya Fondasi*).
+* **Tahap 2 (Spesialisasi & Projek Nyata)**: Pengerjaan studi kasus industri dan projek mitra nyata. (*Target Luaran: 1 Produk Siap Pakai*).
+* **Tahap 3 (Finalisasi & Mentoring)**: Portofolio showcase, uji sertifikasi, dan persiapan jenjang profesional. (*Target Luaran: Portofolio Lengkap*).
+
+### 3 Jalur Spesialisasi:
+* **Jalur A (Creative & Visual Design)**: Brand identity, UI/UX wireframe, media promosi, dan digital asset.
+* **Jalur B (Tech & Web Development)**: Modern web apps, landing page interaktif, database, dan integrasi workflow.
+* **Jalur C (AI & Workflow Productivity)**: AI automation prompts, custom chatbot, data analysis, dan riset terapan.
+
+---
+
+## 5. SIMULASI FINANSIAL & ANGGARAN RAMPING
+### Prinsip Efisiensi Alokasi SDM:
+* Tim Manajerial & Koordinator dioptimalkan dari internal organisasi.
+* Instruktur Inti dialokasikan secara terfokus (Estimasi ~Rp18 Juta/th).
+* Mentor Praktisi Spesialisasi dilibatkan secara kemitraan/freelance (Estimasi 3 Mentor ~Rp36 Juta/th).
+* Narasumber Tamu & Workshop Khusus 4 sesi per tahun (~Rp2 Juta/th).
+* **Total Alokasi SDM Minimal Tahun Pertama**: Rp56.000.000 / tahun.
+
+### Proyeksi Kebutuhan & Target Pendanaan:
+* Total Kebutuhan Biaya Operasional Penuh Batch Awal: ~Rp950.000.000.
+* Estimasi Penerimaan Mandiri Peserta: ~Rp171.000.000.
+* Alokasi Subsidi / Beasiswa Kemitraan: ~Rp779.000.000.
+* Investasi Awal Infrastruktur & Perangkat: ~Rp49.100.000.
+* **Target Kebutuhan Penggalangan Dana & Sponsor**: Rp800.000.000 - Rp900.000.000.
+
+---
+
+## 6. ROADMAP EKSEKUSI & AGENDA KEPUTUSAN
+* **Fase 1 (Bulan 0 - 3)**: Finalisasi konsep kurikulum, target luaran, skema pendanaan, dan materi sosialisasi.
+* **Fase 2 (Bulan 3 - 6)**: Penyiapan modul teknis, setup infrastruktur, MoU mitra mentor, dan rekrutmen awal.
+* **Fase 3 (Bulan 6 - 12)**: Pelaksanaan program, pendampingan projek, pembuatan portofolio awal, dan evaluasi.
+* **Fase 4 (Tahun Kedua)**: Akselerasi kompetensi lanjutan, uji sertifikasi, pameran karya (showcase), dan ekspansi skala.
+
+### Butir Kesepakatan Rapat (Action Items):
+1. Menyetujui positioning program berbasis integritas, keunggulan inti, dan portofolio keahlian terapan.
+2. Menyetujui pembukaan 3 jalur peminatan spesialisasi awal.
+3. Menyetujui target penggalangan kemitraan dan sponsor tahap awal.
+4. Membentuk tim taskforce kecil untuk penyiapan kurikulum, operasional, dan kemitraan strategis.`;
+
+  // 2. FORMAT GAMMA.APP / SLIDES AI OUTLINE
+  const gammaOutline = `# ${topic}
+## ${currentSlide.subtitle || 'Executive Strategic Presentation Deck'}
+
+${slides.map((s) => `
+---
+
+### Slide ${s.slideNo}: ${s.title}
+*${s.subtitle}*
+
+${s.bullets.map((b) => `- ${b}`).join('\n')}
+${s.coreHighlight ? `\n> **${s.coreHighlight.tag}**: ${s.coreHighlight.body}\n> *${s.coreHighlight.output}*` : ''}
+${s.solutionBanner ? `\n> **${s.solutionBanner.badge}**: ${s.solutionBanner.text}` : ''}
+${s.actionChecklist ? `\n**Action Items Kesepakatan:**\n${s.actionChecklist.map(a => `- [x] ${a}`).join('\n')}` : ''}
+${s.goldenTakeaway ? `\n**Key Takeaway**: ${s.goldenTakeaway}` : ''}
+
+*Visual Layout Idea: ${s.layout}*
+`).join('\n')}
+`;
+
+  // 3. FORMAT VBA POWERPOINT MACRO (NATIVE 1-CLICK GENERATOR, ZERO CORRUPTION)
+  const vbaMacro = `' ==============================================================================
+' SMARTFEED AI - POWERPOINT 16:9 SLIDE DECK BUILDER (VBA MACRO)
+' ==============================================================================
+' CARA MENGGUNAKAN DI POWERPOINT:
+' 1. Buka Microsoft PowerPoint baru.
+' 2. Tekan tombol [Alt + F11] pada keyboard untuk membuka VBA Editor.
+' 3. Klik menu: Insert > Module.
+' 4. Paste SELURUH kode VBA ini ke dalam layar editor.
+' 5. Tekan tombol [F5] atau klik tombol Run (Play hijau).
+' 6. Presentasi 16:9 eksekutif dengan warna tema & layout langsung terbuat rapi!
+' ==============================================================================
+
+Sub BuildExecutivePresentation()
+    Dim pptPres As Presentation
+    Dim sld As Slide
+    Dim shpTitle As Shape, shpSub As Shape, shpBox As Shape, shpFoot As Shape
+    Dim sldWidth As Single, sldHeight As Single
+    
+    Set pptPres = ActivePresentation
+    
+    ' Atur Ukuran 16:9 Widescreen (13.33 x 7.5 inches)
+    sldWidth = 960
+    sldHeight = 540
+    pptPres.PageSetup.SlideWidth = sldWidth
+    pptPres.PageSetup.SlideHeight = sldHeight
+    
+    ' Hapus slide kosong jika ada
+    Do While pptPres.Slides.Count > 0
+        pptPres.Slides(1).Delete
+    Loop
+
+    ' -------------------------------------------------------------
+    ' SLIDE 1: COVER HERO
+    ' -------------------------------------------------------------
+    Set sld = pptPres.Slides.Add(1, ppLayoutBlank)
+    sld.Background.Fill.Solid
+    sld.Background.Fill.ForeColor.RGB = RGB(0, 45, 98) ' Dark Navy
+    
+    ' Eyebrow Tag
+    Set shpBox = sld.Shapes.AddShape(msoShapeRoundedRectangle, 50, 60, 180, 28)
+    shpBox.Fill.Solid: shpBox.Fill.ForeColor.RGB = RGB(234, 170, 0)
+    shpBox.Line.Visible = msoFalse
+    shpBox.TextFrame.TextRange.Text = "EXECUTIVE PROPOSAL"
+    shpBox.TextFrame.TextRange.Font.Bold = msoTrue
+    shpBox.TextFrame.TextRange.Font.Size = 10
+    shpBox.TextFrame.TextRange.Font.Color.RGB = RGB(0, 45, 98)
+    
+    ' Title
+    Set shpTitle = sld.Shapes.AddTextbox(msoTextOrientationHorizontal, 50, 100, 520, 160)
+    shpTitle.TextFrame.TextRange.Text = "${topic.replace(/"/g, '""')}"
+    shpTitle.TextFrame.TextRange.Font.Bold = msoTrue
+    shpTitle.TextFrame.TextRange.Font.Size = 28
+    shpTitle.TextFrame.TextRange.Font.Color.RGB = RGB(255, 255, 255)
+    
+    ' Subtitle
+    Set shpSub = sld.Shapes.AddTextbox(msoTextOrientationHorizontal, 50, 270, 520, 60)
+    shpSub.TextFrame.TextRange.Text = "Membangun Ekosistem Berkelanjutan, Berdaya Saing Tinggi & Berdampak Nyata"
+    shpSub.TextFrame.TextRange.Font.Size = 14
+    shpSub.TextFrame.TextRange.Font.Color.RGB = RGB(220, 230, 242)
+    
+    ' Presenter & Audience Card
+    Set shpBox = sld.Shapes.AddShape(msoShapeRoundedRectangle, 50, 360, 520, 65)
+    shpBox.Fill.Solid: shpBox.Fill.ForeColor.RGB = RGB(10, 60, 120)
+    shpBox.Line.Color.RGB = RGB(234, 170, 0)
+    shpBox.TextFrame.TextRange.Text = "Disusun Oleh: ${presenter.replace(/"/g, '""')}  |  Audiens: ${audience.replace(/"/g, '""')}"
+    shpBox.TextFrame.TextRange.Font.Size = 11
+    shpBox.TextFrame.TextRange.Font.Color.RGB = RGB(255, 255, 255)
+    
+    ' Right Visual Container Box
+    Set shpBox = sld.Shapes.AddShape(msoShapeRoundedRectangle, 610, 60, 300, 365)
+    shpBox.Fill.Solid: shpBox.Fill.ForeColor.RGB = RGB(15, 23, 42)
+    shpBox.Line.Color.RGB = RGB(234, 170, 0)
+    shpBox.TextFrame.TextRange.Text = "VISUAL 3D CONCEPT" & vbCrLf & vbCrLf & "[High-Impact Architectural / Product Render]"
+    shpBox.TextFrame.TextRange.Font.Bold = msoTrue
+    shpBox.TextFrame.TextRange.Font.Size = 14
+    shpBox.TextFrame.TextRange.Font.Color.RGB = RGB(234, 170, 0)
+
+${slides.slice(1).map((s, idx) => `
+    ' -------------------------------------------------------------
+    ' SLIDE ${s.slideNo}: ${s.title.replace(/"/g, '""')}
+    ' -------------------------------------------------------------
+    Set sld = pptPres.Slides.Add(${s.slideNo}, ppLayoutBlank)
+    sld.Background.Fill.Solid
+    sld.Background.Fill.ForeColor.RGB = RGB(244, 247, 250) ' Clean Ice White
+    
+    ' Header Bar Navy
+    Set shpBox = sld.Shapes.AddShape(msoShapeRectangle, 0, 0, sldWidth, 80)
+    shpBox.Fill.Solid: shpBox.Fill.ForeColor.RGB = RGB(0, 45, 98)
+    shpBox.Line.Visible = msoFalse
+    
+    ' Eyebrow
+    Set shpSub = sld.Shapes.AddTextbox(msoTextOrientationHorizontal, 40, 10, 600, 20)
+    shpSub.TextFrame.TextRange.Text = "${(s.eyebrow || 'EXECUTIVE PRESENTATION').replace(/"/g, '""')}"
+    shpSub.TextFrame.TextRange.Font.Bold = msoTrue
+    shpSub.TextFrame.TextRange.Font.Size = 9
+    shpSub.TextFrame.TextRange.Font.Color.RGB = RGB(234, 170, 0)
+    
+    ' Title
+    Set shpTitle = sld.Shapes.AddTextbox(msoTextOrientationHorizontal, 40, 28, 800, 45)
+    shpTitle.TextFrame.TextRange.Text = "${s.title.replace(/"/g, '""')}"
+    shpTitle.TextFrame.TextRange.Font.Bold = msoTrue
+    shpTitle.TextFrame.TextRange.Font.Size = 18
+    shpTitle.TextFrame.TextRange.Font.Color.RGB = RGB(255, 255, 255)
+    
+    ' Content Card 1
+    Set shpBox = sld.Shapes.AddShape(msoShapeRoundedRectangle, 40, 105, 550, 360)
+    shpBox.Fill.Solid: shpBox.Fill.ForeColor.RGB = RGB(255, 255, 255)
+    shpBox.Line.Color.RGB = RGB(210, 220, 230)
+    shpBox.TextFrame.TextRange.Text = "${s.bullets.slice(0, 4).join('\n\n').replace(/"/g, '""').replace(/\n/g, '" & vbCrLf & "')}"
+    shpBox.TextFrame.TextRange.Font.Size = 11
+    shpBox.TextFrame.TextRange.Font.Color.RGB = RGB(15, 23, 42)
+    
+    ' Right Highlight Container
+    Set shpBox = sld.Shapes.AddShape(msoShapeRoundedRectangle, 610, 105, 310, 360)
+    shpBox.Fill.Solid: shpBox.Fill.ForeColor.RGB = RGB(0, 45, 98)
+    shpBox.Line.Color.RGB = RGB(234, 170, 0)
+    shpBox.TextFrame.TextRange.Text = "KEY TAKEAWAY & FORMULA" & vbCrLf & vbCrLf & "${(s.coreHighlight?.body || s.solutionBanner?.text || s.valueStatement || s.goldenTakeaway || s.subtitle).replace(/"/g, '""')}"
+    shpBox.TextFrame.TextRange.Font.Bold = msoTrue
+    shpBox.TextFrame.TextRange.Font.Size = 12
+    shpBox.TextFrame.TextRange.Font.Color.RGB = RGB(255, 255, 255)
+    
+    ' Footer Bar
+    Set shpFoot = sld.Shapes.AddShape(msoShapeRectangle, 0, 515, sldWidth, 25)
+    shpFoot.Fill.Solid: shpFoot.Fill.ForeColor.RGB = RGB(0, 45, 98)
+    shpFoot.Line.Visible = msoFalse
+    shpFoot.TextFrame.TextRange.Text = "${topic.replace(/"/g, '""')}  |  Slide ${s.slideNo}"
+    shpFoot.TextFrame.TextRange.Font.Size = 9
+    shpFoot.TextFrame.TextRange.Font.Color.RGB = RGB(234, 170, 0)
+`).join('\n')}
+
+    MsgBox "Berhasil! " & pptPres.Slides.Count & " Slide Presentasi Eksekutif 16:9 Telah Selesai Dibuat!", vbInformation, "SmartFeed AI Studio"
+End Sub`;
+
+  // 4. MASTER PROMPT (AI GENERATOR / CLAUDE / CHATGPT / GEMINI)
   const markdownPrompt = `# MASTER PROMPT: EXECUTIVE 16:9 PRESENTATION DECK GENERATOR
 **Standar Desain**: Masterclass Executive Layout (McKinsey & BCG Style)
 **Topik Presentasi**: ${topic}
@@ -263,20 +500,16 @@ ${includeVisualPrompts ? `- **AI Image Prompt (16:9)**: \`\`\`${s.visualPrompt}\
 
 ---
 
-## PETUNJUK IMPLEMENTASI DESAIN KE POWERPOINT / CANVA / GAMMA
-1. **Rasio Tampilan**: Wajib menggunakan format Widescreen 16:9.
-2. **Palet Warna Utama**:
-   - Primary Deep: Navy Blue \`#002D62\` (Elemen kartu core, banner solusi, badge tebal, dan footer)
-   - Secondary Accent: Warm Gold \`#EAAA00\` (Nomor urut, badge sorot, dan border penekanan)
-   - Neutral Background: Pure White \`#FFFFFF\` & Soft Ice Grey \`#F4F7FA\` (Kanvas bersih mudah dibaca)
-   - Teks Utama: Slate Navy \`#0F172A\` (Tipografi tebal dengan kontras tinggi)
-3. **Hierarki Tipografi**:
-   - Judul Slide: Bold Sans-Serif (Inter / Montserrat / Plus Jakarta Sans) 900 weight.
-   - Body & Poin: Clean Sans-Serif 500-600 weight.
-4. **Visual Imagery**: Gunakan gambar fotorealistik 3D atau foto profesional tanpa watermark.`;
+## PETUNJUK IMPLEMENTASI DESAIN KE SLIDE BUILDERS (NOTEBOOKLM / GAMMA / CANVA / POWERPOINT)
+1. **Google NotebookLM**: Upload file .md ini sebagai "Source Document" untuk membuat podcast ringkasan audio & FAQ eksekutif secara otomatis.
+2. **Gamma.app / Canva AI**: Copy outline untuk langsung generate 16:9 presentasi visual otomatis dengan 1-click import.
+3. **PowerPoint Native**: Gunakan script VBA resmi di SmartFeed Studio (Alt + F11) untuk membuat slide bebas error korupsi file.`;
 
   return {
     slides,
+    notebookLmDoc,
+    gammaOutline,
+    vbaMacro,
     markdownPrompt,
     totalSlides: slides.length,
     styleObj,
