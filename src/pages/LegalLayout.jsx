@@ -38,8 +38,8 @@ export default function LegalLayout({ title, subtitle, activeTab, children }) {
                 {brandParts().lead && <>{brandParts().lead} </>}
                 <span className="text-accent">{brandParts().accent}</span>
               </span>
-              <span className="text-[9px] mono uppercase text-text-dim">
-                by {CONFIG.companyName}
+              <span className="text-[9px] mono uppercase tracking-[0.14em] text-text-dim">
+                Studio Visual Instan
               </span>
             </div>
           </a>
