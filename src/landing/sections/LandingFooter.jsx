@@ -53,6 +53,7 @@ export default function LandingFooter() {
               <li><a href="#cara" className="text-text-mut hover:text-accent transition-colors">Cara Kerja</a></li>
               <li><a href="#contoh" className="text-text-mut hover:text-accent transition-colors">Galeri Showcase</a></li>
               <li><a href="#harga" className="text-text-mut hover:text-accent transition-colors">Paket & Harga</a></li>
+              <li><a href="/checkout" className="text-text-mut hover:text-accent transition-colors">Halaman Checkout</a></li>
               <li><a href="#faq" className="text-text-mut hover:text-accent transition-colors">Tanya Jawab (FAQ)</a></li>
               <li><a href="/app" className="text-accent font-semibold hover:underline">Masuk ke Studio</a></li>
             </ul>

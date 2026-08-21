@@ -31,8 +31,6 @@ export default function FinalCta({ onOpenAccess }) {
         <div className="mt-9 flex flex-col sm:flex-row gap-3 items-center justify-center">
           <a
             href={CTA_HREF}
-            target="_blank"
-            rel="noreferrer"
             className="btn-cta text-base sm:text-lg !py-3.5 !px-8 shadow-[0_10px_35px_rgba(var(--accent-rgb),0.35)]"
           >
             <Sparkles className="w-5 h-5" />

@@ -26,8 +26,8 @@ export const CONFIG = {
   bgColor:     pick(cfg.bgColor, ''),
 
   // ── Link ──────────────────────────────────────────────────
-  paymentUrl:   pick(cfg.paymentUrl, 'https://aiautomation.myr.id/pl/smart-feed/'),
-  affiliateUrl: pick(cfg.affiliateUrl, 'https://web.mayar.id/sign-in/referral/fUAlH05'),
+  paymentUrl:   pick(cfg.paymentUrl, '/checkout'),
+  affiliateUrl: pick(cfg.affiliateUrl, ''),
 
   // Tombol setelah Copy: link ChatGPT biasa + Custom GPT (kosong = sembunyikan tombol GPT).
   chatgptUrl: pick(cfg.chatgptUrl, 'https://chatgpt.com/'),
@@ -56,7 +56,7 @@ export const CONFIG = {
   showResellerTier:   cfg.showResellerTier !== false,        // true = tampilkan kartu reseller
   resellerPrice:      pick(cfg.resellerPrice, '290.000'),
   resellerStrike:     pick(cfg.resellerStrike, '1.500.000'),
-  resellerPaymentUrl: pick(cfg.resellerPaymentUrl, 'https://aiautomation.myr.id/pl/smart-feed/'),
+  resellerPaymentUrl: pick(cfg.resellerPaymentUrl, '/checkout?plan=reseller'),
   // ── PENDAFTARAN & LOGIN VIA GOOGLE SPREADSHEET ──────────
   sheetWebhookUrl: pick(cfg.sheetWebhookUrl, ''),
   sheetCsvUrl: pick(cfg.sheetCsvUrl, ''),

@@ -15,7 +15,7 @@ window.__AF_CONFIG = {
    bgColor: "#f4f7fa",   // background terang soft light khas logo
 
    /* -- 2. LINK ------------------------------------------------------- */
-   paymentUrl: "https://CHECKOUT-KAMU.com",   // link pembayaran/checkout kamu
+   paymentUrl: "/checkout",   // link pembayaran/checkout kamu
    affiliateUrl: "",                            // link daftar affiliate (boleh kosong "")
 
    // Mode "9 Feed Konsisten" - link ChatGPT untuk tombol setelah Copy & tutorial.

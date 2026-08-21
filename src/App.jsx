@@ -4,6 +4,7 @@ import lazyWithRetry from './lazyWithRetry.js';
 
 // Studio & Halaman Statis di-code-split agar landing page tetap super ringan
 const StudioApp = lazyWithRetry(() => import('./StudioApp.jsx'), 'studio');
+const Checkout = lazyWithRetry(() => import('./pages/Checkout.jsx'), 'checkout');
 const AboutUs = lazyWithRetry(() => import('./pages/AboutUs.jsx'), 'about');
 const PrivacyPolicy = lazyWithRetry(() => import('./pages/PrivacyPolicy.jsx'), 'privacy');
 const TermsConditions = lazyWithRetry(() => import('./pages/TermsConditions.jsx'), 'terms');
@@ -14,6 +15,18 @@ function getRoute() {
   const host = window.location.host || '';
   const pathname = (window.location.pathname || '').toLowerCase().replace(/\/$/, '');
   const hash = (window.location.hash || '').toLowerCase().replace(/\/$/, '');
+
+  if (
+    pathname === '/checkout' ||
+    pathname === '/order' ||
+    pathname === '/bayar' ||
+    pathname.startsWith('/checkout/') ||
+    hash === '#/checkout' ||
+    hash === '#checkout' ||
+    hash.startsWith('#/checkout/')
+  ) {
+    return 'checkout';
+  }
 
   if (
     host.startsWith('app.') ||
@@ -103,6 +116,8 @@ export default function App() {
   useEffect(() => {
     if (route === 'studio') {
       document.title = 'Smart Feed Studio | Generator Konten & Desain Visual AI';
+    } else if (route === 'checkout') {
+      document.title = 'Checkout Pembayaran Resmi | Smart Feed - Beranda Teknologi Digital';
     } else if (route === 'about') {
       document.title = 'Tentang Kami | Smart Feed - Beranda Teknologi Digital';
     } else if (route === 'privacy') {
@@ -115,6 +130,14 @@ export default function App() {
       document.title = 'Smart Feed | Studio Visual Instan - Beranda Teknologi Digital';
     }
   }, [route]);
+
+  if (route === 'checkout') {
+    return (
+      <Suspense fallback={<PageLoading label="Memuat checkout..." />}>
+        <Checkout />
+      </Suspense>
+    );
+  }
 
   if (route === 'studio') {
     return (
