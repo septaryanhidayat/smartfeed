@@ -57,7 +57,9 @@ export default function AccessModal({ open, onClose }) {
             type: 'register',
             email: cleanEmail,
             name: cleanName,
-            source: 'Pelatihan',
+            source: 'Peserta Pelatihan (Gratis)',
+            payment_method: 'Peserta Pelatihan (Gratis)',
+            payment_name: 'Peserta Pelatihan (Gratis)',
             timestamp: new Date().toISOString(),
           }),
         }).catch(() => {});

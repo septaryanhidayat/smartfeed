@@ -1,5 +1,5 @@
 import { useState, useReducer, useMemo, useDeferredValue } from 'react';
-import { PlayCircle, User, LogOut } from 'lucide-react';
+import { PlayCircle, User, LogOut, Menu } from 'lucide-react';
 import { CONFIG, brandParts } from './config.js';
 import { getDemoIcon } from './components/demoIcons.js';
 import Sidebar from './components/Sidebar.jsx';
@@ -403,37 +403,55 @@ function AuthedApp() {
     setRestoreSignal((s) => s + 1);
   };
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const t = TITLES[mode] || { name: CONFIG.brandName, desc: '' };
   const showMockup = HAS_MOCKUP[mode];
 
   return (
-    <div className="lg:h-screen lg:flex lg:flex-col lg:overflow-hidden">
+    <div className="lg:h-screen lg:flex lg:flex-col lg:overflow-hidden bg-bg text-text">
       {/* Top bar */}
-      <header className="h-14 px-4 sm:px-5 border-b border-border bg-bg-panel/95 backdrop-blur-md flex items-center justify-between gap-3 shrink-0 sticky top-0 z-30 lg:static">
-        <div className="leading-tight min-w-0">
-          <div className="text-base font-bold flex items-center gap-2">
-            {brandParts().lead && <>{brandParts().lead} </>}<span className="text-accent">{brandParts().accent}</span>
-            <span className="inline-flex text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded bg-accent text-white mono font-bold">LIVE</span>
+      <header className="h-14 px-3 sm:px-5 border-b border-border bg-bg-panel/95 backdrop-blur-md flex items-center justify-between gap-2 sm:gap-3 shrink-0 sticky top-0 z-30 lg:static">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(true)}
+            className="lg:hidden p-2 rounded-xl bg-bg-elev border border-border text-text hover:text-accent flex items-center justify-center shrink-0 transition cursor-pointer"
+            aria-label="Buka Menu Studio"
+            title="Buka Menu Studio"
+          >
+            <Menu className="w-4 h-4 text-accent" />
+          </button>
+
+          <div className="leading-tight min-w-0">
+            <div className="text-sm sm:text-base font-extrabold flex items-center gap-1.5 sm:gap-2 text-text">
+              {brandParts().lead && <span className="font-bold">{brandParts().lead} </span>}
+              <span className="text-accent">{brandParts().accent}</span>
+              <span className="inline-flex text-[9px] uppercase tracking-widest px-1.5 py-0.2 rounded bg-accent text-white mono font-black">LIVE</span>
+            </div>
+            <div className="text-[9px] sm:text-[10px] text-text-dim mono uppercase tracking-widest truncate font-semibold">
+              {CONFIG.tagline}
+            </div>
           </div>
-          <div className="text-[9px] sm:text-[10px] text-text-dim mono uppercase tracking-widest">{CONFIG.tagline}</div>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {session?.email && (
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-bg-elev border border-border text-[11px] text-text-mut mono">
+            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-bg-elev border border-border text-[11px] text-text-mut mono">
               <User className="w-3 h-3 text-accent" />
-              <span className="max-w-[140px] truncate">{session.name || session.email}</span>
+              <span className="max-w-[140px] truncate font-medium">{session.name || session.email}</span>
             </div>
           )}
-          <button onClick={() => setTutorialOpen(true)} className="btn-ghost text-xs !py-1.5 !px-3" title="Video tutorial">
-            <PlayCircle className="w-3.5 h-3.5" />
-            <span>Tutorial</span>
+          <button onClick={() => setTutorialOpen(true)} className="btn-ghost text-xs !py-1.5 !px-2.5 sm:!px-3" title="Video tutorial">
+            <PlayCircle className="w-3.5 h-3.5 text-accent" />
+            <span className="hidden sm:inline">Tutorial</span>
           </button>
-          <button onClick={() => setDemoOpen(true)} className="btn-primary text-xs !py-1.5 !px-3">
+          <button onClick={() => setDemoOpen(true)} className="btn-primary text-xs !py-1.5 !px-2.5 sm:!px-3 font-bold">
             <span className="hidden sm:inline">✨ Randomize</span><span className="sm:hidden">✨</span> Demo
           </button>
           <button
             onClick={() => showConfirmLogout(logout)}
-            className="btn-ghost text-xs !py-1.5 !px-2.5 text-text-dim hover:text-red-400"
+            className="btn-ghost text-xs !py-1.5 !px-2 sm:!px-2.5 text-text-dim hover:text-red-400"
             title="Logout"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -442,7 +460,7 @@ function AuthedApp() {
         </div>
       </header>
 
-      {/* Main layout (sidebar always visible) */}
+      {/* Main layout */}
       <div className="flex flex-1 min-h-0">
         <Sidebar
           mode={mode}
@@ -452,6 +470,8 @@ function AuthedApp() {
           onOpenSettings={() => setSettingsOpen(true)}
           onOpenAffiliateProgram={() => setAffiliateProgramOpen(true)}
           onOpenReseller={() => setResellerOpen(true)}
+          mobileOpen={mobileMenuOpen}
+          onCloseMobile={() => setMobileMenuOpen(false)}
         />
 
         <div className="flex-1 flex flex-col lg:flex-row min-w-0 lg:overflow-hidden">

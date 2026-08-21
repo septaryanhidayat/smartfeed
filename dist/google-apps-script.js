@@ -107,7 +107,7 @@ function handleIncomingWebhook(e, isPost) {
     var name = (data.name || data.customer_name || '').toString().trim();
     var phone = (data.phone || data.customer_phone || '').toString().trim();
     var amount = data.amount || data.total_amount || 0;
-    var paymentMethod = data.payment_method || data.payment_name || 'TriPay';
+    var paymentMethod = data.payment_method || data.payment_name || data.source || ((eventType === 'register' || eventType === 'free_training') ? 'Peserta Pelatihan (Gratis)' : 'TriPay');
     var merchantRef = data.merchant_ref || data.reference || ('TRX-' + new Date().getTime());
     var now = new Date();
 
