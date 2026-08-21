@@ -1,12 +1,28 @@
-import { X, PlayCircle, Sparkles, Copy, Send } from 'lucide-react';
+import { X, PlayCircle, Sparkles, Copy, Send, MonitorPlay, Layers, FileText } from 'lucide-react';
 import AnimatedTutorial from './AnimatedTutorial.jsx';
 import { CONFIG } from '../config.js';
 
 const QUICK_STEPS = [
-  { icon: Sparkles, title: 'Pilih Mode',         desc: 'Klik salah satu dari 5 generator di sidebar kiri: Banner, Youtube, Ads, Copy Writing, atau Face Card.' },
-  { icon: PlayCircle, title: 'Isi Form / Pakai Demo', desc: 'Klik Randomize Demo untuk auto-isi dari 48 template industri, atau isi manual semua field.' },
-  { icon: Copy,      title: 'Generate & Copy',    desc: 'Klik tombol Generate di panel kanan untuk build prompt, lalu klik Copy.' },
-  { icon: Send,      title: 'Paste ke ChatGPT',   desc: 'Buka ChatGPT, klik ikon + → Buat gambar → paste prompt, upload foto kalau perlu. Hasil keluar dalam hitungan detik.' },
+  {
+    icon: Layers,
+    title: 'Pilih Engine Kreatif',
+    desc: 'Pilih salah satu dari 20 engine studio di menu: Slide & PPT Deck, Carousel Feeds, 9-Feed Konsisten, Naskah Video, Suite Jurnalisme, atau Affiliate Tools.'
+  },
+  {
+    icon: Sparkles,
+    title: 'Isi Form / Pakai Preset Demo',
+    desc: 'Klik tombol "Randomize Demo" untuk otomatis mengisi dari 50+ kategori template industri siap pakai, atau sesuaikan data presentasi secara mandiri.'
+  },
+  {
+    icon: Copy,
+    title: 'Generate & Salin Format Pilihan',
+    desc: 'Klik "✦ Generate Magic Prompt" untuk menghasilkan prompt master terstruktur. Anda juga bisa memilih format Gamma/Canva, Script VBA PowerPoint, atau Dokumen NotebookLM.'
+  },
+  {
+    icon: Send,
+    title: 'Paste ke AI Pilihan (ChatGPT, Claude, Gamma, PowerPoint)',
+    desc: 'Paste prompt ke ChatGPT, Claude, atau Gemini untuk naskah lengkap & AI visual; paste outline ke Gamma.app/Canva untuk generate slide otomatis; atau jalankan script VBA di Microsoft PowerPoint.'
+  },
 ];
 
 export default function TutorialModal({ open, onClose }) {
@@ -18,42 +34,50 @@ export default function TutorialModal({ open, onClose }) {
       onClick={onClose}
     >
       <div
-        className="surface shadow-panel w-full max-w-2xl h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto animate-slide-up sm:rounded-xl rounded-none"
+        className="surface shadow-panel w-full max-w-2xl h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto animate-slide-up sm:rounded-2xl rounded-none border border-border"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-border flex items-center justify-between sticky top-0 bg-bg-panel z-10">
+        <div className="px-4 sm:px-5 py-3.5 sm:py-4 border-b border-border flex items-center justify-between sticky top-0 bg-bg-panel/95 backdrop-blur-md z-10">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-accent-sm flex items-center justify-center">
-              <PlayCircle className="w-4 h-4 text-accent" />
+            <div className="w-8 h-8 rounded-xl bg-accent flex items-center justify-center text-white shadow-sm">
+              <PlayCircle className="w-4 h-4" />
             </div>
-            <h2 className="text-sm sm:text-base font-semibold">Tutorial {CONFIG.brandName}</h2>
+            <div>
+              <h2 className="text-sm sm:text-base font-extrabold text-text">Panduan Praktis {CONFIG.brandName}</h2>
+              <div className="text-[10px] text-text-dim mono uppercase tracking-wider">Workflow 4 Langkah Cepat</div>
+            </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-md hover:bg-bg-elev flex items-center justify-center text-text-mut">
-            <X className="w-4 h-4" />
+          <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-bg-elev flex items-center justify-center text-text-mut hover:text-text transition cursor-pointer">
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-2 sm:p-5">
-          {/* Animated tutorial — 4 scenes loop */}
-          <AnimatedTutorial />
+        <div className="p-4 sm:p-6 space-y-6">
+          {/* Animated visual tutorial */}
+          <div className="rounded-xl overflow-hidden border border-border bg-bg-deep shadow-sm">
+            <AnimatedTutorial />
+          </div>
 
           {/* Quick steps reference */}
-          <div className="mt-5">
-            <div className="text-[10px] mono uppercase tracking-widest text-accent mb-3">Quick Steps</div>
-            <ol className="space-y-3">
+          <div>
+            <div className="text-[10px] mono uppercase tracking-widest text-accent font-extrabold mb-3.5 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>LANGKAH PENGGUNAAN CEPAT</span>
+            </div>
+            <ol className="space-y-3.5">
               {QUICK_STEPS.map((s, i) => {
                 const Icon = s.icon;
                 return (
-                  <li key={i} className="flex gap-3">
-                    <div className="w-8 h-8 rounded-md bg-accent-sm flex items-center justify-center shrink-0">
-                      <Icon className="w-3.5 h-3.5 text-accent" />
+                  <li key={i} className="flex items-start gap-3.5 p-3 rounded-xl bg-bg-panel border border-border shadow-xs">
+                    <div className="w-8 h-8 rounded-lg bg-accent/15 border border-accent/30 text-accent flex items-center justify-center shrink-0 mt-0.5 font-bold">
+                      <Icon className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold flex items-center gap-2">
-                        <span className="mono text-text-dim text-[10px]">{String(i + 1).padStart(2, '0')}.</span>
-                        {s.title}
+                      <div className="text-xs sm:text-sm font-extrabold text-text flex items-center gap-2">
+                        <span className="mono text-accent text-[11px]">0{i + 1}.</span>
+                        <span>{s.title}</span>
                       </div>
-                      <p className="text-xs text-text-mut mt-0.5 leading-relaxed">{s.desc}</p>
+                      <p className="text-xs text-text-mut mt-1 leading-relaxed">{s.desc}</p>
                     </div>
                   </li>
                 );
