@@ -14,4 +14,4 @@ define('TRIPAY_API_URL', TRIPAY_MODE === 'production'
     : 'https://tripay.co.id/api-sandbox/'
 );
 
-define('GOOGLE_SCRIPT_WEBHOOK', 'https://script.google.com/macros/s/AKfycbzSVFXWUhaP09jdbRcD1FVVDZaDHhsskUvbx-mS7FZ2QfQcRxjMfm3WwLRoPg5wfVV1/exec');
+define('GOOGLE_SCRIPT_WEBHOOK', 'https://script.google.com/macros/s/AKfycbyU-nWqkiP62eGmmJz6aIIRifLWdQHzCzHEsLHWGkK8_DSOpsHSMXLvpY69uBNuKgfM/exec');

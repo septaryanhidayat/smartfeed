@@ -51,7 +51,7 @@ window.__AF_CONFIG = {
       a. sheetWebhookUrl: URL Google Apps Script Web App untuk otomatis mencatat
          email & nama peserta pelatihan langsung ke Google Sheet saat mendaftar.
       b. sheetCsvUrl: URL Published CSV spreadsheet daftar email. */
-   sheetWebhookUrl: "https://script.google.com/macros/s/AKfycbzSVFXWUhaP09jdbRcD1FVVDZaDHhsskUvbx-mS7FZ2QfQcRxjMfm3WwLRoPg5wfVV1/exec",
+   sheetWebhookUrl: "https://script.google.com/macros/s/AKfycbyU-nWqkiP62eGmmJz6aIIRifLWdQHzCzHEsLHWGkK8_DSOpsHSMXLvpY69uBNuKgfM/exec",
    sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQArR06UvroNZT1AReqN5kPWbyrHvq0VVaLKezPHcFarwDhY0zO69wjtZxajvdzKlqZlm2PVbcx175-/pub?gid=0&single=true&output=csv",
 
    // Password login (semua pelanggan pakai 1 password ini).

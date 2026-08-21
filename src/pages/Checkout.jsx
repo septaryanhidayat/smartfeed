@@ -6,7 +6,7 @@ import {
 import { CONFIG, brandParts } from '../config.js';
 import SafeImage from '../landing/primitives/SafeImage.jsx';
 
-// Active payment channels matching user's TriPay dashboard & File 1
+// Active payment channels strictly matching user's TriPay dashboard & File 1
 const PAYMENT_OPTIONS = [
   {
     category: 'QRIS (Semua Bank & E-Wallet)',
@@ -18,7 +18,6 @@ const PAYMENT_OPTIONS = [
         desc: 'BCA, Mandiri, BRI, BNI, GoPay, OVO, DANA, ShopeePay',
         logo: '/payment-icons/qris.png',
         popular: true,
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[140px]',
       },
     ],
   },
@@ -31,35 +30,30 @@ const PAYMENT_OPTIONS = [
         name: 'Bank Mandiri',
         desc: 'Virtual Account Mandiri (Livin\' / ATM)',
         logo: '/payment-icons/mandiri.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
       {
         id: 'BNIVA',
         name: 'Bank BNI',
         desc: 'Virtual Account BNI (Mobile Banking / ATM)',
         logo: '/payment-icons/bni.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
       {
         id: 'BRIVA',
         name: 'Bank BRI',
         desc: 'Virtual Account BRI (BRImo / ATM)',
         logo: '/payment-icons/bri.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
       {
         id: 'BSIVA',
         name: 'Bank BSI',
         desc: 'Virtual Account BSI (BSI Mobile / ATM)',
         logo: '/payment-icons/bsi.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
       {
         id: 'BCAVA',
         name: 'Bank BCA',
         desc: 'Virtual Account BCA (BCA Mobile / KlikBCA)',
         logo: '/payment-icons/bca.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
     ],
   },
@@ -72,21 +66,18 @@ const PAYMENT_OPTIONS = [
         name: 'ShopeePay',
         desc: 'Bayar langsung via aplikasi Shopee',
         logo: '/payment-icons/shopeepay.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
       {
         id: 'DANA',
         name: 'DANA',
         desc: 'Bayar via saldo akun DANA',
         logo: '/payment-icons/dana.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
       {
         id: 'OVO',
         name: 'OVO',
         desc: 'Push notifikasi pembayaran ke OVO',
         logo: '/payment-icons/ovo.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[40px]',
       },
     ],
   },
@@ -274,7 +265,7 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* Box 2: Metode Pembayaran (Clean Radio List dengan Logo Asli) */}
+            {/* Box 2: Metode Pembayaran (Clean Radio List dengan Logo Setara & Rapi) */}
             <div className="bg-bg-panel border border-border rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2.5">
                 <span className="w-5 h-5 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold shrink-0">
@@ -325,13 +316,13 @@ export default function Checkout() {
                             </div>
                           </div>
 
-                          {/* Logo Channel Asli (Full Proportional Display) */}
+                          {/* Logo Channel Standar & Setara (Ukuran Sama Rata) */}
                           <div className="shrink-0 pl-1.5 flex items-center justify-end">
-                            <div className="h-8 min-w-[54px] px-2 rounded-lg bg-white border border-neutral-200/90 shadow-2xs flex items-center justify-center">
+                            <div className="h-9 w-[86px] sm:w-[96px] px-2 py-1 rounded-lg bg-white border border-neutral-200 shadow-2xs flex items-center justify-center overflow-hidden">
                               <img
                                 src={item.logo}
                                 alt={item.name}
-                                className={item.logoClass}
+                                className="max-h-6 max-w-full w-auto object-contain"
                                 loading="lazy"
                               />
                             </div>
