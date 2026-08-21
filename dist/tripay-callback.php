@@ -44,13 +44,27 @@ if ($eventHeader === 'payment_status') {
     $status = strtoupper($data['status'] ?? '');
     
     if ($status === 'PAID') {
+        $merchantRef   = $data['merchant_ref'] ?? '';
+        $reference     = $data['reference'] ?? '';
+        $amount        = $data['total_amount'] ?? $data['amount'] ?? 0;
+        $paymentMethod = $data['payment_method'] ?? $data['payment_name'] ?? 'TriPay';
+
         $customerEmail = trim($data['customer_email'] ?? '');
         $customerName  = trim($data['customer_name'] ?? '');
         $customerPhone = trim($data['customer_phone'] ?? '');
-        $amount        = $data['total_amount'] ?? $data['amount'] ?? 0;
-        $paymentMethod = $data['payment_method'] ?? $data['payment_name'] ?? 'TriPay';
-        $merchantRef   = $data['merchant_ref'] ?? '';
-        $reference     = $data['reference'] ?? '';
+
+        // JIKA TRIPAY TIDAK MENYERTAKAN EMAIL (MISAL QRIS), AMBIL DARI DATA ORDER LOKAL
+        if (empty($customerEmail) && !empty($merchantRef)) {
+            $trxFile = __DIR__ . '/data_trx/' . $merchantRef . '.json';
+            if (file_exists($trxFile)) {
+                $cached = json_decode(file_get_contents($trxFile), true);
+                if ($cached) {
+                    $customerEmail = trim($cached['customer_email'] ?? '');
+                    $customerName  = trim($cached['customer_name'] ?? '');
+                    $customerPhone = trim($cached['customer_phone'] ?? '');
+                }
+            }
+        }
 
         // 1. Kirim via POST dengan CURLOPT_POSTREDIR untuk menangani 302 redirect Google Apps Script
         $forwardPayload = json_encode([
@@ -108,7 +122,7 @@ if ($eventHeader === 'payment_status') {
         $fallbackResult = curl_exec($chFallback);
         curl_close($chFallback);
 
-        @file_put_contents($logFile, "[$timestamp] [SUCCESS PAID] Ref: $merchantRef | Email: $customerEmail | POST Result (HTTP $httpCode): $result | Fallback Result: $fallbackResult\n", FILE_APPEND);
+        @file_put_contents($logFile, "[$timestamp] [SUCCESS PAID] Ref: $merchantRef | Email: $customerEmail | POST Result (HTTP $httpCode): $result | Fallback: $fallbackResult\n", FILE_APPEND);
     }
 
     echo json_encode([

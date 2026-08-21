@@ -28,7 +28,7 @@ if (!$data) {
 }
 
 $name = trim($data['name'] ?? '');
-$email = trim($data['email'] ?? '');
+$email = strtolower(trim($data['email'] ?? ''));
 $phone = trim($data['phone'] ?? '');
 $method = trim($data['method'] ?? 'QRIS');
 $plan = trim($data['plan'] ?? 'lifetime');
@@ -41,7 +41,7 @@ if (empty($name) || empty($email) || empty($phone)) {
     exit;
 }
 
-// Normalisasi phone format (misal 0812 -> 0812)
+// Normalisasi phone format (misal 62812 -> 0812)
 $phone = preg_replace('/[^0-9]/', '', $phone);
 if (substr($phone, 0, 2) === '62') {
     $phone = '0' . substr($phone, 2);
@@ -78,6 +78,25 @@ $productName = ($plan === 'reseller')
     : 'SmartFeed AI Studio (Lifetime Access - 20 Engine Kreatif)';
 
 $merchantRef = 'SF-' . time() . '-' . rand(100, 999);
+
+// SIMPAN DATA TRANSAKSI KE CACHE LOKAL AGAR CALLBACK TRIPAY SELALU MEMILIKI EMAIL & NAMA PEMBELI
+$trxDir = __DIR__ . '/data_trx';
+if (!is_dir($trxDir)) {
+    @mkdir($trxDir, 0755, true);
+}
+
+$trxData = [
+    'merchant_ref'   => $merchantRef,
+    'customer_name'  => $name,
+    'customer_email' => $email,
+    'customer_phone' => $phone,
+    'amount'         => (int)$amount,
+    'plan'           => $plan,
+    'method'         => $method,
+    'created_at'     => time()
+];
+@file_put_contents($trxDir . '/' . $merchantRef . '.json', json_encode($trxData, JSON_PRETTY_PRINT));
+
 $signature = hash_hmac('sha256', TRIPAY_MERCHANT_CODE . $merchantRef . $amount, TRIPAY_PRIVATE_KEY);
 
 $payload = [
