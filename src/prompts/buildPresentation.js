@@ -1,49 +1,60 @@
 /**
  * Smart Feed — Magic Prompt Presentasi PPT (Beta) Engine
- * Menghasilkan output presentasi berbasis 5 prinsip desain terbaik:
- * 1. Satu Slide Satu Pesan
- * 2. Prinsip 5-5-5 (Maksimal 5 baris, 5 kata per baris)
- * 3. Struktur Logis (Opening, Problem, Solution, Evidence, CTA)
- * 4. Data & Bukti Terukur
- * 5. Visual Berkualitas Tinggi
+ * Menghasilkan output prompt presentasi PowerPoint berbasis 10 prinsip desain terbaik:
+ * 1. Satu Slide, Satu Pesan Utama
+ * 2. Prinsip 5-5-5
+ * 3. Bullet Points Efektif
+ * 4. Berbasis Data dan Bukti
+ * 5. Struktur Logis: Pendahuluan -> Isi -> Penutup
+ * 6. Desain Simpel dan Konsisten
+ * 7. Kontras Tinggi (WCAG AA)
+ * 8. Font Mudah Dibaca
+ * 9. Visual Berkualitas Tinggi
+ * 10. Manfaatkan White Space
  */
 
 export const INITIAL_PRESENTATION = {
-  topic: 'Strategi Growth Hacking untuk Startup SaaS B2B',
-  type: 'Pitching ke Investor',
-  audience: 'Investor Series A, Tim Marketing, CEO Startup',
-  slideCount: 10,
-  duration: '10-15 menit',
+  topic: 'Strategi buat konten mudah dan menarik',
+  type: 'Edukasi / Workshop',
+  audience: 'Kreator pemula atau yang mau mulai ngonten',
+  slideCount: 6,
+  duration: '5-10 menit',
   language: 'Indonesia',
-  keyPoints: '- Masalah utama: Customer Acquisition Cost (CAC) industri SaaS naik 60%\n- Solusi: Framework Growth Flywheel berbasis Product-Led Growth (PLG)\n- Ukuran pasar & peluang di Asia Tenggara (TAM $12B)\n- Model monetisasi & proyeksi recurring revenue (ARR)\n- Traction saat ini: 1.200 pengguna aktif berbayar, NPS 72\n- Dana yang dibutuhkan $500K untuk ekspansi tim engineer dan akuisisi',
-  dataEvidence: 'Market size $12B, growth rate 35% YoY, 1.200 pengguna aktif, CAC payback period 4 bulan, NPS score 72.',
-  mainCta: 'Investor commit funding $500K untuk ekspansi regional 12 bulan ke depan.',
-  designStyle: 'Startup Inovatif',
-  colorScheme: 'Obsidian Black (#0A0F1D) + Emerald Neon (#10B981) + Pure White',
-  visualElements: ['Infografis & Diagram', 'Grafik & Chart', 'Mockup Produk', 'Comparison Table'],
-  tone: 'Data-driven',
-  extraNotes: 'Tekankan unit economics yang sehat dan traction riil pengguna.',
+  keyPoints: '- tipe-tipe konten\n- contoh kreator yang mudah ditiru\n- trend terkini\n- konten yang bermanfaat',
+  dataEvidence: '',
+  mainCta: 'Ikut komunitas yang siap mendukung pertumbuhan mu',
+  designStyle: 'Kreatif & Playful',
+  colorScheme: 'Putih, Orange, Kuning, Hijau',
+  visualElements: ['Infografis & Diagram', 'Ikon Vektor', 'Foto HD', 'Timeline', 'Comparison Table'],
+  tone: 'Percaya Diri',
+  extraNotes: '',
 };
 
 export function buildPresentation(state) {
   const {
-    topic = 'Proposal Strategis & Inovasi Presentasi',
-    type = 'Pitching ke Investor',
-    audience = 'Investor, Manajemen & Pemangku Kepentingan',
-    slideCount = 10,
-    duration = '10-15 menit',
+    topic = 'Strategi buat konten mudah dan menarik',
+    type = 'Edukasi / Workshop',
+    audience = 'Kreator pemula atau yang mau mulai ngonten',
+    slideCount = 6,
+    duration = '5-10 menit',
     language = 'Indonesia',
-    keyPoints = '',
+    keyPoints = '- tipe-tipe konten\n- contoh kreator yang mudah ditiru\n- trend\n- konten yang bermanfaat',
     dataEvidence = '',
-    mainCta = '',
-    designStyle = 'Profesional & Minimalis',
-    colorScheme = 'Navy Blue (#002D62) + Warm Gold (#EAAA00) + Clean White',
-    visualElements = ['Infografis & Diagram', 'Ikon Vektor', 'Grafik & Chart', 'Timeline'],
+    mainCta = 'Ikut komunitas yang siap mendukung pertumbuhan mu',
+    designStyle = 'Kreatif & Playful',
+    colorScheme = 'Putih, Orange, Kuning, Hijau',
+    visualElements = ['Infografis & Diagram', 'Ikon Vektor', 'Foto HD', 'Timeline', 'Comparison Table'],
     tone = 'Percaya Diri',
     extraNotes = '',
   } = state || {};
 
-  const safeCount = Math.max(4, Math.min(Number(slideCount) || 10, 24));
+  const safeCount = Math.max(4, Math.min(Number(slideCount) || 6, 24));
+  const slideCountLabel = safeCount <= 7 ? '5–7 slide' : safeCount <= 12 ? '10–12 slide' : safeCount <= 20 ? '15–20 slide' : '20–30 slide';
+
+  const visualElementsList = Array.isArray(visualElements) && visualElements.length > 0
+    ? visualElements.map((v) => v.toLowerCase()).join(', ')
+    : 'infografis dan diagram, ikon vektor, foto berkualitas tinggi, timeline visual, comparison table';
+
   const slides = [];
 
   // SLIDE 1: Cover Hero
@@ -54,170 +65,194 @@ export function buildPresentation(state) {
     title: topic,
     subtitle: `Disusun untuk: ${audience} | Durasi: ${duration}`,
     layout: 'Split Layout 50:50 — Headline tebal beraksen kontras tinggi di kiri, Visual 3D Photorealistic di kanan, Ribbon footer elegan',
-    categoryChips: Array.isArray(visualElements) && visualElements.length > 0 ? visualElements.slice(0, 5) : ['STRATEGI', 'DATA', 'INOVASI', 'EKSEKUSI'],
+    categoryChips: Array.isArray(visualElements) && visualElements.length > 0 ? visualElements.slice(0, 5) : ['STRATEGI', 'KREATIF', 'KONTEN', 'KOMUNITAS'],
     bullets: [
-      `Tujuan Presentasi: ${type}`,
-      `Target Audiens: ${audience}`,
-      `Durasi Paparan: ${duration}`,
-      `Bahasa Pengantar: ${language}`,
+      `Topik: ${topic}`,
+      `Tujuan: ${type}`,
+      `Audiens: ${audience}`,
+      `Target: ${slideCountLabel}`,
     ],
-    speakerNotes: `Selamat datang Bapak/Ibu. Hari ini kami memaparkan rencana komprehensif mengenai "${topic}". Kita akan melihat tantangan pasar, solusi terukur, data pendukung, serta langkah eksekusi konkret yang siap dijalankan.`,
-    visualPrompt: `16:9 widescreen presentation title slide, minimalist luxury style, color scheme ${colorScheme}, bold typography "${topic}", high-end clean 3D isometric graphic on the right, pristine lighting, 8k resolution.`,
+    speakerNotes: `Halo semuanya, selamat datang! Pada sesi ini kita akan membedah "${topic}" secara praktis dan langsung bisa dipraktikkan hari ini juga.`,
+    visualPrompt: `16:9 widescreen presentation title slide, creative and playful style, color scheme ${colorScheme}, bold typography "${topic}", crisp lighting, 8k resolution.`,
   });
 
-  // SLIDE 2: Problem & Market Context
+  // SLIDE 2: Problem & Hook
   slides.push({
     slideNo: 2,
-    type: 'Latar Belakang & Urgensi Masalah',
-    eyebrow: 'URGENSI & TANTANGAN UTAMA',
-    title: 'Latar Belakang & Akar Permasalahan',
-    subtitle: 'Faktor pemicu yang menuntut tindakan strategis segera',
+    type: 'Hook & Masalah Utama',
+    eyebrow: 'TANTANGAN KREATOR PEMULA',
+    title: 'Kenapa Banyak yang Gagal Mulai Ngonten?',
+    subtitle: 'Hambatan psikologis & teknis yang sering menjebak pemula',
     layout: 'Grid 2-Kolom: 4 Kartu Masalah Bernomor (01-04) di sisi kiri, Box Sorot CORE di sisi kanan',
     bullets: [
-      '01. Efisiensi Biaya: Peningkatan biaya operasional/akuisisi yang menekan margin profitabilitas.',
-      '02. Perubahan Tren: Pergeseran cepat ekspektasi pasar dan kebutuhan adopsi teknologi digital.',
-      '03. Kesenjangan Solusi: Solusi konvensional yang beredar saat ini lambat dan tidak fleksibel.',
-      '04. Potensi Pasar Terbuka: Kebutuhan solusi modern yang terjangkau dan scalable.',
+      '01. Terlalu Perfeksionis: Menunggu alat mahal baru berani posting.',
+      '02. Bingung Ide: Tidak tahu formula tipe-tipe konten teruji.',
+      '03. Takut Gak Ditonton: Ekspektasi viral instan tanpa konsistensi.',
+      '04. Kurang Bimbingan: Jalan sendirian tanpa komunitas pendukung.',
     ],
     coreHighlight: {
-      tag: 'MASALAH UTAMA',
-      body: 'Tanpa inovasi dan strategi yang tepat sasaran, peluang pasar bernilai tinggi akan terlewatkan oleh kompetitor.',
-      output: 'Dibutuhkan Solusi Cepat, Terukur & Teruji',
+      tag: 'KUNCI SUKSES',
+      body: 'Konten yang bagus bukan yang paling canggih editnya, tapi yang paling konsisten dan memberikan manfaat nyata bagi audiens.',
+      output: 'Sederhana + Bermanfaat + Konsisten',
     },
-    speakerNotes: 'Slide ini menyoroti akar masalah yang kita temukan di lapangan, mengapa situasi saat ini menuntut perubahan segera, dan potensi risiko jika tidak segera diatasi.',
-    visualPrompt: `16:9 presentation slide showing 4 numbered problem cards on the left with subtle red accents, a prominent tall dark card on the right labeled CORE with ${colorScheme}, crisp typography.`,
+    speakerNotes: 'Banyak orang gagal ngonten bukan karena tidak punya bakat, tapi karena terjebak rasa takut dan tidak tahu pola konten yang mudah ditiru.',
+    visualPrompt: `16:9 presentation slide showing 4 numbered problem cards with warm accent borders, right tall highlight box, color palette ${colorScheme}, clean typography.`,
   });
 
-  // SLIDE 3: Solusi & Keunggulan
+  // SLIDE 3: Tipe-Tipe Konten & Solusi
   slides.push({
     slideNo: 3,
-    type: 'Solusi Utama & Value Proposition',
-    eyebrow: 'SOLUSI STRATEGIS',
-    title: 'Solusi Terpadu & Nilai Tambah',
-    subtitle: 'Menghadirkan diferensiasi nyata dengan dampak terukur',
-    layout: '3 Pilar Kartu Vertikal dengan Banner Solusi Utama di bagian bawah',
+    type: 'Pilar Solusi & Tipe Konten',
+    eyebrow: 'FORMULA PRAKTIS',
+    title: '4 Pilar Tipe Konten Berdampak',
+    subtitle: 'Pilih satu yang paling cocok dengan karakter Anda',
+    layout: '3-4 Pilar Kartu Vertikal dengan Banner Solusi Utama di bagian bawah',
     bullets: [
-      'Pilar 1 (Efisiensi): Otomasi proses yang memangkas waktu kerja hingga 70%.',
-      'Pilar 2 (Skalabilitas): Infrastruktur siap berkembang seiring pertumbuhan volume bisnis.',
-      'Pilar 3 (Keandalan): Standar kualitas teruji dengan bukti kepuasan pengguna nyata.',
+      'Pilar 1 (Edukasi): Tips singkat & panduan langkah-demi-langkah.',
+      'Pilar 2 (Inspirasi): Cerita perjalanan & studi kasus nyata.',
+      'Pilar 3 (Entertain): Tren terkini yang dikemas santai & relevan.',
     ],
     solutionBanner: {
-      badge: 'DIFERENSIASI UTAMA',
-      text: 'Solusi holistik yang memadukan kecepatan eksekusi, akurasi data, dan kemudahan penggunaan.',
+      badge: 'STRATEGI UTAMA',
+      text: 'Gunakan formula ATM (Amati, Tiru, Modifikasi) dari kreator yang sudah terbukti berhasil.',
     },
-    speakerNotes: 'Berikut adalah jawaban konkret kami terhadap permasalahan tadi. Kami merancang 3 pilar solusi yang langsung menjawab kebutuhan pengguna.',
-    visualPrompt: `16:9 presentation slide showing 3 modern vertical pillar cards with glowing icon headers, bottom wide highlight banner with ${colorScheme}, professional corporate aesthetic.`,
+    speakerNotes: 'Jangan buat konten dari nol jika bingung. Amati kreator panutan, pelajari polanya, lalu berikan sentuhan autentik versi Anda sendiri.',
+    visualPrompt: `16:9 presentation slide showing 3 modern vertical pillar cards with glowing icon headers, bottom wide banner with ${colorScheme}, playful corporate aesthetic.`,
   });
 
-  // SLIDE 4: Data, Bukti & Statistik
+  // SLIDE 4: Trend & Bukti
   slides.push({
     slideNo: 4,
-    type: 'Data & Bukti Terukur',
-    eyebrow: 'BUKTI DATA & VALIDASI',
-    title: 'Validasi Pasar & Metrik Kunci',
-    subtitle: 'Didukung angka riil dan riset pasar mendalam',
+    type: 'Trend & Bukti Data',
+    eyebrow: 'MOMENTUM & PELUANG',
+    title: 'Memanfaatkan Trend Tanpa Kehilangan Identitas',
+    subtitle: 'Data & pola viral yang bisa dimanfaatkan secara cerdas',
     layout: '4 Metrik Angka Tebal (KPI Cards) + Ringkasan Insight Analitik',
     bullets: [
-      `Data Validasi: ${dataEvidence || 'Pertumbuhan eksponensial dengan retensi pengguna tinggi.'}`,
-      'Metrik Efisiensi: Waktu implementasi 3x lebih cepat dibandingkan standar industri.',
-      'Kepuasan Pengguna: Feedback positif konsisten dan tingkat adopsi melampaui target.',
-      'Proyeksi Pertumbuhan: Peluang ekspansi pasar yang terus membesar setiap kuartal.',
+      'Trend Hook 3 Detik: 80% audiens memutuskan menonton di 3 detik pertama.',
+      'Audio Populer: Meningkatkan jangkauan distribusi algoritma hingga 2.5x.',
+      'Format Micro-learning: Konten 30-60 detik memiliki tingkat penyelesaian tertinggi.',
+      'Nilai Manfaat: Konten yang memecahkan masalah 4x lebih sering disimpan (Save).',
     ],
-    goldenTakeaway: dataEvidence || 'Data membuktikan penerimaan pasar yang sangat kuat dan potensi skalabilitas tinggi.',
-    speakerNotes: `Angka tidak pernah bohong. Seperti yang terlihat pada metrik di slide ini: ${dataEvidence || 'semua indikator menunjukkan performa positif dan momentum yang sangat tepat.'}`,
-    visualPrompt: `16:9 data dashboard presentation slide with 4 clean metric stat boxes, modern line chart graph, clean typography, ${colorScheme}, high contrast readability.`,
+    goldenTakeaway: 'Trend adalah kendaraan, tapi isi dan manfaat adalah bahan bakarnya.',
+    speakerNotes: 'Ikuti trend audio atau format visual, tapi selalu selipkan nilai edukasi atau solusi agar audiens loyal dan menekan tombol Follow.',
+    visualPrompt: `16:9 data dashboard presentation slide with clean metric stat boxes, modern line chart, color scheme ${colorScheme}, high contrast readability.`,
   });
 
-  // SLIDE 5: Rencana Eksekusi & Roadmap
+  // SLIDE 5: Call to Action & Komunitas
   slides.push({
     slideNo: 5,
-    type: 'Roadmap & Rencana Implementasi',
-    eyebrow: 'ROADMAP STRATEGIS',
-    title: 'Tahapan Eksekusi & Timeline',
-    subtitle: 'Langkah terstruktur menuju pencapaian target',
-    layout: 'Timeline Horizontal 4 Fase dengan Milestone Output Jelas',
-    bullets: [
-      'Fase 1 (Fondasi & Setup): Penyiapan infrastruktur, riset mendalam, dan perakitan tim inti.',
-      'Fase 2 (Peluncuran & Pilot): Pengujian langsung ke pengguna awal dan iterasi cepat.',
-      'Fase 3 (Skalasi & Optimasi): Peningkatan kapasitas dan penetrasi pasar yang lebih luas.',
-      'Fase 4 (Ekspansi & Keberlanjutan): Penguatan kemitraan strategis dan diversifikasi nilai tambah.',
-    ],
-    targetBar: 'Target: Pencapaian milestone utama dalam 6-12 bulan ke depan secara tepat waktu dan sesuai anggaran.',
-    speakerNotes: 'Kami telah menyusun roadmap eksekusi 4 fase yang terukur. Setiap fase memiliki key deliverables yang jelas untuk memastikan akuntabilitas.',
-    visualPrompt: `16:9 presentation slide showing modern 4-phase horizontal roadmap timeline with connected nodes, progress indicators, elegant ${colorScheme}, clean professional style.`,
-  });
-
-  // SLIDE 6: Call to Action & Next Steps
-  slides.push({
-    slideNo: 6,
-    type: 'Call to Action & Kesimpulan',
-    eyebrow: 'LANGKAH SELANJUTNYA',
-    title: 'Kesimpulan & Call to Action',
-    subtitle: 'Mari melangkah bersama menciptakan dampak nyata',
+    type: 'Call to Action & Penutup',
+    eyebrow: 'LANGKAH NYATA',
+    title: 'Mulai Sekarang, Bertumbuh Bersama',
+    subtitle: 'Jangan berjalan sendirian di industri kreatif',
     layout: 'Center CTA Hero Card + 3 Action Items yang Disepakati',
     bullets: [
-      `Pesan Kunci: ${mainCta || 'Kolaborasi strategis untuk meraih peluang pertumbuhan pasar.'}`,
-      'Persetujuan: Menyetujui rencana implementasi dan alokasi sumber daya tahap awal.',
-      'Timeline Mulai: Pembentukan tim kerja dan kickoff project dalam 14 hari kerja.',
+      `Aksi Utama: ${mainCta || 'Ikut komunitas yang siap mendukung pertumbuhan mu.'}`,
+      'Langkah 1: Tentukan 1 pilar konten utama Anda hari ini.',
+      'Langkah 2: Buat 1 video pertama tanpa memikirkan kesempurnaan.',
     ],
     actionChecklist: [
-      'Menyetujui proposal dan target output strategis',
-      'Menetapkan timeline kickoff dan person in charge (PIC)',
-      'Memulai fase eksekusi pertama sesuai roadmap',
+      'Gabung ke grup komunitas kreator',
+      'Praktikkan 1 template konten per hari',
+      'Saling dukung & review antar sesama kreator',
     ],
-    goldenTakeaway: mainCta || 'Saatnya bertindak bersama mengamankan momentum pertumbuhan terbaik.',
-    speakerNotes: `Sebagai penutup, kami mengajak Bapak/Ibu untuk melangkah bersama: ${mainCta || 'Mari kita sepakati langkah awal ini dan mulai eksekusi.'} Terima kasih.`,
-    visualPrompt: `16:9 closing presentation slide, bold central CTA card with gold glow, checkmark icons, contact details placeholder, ${colorScheme}, inspiring finish.`,
+    goldenTakeaway: mainCta || 'Ikut komunitas yang siap mendukung pertumbuhan mu!',
+    speakerNotes: `Sebagai penutup, perjalanan seribu langkah dimulai dari konten pertama. ${mainCta} Sampai jumpa di dalam komunitas!`,
+    visualPrompt: `16:9 closing presentation slide, bold central CTA card with warm glowing button, checkmark icons, color scheme ${colorScheme}, inspiring finish.`,
   });
 
-  // 1. MASTER MAGIC PROMPT (Untuk ChatGPT 4o, Claude 3.5 Sonnet, Gemini Pro, & NotebookLM)
-  const magicPrompt = `# MAGIC PROMPT PRESENTASI PPT (BETA)
-# TOPIC: ${topic}
-# TIPE: ${type} | AUDIENS: ${audience} | DURASI: ${duration} | BAHASA: ${language}
+  // 1. MASTER MAGIC PROMPT (FORMAT BLUEPRINT PERSIS REFERENSI)
+  const magicPrompt = `Buatkan slide presentasi PowerPoint tentang "${topic}"
 
-Anda adalah seorang Konsultan Desain Presentasi Eksekutif & Ahli Komunikasi Bisnis Kelas Dunia (McKinsey / BCG / TED Speaker Level).
-Tugas Anda adalah menyusun Naskah Lengkap, Struktur Slide 16:9 Widescreen, Visual Direction, dan Speaker Notes profesional berdasarkan input berikut:
+Buatkan outline lengkap slide presentasi PowerPoint dengan detail berikut:
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INFORMASI DASAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Judul / Topik     : ${topic}
+• Jenis Presentasi  : ${type}
+• Target Audiens    : ${audience}
+• Jumlah Slide      : ${slideCountLabel}
+• Durasi            : ${duration}
+• Bahasa            : ${language === 'Indonesia' ? 'Bahasa Indonesia' : language === 'Inggris' ? 'Bahasa Inggris' : 'Bilingual (Indonesia / Inggris)'}
 
-## 1. IDENTITAS PRESENTASI
-- **Judul / Topik**: ${topic}
-- **Tujuan / Jenis**: ${type}
-- **Target Audiens**: ${audience}
-- **Target Slide**: ${safeCount} Slide (Widescreen 16:9)
-- **Durasi Paparan**: ${duration}
-- **Bahasa Pengantar**: ${language}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KONTEN & PESAN UTAMA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Poin-poin kunci yang harus disampaikan:
+${keyPoints ? keyPoints.split('\n').map((l) => (l.trim().startsWith('-') ? l : `- ${l}`)).join('\n') : '- Masalah utama di industri\n- Solusi inovatif yang ditawarkan\n- Data traksi dan validasi pasar\n- Rencana implementasi & roadmap'}
 
-## 2. KONTEN & PESAN KUNCI
-- **Poin-Poin Utama**:
-${keyPoints || '- Diskusikan latar belakang masalah, solusi unggulan, data traksi, dan roadmap implementasi.'}
-- **Data / Bukti / Statistik**: ${dataEvidence || 'Data pertumbuhan pasar, metrik efisiensi, dan validasi pengguna nyata.'}
-- **Pesan Utama / Call to Action**: ${mainCta || 'Dapatkan persetujuan stakeholder dan komitmen eksekusi bersama.'}
+${dataEvidence ? `Data / Bukti / Statistik yang akan digunakan:\n${dataEvidence}\n\n` : ''}Call to Action akhir presentasi:
+→ ${mainCta || 'Ikut komunitas yang siap mendukung pertumbuhan mu'}
 
-## 3. GAYA DESAIN & VISUAL (5 PRINSIP PRESENTASI TERBAIK)
-- **Gaya Desain**: ${designStyle}
-- **Skema Warna**: ${colorScheme}
-- **Elemen Visual yang Wajib**: ${Array.isArray(visualElements) ? visualElements.join(', ') : 'Infografis, Chart, Diagram, Ikon'}
-- **Tone / Gaya Bahasa**: ${tone}
-${extraNotes ? `- **Konteks Khusus**: ${extraNotes}\n` : ''}
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRINSIP DESAIN YANG HARUS DITERAPKAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Terapkan prinsip-prinsip berikut secara ketat pada setiap slide:
 
-## FORMAT OUTPUT YANG HARUS ANDA HASILKAN:
-Untuk SETIAP slide (Slide 1 s.d. ${safeCount}), sajikan dalam format terstruktur berikut:
+1. SATU SLIDE, SATU PESAN UTAMA
+   Setiap slide hanya mengkomunikasikan satu ide pokok. Tidak ada dua gagasan 
+   utama dalam satu slide. Buat judul slide mencerminkan pesan tersebut.
 
-### Slide [Nomor]: [Judul Slide yang Kuat & Menarik]
-- **Tipe Slide**: (Cover / Problem / Solution / Data / Roadmap / CTA)
-- **Kategori / Eyebrow Tag**: (Tag kecil huruf kapital di atas judul)
-- **Sub-Judul**: (1 kalimat penjelas pesan utama)
-- **Layout & Visual Composition**: (Deskripsi tata letak kartu, grid, split, infografis)
-- **Konten Poin (Prinsip 5-5-5)**:
-  * (Maksimal 3-5 poin, ringkas, padat, tanpa paragraf panjang)
-- **Data / Highlight Box**: (Angka metrik / quote penegas)
-- **Speaker Notes**: "(Naskah apa yang harus diucapkan presenter selama 1-2 menit dengan gaya ${tone})"
-- **AI Image Prompt (16:9 Photorealistic)**: \`\`\`(Prompt gambar AI dalam bahasa Inggris untuk Midjourney/Flux/Ideogram agar menghasilkan visual slide beresolusi tinggi)\`\`\`
+2. PRINSIP 5-5-5
+   Maksimum 5 bullet points per slide, maksimum 5 kata per bullet point, 
+   dan tidak lebih dari 5 slide berturut-turut dengan format teks penuh.
 
----
-*Patuhi prinsip "Satu Slide Satu Pesan" dan pastikan seluruh narasi mengalir logis menuju Call to Action.*`;
+3. BULLET POINTS YANG EFEKTIF
+   Gunakan bullet points singkat dan padat. Hindari kalimat panjang.
+   Setiap poin adalah pemicu bicara, bukan skrip lengkap.
+
+4. BERBASIS DATA DAN BUKTI
+   Tampilkan angka, statistik, hasil riset, atau studi kasus konkret.
+   Visualisasikan data dalam bentuk chart/grafik bila memungkinkan.
+
+5. STRUKTUR LOGIS: PENDAHULUAN → ISI → PENUTUP
+   - PEMBUKA  : Hook/pernyataan masalah + agenda slide
+   - ISI      : Solusi, argumen, data, dan penjelasan detail
+   - PENUTUP  : Ringkasan, kesimpulan, dan Call to Action yang jelas
+
+6. DESAIN SIMPEL DAN KONSISTEN
+   Gunakan maksimum 2–3 warna utama (${colorScheme}). 
+   Satu atau dua jenis font saja. Layout yang konsisten antar slide.
+
+7. KONTRAS TINGGI
+   Teks harus mudah terbaca dari jarak jauh. Pastikan kontras warna antara 
+   teks dan background minimal 4.5:1 (WCAG AA). Hindari teks abu-abu di atas putih.
+
+8. FONT MUDAH DIBACA
+   Gunakan font sans-serif yang bersih. Heading minimal 28–36pt, 
+   body text minimal 18–24pt, caption minimal 14pt. Tidak ada teks kecil yang sulit dibaca.
+
+9. VISUAL BERKUALITAS TINGGI
+   Rekomendasikan penggunaan: ${visualElementsList}.
+   Setiap visual harus relevan dan memperkuat pesan, bukan sekadar dekorasi.
+
+10. MANFAATKAN WHITE SPACE
+    Jangan penuhi seluruh slide dengan konten. Biarkan ruang kosong bernafas.
+    Padding antar elemen minimal 20–30px. Satu titik fokus utama per slide.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GAYA & TONE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Gaya Desain Visual : ${designStyle.toLowerCase()}
+• Tone Bahasa        : ${tone.toLowerCase()}
+• Skema Warna        : ${colorScheme}
+${extraNotes ? `• Catatan Khusus      : ${extraNotes}\n` : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FORMAT OUTPUT YANG DIINGINKAN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Untuk setiap slide, berikan:
+1. Nomor & Judul Slide
+2. Pesan Utama Slide (1 kalimat)
+3. Konten / Bullet Points (maks. 5 poin, maks. 5 kata per poin)
+4. Rekomendasi Visual (jenis grafik, ikon, foto, atau ilustrasi)
+5. Catatan Presenter (poin tambahan yang diucapkan, tidak ditampilkan di slide)
+6. Layout yang disarankan (full image, two-column, data-heavy, quote, dll.)
+7. Prompt Gambar AI (Midjourney / Flux / Ideogram) 16:9 photorealistic
+
+Susun outline ${slideCountLabel} berdasarkan struktur:
+[PEMBUKA] → [HOOK/MASALAH] → [ISI UTAMA] → [DATA & BUKTI] → [SOLUSI/PROPOSISI] → [CTA/PENUTUP]`;
 
   // 2. GAMMA.APP / CANVA OUTLINE (1-Click Copy Import)
   const gammaOutline = `# ${topic}
@@ -232,7 +267,6 @@ ${slides.map((s) => `
 ${s.bullets.map((b) => `- ${b}`).join('\n')}
 ${s.coreHighlight ? `\n> **${s.coreHighlight.tag}**: ${s.coreHighlight.body}\n> *${s.coreHighlight.output}*` : ''}
 ${s.solutionBanner ? `\n> **${s.solutionBanner.badge}**: ${s.solutionBanner.text}` : ''}
-${s.targetBar ? `\n> **Milestone**: ${s.targetBar}` : ''}
 ${s.goldenTakeaway ? `\n**Key Takeaway**: ${s.goldenTakeaway}` : ''}
 `).join('\n')}`;
 
@@ -252,7 +286,6 @@ Sub BuildMagicPresentation()
     Dim pptPres As Presentation
     Dim sld As Slide
     Dim shpTitle As Shape
-    Dim shpSub As Shape
     Dim shpBody As Shape
     
     Set pptPres = ActivePresentation
@@ -280,7 +313,7 @@ ${slides.map((s, idx) => `
     Set shpBody = sld.Shapes.AddTextbox(msoTextOrientationHorizontal, 50, 120, 1050, 450)
     With shpBody.TextFrame
         .WordWrap = msoTrue
-        .TextRange.Text = "${s.bullets.map(b => b.replace(/"/g, '""')).join('" & vbCrLf & "')}"
+        .TextRange.Text = "${s.bullets.map((b) => b.replace(/"/g, '""')).join('" & vbCrLf & "')}"
         .TextRange.Font.Name = "Calibri"
         .TextRange.Font.Size = 16
         .TextRange.Font.Color.RGB = RGB(220, 230, 245)
@@ -313,10 +346,10 @@ ${keyPoints || 'Pembahasan mendalam tentang tantangan industri saat ini dan urge
 ${dataEvidence || 'Data metrik pendukung dan validasi pasar nyata.'}
 
 ### 4. Rencana Implementasi & Roadmap
-Roadmap 4 fase terstruktur yang menjamin pencapaian target tepat waktu dan sesuai anggaran.
+Roadmap terstruktur yang menjamin pencapaian target tepat waktu dan terukur.
 
 ### 5. Call to Action & Rekomendasi Keputusan
-${mainCta || 'Menyetujui proposal dan memulai langkah kickoff implementasi.'}
+${mainCta || 'Ikut komunitas yang siap mendukung pertumbuhan mu'}
 
 ---
 *Dokumen ini dioptimalkan untuk diunggah ke Google NotebookLM sebagai Source Document guna menghasilkan Ringkasan Audio Podcast dan FAQ Interaktif.*`;
