@@ -13,6 +13,18 @@
 const cfg = (typeof window !== 'undefined' && window.__AF_CONFIG) || {};
 const pick = (v, d) => (v === undefined || v === null || v === '' ? d : v);
 
+const isTruthy = (val, defaultVal = true) => {
+  if (val === undefined || val === null || val === '') return defaultVal;
+  if (typeof val === 'boolean') return val;
+  if (typeof val === 'number') return val !== 0;
+  if (typeof val === 'string') {
+    const s = val.trim().toLowerCase();
+    if (s === 'false' || s === 'off' || s === '0' || s === 'no' || s === 'disable' || s === 'disabled' || s === 'tutup') return false;
+    if (s === 'true' || s === 'on' || s === '1' || s === 'yes' || s === 'enable' || s === 'enabled' || s === 'buka') return true;
+  }
+  return Boolean(val);
+};
+
 export const CONFIG = {
   // ── Branding ──────────────────────────────────────────────
   brandName: pick(cfg.brandName, 'Smart Feed'),
@@ -57,6 +69,7 @@ export const CONFIG = {
   resellerPrice:      pick(cfg.resellerPrice, '290.000'),
   resellerStrike:     pick(cfg.resellerStrike, '1.500.000'),
   resellerPaymentUrl: pick(cfg.resellerPaymentUrl, '/checkout?plan=reseller'),
+
   // ── PENDAFTARAN & LOGIN VIA GOOGLE SPREADSHEET ──────────
   sheetWebhookUrl: pick(cfg.sheetWebhookUrl, ''),
   sheetCsvUrl: pick(cfg.sheetCsvUrl, ''),
