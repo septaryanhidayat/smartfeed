@@ -5,38 +5,38 @@
 /* ═══════════════════════ THEME TOKENS ═══════════════════════ */
 :root.theme-dark {
   --bg:           #060B17;
-  --bg-deep:      #03060D;
+  --bg-deep:      #0B132B;
   --bg-panel:     #0F172A;
   --bg-elev:      #1E293B;
-  --border:       rgba(var(--accent-rgb), 0.22);
-  --border-strong:rgba(var(--accent-rgb), 0.42);
-  --text:         #f8fafc;
-  --text-muted:   #cbd5e1;
-  --text-dim:     #94a3b8;
-  --accent-rgb:   37, 99, 235;
-  --accent:       #2563eb;
-  --accent-hover: #60a5fa;
-  --accent-soft:  rgba(var(--accent-rgb), 0.20);
-  --accent-deep:  #1d4ed8;
-  --shadow-strong: 0 10px 40px -8px rgba(37, 99, 235, 0.5);
+  --border:       rgba(255, 255, 255, 0.12);
+  --border-strong:rgba(255, 255, 255, 0.28);
+  --text:         #F8FAFC;
+  --text-muted:   #CBD5E1;
+  --text-dim:     #94A3B8;
+  --accent-rgb:   0, 168, 181;
+  --accent:       #00a8b5;
+  --accent-hover: #22d3ee;
+  --accent-soft:  rgba(0, 168, 181, 0.20);
+  --accent-deep:  #0891b2;
+  --shadow-strong: 0 10px 40px -8px rgba(0, 168, 181, 0.45);
   color-scheme: dark;
 }
 :root.theme-light {
-  --bg:           #f4f7fa;
-  --bg-deep:      #e6edf5;
-  --bg-panel:     #ffffff;
-  --bg-elev:      #eef3f9;
-  --border:       rgba(0, 168, 181, 0.20);
-  --border-strong:rgba(0, 168, 181, 0.45);
-  --text:         #0A2540;
-  --text-muted:   #334e68;
-  --text-dim:     #627d98;
-  --accent-rgb:   0, 168, 181;
-  --accent:       #00a8b5;
-  --accent-hover: #008c97;
-  --accent-soft:  rgba(0, 168, 181, 0.15);
-  --accent-deep:  #006b74;
-  --shadow-strong: 0 10px 40px -8px rgba(10, 37, 64, 0.15);
+  --bg:           #F1F5F9;
+  --bg-deep:      #FFFFFF;
+  --bg-panel:     #FFFFFF;
+  --bg-elev:      #E2E8F0;
+  --border:       #CBD5E1;
+  --border-strong:#94A3B8;
+  --text:         #0F172A;
+  --text-muted:   #334155;
+  --text-dim:     #64748B;
+  --accent-rgb:   0, 140, 151;
+  --accent:       #008C97;
+  --accent-hover: #006B74;
+  --accent-soft:  rgba(0, 140, 151, 0.14);
+  --accent-deep:  #004E54;
+  --shadow-strong: 0 10px 30px -8px rgba(15, 23, 42, 0.10);
   color-scheme: light;
 }
 

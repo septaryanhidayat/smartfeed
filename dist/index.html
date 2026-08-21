@@ -188,10 +188,10 @@
     }
   </style>
   <!-- tracking dikosongkan untuk paket reseller -->
-  <script type="module" crossorigin src="/assets/index-Ct-n4tO9.js"></script>
+  <script type="module" crossorigin src="/assets/index-DyhTjiH7.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/vendor-icons-D2B_UUMz.js">
   <link rel="modulepreload" crossorigin href="/assets/vendor-react-ChxHhwsW.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-DuwfFZx-.css">
+  <link rel="stylesheet" crossorigin href="/assets/index-CIMwIlJv.css">
 </head>
 
 <body>
@@ -220,22 +220,24 @@
         var darken = function (a, p) { return [clamp(a[0] * (1 - p)), clamp(a[1] * (1 - p)), clamp(a[2] * (1 - p))]; };
         var toRgb = function (a) { return 'rgb(' + a[0] + ',' + a[1] + ',' + a[2] + ')'; };
 
+        var isDarkRgb = function (rgb) {
+          // luminance formula (dark if < 100)
+          return (rgb[0] * 0.299 + rgb[1] * 0.587 + rgb[2] * 0.114) < 100;
+        };
+
         var rules = [];
         // ACCENT
         var ac = hexToRgb(cfg.accentColor);
         if (ac) {
-          // pakai rgb() (selalu valid) — tahan walau user lupa tanda '#'
           rules.push('--accent:' + toRgb(ac) + ';');
           rules.push('--accent-rgb:' + rgbStr(ac) + ';');
           rules.push('--accent-hover:' + toRgb(lighten(ac, 0.18)) + ';');
           rules.push('--accent-deep:' + toRgb(darken(ac, 0.30)) + ';');
           rules.push('--accent-soft:rgba(' + rgbStr(ac) + ',0.20);');
-          rules.push('--border:rgba(' + rgbStr(ac) + ',0.22);');
-          rules.push('--border-strong:rgba(' + rgbStr(ac) + ',0.42);');
         }
-        // BACKGROUND (warna gelap; turunkan 4 shade dari 1 warna dasar)
+        // BACKGROUND (hanya jika warna gelap asli)
         var bg = hexToRgb(cfg.bgColor);
-        if (bg) {
+        if (bg && isDarkRgb(bg)) {
           rules.push('--bg:' + toRgb(bg) + ';');
           rules.push('--bg-deep:' + toRgb(darken(bg, 0.4)) + ';');
           rules.push('--bg-panel:' + toRgb(lighten(bg, 0.06)) + ';');
@@ -243,8 +245,7 @@
         }
         if (rules.length) {
           var st = document.createElement('style');
-          // :root:not(.theme-light) → menang atas :root (dark) tapi TIDAK kena light mode
-          st.textContent = ':root:not(.theme-light){' + rules.join('') + '}';
+          st.textContent = ':root.theme-dark{' + rules.join('') + '}';
           document.head.appendChild(st);
         }
       } catch (e) { }

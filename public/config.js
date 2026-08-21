@@ -12,7 +12,7 @@ window.__AF_CONFIG = {
    /* -- 1b. WARNA (opsional) - kosongkan "" = pakai bawaan -------------
       accentColor : warna utama (tombol, link, glow). bgColor : background GELAP. */
    accentColor: "#00a8b5",   // warna aksen utama teal dari logo SmartFeed
-   bgColor: "#f4f7fa",   // background terang soft light khas logo
+   bgColor: "",   // kosongkan "" = pakai background gelap obsidian bawaan (#060B17)
 
    /* -- 2. LINK ------------------------------------------------------- */
    paymentUrl: "/checkout",   // link pembayaran/checkout kamu
