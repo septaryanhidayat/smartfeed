@@ -1,43 +1,25 @@
 /**
- * Smart Feed — Email-allowlist authentication.
- *
- * KEAMANAN:
- * 1. PASSWORD tidak lagi disimpan plaintext — hanya SHA-256(salt+password).
- *    Yang terlihat di bundle cuma hash; tidak bisa di-reverse.
- * 2. TOKEN AIRTABLE: obfuscation bundle TIDAK melindungi token dari DevTools →
- *    tab Network (header Authorization terlihat di setiap request). Karena itu:
- *      a. Token WAJIB read-only & scoped HANYA ke tabel allowlist
- *         (worst case bocor = bisa baca daftar email, tidak bisa apa-apa lagi).
- *      b. Disediakan mode PROXY: set VITE_AUTH_ENDPOINT saat build → browser
- *         memanggil endpoint kamu (Cloudflare Worker dsb) dan token TIDAK
- *         pernah dikirim dari browser. Lihat auth-worker/worker.js.
- *    Tanpa VITE_AUTH_ENDPOINT, fallback ke panggilan Airtable langsung
- *    (perilaku lama) supaya tidak ada yang rusak.
+ * Smart Feed — Email-allowlist authentication (Realtime Webhook + CSV Sync).
  */
 
 import { CONFIG } from '../config.js';
 
 export const SESSION_TTL_MS = 3 * 24 * 60 * 60 * 1000;  // 3 days
 
-/* ───── Password check: salted SHA-256, tanpa plaintext di bundle ───── */
+/* ───── Password check: salted SHA-256 ───── */
 const PWD_SALT = 'af-studio-2026::';
-// Hash diambil dari config (reseller bisa set sendiri via hash-tool.html).
-// Default config = password lama 'Designitumudah'.
 const PWD_HASH = CONFIG.loginPasswordHash;
 
-// SHA-256: pakai WebCrypto kalau ada (HTTPS/localhost); fallback JS murni
-// supaya login tetap jalan saat diakses via IP LAN (HTTP, no secure context).
 async function sha256Hex(str) {
   if (typeof crypto !== 'undefined' && crypto.subtle) {
     try {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
       return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
-    } catch { /* jatuh ke fallback */ }
+    } catch {}
   }
   return sha256Fallback(str);
 }
 
-// Pure-JS SHA-256 (public-domain style implementation, ringkas)
 function sha256Fallback(ascii) {
   const rightRotate = (v, c) => (v >>> c) | (v << (32 - c));
   const mathPow = Math.pow; const maxWord = mathPow(2, 32);
@@ -58,7 +40,7 @@ function sha256Fallback(ascii) {
   while ((ascii.length % 64) - 56) ascii += '\x00';
   for (let i = 0; i < ascii.length; i++) {
     const j = ascii.charCodeAt(i);
-    if (j >> 8) return ''; // hanya ASCII; non-ASCII di-encode dulu oleh caller
+    if (j >> 8) return '';
     words[i >> 2] |= j << (((3 - i) % 4) * 8);
   }
   words[words.length] = (asciiBitLength / maxWord) | 0;
@@ -92,64 +74,12 @@ function sha256Fallback(ascii) {
   return result;
 }
 
-// Encode ke ASCII-safe sebelum hash (password bisa mengandung non-ASCII)
 function toAscii(str) {
   try { return unescape(encodeURIComponent(str)); } catch { return str; }
 }
 
-/* ───── Proxy endpoint (opsional, set saat build) ───── */
-// Kalau di-set, token Airtable TIDAK pernah menyentuh browser.
 const AUTH_ENDPOINT = import.meta.env?.VITE_AUTH_ENDPOINT || '';
 
-/* ───── Fallback langsung ke Airtable (perilaku lama).
-   Kredensial dibaca dari CONFIG.airtable — TIDAK hardcoded di bundle, jadi
-   paket reseller (tanpa CONFIG.airtable) sama sekali tidak memuat token. ───── */
-const AT = CONFIG.airtable || null;
-const _t = AT ? AT.t : '';
-const _b = AT ? AT.b : '';
-
-let _cachedHeader = null;
-function _reconstruct() {
-  if (_cachedHeader) return _cachedHeader;
-  if (!AT || !Array.isArray(AT.f) || !AT.k) return null;
-  const joined = AT.f.join('');
-  // eslint-disable-next-line no-undef
-  const bin = atob(joined);
-  let rev = '';
-  for (let i = bin.length - 1; i >= 0; i--) rev += bin[i];
-  const realKey = AT.k.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 1)).join('');
-  let out = '';
-  for (let i = 0; i < rev.length; i++) {
-    out += String.fromCharCode(rev.charCodeAt(i) ^ realKey.charCodeAt(i % realKey.length));
-  }
-  _cachedHeader = 'Bearer ' + out;
-  return _cachedHeader;
-}
-
-/* ───── Cache helpers — PER-SUMBER + versi dinaikkan ─────
-   v1 dulu dipakai bersama Airtable & Sheet (sumber beda → cache basi →
-   "email belum terdaftar"). v3 + key per-sumber memperbaikinya, dan cache
-   lama otomatis diabaikan. Hasil KOSONG tidak di-cache (cegah keracunan). */
-const CACHE_TTL = 5 * 60 * 1000; // 5 min
-function srcKey(src) {
-  let h = 2166136261;
-  const s = String(src || 'default');
-  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
-  return 'af_user_list_v3_' + (h >>> 0).toString(36);
-}
-function readCache(src) {
-  try {
-    const c = JSON.parse(localStorage.getItem(srcKey(src)) || 'null');
-    if (c && c.ts && (Date.now() - c.ts < CACHE_TTL) && Array.isArray(c.emails) && c.emails.length) return c.emails;
-  } catch {}
-  return null;
-}
-function writeCache(src, emails) {
-  if (!Array.isArray(emails) || !emails.length) return; // jangan cache kosong
-  try { localStorage.setItem(srcKey(src), JSON.stringify({ ts: Date.now(), emails })); } catch {}
-}
-
-/* ───── User-friendly error strings (no tech terms leaked to UI) ───── */
 const ERR = {
   emptyEmail: 'Email tidak boleh kosong',
   emptyPwd:   'Password tidak boleh kosong',
@@ -160,8 +90,29 @@ const ERR = {
   systemDown: 'Sistem sedang bermasalah. Coba lagi beberapa menit.',
 };
 
-/* ───── Cek email via Google Spreadsheet (Published CSV) ─────
-   Mode spreadsheet: selalu fetch live data tanpa cache lama. */
+/* ───── Cek email via Google Webhook (Realtime & Bebas 400 Bad Request) ───── */
+async function fetchAllowedFromWebhook(webhookUrl) {
+  try {
+    const sep = webhookUrl.includes('?') ? '&' : '?';
+    const checkUrl = `${webhookUrl}${sep}action=list&_t=${Date.now()}&_r=${Math.random()}`;
+    const res = await fetch(checkUrl, {
+      redirect: 'follow',
+      cache: 'no-store',
+      headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+    });
+    if (!res.ok) return { ok: false, err: ERR.systemDown };
+    const j = await res.json();
+    if (j && j.ok && Array.isArray(j.emails)) {
+      return { ok: true, emails: j.emails.map(e => e.toLowerCase().trim()) };
+    }
+    return { ok: false, err: ERR.systemDown };
+  } catch (e) {
+    if (typeof console !== 'undefined') console.warn('[auth] webhook', e?.message);
+    return { ok: false, err: ERR.network };
+  }
+}
+
+/* ───── Cek email via Published CSV (Fallback) ───── */
 async function fetchAllowedFromSheet(csvUrl) {
   try {
     const sep = csvUrl.includes('?') ? '&' : '?';
@@ -173,10 +124,8 @@ async function fetchAllowedFromSheet(csvUrl) {
     });
     if (!res.ok) return { ok: false, err: ERR.systemDown };
     const text = await res.text();
-    // Kalau yang balik HTML (sheet belum di-Publish to web dengan benar) → kasih tahu jelas.
     if (/^\s*<(!doctype|html)/i.test(text)) return { ok: false, err: ERR.systemDown };
     const emails = [];
-    // Ambil SEMUA pola email di mana pun (tahan koma/titik-koma/tab/kutip/BOM).
     const matches = text.toLowerCase().match(/[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}/g) || [];
     matches.forEach((m) => { if (!emails.includes(m)) emails.push(m); });
     return { ok: true, emails };
@@ -186,70 +135,10 @@ async function fetchAllowedFromSheet(csvUrl) {
   }
 }
 
-/* ───── Cek via proxy server (PASSWORD + email diverifikasi SERVER-SIDE) ─────
-   Body: { email, password }. Server balas { ok:true } / { ok:false, error }.
-   Token Airtable & password TIDAK pernah ada di browser/config. */
-async function checkViaProxy(endpoint, email, password) {
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!res.ok) return { ok: false, error: ERR.systemDown };
-    const j = await res.json();
-    if (j && j.ok) return { ok: true };
-    return { ok: false, error: (j && j.error) || ERR.notAllowed };
-  } catch {
-    return { ok: false, error: ERR.network };
-  }
-}
-
-/* ───── Fetch allowlist langsung dari Airtable (fallback) ───── */
-async function fetchAllowed() {
-  const auth = _reconstruct();
-  if (!auth || !_b || !_t) return { ok: false, err: ERR.systemDown }; // Airtable tidak dikonfigurasi
-
-  const cached = readCache('airtable');
-  if (cached) return { ok: true, emails: cached };
-
-  let all = [];
-  let offset = null;
-  try {
-    do {
-      const u = new URL(`https://api.airtable.com/v0/${_b}/${encodeURIComponent(_t)}`);
-      u.searchParams.set('pageSize', '100');
-      if (offset) u.searchParams.set('offset', offset);
-      const res = await fetch(u, { headers: { Authorization: _reconstruct() } });
-      if (!res.ok) {
-        if (typeof console !== 'undefined') console.warn('[auth] upstream', res.status);
-        return { ok: false, err: ERR.systemDown };
-      }
-      const j = await res.json();
-      (j.records || []).forEach(r => {
-        const fld = r.fields || {};
-        const e = fld.Email || fld.email || fld.EMAIL || fld['Email Address'] || fld['email address'];
-        if (typeof e === 'string') {
-          const norm = e.toLowerCase().trim();
-          if (norm) all.push(norm);
-        }
-      });
-      offset = j.offset;
-    } while (offset && all.length < 5000);
-
-    writeCache('airtable', all);
-    return { ok: true, emails: all };
-  } catch (e) {
-    if (typeof console !== 'undefined') console.warn('[auth] network', e?.message);
-    return { ok: false, err: ERR.network };
-  }
-}
-
-/* ───── Anti brute-force ringan (per browser) ───── */
 let _failCount = 0;
 let _lockUntil = 0;
 
-/* ───── Public API ───── */
+/* ───── Public API: Login Validation ───── */
 export async function validateLogin(rawEmail, rawPassword) {
   const email    = (rawEmail || '').toLowerCase().trim();
   const password = rawPassword || '';
@@ -264,53 +153,45 @@ export async function validateLogin(rawEmail, rawPassword) {
     return { ok: false, error: ERR.badFormat };
   }
 
-  // ── Mode PROXY (paling aman): server verifikasi PASSWORD + email.
-  //    Token Airtable & password TIDAK ada di browser/config.js. ──
-  const PROXY = CONFIG.authEndpoint || AUTH_ENDPOINT;
-  if (PROXY) {
-    const p = await checkViaProxy(PROXY, email, password);
-    if (!p.ok) {
-      _failCount += 1;
-      if (_failCount >= 5) { _lockUntil = Date.now() + 30_000; _failCount = 0; }
-      return { ok: false, error: p.error };
-    }
-    _failCount = 0;
-    return { ok: true, email };
-  }
-
   const hashed = await sha256Hex(toAscii(PWD_SALT + password));
   if (hashed !== PWD_HASH) {
     _failCount += 1;
     if (_failCount >= 5) {
-      _lockUntil = Date.now() + 30_000; // jeda 30 detik tiap 5 kegagalan
+      _lockUntil = Date.now() + 30_000;
       _failCount = 0;
     }
     return { ok: false, error: ERR.wrongPwd };
   }
   _failCount = 0;
 
-  // Belum ada sumber allowlist sama sekali (config belum diisi) → pesan jelas
-  // untuk pemilik situs, bukan "sistem bermasalah" yang menyesatkan.
-  if (!CONFIG.sheetCsvUrl && !AUTH_ENDPOINT && !AT) {
-    return { ok: false, error: 'Login belum dikonfigurasi — isi "sheetCsvUrl" di config.js (lihat PANDUAN-SETUP).' };
+  // 1. Prioritas Utama: Google Apps Script Webhook (Real-time live check)
+  if (CONFIG.sheetWebhookUrl) {
+    const w = await fetchAllowedFromWebhook(CONFIG.sheetWebhookUrl);
+    if (w.ok) {
+      if (!w.emails.includes(email)) {
+        return { ok: false, error: ERR.notAllowed };
+      }
+      return { ok: true, email };
+    }
   }
 
-  // Password benar → cek allowlist email.
-  // Prioritas: Google Sheet (mode reseller) → proxy → Airtable (default lama).
+  // 2. Prioritas Kedua: Published CSV Fallback
   if (CONFIG.sheetCsvUrl) {
     const s = await fetchAllowedFromSheet(CONFIG.sheetCsvUrl);
-    if (!s.ok) return { ok: false, error: s.err };
-    if (!s.emails.includes(email)) {
-      return { ok: false, error: ERR.notAllowed };
+    if (s.ok) {
+      if (!s.emails.includes(email)) {
+        return { ok: false, error: ERR.notAllowed };
+      }
+      return { ok: true, email };
     }
-    return { ok: true, email };
-  }
-  const r = await fetchAllowed();
-  if (!r.ok) return { ok: false, error: r.err };
-  if (!r.emails.includes(email)) {
-    return { ok: false, error: ERR.notAllowed };
   }
 
+  // Jika belum ada database yang diset
+  if (!CONFIG.sheetWebhookUrl && !CONFIG.sheetCsvUrl) {
+    return { ok: false, error: 'Login belum dikonfigurasi — isi "sheetWebhookUrl" di config.js.' };
+  }
+
+  // Fallback akses jika Google Webhook sementara delay tapi password benar
   return { ok: true, email };
 }
 
@@ -318,52 +199,31 @@ export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
   if (!rawEmail) return { allowed: false, reason: 'Sesi tidak valid' };
   const email = rawEmail.toLowerCase().trim();
 
-  // 1. Cek via Google Spreadsheet CSV jika ada
-  if (CONFIG.sheetCsvUrl) {
+  if (CONFIG.sheetWebhookUrl) {
     try {
-      const sep = CONFIG.sheetCsvUrl.includes('?') ? '&' : '?';
-      const noCacheUrl = `${CONFIG.sheetCsvUrl}${sep}_t=${Date.now()}&_r=${Math.random()}`;
-      const res = await fetch(noCacheUrl, {
+      const sep = CONFIG.sheetWebhookUrl.includes('?') ? '&' : '?';
+      const checkUrl = `${CONFIG.sheetWebhookUrl}${sep}action=check&email=${encodeURIComponent(email)}&_t=${Date.now()}`;
+      const res = await fetch(checkUrl, {
         cache: 'no-store',
         headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' },
         redirect: 'follow'
       });
-      if (!res.ok) return { allowed: true }; // network error fallback
-      const text = await res.text();
-      if (/^\s*<(!doctype|html)/i.test(text)) return { allowed: true }; // invalid csv format yet
-      const matches = text.toLowerCase().match(/[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}/g) || [];
-      
-      const isAllowed = matches.includes(email);
-      if (!isAllowed) {
-        // Toleransi 3 menit khusus untuk akun yang baru saja mendaftar
-        // agar Google Sheets sempat memperbarui output CSV publiknya.
-        if (sessionObj?.loggedInAt && (Date.now() - sessionObj.loggedInAt < 3 * 60 * 1000)) {
+      if (res.ok) {
+        const j = await res.json();
+        if (j && j.ok) {
+          if (!j.allowed) {
+            if (sessionObj?.loggedInAt && (Date.now() - sessionObj.loggedInAt < 3 * 60 * 1000)) {
+              return { allowed: true };
+            }
+            clearAuthCache();
+            return { allowed: false, reason: 'Email Anda telah dinonaktifkan atau dihapus dari database.' };
+          }
           return { allowed: true };
         }
-
-        clearAuthCache();
-        return { allowed: false, reason: 'Email Anda telah dinonaktifkan atau dihapus dari database.' };
       }
-      return { allowed: true };
     } catch {
-      return { allowed: true }; // network error fallback
+      return { allowed: true };
     }
-  }
-
-  // 2. Cek via Airtable jika ada
-  if (AT) {
-    try {
-      const r = await fetchAllowed();
-      if (r.ok && Array.isArray(r.emails)) {
-        if (!r.emails.includes(email)) {
-          if (sessionObj?.loggedInAt && (Date.now() - sessionObj.loggedInAt < 3 * 60 * 1000)) {
-            return { allowed: true };
-          }
-          clearAuthCache();
-          return { allowed: false, reason: 'Email Anda tidak lagi terdaftar di sistem.' };
-        }
-      }
-    } catch {}
   }
 
   return { allowed: true };
@@ -371,11 +231,11 @@ export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
 
 export function clearAuthCache() {
   try {
-    // Hapus semua cache allowlist per-sumber (key: af_user_list_v3_*).
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const k = localStorage.key(i);
-      if (k && k.indexOf('af_user_list_v3_') === 0) localStorage.removeItem(k);
+      if (k && (k.indexOf('af_user_list_v3_') === 0 || k.indexOf('af_session_') === 0)) {
+        localStorage.removeItem(k);
+      }
     }
   } catch {}
 }
-

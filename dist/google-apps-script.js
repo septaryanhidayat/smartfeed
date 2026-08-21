@@ -1,6 +1,6 @@
 /**
  * ==============================================================================
- * SMARTFEED — GOOGLE APPS SCRIPT WEBHOOK, AUTO-EMAIL & DATABASE HANDLER (V3.2)
+ * SMARTFEED — GOOGLE APPS SCRIPT WEBHOOK, REALTIME AUTH & DATABASE (V3.3)
  * ==============================================================================
  * 
  * CARA UPDATE DI GOOGLE SPREADSHEET:
@@ -22,13 +22,46 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  // Jika ada parameter email yang dikirim via GET, proses simpan data & kirim email
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // 1. CEK OTENTIKASI REALTIME (UNTUK LOGIN STUDIO INSTAN TANPA DELAY)
+  if (e && e.parameter && (e.parameter.action === 'list' || e.parameter.action === 'check' || e.parameter.get_users === '1')) {
+    var userSheet = ss.getSheetByName('Users') || ss.getSheets()[0];
+    var lastRow = userSheet ? userSheet.getLastRow() : 0;
+    var emails = [];
+
+    if (lastRow > 1) {
+      var data = userSheet.getRange(2, 1, lastRow - 1, 1).getValues();
+      for (var i = 0; i < data.length; i++) {
+        var em = (data[i][0] || '').toString().toLowerCase().trim();
+        if (em && em.includes('@') && !emails.includes(em)) {
+          emails.push(em);
+        }
+      }
+    }
+
+    if (e.parameter.action === 'check') {
+      var targetEmail = (e.parameter.email || '').toString().toLowerCase().trim();
+      return ContentService.createTextOutput(JSON.stringify({
+        ok: true,
+        allowed: emails.includes(targetEmail),
+        email: targetEmail
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({
+      ok: true,
+      emails: emails,
+      total: emails.length
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // 2. JIKA ADA PARAMETER REGISTRASI / BAYAR VIA GET
   if (e && e.parameter && (e.parameter.email || e.parameter.customer_email)) {
     return handleIncomingWebhook(e, false);
   }
 
-  // Jika GET biasa tanpa parameter (misal untuk cek status webhook)
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  // 3. STATUS DEFAULT WEBHOOK
   var userSheet = ss.getSheetByName('Users') || ss.getSheets()[0];
   var count = userSheet ? Math.max(0, userSheet.getLastRow() - 1) : 0;
   return ContentService.createTextOutput(JSON.stringify({
@@ -62,7 +95,7 @@ function handleIncomingWebhook(e, isPost) {
       }
     }
 
-    // Merge dengan query parameters jika ada
+    // Merge parameter GET jika ada
     if (e && e.parameter) {
       for (var k in e.parameter) {
         if (!data[k]) data[k] = e.parameter[k];
@@ -101,10 +134,10 @@ function handleIncomingWebhook(e, isPost) {
     });
 
     // ─────────────────────────────────────────────────────────────
-    // 2. SIMPAN JUGA KE TAB PERTAMA (Sheet1 / gid=0) AGAR CSV PUBLISH SELALU AKTIF
+    // 2. SIMPAN JUGA KE TAB PERTAMA AGAR CSV PUBLISH SELALU AKTIF
     // ─────────────────────────────────────────────────────────────
     var firstSheet = ss.getSheets()[0];
-    if (firstSheet && firstSheet.getName() !== 'Transactions' && firstSheet.getName() !== 'Activity_Logs') {
+    if (firstSheet && firstSheet.getName() !== 'Transactions' && firstSheet.getName() !== 'Riwayat Aktivitas') {
       saveOrUpdateUser(firstSheet, {
         email: email,
         name: name,
