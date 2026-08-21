@@ -3,12 +3,12 @@ import { CONFIG } from '../../config.js';
 import ScanlineGrid from '../primitives/ScanlineGrid.jsx';
 
 const REASONS = [
-  { icon: Gauge,   title: 'Output presisi',     body: 'Bukan template generik, tiap field dipetakan ke karakter visual commercial-grade.' },
-  { icon: Boxes,   title: '48+ kategori siap',  body: 'F&B, fashion, beauty, otomotif, edukasi, finance, sampai niche gaming: preset on click.' },
-  { icon: Cpu,     title: 'Multi-format output',body: 'Banner, thumbnail, typography, story, reels: semua format lahir dari satu studio.' },
-  { icon: Lock,    title: 'Akses Pelatihan',   body: 'Disediakan gratis untuk seluruh peserta pelatihan tanpa biaya langganan.' },
-  { icon: InfIcon, title: 'Render unlimited',   body: 'Sebanyak apapun visual yang kamu butuh, tanpa batas dan tanpa throttle.' },
-  { icon: Crown,   title: 'Update lifetime',    body: 'Mode baru, kategori baru, opsi gaya baru: semua di-push otomatis ke akunmu.' },
+  { icon: Gauge,   title: 'Output presisi komersial', body: 'Bukan template generik, tiap field dipetakan ke karakter visual commercial-grade.' },
+  { icon: Boxes,   title: '48+ kategori siap',       body: 'F&B, fashion, beauty, otomotif, edukasi, finance, sampai niche gaming: preset on click.' },
+  { icon: Cpu,     title: 'Multi-AI Architecture',    body: 'Dioptimalisasi kolaborasi ChatGPT, Gemini, Grok, dan Leonardo.ai untuk visual dan copy juara.' },
+  { icon: Lock,    title: 'Akses Pelatihan',        body: 'Disediakan gratis untuk seluruh peserta pelatihan tanpa biaya langganan.' },
+  { icon: InfIcon, title: 'Render unlimited',        body: 'Sebanyak apapun visual yang kamu butuh, tanpa batas dan tanpa throttle.' },
+  { icon: Crown,   title: 'Update lifetime',         body: 'Mode baru, kategori baru, opsi gaya baru: semua di-push otomatis ke akunmu.' },
 ];
 
 export default function WhyDifferent() {

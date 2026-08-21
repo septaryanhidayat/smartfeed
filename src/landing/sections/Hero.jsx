@@ -69,10 +69,10 @@ export default function Hero({ onOpenAccess }) {
           )}
 
           {/* Mini trust strip */}
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-text-dim">
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-text-dim">
             <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-accent" /> Sekali bayar selamanya</span>
-            <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-accent" /> 19 engine AI lengkap</span>
-            <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-accent" /> Update fitur baru gratis</span>
+            <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5 text-accent" /> 19 engine AI terpadu</span>
+            <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-accent" /> ChatGPT · Gemini · Grok · Leonardo.ai</span>
           </div>
         </div>
 

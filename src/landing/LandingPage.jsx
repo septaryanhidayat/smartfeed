@@ -21,6 +21,7 @@ const CarouselShowcase = lazyWithRetry(() => import('./sections/CarouselShowcase
 const FaceCardShowcase = lazyWithRetry(() => import('./sections/FaceCardShowcase.jsx'), 'fc');
 const MenuFBShowcase   = lazyWithRetry(() => import('./sections/MenuFBShowcase.jsx'), 'mf');
 const AffiliateShowcase = lazyWithRetry(() => import('./sections/AffiliateShowcase.jsx'), 'as');
+const AiEnginesStrip   = lazyWithRetry(() => import('./sections/AiEnginesStrip.jsx'), 'ai');
 const HowItWorks       = lazyWithRetry(() => import('./sections/HowItWorks.jsx'), 'hw');
 const WhyDifferent     = lazyWithRetry(() => import('./sections/WhyDifferent.jsx'), 'wd');
 const AudienceCards    = lazyWithRetry(() => import('./sections/AudienceCards.jsx'), 'ac');
@@ -111,6 +112,7 @@ export default function LandingPage() {
         <SafeSection><AffiliateShowcase /></SafeSection>
         <SafeSection><FaceCardShowcase /></SafeSection>
         <SafeSection><MenuFBShowcase /></SafeSection>
+        <SafeSection><AiEnginesStrip /></SafeSection>
         <SafeSection><HowItWorks onOpenAccess={openAccess} /></SafeSection>
         <SafeSection><WhyDifferent onOpenAccess={openAccess} /></SafeSection>
         <SafeSection><AudienceCards /></SafeSection>
