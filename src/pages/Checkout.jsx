@@ -59,7 +59,7 @@ const PAYMENT_OPTIONS = [
         name: 'Bank BCA',
         desc: 'Virtual Account BCA (BCA Mobile / KlikBCA)',
         logo: '/payment-icons/bca.png',
-        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[40px]',
+        logoClass: 'h-6 sm:h-7 w-auto object-contain max-w-[90px]',
       },
     ],
   },
