@@ -238,7 +238,7 @@ const ALL_MODES = [
     ratio: '1:1 Logo & Mockup',
     icon: Sparkles,
     variant: 8,
-    img: '/landing/affiliate-demos/logoaffiliate/logo-saas-tech.jpg?v=3',
+    img: '/landing/brand/logo.png',
     bullets: ['Desain logo brand instan', 'Custom HEX palette & typography', '21 mockup media merchandise'],
   },
   {
