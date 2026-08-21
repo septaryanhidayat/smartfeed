@@ -191,7 +191,10 @@ function AuthedApp() {
     if (mode === 'tryonaffiliate')      return buildTryOnAffiliate(deferredState);
     if (mode === 'reviewaffiliate')     return buildReviewAffiliate(deferredState);
     if (mode === 'storyboardaffiliate') return buildStoryboardAffiliate(deferredState);
-    if (mode === 'presentation')        return buildPresentation(deferredState).masterPrompt;
+    if (mode === 'presentation') {
+      const res = buildPresentation(deferredState);
+      return res?.markdownPrompt || res?.masterPrompt || '';
+    }
     return null;
   }, [mode, deferredState]);
 

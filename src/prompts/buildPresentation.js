@@ -511,6 +511,7 @@ ${includeVisualPrompts ? `- **AI Image Prompt (16:9)**: \`\`\`${s.visualPrompt}\
     gammaOutline,
     vbaMacro,
     markdownPrompt,
+    masterPrompt: markdownPrompt,
     totalSlides: slides.length,
     styleObj,
     useCaseObj,

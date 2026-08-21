@@ -86,19 +86,18 @@ const ERR = {
   badFormat:  'Format email tidak valid',
   wrongPwd:   'Password salah',
   notAllowed: 'Email Anda belum terdaftar di database',
-  network:    'Tidak bisa terhubung. Cek koneksi internet kamu.',
-  systemDown: 'Sistem sedang bermasalah. Coba lagi beberapa menit.',
+  network:    'Tidak bisa terhubung ke server database.',
+  systemDown: 'Sistem sedang memverifikasi data. Coba beberapa saat lagi.',
 };
 
-/* ───── Cek email via Google Webhook (Realtime & Bebas 400 Bad Request) ───── */
+/* ───── Cek email via Google Webhook (Bebas CORS Preflight) ───── */
 async function fetchAllowedFromWebhook(webhookUrl) {
   try {
     const sep = webhookUrl.includes('?') ? '&' : '?';
-    const checkUrl = `${webhookUrl}${sep}action=list&_t=${Date.now()}&_r=${Math.random()}`;
+    const checkUrl = `${webhookUrl}${sep}action=list&_t=${Date.now()}`;
     const res = await fetch(checkUrl, {
-      redirect: 'follow',
-      cache: 'no-store',
-      headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+      method: 'GET',
+      redirect: 'follow'
     });
     if (!res.ok) return { ok: false, err: ERR.systemDown };
     const j = await res.json();
@@ -116,11 +115,10 @@ async function fetchAllowedFromWebhook(webhookUrl) {
 async function fetchAllowedFromSheet(csvUrl) {
   try {
     const sep = csvUrl.includes('?') ? '&' : '?';
-    const freshUrl = `${csvUrl}${sep}_t=${Date.now()}&_r=${Math.random()}`;
+    const freshUrl = `${csvUrl}${sep}_t=${Date.now()}`;
     const res = await fetch(freshUrl, {
-      redirect: 'follow',
-      cache: 'no-store',
-      headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+      method: 'GET',
+      redirect: 'follow'
     });
     if (!res.ok) return { ok: false, err: ERR.systemDown };
     const text = await res.text();
@@ -164,7 +162,7 @@ export async function validateLogin(rawEmail, rawPassword) {
   }
   _failCount = 0;
 
-  // 1. Prioritas Utama: Google Apps Script Webhook (Real-time live check)
+  // 1. Prioritas Utama: Google Apps Script Webhook (Live check)
   if (CONFIG.sheetWebhookUrl) {
     const w = await fetchAllowedFromWebhook(CONFIG.sheetWebhookUrl);
     if (w.ok) {
@@ -186,13 +184,12 @@ export async function validateLogin(rawEmail, rawPassword) {
     }
   }
 
-  // Jika belum ada database yang diset
-  if (!CONFIG.sheetWebhookUrl && !CONFIG.sheetCsvUrl) {
-    return { ok: false, error: 'Login belum dikonfigurasi — isi "sheetWebhookUrl" di config.js.' };
+  // Jika database tersambung tapi email tidak ada
+  if (CONFIG.sheetWebhookUrl || CONFIG.sheetCsvUrl) {
+    return { ok: false, error: ERR.notAllowed };
   }
 
-  // Fallback akses jika Google Webhook sementara delay tapi password benar
-  return { ok: true, email };
+  return { ok: false, error: 'Login belum dikonfigurasi — isi "sheetWebhookUrl" di config.js.' };
 }
 
 export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
@@ -204,8 +201,7 @@ export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
       const sep = CONFIG.sheetWebhookUrl.includes('?') ? '&' : '?';
       const checkUrl = `${CONFIG.sheetWebhookUrl}${sep}action=check&email=${encodeURIComponent(email)}&_t=${Date.now()}`;
       const res = await fetch(checkUrl, {
-        cache: 'no-store',
-        headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' },
+        method: 'GET',
         redirect: 'follow'
       });
       if (res.ok) {
@@ -216,7 +212,7 @@ export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
               return { allowed: true };
             }
             clearAuthCache();
-            return { allowed: false, reason: 'Email Anda telah dinonaktifkan atau dihapus dari database.' };
+            return { allowed: false, reason: 'Email Anda tidak terdaftar di database.' };
           }
           return { allowed: true };
         }
