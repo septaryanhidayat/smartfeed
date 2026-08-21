@@ -30,8 +30,8 @@ const AI_ENGINES = [
     dotColor: 'bg-purple-400',
   },
   {
-    name: 'Leonardo.ai',
-    provider: 'Leonardo Visual AI',
+    name: 'Leonardo.Ai',
+    provider: 'Leonardo AI',
     role: 'Commercial Visual & Render Engine',
     desc: 'Menghasilkan estetika visual komersial, pencahayaan sinematik, kedalaman tekstur produk, dan komposisi poster berstandar studio.',
     tag: 'Generative Visual',
@@ -66,11 +66,11 @@ export default function AiEnginesStrip() {
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] mono uppercase font-bold border bg-gradient-to-r ${engine.badgeColor}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${engine.dotColor}`} />
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] mono uppercase font-bold border bg-gradient-to-r whitespace-nowrap shrink-0 ${engine.badgeColor}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${engine.dotColor}`} />
                     {engine.provider}
                   </span>
-                  <span className="text-[10px] mono text-text-dim">{engine.tag}</span>
+                  <span className="text-[10px] mono text-text-dim whitespace-nowrap truncate">{engine.tag}</span>
                 </div>
 
                 <h3 className="text-lg font-bold text-text mt-1">{engine.name}</h3>
