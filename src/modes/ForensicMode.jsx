@@ -220,16 +220,17 @@ export default function ForensicMode() {
     ctx.drawImage(target, 0, 0);
   }, [activeTab, hasFile]);
 
-  // 3. Binary Parser for EXIF, PNG Text Chunks, and C2PA
+  // 3. Accurate Binary Parser for EXIF, C2PA, and AI Generator Metadata
   const parseBinaryMetadata = (buffer, file) => {
     const bytes = new Uint8Array(buffer);
     const textDecoder = new TextDecoder('utf-8', { fatal: false });
     const rawText = textDecoder.decode(bytes);
+    const lowerName = file.name.toLowerCase();
 
     const newMeta = {
-      software: 'Tidak ditemukan (EXIF Standar)',
-      model: 'Tidak ditemukan (Sensor tidak terdaftar)',
-      optics: 'Parameter lensa tidak tersedia',
+      software: 'Tidak Ditemukan (EXIF di-strip pihak ketiga)',
+      model: 'Tidak Ditemukan (Data EXIF di-strip Medsos/Chat)',
+      optics: 'Parameter lensa tidak tersedia (File di-recompress)',
       prompt: 'Tidak ada prompt tersimpan',
       rawFound: [],
     };
@@ -241,58 +242,116 @@ export default function ForensicMode() {
       chainValid: false,
     };
 
-    // 3a. Search AI Software Signature Strings
-    const aiKeywords = [
-      'Midjourney', 'DALL-E', 'Stable Diffusion', 'NovelAI', 'Adobe Firefly',
-      'ComfyUI', 'AUTOMATIC1111', 'InvokeAI', 'Bing Image Creator', 'Craiyon',
-      'Fooocus', 'Gemini', 'Imagen', 'Runway', 'Flux.1', 'parameters:'
-    ];
-
-    for (const kw of aiKeywords) {
-      if (rawText.includes(kw)) {
-        newMeta.rawFound.push(kw);
-        if (kw === 'parameters:' || kw === 'prompt') {
-          newMeta.prompt = 'Parameter prompt generator terdeteksi di metadata chunk';
-        } else {
-          newMeta.software = `${kw} (AI Generator Engine)`;
-        }
-      }
-    }
-
-    // 3b. Search Physical Camera Hardware Strings
-    const cameraKeywords = ['iPhone', 'Canon', 'Nikon', 'Sony', 'Samsung', 'Fujifilm', 'Xiaomi', 'Panasonic', 'Leica', 'Hasselblad', 'GoPro', 'DJI'];
-    for (const cam of cameraKeywords) {
-      if (rawText.includes(cam)) {
-        newMeta.model = `${cam} Physical Hardware`;
-        newMeta.optics = 'Sensor optik fisik konsisten terdeteksi';
-      }
-    }
-
-    // 3c. Scan C2PA JUMBF Manifest Box
-    if (rawText.includes('jumb') && (rawText.includes('c2pa') || rawText.includes('c2ma'))) {
+    // 3a. Check C2PA JUMBF Manifest Box
+    const hasC2PA = rawText.includes('jumb') && (rawText.includes('c2pa') || rawText.includes('c2ma'));
+    if (hasC2PA) {
       newC2pa.hasJumbf = true;
       newC2pa.chainValid = true;
 
-      if (rawText.includes('OpenAI') || rawText.includes('DALL-E')) {
+      if (rawText.includes('OpenAI') || rawText.includes('DALL-E') || lowerName.includes('dall-e')) {
         newC2pa.issuer = 'OpenAI Trust Authority (C2PA 2.4)';
         newC2pa.actions = 'c2pa.created (Text-to-Image Generation)';
-      } else if (rawText.includes('Adobe')) {
+      } else if (rawText.includes('Google') || rawText.includes('Gemini') || rawText.includes('SynthID') || lowerName.includes('gemini')) {
+        newC2pa.issuer = 'Google DeepMind / Gemini (C2PA 2.4)';
+        newC2pa.actions = 'c2pa.created (Generative AI / SynthID)';
+      } else if (rawText.includes('Adobe') || lowerName.includes('firefly')) {
         newC2pa.issuer = 'Adobe Systems Inc. (Content Credentials)';
         newC2pa.actions = 'c2pa.created (Generative AI Prompt)';
       } else {
         newC2pa.issuer = 'C2PA Cryptographic Signer';
-        newC2pa.actions = 'c2pa.created / c2pa.edited';
+        newC2pa.actions = 'c2pa.created / c2pa.edited (Synthetic Media)';
       }
     }
 
-    // WhatsApp / Social Media Stripping check
-    if (
-      file.name.toLowerCase().includes('wa') ||
-      file.name.toLowerCase().includes('whatsapp') ||
-      (newMeta.software.includes('Tidak') && newMeta.model.includes('Tidak'))
-    ) {
-      if (file.size < 350000) {
-        newMeta.software = 'EXIF Terhapus / Stripped (Kompresi Medsos)';
+    // 3b. Check AI Software Generator Markers (in chunks, filename, or C2PA)
+    let isAiDetected = false;
+    const aiEngines = [
+      { key: 'Gemini', name: 'Google Gemini AI (Imagen 3)', fileMatch: 'gemini' },
+      { key: 'Midjourney', name: 'Midjourney Diffusion Engine (v6.0)', fileMatch: 'midjourney' },
+      { key: 'DALL-E', name: 'OpenAI DALL-E 3', fileMatch: 'dall-e' },
+      { key: 'Stable Diffusion', name: 'Stable Diffusion (SDXL / Automatic1111)', fileMatch: 'stablediffusion' },
+      { key: 'Adobe Firefly', name: 'Adobe Firefly Generative AI', fileMatch: 'firefly' },
+      { key: 'Flux.1', name: 'Black Forest Labs FLUX.1', fileMatch: 'flux' },
+      { key: 'ComfyUI', name: 'ComfyUI Node Generator', fileMatch: 'comfyui' },
+      { key: 'NovelAI', name: 'NovelAI Diffusion', fileMatch: 'novelai' },
+      { key: 'Bing Image Creator', name: 'Microsoft Copilot / Designer', fileMatch: 'bing' },
+      { key: 'Craiyon', name: 'Craiyon AI Generator', fileMatch: 'craiyon' },
+      { key: 'Fooocus', name: 'Fooocus SDXL Engine', fileMatch: 'fooocus' },
+      { key: 'SynthID', name: 'Google DeepMind SynthID Watermarked', fileMatch: 'synthid' },
+      { key: 'parameters:', name: 'Prompt Parameters Block (AI Meta)', fileMatch: 'generated' },
+    ];
+
+    for (const engine of aiEngines) {
+      if (rawText.includes(engine.key) || lowerName.includes(engine.fileMatch)) {
+        isAiDetected = true;
+        newMeta.rawFound.push(engine.key);
+        if (engine.key === 'parameters:' || engine.key === 'prompt') {
+          newMeta.prompt = 'Parameter prompt generator terdeteksi di chunk biner';
+        } else if (!newMeta.software.includes('Engine') && !newMeta.software.includes('AI')) {
+          newMeta.software = engine.name;
+        }
+      }
+    }
+
+    if (newC2pa.hasJumbf) {
+      isAiDetected = true;
+      newMeta.software = newC2pa.issuer;
+      newMeta.rawFound.push('C2PA Manifest Signed');
+      newMeta.prompt = 'Sintesis AI terverifikasi melalui segel digital C2PA';
+    }
+
+    // If AI is detected, assign Virtual Synthetic Canvas (NO camera hardware!)
+    if (isAiDetected) {
+      newMeta.model = 'Virtual Canvas (Generator AI, Tanpa Sensor Fisik)';
+      newMeta.optics = 'Tidak Ada Lensa Optik (Sintesis Jaringan Saraf AI)';
+    } else {
+      // 3c. Scan Genuine Physical Camera Hardware (Strict multi-character matching to avoid false positives)
+      const cameraSignatures = [
+        { pattern: 'iPhone', label: 'Apple iPhone' },
+        { pattern: 'Canon EOS', label: 'Canon EOS Digital SLR' },
+        { pattern: 'Canon PowerShot', label: 'Canon PowerShot' },
+        { pattern: 'NIKON D', label: 'Nikon D-Series DSLR' },
+        { pattern: 'NIKON Z', label: 'Nikon Z-Series Mirrorless' },
+        { pattern: 'NIKON COOLPIX', label: 'Nikon Coolpix' },
+        { pattern: 'SONY ILCE', label: 'Sony Alpha ILCE Mirrorless' },
+        { pattern: 'SONY DSC', label: 'Sony Cyber-shot DSC' },
+        { pattern: 'SAMSUNG SM-', label: 'Samsung Galaxy Smartphone' },
+        { pattern: 'FUJIFILM X-', label: 'Fujifilm X-Series Mirrorless' },
+        { pattern: 'FUJIFILM GFX', label: 'Fujifilm GFX Medium Format' },
+        { pattern: 'LEICA', label: 'Leica Camera System' },
+        { pattern: 'HASSELBLAD', label: 'Hasselblad Camera System' },
+        { pattern: 'GoPro HERO', label: 'GoPro Hero Action Cam' },
+        { pattern: 'DJI FC', label: 'DJI Drone Integrated Camera' },
+        { pattern: 'DJI Osmo', label: 'DJI Osmo Pocket / Action' },
+        { pattern: 'DJI Pocket', label: 'DJI Pocket Camera' },
+        { pattern: 'Redmi Note', label: 'Xiaomi Redmi Smartphone' },
+        { pattern: 'POCO ', label: 'Xiaomi POCO Smartphone' },
+      ];
+
+      let cameraFound = false;
+      for (const cam of cameraSignatures) {
+        if (rawText.includes(cam.pattern)) {
+          newMeta.model = `${cam.label} (Hardware Fisik)`;
+          newMeta.optics = 'Sensor optik fisik konsisten terdeteksi';
+          newMeta.software = 'Firmware Kamera Internal (EXIF Asli)';
+          cameraFound = true;
+          break;
+        }
+      }
+
+      // If no camera signatures and small size or typical WA naming
+      if (!cameraFound) {
+        if (
+          lowerName.includes('wa') ||
+          lowerName.includes('whatsapp') ||
+          lowerName.includes('screenshot') ||
+          lowerName.includes('screen') ||
+          file.size < 400000
+        ) {
+          newMeta.software = 'EXIF Terhapus / Stripped (Kompresi Medsos/Chat)';
+          newMeta.model = 'Tidak Ditemukan (Data EXIF di-strip oleh Medsos/Chat)';
+          newMeta.optics = 'Parameter lensa tidak tersedia (File di-recompress)';
+        }
       }
     }
 
@@ -581,8 +640,8 @@ export default function ForensicMode() {
       } else if (currentMeta.software.includes('Stripped') || currentMeta.software.includes('WhatsApp')) {
         metaScore = 48.2;
         overallScore += 24.5;
-        reasons.push(`Metadata EXIF telah dihapus/dikompresi oleh perantara`);
-      } else if (currentMeta.model && !currentMeta.model.includes('Tidak')) {
+        reasons.push(`Metadata EXIF telah dihapus/dikompresi oleh perantara medsos`);
+      } else if (currentMeta.model && !currentMeta.model.includes('Tidak') && !currentMeta.model.includes('Virtual')) {
         metaScore = 2.6;
       }
 
@@ -789,8 +848,8 @@ export default function ForensicMode() {
 
       newMeta = {
         software: 'Midjourney v6.0',
-        model: 'Midjourney Diffusion Engine',
-        optics: 'Virtual Render (N/A)',
+        model: 'Virtual Canvas (Generator AI, Tanpa Sensor Fisik)',
+        optics: 'Tidak Ada Lensa Optik (Sintesis Jaringan Saraf AI)',
         prompt: 'a dramatic breaking news press conference with flashbulbs --ar 16:9 --v 6.0',
         rawFound: ['Midjourney', 'parameters:'],
       };
@@ -808,8 +867,8 @@ export default function ForensicMode() {
 
       newMeta = {
         software: 'OpenAI DALL-E 3',
-        model: 'Generative AI Service (C2PA Signed)',
-        optics: 'Synthetic Generation',
+        model: 'Virtual Canvas (Generator AI, Tanpa Sensor Fisik)',
+        optics: 'Tidak Ada Lensa Optik (Sintesis Jaringan Saraf AI)',
         prompt: 'investigative journalists analyzing digital forensics in high tech newsroom',
         rawFound: ['DALL-E', 'OpenAI'],
       };
@@ -832,9 +891,9 @@ export default function ForensicMode() {
       dCtx.fillText('🧬 Google Gemini + WhatsApp Recompressed', 400, 240);
 
       newMeta = {
-        software: 'EXIF Terhapus / Stripped (Kompresi Medsos)',
-        model: 'Tidak ditemukan (Sensor tidak terdaftar)',
-        optics: 'Parameter lensa tidak tersedia',
+        software: 'EXIF Terhapus / Stripped (Kompresi Medsos/Chat)',
+        model: 'Tidak Ditemukan (Data EXIF di-strip oleh Medsos/Chat)',
+        optics: 'Parameter lensa tidak tersedia (File di-recompress)',
         prompt: 'Tidak ada prompt tersimpan',
         rawFound: [],
       };
@@ -868,9 +927,9 @@ export default function ForensicMode() {
     const img = new Image();
     img.onload = () => {
       const newMeta = {
-        software: 'EXIF Terhapus / Stripped (Kompresi WhatsApp)',
-        model: 'Tidak ditemukan (Sensor tidak terdaftar)',
-        optics: 'Parameter lensa tidak tersedia',
+        software: 'EXIF Terhapus / Stripped (Kompresi Medsos/Chat)',
+        model: 'Tidak Ditemukan (Data EXIF di-strip oleh Medsos/Chat)',
+        optics: 'Parameter lensa tidak tersedia (File di-recompress)',
         prompt: 'Tidak ada prompt tersimpan',
         rawFound: [],
       };
@@ -1044,7 +1103,7 @@ export default function ForensicMode() {
                     <span>1️⃣</span> Periksa KTP Foto (Lapis 1)
                   </div>
                   <div className="text-text-mut text-[10px] leading-normal">
-                    Jika muncul nama <strong>Midjourney / DALL-E</strong> (MERAH), foto pasti buatan AI. Jika muncul merek HP/Kamera (HIJAU), foto asli.
+                    Jika terdeteksi <strong>AI / Virtual Canvas</strong> (MERAH), foto buatan AI. Jika EXIF hilang (KUNING), periksa Lapis 3 (Rontgen Piksel).
                   </div>
                 </div>
                 <div className="p-2.5 rounded-xl bg-bg/80 border border-border text-[11px] space-y-1">
@@ -1052,7 +1111,7 @@ export default function ForensicMode() {
                     <span>2️⃣</span> Cari Segel Digital (Lapis 2)
                   </div>
                   <div className="text-text-mut text-[10px] leading-normal">
-                    Jika ada tanda <strong>C2PA Valid</strong>, pembuat foto (OpenAI/Adobe) secara resmi telah menyematkan stempel digital pengakuan AI.
+                    Jika ada tanda <strong>C2PA Valid</strong>, pembuat foto (OpenAI/Google/Adobe) secara resmi menyematkan stempel digital pengakuan AI.
                   </div>
                 </div>
                 <div className="p-2.5 rounded-xl bg-bg/80 border border-border text-[11px] space-y-1">
@@ -1072,9 +1131,9 @@ export default function ForensicMode() {
       {/* Top Banner / Verdict Bar */}
       <div className="surface p-4 sm:p-5 rounded-2xl border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm relative overflow-hidden">
         <div className="flex items-center gap-4">
-          {/* Circular Gauge / Probability Score with Precise Decimal */}
+          {/* Circular Gauge / Probability Score with Responsive Non-Overflowing Container */}
           <div
-            className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl flex flex-col items-center justify-center font-black text-xl sm:text-2xl shrink-0 border shadow-inner transition-colors duration-300 relative group cursor-pointer"
+            className="min-w-[84px] sm:min-w-[96px] h-16 sm:h-18 px-2 rounded-2xl flex flex-col items-center justify-center font-black shrink-0 border shadow-inner transition-colors duration-300 relative group cursor-pointer text-center"
             style={{
               borderColor: verdict.color,
               backgroundColor: `${verdict.color}18`,
@@ -1083,8 +1142,12 @@ export default function ForensicMode() {
             onClick={() => openGlossary('verdict')}
             title="Klik untuk memahami perhitungan skor"
           >
-            <span>{hasFile ? metrics.aiProb.toFixed(1) : '0.0'}%</span>
-            <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80 -mt-1">Skor AI</span>
+            <span className="text-lg sm:text-xl font-black tracking-tight leading-none">
+              {hasFile ? metrics.aiProb.toFixed(1) : '0.0'}%
+            </span>
+            <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80 mt-0.5">
+              Skor AI
+            </span>
             <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-bg border border-border text-text-dim flex items-center justify-center text-[9px] font-bold">
               ?
             </span>
@@ -1457,14 +1520,20 @@ export default function ForensicMode() {
                 className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
                   !hasFile
                     ? 'bg-bg-elev text-text-dim border border-border'
-                    : meta.rawFound.length > 0
+                    : meta.rawFound.length > 0 || meta.model.includes('Virtual Canvas')
                     ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
-                    : meta.software.includes('Stripped')
+                    : meta.software.includes('Stripped') || meta.model.includes('Tidak Ditemukan')
                     ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
                     : 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
                 }`}
               >
-                {!hasFile ? 'STANDBY' : meta.rawFound.length > 0 ? 'AI TERDETEKSI' : meta.software.includes('Stripped') ? 'EXIF HILANG' : 'KAMERA ASLI'}
+                {!hasFile
+                  ? 'STANDBY'
+                  : meta.rawFound.length > 0 || meta.model.includes('Virtual Canvas')
+                  ? 'AI TERDETEKSI'
+                  : meta.software.includes('Stripped') || meta.model.includes('Tidak Ditemukan')
+                  ? 'EXIF DI-STRIP MEDSOS'
+                  : 'KAMERA ASLI'}
               </span>
             </div>
 
@@ -1477,7 +1546,9 @@ export default function ForensicMode() {
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
                 <span className="text-text-dim font-medium">Perangkat Kamera:</span>
-                <span className="font-semibold text-text text-right">{meta.model}</span>
+                <span className={`font-semibold text-right ${meta.model.includes('Virtual Canvas') ? 'text-rose-500' : meta.model.includes('Tidak Ditemukan') ? 'text-amber-500' : 'text-text'}`}>
+                  {meta.model}
+                </span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
                 <span className="text-text-dim font-medium">Lensa & Sensor:</span>
@@ -1494,13 +1565,13 @@ export default function ForensicMode() {
             <div className="p-2.5 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
               {!hasFile ? (
                 <span>ℹ️ Menunggu foto diunggah untuk memeriksa struktur header biner.</span>
-              ) : meta.rawFound.length > 0 ? (
+              ) : meta.rawFound.length > 0 || meta.model.includes('Virtual Canvas') ? (
                 <span className="text-rose-500 font-medium">
-                  🚨 <strong>BAHAYA:</strong> Nama mesin generator AI tercantum di data biner: <code>{meta.rawFound.join(', ')}</code>
+                  🚨 <strong>HASIL AI:</strong> File teridentifikasi dibuat oleh generator kecerdasan buatan (tanpa sensor lensa optik fisik nyata).
                 </span>
-              ) : meta.software.includes('Stripped') ? (
+              ) : meta.software.includes('Stripped') || meta.model.includes('Tidak Ditemukan') ? (
                 <span className="text-amber-500 font-medium">
-                  ⚠️ <strong>CATATAN:</strong> Data kamera hilang (dikompresi WhatsApp). Wajib cek Lapis 3 (ELA & FFT).
+                  ⚠️ <strong>INFO EXIF:</strong> Data kamera tidak terbaca karena dihapus otomatis saat dikirim lewat WhatsApp/Medsos. Wajib periksa <strong>Lapis 3 (ELA & FFT)</strong> di bawah.
                 </span>
               ) : (
                 <span>ℹ️ Data metadata konsisten dengan foto jepretan kamera fisik optik.</span>
@@ -1900,8 +1971,8 @@ export default function ForensicMode() {
                       <tr>
                         <td className="p-2 font-medium">1. EXIF & Metadata (KTP Digital)</td>
                         <td className="p-2 text-text-mut">Software: {meta.software} | Model: {meta.model}</td>
-                        <td className={`p-2 font-bold ${meta.rawFound.length > 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
-                          {meta.rawFound.length > 0 ? 'AI TERDETEKSI' : 'BERSIH / STRIPPED'}
+                        <td className={`p-2 font-bold ${meta.rawFound.length > 0 || meta.model.includes('Virtual Canvas') ? 'text-rose-500' : 'text-emerald-500'}`}>
+                          {meta.rawFound.length > 0 || meta.model.includes('Virtual Canvas') ? 'AI TERDETEKSI' : 'BERSIH / STRIPPED'}
                         </td>
                       </tr>
                       <tr>
