@@ -46,7 +46,7 @@ window.__AF_CONFIG = {
       Bisa diisi: true / "on" (Buka pendaftaran) atau false / "off" (Tutup pendaftaran).
       - true / "on"   : Tampilkan link/tombol klaim akses gratis di landing page
       - false / "off" : Sembunyikan & tutup semua link pendaftaran peserta gratis */
-   enableFreeTrainingClaim: false,
+   enableFreeTrainingClaim: true,
 
    /* -- 3c. TIER LISENSI RESELLER ------------------------------------
       false = sembunyikan kartu "Jual Ulang" (untuk situs jualan biasa). */
