@@ -111,6 +111,45 @@ function handleIncomingWebhook(e, isPost) {
     var merchantRef = data.merchant_ref || data.reference || ('TRX-' + new Date().getTime());
     var now = new Date();
 
+    // ─────────────────────────────────────────────────────────────
+    // 0. JIKA EVENT TYPE = 'activity' (CATAT KE TAB "Riwayat Aktivitas")
+    // ─────────────────────────────────────────────────────────────
+    if (eventType === 'activity') {
+      var actSheet = getOrCreateSheet(ss, 'Riwayat Aktivitas', ['Waktu', 'Email Peserta', 'Nama Peserta', 'Tool / Mode', 'Aksi', 'Keterangan']);
+      actSheet.appendRow([
+        now,
+        email || 'anonim',
+        name || '-',
+        data.tool || data.mode || '-',
+        data.action || '-',
+        data.details || data.label || '-'
+      ]);
+
+      // Update kolom 'Terakhir Aktif' di tab Users jika email ditemukan
+      if (email && email.includes('@')) {
+        var uSheet = ss.getSheetByName('Users');
+        if (uSheet) {
+          var uLastRow = uSheet.getLastRow();
+          if (uLastRow > 1) {
+            var uEmails = uSheet.getRange(2, 1, uLastRow - 1, 1).getValues();
+            for (var u = 0; u < uEmails.length; u++) {
+              if ((uEmails[u][0] || '').toString().toLowerCase().trim() === email) {
+                uSheet.getRange(u + 2, 7).setValue(now);
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      lock.releaseLock();
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        type: 'activity',
+        message: 'Aktivitas berhasil dicatat ke Riwayat Aktivitas.'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     if (!email || !email.includes('@')) {
       lock.releaseLock();
       return ContentService.createTextOutput(JSON.stringify({
