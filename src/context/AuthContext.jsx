@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { validateLogin, verifyEmailAllowed, SESSION_TTL_MS, clearAuthCache } from '../auth/auth.js';
+import { CONFIG } from '../config.js';
 import { showAccountDisabledAlert } from '../utils/alerts.js';
 
 const AuthContext = createContext(null);
