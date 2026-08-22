@@ -5,7 +5,7 @@ import {
   Wand2, Settings, PlayCircle, Sparkles, DollarSign, GalleryHorizontalEnd, HandCoins,
   Sparkles as LogoIcon, Shirt, Star, Film, ChevronRight, ChevronDown, Store, Grid3x3, LogOut,
   PanelLeftClose, PanelLeftOpen, Sun, Moon, Layers, Newspaper, MessageSquareQuote, ShieldAlert,
-  Scissors, BookOpenText, Clapperboard, Presentation, X, Menu
+  Scissors, BookOpenText, Clapperboard, Presentation, X, Menu, ScanSearch
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -27,10 +27,11 @@ const MODES = [
 ];
 
 const JOURNALISM_MODES = [
-  { id: 'article',   icon: BookOpenText,       label: 'Artikel & Berita', badge: 'New', desc: 'Straight news, feature & rilis pers' },
-  { id: 'newscard',  icon: Newspaper,          label: 'Breaking News',    badge: 'Hot', desc: 'Kartu berita kilat & editorial' },
-  { id: 'quotecard', icon: MessageSquareQuote, label: 'Quote Tokoh',      badge: '',    desc: 'Kutipan narasumber & tokoh' },
-  { id: 'factcheck', icon: ShieldAlert,        label: 'Cek Fakta',        badge: 'New', desc: 'Verifikasi hoaks & klarifikasi' },
+  { id: 'forensic',  icon: ScanSearch,         label: 'Lab Forensik Konten AI', badge: 'Pro', desc: 'Uji ELA, 2D FFT, C2PA & EXIF Biner' },
+  { id: 'article',   icon: BookOpenText,       label: 'Artikel & Berita',       badge: 'New', desc: 'Straight news, feature & rilis pers' },
+  { id: 'newscard',  icon: Newspaper,          label: 'Breaking News',          badge: 'Hot', desc: 'Kartu berita kilat & editorial' },
+  { id: 'quotecard', icon: MessageSquareQuote, label: 'Quote Tokoh',            badge: '',    desc: 'Kutipan narasumber & tokoh' },
+  { id: 'factcheck', icon: ShieldAlert,        label: 'Cek Fakta',              badge: 'New', desc: 'Verifikasi hoaks & klarifikasi' },
 ];
 
 const JOURNALISM_IDS = JOURNALISM_MODES.map((m) => m.id);

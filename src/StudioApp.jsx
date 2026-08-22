@@ -40,6 +40,7 @@ import ArticleMode from './modes/ArticleMode.jsx';
 import VideoScriptMode from './modes/VideoScriptMode.jsx';
 import ImageSlicerMode from './modes/ImageSlicerMode.jsx';
 import PresentationMode from './modes/PresentationMode.jsx';
+import ForensicMode from './modes/ForensicMode.jsx';
 import VideoScriptDemoModal from './components/VideoScriptDemoModal.jsx';
 import PresentationDemoModal from './components/PresentationDemoModal.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
@@ -83,6 +84,7 @@ const TITLES = {
   copywriting: { name: 'Copy Writing', desc: 'AI Creative Copy Engine untuk kebutuhan banner & iklan.' },
   facecard:    { name: 'Face Card Analysis', desc: 'Buat analisa wajah editorial: face features, spectacles, style, color, dan makeup. Ikuti video tutorial untuk memakai hasilnya.' },
   menufb:      { name: 'Menu F&B', desc: 'Buat menu poster F&B dinamis (patisserie, restaurant, healthy food, dessert). Wireframe live update sesuai input.' },
+  forensic:    { name: 'Lab Forensik Konten AI & Cek Fakta Visual', desc: 'Uji keaslian foto digital secara saintifik melalui EXIF Biner, Kriptografi C2PA 2.4, Real ELA (Error Level Analysis), dan 2D FFT Spektrogram Frekuensi.' },
   article:     { name: 'Artikel & Berita Media', desc: 'Isi detail peristiwa untuk menghasilkan naskah artikel, straight news, feature, opini redaksi, atau siaran pers siap terbit.' },
   newscard:    { name: 'Breaking News Card', desc: 'Isi rubrik & detail peristiwa untuk menghasilkan kartu berita kilat & foto jurnalistik berbobot.' },
   quotecard:   { name: 'Quote Card Tokoh', desc: 'Isi kutipan narasumber, gelar jabatan, dan konteks wawancara untuk kartu kutipan berwibawa.' },
@@ -95,7 +97,7 @@ const TITLES = {
 };
 
 const HAS_MOCKUP = {
-  banner: true, carousel: true, gridfeed: false, imageslicer: false, videoscript: false, presentation: false,
+  banner: true, carousel: true, gridfeed: false, imageslicer: false, forensic: false, videoscript: false, presentation: false,
   thumbnail: true, typography: true, copywriting: false, facecard: false, menufb: false, article: false,
   newscard: false, quotecard: false, factcheck: false,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
@@ -488,6 +490,14 @@ function AuthedApp() {
           {mode === 'imageslicer' ? (
             <main className="flex-1 min-w-0 overflow-y-auto p-4 lg:p-6 max-w-7xl mx-auto w-full">
               <ImageSlicerMode />
+            </main>
+          ) : mode === 'forensic' ? (
+            <main className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 lg:p-6 w-full max-w-[1750px] mx-auto">
+              <div className="mb-4">
+                <h1 className="text-xl font-bold">{t.name}</h1>
+                <p className="text-xs text-text-mut mt-1">{t.desc}</p>
+              </div>
+              <ForensicMode />
             </main>
           ) : mode === 'presentation' ? (
             <main className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 lg:p-6 w-full max-w-[1750px] mx-auto">
