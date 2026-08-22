@@ -3,37 +3,39 @@ import {
   ShieldAlert, ShieldCheck, FileCheck2, Cpu, Scan, RefreshCw, Upload,
   Download, Printer, Copy, Check, ExternalLink, AlertTriangle, Info,
   Sliders, ZoomIn, ZoomOut, Maximize2, Sparkles, FileText, Image as ImageIcon,
-  Flame, Lock, Eye, CheckCircle2, XCircle, Search, Layers, Activity
+  Flame, Lock, Eye, CheckCircle2, XCircle, Search, Layers, Activity,
+  BookOpen, HelpCircle, ChevronRight, ChevronDown, Lightbulb, Compass
 } from 'lucide-react';
 import { showAlert } from '../utils/alerts.js';
+import { FORENSIC_GLOSSARY } from '../data/forensicGlossary.js';
 
 // Pre-configured Test Cases for demonstrations and training
 const PRESET_SAMPLES = [
   {
     id: 'real_camera',
-    label: 'Kamera Fisik Optik',
-    sublabel: 'Sony A7R IV (Clean EXIF + Natural Sensor)',
+    label: 'Kamera Fisik Asli',
+    sublabel: 'Sony A7R IV (KTP kamera fisik + noise optik alami)',
     icon: '📷',
     type: 'pass',
   },
   {
     id: 'midjourney_raw',
     label: 'Midjourney v6.0 Raw',
-    sublabel: 'Biner prompt parameter terdeteksi di chunk',
+    sublabel: 'Biner prompt parameter terdeteksi di chunk file',
     icon: '🤖',
     type: 'alert',
   },
   {
     id: 'c2pa_ai',
     label: 'DALL-E 3 (C2PA Signed)',
-    sublabel: 'Sertifikat Kriptografi JUMBF Valid',
+    sublabel: 'Sertifikat Kriptografi JUMBF resmi OpenAI',
     icon: '🔐',
     type: 'c2pa',
   },
   {
     id: 'synthid_crop',
     label: 'Gemini + WA Stripped',
-    sublabel: 'EXIF terhapus, terdeteksi via ELA & FFT',
+    sublabel: 'EXIF terhapus WhatsApp, terdeteksi via ELA & FFT',
     icon: '🧬',
     type: 'warn',
   },
@@ -53,6 +55,12 @@ export default function ForensicMode() {
   const [isDragOver, setIsDragOver] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [copiedReport, setCopiedReport] = useState(false);
+
+  // Layperson Guide & Glossary Modals
+  const [showGlossaryModal, setShowGlossaryModal] = useState(false);
+  const [selectedGlossaryId, setSelectedGlossaryId] = useState(null);
+  const [glossarySearch, setGlossarySearch] = useState('');
+  const [showQuickGuide, setShowQuickGuide] = useState(true);
 
   // Forensic Metadata & Metrics
   const [meta, setMeta] = useState({
@@ -89,6 +97,12 @@ export default function ForensicMode() {
 
   const activeCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  // Open Glossary focused on a specific term
+  const openGlossary = (termId = null) => {
+    setSelectedGlossaryId(termId);
+    setShowGlossaryModal(true);
+  };
 
   // 1. Radix-2 1D Fast Fourier Transform
   const fft1D = useCallback((real, imag) => {
@@ -333,7 +347,7 @@ export default function ForensicMode() {
         colIm[y] = imag[y * fftSize + x];
       }
       fft1D(colRe, colIm);
-      for (let y = 0; y < fftSize; y++) {
+      for (let x = 0; x < fftSize; x++) {
         real[y * fftSize + x] = colRe[y];
         imag[y * fftSize + x] = colIm[y];
       }
@@ -720,35 +734,38 @@ export default function ForensicMode() {
     renderCanvasView(activeTab);
   }, [activeTab, renderCanvasView]);
 
-  // Verdict Colors & Text
+  // Verdict Colors & Text with plain-language explanations
   const getVerdictInfo = () => {
     if (metrics.aiProb >= 70) {
       return {
-        badge: 'AI DETECTED',
+        badge: 'TERINDIKASI KUAT AI',
         badgeBg: 'bg-rose-500/15 text-rose-500 border-rose-500/30',
-        headline: 'Terindikasi Kuat Konten Buatan AI',
+        headline: 'Terindikasi Kuat Konten Buatan AI / Rekayasa Komputer',
         action: 'TOLAK / LABELI KONTEN AI',
         actionColor: 'text-rose-500',
         color: '#f43f5e',
+        plainMeaning: 'Foto ini memiliki sidik jari AI yang nyata. Tidak disarankan untuk diterbitkan sebagai foto fakta/jurnalistik asli tanpa label peringatan AI.',
       };
     }
     if (metrics.aiProb >= 35) {
       return {
-        badge: 'SUSPICIOUS / STRIPPED',
+        badge: 'MENCURIGAKAN / EXIF HILANG',
         badgeBg: 'bg-amber-500/15 text-amber-500 border-amber-500/30',
-        headline: 'Mencurigakan / Metadata Telah Dihapus',
+        headline: 'Mencurigakan / Identitas File Telah Dihapus Medsos',
         action: 'INVESTIGASI LANJUTAN',
         actionColor: 'text-amber-500',
         color: '#f59e0b',
+        plainMeaning: 'Data asal-usul kamera hilang (kemungkinan karena dikirim lewat WhatsApp/Facebook). Periksa tampilan ELA & 2D FFT di layar tengah untuk melihat susunan pikselnya.',
       };
     }
     return {
-      badge: 'VERIFIED AUTHENTIC',
+      badge: 'FOTO ASLI TERVERIFIKASI',
       badgeBg: 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30',
-      headline: 'Foto Otentik / Kamera Fisik',
+      headline: 'Foto Otentik / Jepretan Kamera Fisik Nyata',
       action: 'LAYAK TERBIT (VERIFIED)',
       actionColor: 'text-emerald-500',
       color: '#10b981',
+      plainMeaning: 'Ciri-ciri fisik optik kamera konsisten dan alami. Tidak ditemukan jejak sintetis maupun manipulasi digital.',
     };
   };
 
@@ -756,10 +773,10 @@ export default function ForensicMode() {
 
   // Mode Descriptions for Canvas Inspector
   const VIEW_DESCRIPTIONS = {
-    original: 'Visual Asli (Standard Viewport Render)',
-    ela: 'Real Error Level Analysis — Mendeteksi ketidaksamaan tingkat kompresi pada area editan/sintesis',
-    fft: '2D Fast Fourier Transform — Spektrogram frekuensi untuk mendeteksi titik resonansi kisi AI',
-    laplacian: 'Laplacian Noise Residual — Isolasi noise sensor optik mikroskopis vs kehalusan difusi',
+    original: 'Visual Asli: Tampilan foto standar sebagaimana dilihat mata manusia.',
+    ela: 'Real ELA (Error Level Analysis): Menyorot bekas editan atau tempelan wajah yang bereaksi beda saat dikompresi.',
+    fft: '2D FFT (Fast Fourier Transform): Rontgen frekuensi untuk menemukan pola kisi catur yang ditinggalkan komputer AI.',
+    laplacian: 'Laplacian Noise Residual: Mengisolasi butiran pasir sensor kamera nyata vs gambar AI yang terlalu mulus.',
   };
 
   // Copy newsroom report text
@@ -776,26 +793,99 @@ export default function ForensicMode() {
   const now = new Date();
   const docNumber = `VF-${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-8942`;
 
+  const filteredGlossary = FORENSIC_GLOSSARY.filter((item) => {
+    const s = glossarySearch.trim().toLowerCase();
+    if (!s) return true;
+    return (
+      item.term.toLowerCase().includes(s) ||
+      item.shortLabel.toLowerCase().includes(s) ||
+      item.plainDescription.toLowerCase().includes(s) ||
+      item.category.toLowerCase().includes(s) ||
+      item.simpleAnalogy.toLowerCase().includes(s)
+    );
+  });
+
   return (
     <div className="space-y-4">
+      {/* Quick Guide Accordion for Laypeople */}
+      {showQuickGuide && (
+        <div className="surface p-4 rounded-2xl border border-accent/30 bg-accent/5 shadow-sm relative animate-fade-in">
+          <button
+            type="button"
+            onClick={() => setShowQuickGuide(false)}
+            className="absolute right-3 top-3 w-6 h-6 rounded-md hover:bg-accent/15 text-text-mut hover:text-text flex items-center justify-center text-xs transition cursor-pointer"
+            title="Tutup Panduan"
+          >
+            ✕
+          </button>
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-xl bg-accent text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+              <Lightbulb className="w-4 h-4" />
+            </div>
+            <div className="space-y-1.5 pr-6">
+              <div className="text-xs font-bold text-text flex items-center gap-2">
+                <span>💡 Panduan 3 Langkah Memeriksa Foto Viral (Untuk Orang Awam)</span>
+                <span className="text-[10px] bg-accent/20 text-accent font-semibold px-2 py-0.2 rounded-full">
+                  Panduan Cepat
+                </span>
+              </div>
+              <p className="text-[11px] text-text-mut leading-relaxed">
+                Tidak perlu latar belakang IT! Ikuti 3 langkah sederhana di bawah untuk membongkar hoaks visual:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1.5">
+                <div className="p-2.5 rounded-xl bg-bg/80 border border-border text-[11px] space-y-1">
+                  <div className="font-bold text-accent flex items-center gap-1">
+                    <span>1️⃣</span> Periksa KTP Foto (Lapis 1)
+                  </div>
+                  <div className="text-text-mut text-[10px] leading-normal">
+                    Jika muncul nama <strong>Midjourney / DALL-E</strong> (MERAH), foto pasti 100% buatan AI. Jika muncul merek HP/Kamera (HIJAU), foto asli.
+                  </div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-bg/80 border border-border text-[11px] space-y-1">
+                  <div className="font-bold text-purple-400 flex items-center gap-1">
+                    <span>2️⃣</span> Cari Segel Digital (Lapis 2)
+                  </div>
+                  <div className="text-text-mut text-[10px] leading-normal">
+                    Jika ada tanda <strong>C2PA Valid</strong>, pembuat foto (OpenAI/Adobe) secara resmi telah menyematkan stempel digital pengakuan AI.
+                  </div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-bg/80 border border-border text-[11px] space-y-1">
+                  <div className="font-bold text-emerald-400 flex items-center gap-1">
+                    <span>3️⃣</span> Rontgen Piksel (Lapis 3)
+                  </div>
+                  <div className="text-text-mut text-[10px] leading-normal">
+                    Jika foto dari WA (EXIF hilang), klik tab <strong>Real ELA</strong> & <strong>2D FFT</strong> di layar tengah untuk melihat pola kisi buatan komputer.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner / Verdict Bar */}
       <div className="surface p-4 sm:p-5 rounded-2xl border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm relative overflow-hidden">
         <div className="flex items-center gap-4">
           {/* Circular Gauge / Probability Score */}
           <div
-            className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl flex flex-col items-center justify-center font-black text-xl sm:text-2xl shrink-0 border shadow-inner transition-colors duration-300"
+            className="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl flex flex-col items-center justify-center font-black text-xl sm:text-2xl shrink-0 border shadow-inner transition-colors duration-300 relative group cursor-pointer"
             style={{
               borderColor: verdict.color,
               backgroundColor: `${verdict.color}18`,
               color: verdict.color,
             }}
+            onClick={() => openGlossary('verdict')}
+            title="Klik untuk memahami perhitungan skor"
           >
             <span>{metrics.aiProb}%</span>
-            <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80 -mt-1">AI Prob</span>
+            <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80 -mt-1">Skor AI</span>
+            <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-bg border border-border text-text-dim flex items-center justify-center text-[9px] font-bold">
+              ?
+            </span>
           </div>
 
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${verdict.badgeBg}`}>
                 {verdict.badge}
               </span>
@@ -805,29 +895,37 @@ export default function ForensicMode() {
                 </span>
               )}
             </div>
-            <h2 className="text-lg font-bold text-text mt-1">{verdict.headline}</h2>
-            <p className="text-xs text-text-mut max-w-2xl line-clamp-1 mt-0.5">
-              {metrics.reasons.length > 0 ? metrics.reasons.join(' • ') : 'Karakteristik optik fisik dan sensor noise konsisten alami.'}
+            <h2 className="text-base sm:text-lg font-bold text-text mt-1">{verdict.headline}</h2>
+            <p className="text-xs text-text-mut max-w-2xl mt-0.5">
+              {verdict.plainMeaning}
             </p>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 self-stretch md:self-auto justify-end shrink-0">
+        <div className="flex items-center gap-2 self-stretch md:self-auto justify-end shrink-0 flex-wrap">
+          <button
+            type="button"
+            onClick={() => openGlossary()}
+            className="px-3 py-2 rounded-xl bg-bg-elev border border-accent/40 text-accent hover:bg-accent/10 font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>📖 Kamus Istilah</span>
+          </button>
           <button
             type="button"
             onClick={() => setShowReportModal(true)}
             className="px-3.5 py-2 rounded-xl bg-accent text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm hover:opacity-95 transition cursor-pointer"
           >
             <FileText className="w-4 h-4" />
-            <span>Berita Acara SOP Redaksi</span>
+            <span>Berita Acara SOP</span>
           </button>
           <a
             href="https://contentcredentials.org/verify"
             target="_blank"
             rel="noreferrer"
             className="px-3 py-2 rounded-xl bg-bg-elev border border-border text-text-mut hover:text-text font-semibold text-xs flex items-center gap-1.5 transition"
-            title="Buka Validator C2PA Resmi"
+            title="Buka Validator C2PA Resmi Global"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">C2PA Validator</span>
@@ -889,8 +987,11 @@ export default function ForensicMode() {
 
           {/* Preset Test Cases */}
           <div className="surface p-4 rounded-xl border border-border space-y-2.5 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-dim flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-accent" /> Sampel Kasus Praktik
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-bold uppercase tracking-wider text-text-dim flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-accent" /> Sampel Praktik
+              </div>
+              <span className="text-[10px] text-text-dim">Klik untuk coba</span>
             </div>
             <div className="space-y-1.5">
               {PRESET_SAMPLES.map((preset) => (
@@ -916,11 +1017,20 @@ export default function ForensicMode() {
 
           {/* Stress Testing Tools */}
           <div className="surface p-4 rounded-xl border border-border space-y-2.5 shadow-sm">
-            <div className="text-xs font-bold uppercase tracking-wider text-text-dim flex items-center gap-1.5">
-              <Flame className="w-3.5 h-3.5 text-amber-500" /> Uji Ketahanan Manipulasi
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-bold uppercase tracking-wider text-text-dim flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-amber-500" /> Simulasi Trik Manipulasi
+              </div>
+              <button
+                type="button"
+                onClick={() => openGlossary('stripped')}
+                className="text-[10px] text-accent hover:underline flex items-center gap-0.5"
+              >
+                <HelpCircle className="w-3 h-3" /> Apa ini?
+              </button>
             </div>
             <p className="text-[11px] text-text-mut leading-relaxed">
-              Uji ketahanan algoritma saat pelaku hoaks berusaha menghapus jejak metadata:
+              Uji ketahanan alat saat pelaku hoaks berusaha menghapus jejak metadata dengan trik kirim WhatsApp atau potong gambar:
             </p>
             <div className="grid grid-cols-2 gap-2 pt-1">
               <button
@@ -955,6 +1065,7 @@ export default function ForensicMode() {
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'original' ? 'bg-accent text-white shadow-sm' : 'text-text-mut hover:text-text hover:bg-bg-card'
                   }`}
+                  title="Tampilan visual asli foto"
                 >
                   <Eye className="w-3.5 h-3.5" /> <span>Original</span>
                 </button>
@@ -964,6 +1075,7 @@ export default function ForensicMode() {
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'ela' ? 'bg-accent text-white shadow-sm' : 'text-text-mut hover:text-text hover:bg-bg-card'
                   }`}
+                  title="Detektor bekas tempelan & editan foto"
                 >
                   <Activity className="w-3.5 h-3.5" /> <span>Real ELA</span>
                 </button>
@@ -973,6 +1085,7 @@ export default function ForensicMode() {
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'fft' ? 'bg-accent text-white shadow-sm' : 'text-text-mut hover:text-text hover:bg-bg-card'
                   }`}
+                  title="Rontgen spektrogram frekuensi sidik jari AI"
                 >
                   <Scan className="w-3.5 h-3.5" /> <span>2D FFT</span>
                 </button>
@@ -982,6 +1095,7 @@ export default function ForensicMode() {
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'laplacian' ? 'bg-accent text-white shadow-sm' : 'text-text-mut hover:text-text hover:bg-bg-card'
                   }`}
+                  title="Pemeriksaan pori-pori dan butiran noise sensor"
                 >
                   <Layers className="w-3.5 h-3.5" /> <span>Laplacian</span>
                 </button>
@@ -993,7 +1107,7 @@ export default function ForensicMode() {
                   type="button"
                   onClick={() => setZoomLevel((z) => Math.max(0.6, z - 0.2))}
                   className="p-1.5 rounded-md hover:bg-bg-card text-text-mut hover:text-text transition"
-                  title="Zoom Out"
+                  title="Perkecil Tampilan (Zoom Out)"
                 >
                   <ZoomOut className="w-3.5 h-3.5" />
                 </button>
@@ -1004,7 +1118,7 @@ export default function ForensicMode() {
                   type="button"
                   onClick={() => setZoomLevel((z) => Math.min(2.5, z + 0.2))}
                   className="p-1.5 rounded-md hover:bg-bg-card text-text-mut hover:text-text transition"
-                  title="Zoom In"
+                  title="Perbesar Tampilan (Zoom In)"
                 >
                   <ZoomIn className="w-3.5 h-3.5" />
                 </button>
@@ -1012,7 +1126,7 @@ export default function ForensicMode() {
                   type="button"
                   onClick={() => setZoomLevel(1)}
                   className="p-1.5 rounded-md hover:bg-bg-card text-text-mut hover:text-text transition"
-                  title="Reset Zoom"
+                  title="Kembalikan Ukuran Asli (100%)"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
                 </button>
@@ -1024,7 +1138,7 @@ export default function ForensicMode() {
               {isProcessing && (
                 <div className="absolute inset-0 bg-black/70 backdrop-blur-xs flex flex-col items-center justify-center gap-2 z-20 text-accent">
                   <RefreshCw className="w-7 h-7 animate-spin" />
-                  <span className="text-xs font-semibold mono">Memproses Fourier & ELA Canvas...</span>
+                  <span className="text-xs font-semibold mono">Menghitung Fourier & ELA Canvas...</span>
                 </div>
               )}
               <canvas
@@ -1043,19 +1157,39 @@ export default function ForensicMode() {
             {/* Description Banner */}
             <div className="px-3.5 py-2.5 bg-bg-elev/80 border-t border-border text-[11px] text-text-mut flex items-center justify-between">
               <span className="font-medium">{VIEW_DESCRIPTIONS[activeTab]}</span>
-              <span className="text-[10px] mono text-accent font-semibold uppercase">{activeTab} VIEW</span>
+              <button
+                type="button"
+                onClick={() => openGlossary(activeTab === 'original' ? 'exif' : activeTab)}
+                className="text-[10px] text-accent hover:underline flex items-center gap-1 font-semibold"
+              >
+                <span>Pelajari Mode Ini</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
             </div>
           </div>
 
           {/* Quick Explanation Alert */}
-          <div className="p-3 bg-bg-elev rounded-xl border border-border text-xs text-text-mut space-y-1">
-            <div className="font-semibold text-text flex items-center gap-1.5">
-              <Info className="w-3.5 h-3.5 text-accent" /> Cara Membaca Visual Forensik:
+          <div className="p-3.5 bg-bg-elev rounded-xl border border-border text-xs text-text-mut space-y-1.5">
+            <div className="font-semibold text-text flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-accent" /> Cara Sederhana Membaca Gambar di Atas:
+              </div>
+              <button
+                type="button"
+                onClick={() => openGlossary('ela')}
+                className="text-[10px] text-accent hover:underline"
+              >
+                Buka Kamus Forensik →
+              </button>
             </div>
-            <p className="text-[11px] leading-relaxed">
-              • <strong>ELA (Error Level Analysis)</strong>: Area editan/sintetis menghasilkan pendaran intensitas error kompresi yang berbeda tajam dari latar belakang.<br />
-              • <strong>2D FFT Spektrogram</strong>: Generator difusi AI meninggalkan titik terang berpola kisi simetris (*checkerboard artifact*) di luar titik pusat DC.
-            </p>
+            <div className="text-[11px] leading-relaxed space-y-1">
+              <div>
+                • <strong>Tampilan ELA (Bekas Tempelan)</strong>: Jika ada wajah atau objek yang berpendar terang sendirian dibanding sekitarnya, area itu hasil editan.
+              </div>
+              <div>
+                • <strong>Tampilan 2D FFT (Rontgen AI)</strong>: Jika ada titik-titik terang simetris atau pola kisi kotak catur di luar titik pusat, itu sidik jari buatan komputer AI.
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1064,8 +1198,19 @@ export default function ForensicMode() {
           {/* LAPIS 1: EXIF & Metadata Biner */}
           <div className="surface p-4 rounded-xl border border-border shadow-sm space-y-2.5">
             <div className="flex items-center justify-between pb-2 border-b border-border">
-              <div className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
-                <span>📁</span> LAPIS 1: EXIF & Metadata Biner
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                  <span>📁</span> LAPIS 1: EXIF & Metadata Biner
+                  <button
+                    type="button"
+                    onClick={() => openGlossary('exif')}
+                    className="text-accent hover:text-accent/80"
+                    title="Pelajari apa itu EXIF"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div className="text-[10px] text-text-dim">Pemeriksaan "KTP Digital" asal kamera vs software</div>
               </div>
               <span
                 className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
@@ -1076,44 +1221,44 @@ export default function ForensicMode() {
                     : 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
                 }`}
               >
-                {meta.rawFound.length > 0 ? 'AI DETECTED' : meta.software.includes('Stripped') ? 'STRIPPED' : 'HARDWARE CLEAN'}
+                {meta.rawFound.length > 0 ? 'AI TERDETEKSI' : meta.software.includes('Stripped') ? 'EXIF HILANG' : 'KAMERA ASLI'}
               </span>
             </div>
 
             <div className="space-y-1.5 text-xs">
               <div className="flex justify-between py-1 border-b border-border/50">
-                <span className="text-text-dim font-medium">Software Engine:</span>
+                <span className="text-text-dim font-medium">Software / Mesin:</span>
                 <span className={`font-semibold text-right ${meta.rawFound.length > 0 ? 'text-rose-500' : 'text-text'}`}>
                   {meta.software}
                 </span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
-                <span className="text-text-dim font-medium">Hardware Model:</span>
+                <span className="text-text-dim font-medium">Perangkat Kamera:</span>
                 <span className="font-semibold text-text text-right">{meta.model}</span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
-                <span className="text-text-dim font-medium">Optics / Lensa:</span>
+                <span className="text-text-dim font-medium">Lensa & Sensor:</span>
                 <span className="font-semibold text-text text-right">{meta.optics}</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-text-dim font-medium">Prompt Chunk:</span>
+                <span className="text-text-dim font-medium">Catatan Prompt:</span>
                 <span className="font-semibold text-text text-right truncate max-w-[170px]" title={meta.prompt}>
                   {meta.prompt}
                 </span>
               </div>
             </div>
 
-            <div className="p-2 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
+            <div className="p-2.5 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
               {meta.rawFound.length > 0 ? (
                 <span className="text-rose-500 font-medium">
-                  🚨 <strong>RED FLAG:</strong> Mesin AI tercantum di tag biner: <code>{meta.rawFound.join(', ')}</code>
+                  🚨 <strong>BAHAYA:</strong> Nama mesin generator AI tercantum di data biner: <code>{meta.rawFound.join(', ')}</code>
                 </span>
               ) : meta.software.includes('Stripped') ? (
                 <span className="text-amber-500 font-medium">
-                  ⚠️ <strong>PERINGATAN:</strong> EXIF tidak ada / dilucuti. Wajib uji Lapis 3 (ELA & FFT).
+                  ⚠️ <strong>CATATAN:</strong> Data kamera hilang (dikompresi WhatsApp). Wajib cek Lapis 3 (ELA & FFT).
                 </span>
               ) : (
-                <span>ℹ️ Header metadata konsisten dengan foto perangkat fisik optik.</span>
+                <span>ℹ️ Data metadata konsisten dengan foto jepretan kamera fisik optik.</span>
               )}
             </div>
           </div>
@@ -1121,8 +1266,19 @@ export default function ForensicMode() {
           {/* LAPIS 2: Kriptografi C2PA (Content Credentials) */}
           <div className="surface p-4 rounded-xl border border-border shadow-sm space-y-2.5">
             <div className="flex items-center justify-between pb-2 border-b border-border">
-              <div className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
-                <span>🔐</span> LAPIS 2: Kriptografi C2PA 2.4
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                  <span>🔐</span> LAPIS 2: Kriptografi C2PA 2.4
+                  <button
+                    type="button"
+                    onClick={() => openGlossary('c2pa')}
+                    className="text-accent hover:text-accent/80"
+                    title="Pelajari apa itu C2PA"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div className="text-[10px] text-text-dim">Pemeriksaan "Segel Stempel Digital Resmi"</div>
               </div>
               <span
                 className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
@@ -1131,15 +1287,15 @@ export default function ForensicMode() {
                     : 'bg-bg-elev text-text-dim border border-border'
                 }`}
               >
-                {c2pa.hasJumbf ? 'C2PA SIGNED' : 'NO MANIFEST'}
+                {c2pa.hasJumbf ? 'C2PA SIGNED' : 'TIDAK ADA SEGEL'}
               </span>
             </div>
 
             <div className="space-y-1.5 text-xs">
               <div className="flex justify-between py-1 border-b border-border/50">
-                <span className="text-text-dim font-medium">JUMBF Manifest:</span>
+                <span className="text-text-dim font-medium">Status Segel:</span>
                 <span className="font-semibold text-text text-right">
-                  {c2pa.hasJumbf ? 'Valid JUMBF Manifest (Signed)' : 'Tidak ditemukan JUMBF box'}
+                  {c2pa.hasJumbf ? 'Sertifikat Digital Valid' : 'Tidak ada sertifikat JUMBF'}
                 </span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
@@ -1147,20 +1303,20 @@ export default function ForensicMode() {
                 <span className="font-semibold text-text text-right">{c2pa.issuer}</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-text-dim font-medium">Rantai Tindakan:</span>
+                <span className="text-text-dim font-medium">Tindakan Sistem:</span>
                 <span className="font-semibold text-text text-right truncate max-w-[170px]" title={c2pa.actions}>
                   {c2pa.actions}
                 </span>
               </div>
             </div>
 
-            <div className="p-2 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
+            <div className="p-2.5 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
               {c2pa.hasJumbf ? (
                 <span className="text-purple-400 font-medium">
-                  🔐 <strong>KRIPTOGRAFI:</strong> Sertifikat digital mengonfirmasi asal sintesis AI resmi.
+                  🔐 <strong>BUKTI RESMI:</strong> Sertifikat digital mengonfirmasi gambar dibuat oleh Text-to-Image AI.
                 </span>
               ) : (
-                <span>ℹ️ File tidak menyertakan tanda tangan digital C2PA manifest.</span>
+                <span>ℹ️ Foto ini tidak membawa segel kriptografi C2PA.</span>
               )}
             </div>
           </div>
@@ -1168,8 +1324,19 @@ export default function ForensicMode() {
           {/* LAPIS 3: SynthID & Piksel FFT */}
           <div className="surface p-4 rounded-xl border border-border shadow-sm space-y-2.5">
             <div className="flex items-center justify-between pb-2 border-b border-border">
-              <div className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
-                <span>🧬</span> LAPIS 3: SynthID & Piksel FFT
+              <div>
+                <div className="text-xs font-bold uppercase tracking-wider text-text flex items-center gap-1.5">
+                  <span>🧬</span> LAPIS 3: SynthID & Piksel FFT
+                  <button
+                    type="button"
+                    onClick={() => openGlossary('fft')}
+                    className="text-accent hover:text-accent/80"
+                    title="Pelajari apa itu ELA & FFT"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div className="text-[10px] text-text-dim">Rontgen susunan piksel mikroskopis</div>
               </div>
               <span
                 className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
@@ -1178,37 +1345,149 @@ export default function ForensicMode() {
                     : 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
                 }`}
               >
-                {metrics.isAiFlag ? 'SYNTHETIC PATTERN' : 'NATURAL SENSOR'}
+                {metrics.isAiFlag ? 'POLA SINTETIS' : 'SENSOR ALAMI'}
               </span>
             </div>
 
             <div className="space-y-1.5 text-xs">
               <div className="flex justify-between py-1 border-b border-border/50">
-                <span className="text-text-dim font-medium">Skor Anomali ELA:</span>
-                <span className="font-semibold text-text text-right">{metrics.elaScore.toFixed(1)} px (Variance)</span>
+                <span className="text-text-dim font-medium">Ketidaksamaan ELA:</span>
+                <span className="font-semibold text-text text-right">{metrics.elaScore.toFixed(1)} px (Tingkat selisih)</span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
-                <span className="text-text-dim font-medium">Sidik Frekuensi FFT:</span>
-                <span className="font-semibold text-text text-right">{metrics.fftSpikeScore} grid spikes</span>
+                <span className="text-text-dim font-medium">Titik Kisi Kisi FFT:</span>
+                <span className="font-semibold text-text text-right">{metrics.fftSpikeScore} titik anomali</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-text-dim font-medium">Indikasi SynthID:</span>
-                <span className="font-semibold text-text text-right">{metrics.synthScore}% (Watermark Energy)</span>
+                <span className="text-text-dim font-medium">Sinyal SynthID:</span>
+                <span className="font-semibold text-text text-right">{metrics.synthScore}% (Energi sinyal AI)</span>
               </div>
             </div>
 
-            <div className="p-2 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
+            <div className="p-2.5 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
               {metrics.isAiFlag ? (
                 <span className="text-rose-500 font-medium">
-                  🚨 <strong>PIXEL FORENSICS:</strong> Spektrum frekuensi FFT & pola ELA mengindikasikan sintesis generator difusi.
+                  🚨 <strong>HASIL RONTGEN:</strong> Spektrum frekuensi & ELA membuktikan struktur kisi matematika AI.
                 </span>
               ) : (
-                <span>ℹ️ Distribusi noise dan spektrum optik alami tanpa anomali sintetis.</span>
+                <span>ℹ️ Distribusi butiran noise merata alami khas sensor optik kamera nyata.</span>
               )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* MODAL: Kamus Istilah Forensik untuk Orang Awam */}
+      {showGlossaryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-fade-in">
+          <div className="surface w-full max-w-3xl max-h-[88vh] flex flex-col rounded-2xl border border-border shadow-2xl overflow-hidden animate-scale-in">
+            {/* Header */}
+            <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-bg-elev">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-accent text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                  📖
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-text">Kamus Istilah Forensik Konten AI</h3>
+                  <p className="text-[11px] text-text-mut">Penjelasan mudah & analogi sehari-hari untuk orang awam</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowGlossaryModal(false)}
+                className="w-8 h-8 rounded-lg hover:bg-bg flex items-center justify-center text-text-mut hover:text-text transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Search */}
+            <div className="p-3.5 border-b border-border bg-bg/50">
+              <div className="relative">
+                <Search className="w-4 h-4 text-text-dim absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={glossarySearch}
+                  onChange={(e) => setGlossarySearch(e.target.value)}
+                  placeholder="Cari istilah: EXIF, C2PA, ELA, FFT, SynthID, WhatsApp..."
+                  className="w-full bg-bg border border-border rounded-xl pl-10 pr-4 py-2 text-xs text-text focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+
+            {/* Glossary Content Items */}
+            <div className="p-4 sm:p-5 overflow-y-auto flex-1 space-y-3.5">
+              {filteredGlossary.map((item) => {
+                const isSelected = selectedGlossaryId === item.id;
+                return (
+                  <div
+                    key={item.id}
+                    className={`p-4 rounded-xl border transition-all ${
+                      isSelected
+                        ? 'border-accent bg-accent/5 ring-1 ring-accent shadow-sm'
+                        : 'border-border bg-bg-elev/40 hover:border-border-hover'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-extrabold text-text">{item.term}</span>
+                          <span className="text-[10px] px-2 py-0.2 rounded-md bg-accent/15 text-accent font-semibold">
+                            {item.shortLabel}
+                          </span>
+                          <span className="text-[10px] px-2 py-0.2 rounded-md bg-bg text-text-dim border border-border">
+                            {item.category}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Analogy Box */}
+                    <div className="mt-2.5 p-2.5 rounded-lg bg-accent/10 border border-accent/20 text-xs text-text flex items-start gap-2">
+                      <span className="text-sm">💡</span>
+                      <div>
+                        <strong className="text-accent text-[11px] block uppercase tracking-wide">Analogi Sederhana:</strong>
+                        <span className="text-[11px] text-text/90 leading-relaxed">{item.simpleAnalogy}</span>
+                      </div>
+                    </div>
+
+                    {/* Plain Description */}
+                    <div className="mt-2 text-xs text-text-mut leading-relaxed">
+                      {item.plainDescription}
+                    </div>
+
+                    {/* How to Read */}
+                    <div className="mt-2.5 pt-2.5 border-t border-border/60 text-[11px]">
+                      <strong className="text-text font-semibold block mb-0.5">Cara Membaca Hasil di SmartFeed:</strong>
+                      <div className="text-text-mut whitespace-pre-line leading-relaxed">
+                        {item.howToRead}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {filteredGlossary.length === 0 && (
+                <div className="text-center py-8 text-text-dim text-xs">
+                  Tidak ditemukan istilah yang cocok dengan "{glossarySearch}".
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 py-3 border-t border-border bg-bg-elev flex items-center justify-between text-xs text-text-mut">
+              <span>SmartFeed AI Content Forensics Inspector</span>
+              <button
+                type="button"
+                onClick={() => setShowGlossaryModal(false)}
+                className="px-4 py-1.5 rounded-lg bg-accent text-white font-semibold text-xs hover:opacity-95 transition cursor-pointer"
+              >
+                Tutup Kamus
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL: Berita Acara SOP Redaksi Resmi */}
       {showReportModal && (
@@ -1281,14 +1560,14 @@ export default function ForensicMode() {
                     </thead>
                     <tbody className="divide-y divide-border/60">
                       <tr>
-                        <td className="p-2 font-medium">1. EXIF & Metadata</td>
+                        <td className="p-2 font-medium">1. EXIF & Metadata (KTP Digital)</td>
                         <td className="p-2 text-text-mut">Software: {meta.software} | Model: {meta.model}</td>
                         <td className={`p-2 font-bold ${meta.rawFound.length > 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
-                          {meta.rawFound.length > 0 ? 'AI DETECTED' : 'CLEAN / STRIPPED'}
+                          {meta.rawFound.length > 0 ? 'AI TERDETEKSI' : 'BERSIH / STRIPPED'}
                         </td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-medium">2. Kriptografi C2PA</td>
+                        <td className="p-2 font-medium">2. Kriptografi C2PA (Segel Digital)</td>
                         <td className="p-2 text-text-mut">
                           {c2pa.hasJumbf ? `Signed (${c2pa.issuer})` : 'Tidak Ditemukan Manifest'}
                         </td>
@@ -1297,7 +1576,7 @@ export default function ForensicMode() {
                         </td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-medium">3. ELA & 2D FFT</td>
+                        <td className="p-2 font-medium">3. ELA & 2D FFT (Rontgen Piksel)</td>
                         <td className="p-2 text-text-mut">
                           ELA: {metrics.elaScore.toFixed(1)} px | FFT Spikes: {metrics.fftSpikeScore}
                         </td>
@@ -1320,6 +1599,11 @@ export default function ForensicMode() {
                   <div className="text-[11px] text-text-mut">
                     {metrics.reasons.length > 0 ? metrics.reasons.join('. ') : 'Tidak ditemukan jejak anomali sintesis digital pada metadata maupun spektrum frekuensi piksel.'}
                   </div>
+                </div>
+
+                {/* Footnote for Laypeople */}
+                <div className="p-2.5 rounded-lg bg-bg/40 border border-border/40 text-[10px] text-text-dim leading-normal">
+                  📌 <strong>Catatan Pemeriksaan:</strong> Pengujian menggunakan pembuktian 3 lapis saintifik (EXIF Biner ➔ Kriptografi C2PA ➔ Piksel ELA & 2D FFT) sesuai standar jurnalisme investigasi visual.
                 </div>
               </div>
             </div>
