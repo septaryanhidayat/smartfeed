@@ -1,495 +1,284 @@
 /**
- * Comprehensive Camera & Sensor Forensic Database
- * Covers PC Webcams, Android (Samsung, Xiaomi, OPPO, Vivo, Realme, Google Pixel, Infinix, Tecno, itel, OnePlus, Huawei),
- * Apple iOS (iPhone 6 - 16 Pro Max, iPad), DSLR / Mirrorless (Sony, Canon, Nikon, Fujifilm, Leica, Hasselblad),
- * and Drones / Action Cams (DJI, GoPro, Insta360).
+ * Simplified Brand-Level Camera & Sensor Forensic Database
+ * Grouped strictly by Manufacturer / Brand to eliminate sub-model bias:
+ * Apple (iPhone/iPad), Samsung, Xiaomi/Redmi/POCO, OPPO, Vivo, Realme, Google Pixel,
+ * Infinix, Tecno, itel, OnePlus, Huawei/Honor, Sony, Canon, Nikon, Fujifilm, Leica,
+ * DJI, GoPro, and PC Webcams.
  */
 
 export const CAMERA_SENSOR_DATABASE = [
   // ==========================================
-  // 1. PC WEBCAMS & LAPTOP INTERNAL CAMERAS (EVALUATED FIRST)
+  // 1. PC WEBCAMS & LAPTOP INTERNAL CAMERAS
   // ==========================================
   {
-    patterns: ['WIN_', 'Windows Camera', 'Microsoft LifeCam', 'SunplusIT', 'Realtek Camera', 'BisonCam', 'Chicony', 'USB Camera', 'Integrated Camera', 'HD Webcam', 'webcam', 'snapshot', 'DirectShow'],
     brand: 'Windows / PC Laptop',
-    model: 'Kamera Laptop / PC Webcam (Windows Camera)',
-    sensorType: 'Integrated CMOS Optical Sensor (720p / 1080p Video Device)',
-    lensOptics: 'Fixed Focus Optical Lens (Natural CMOS Thermal Noise)',
-    category: 'Webcam PC / Laptop Windows',
+    patterns: ['WIN_', 'Windows Camera', 'Microsoft LifeCam', 'SunplusIT', 'Realtek Camera', 'BisonCam', 'Chicony', 'USB Camera', 'Integrated Camera', 'HD Webcam', 'webcam', 'snapshot', 'DirectShow'],
+    model: 'Kamera Laptop / PC (Webcam Internal/USB)',
+    sensorType: 'Sensor Optik CMOS Webcam (Video Device)',
+    lensOptics: 'Lensa Fixed Focus Optik (Natural Sensor Noise)',
+    category: 'Webcam PC / Laptop',
     hardwareConfidence: 98.5,
-    notes: 'Tangkapan langsung dari kamera webcam PC/laptop dengan butiran thermal noise sensor CMOS alami.',
+    notes: 'Kamera webcam internal/eksternal PC dengan butiran noise CMOS alami.',
   },
   {
-    patterns: ['Brio', 'C920', 'C922', 'C930', 'StreamCam', 'Logitech Webcam', 'Logitech HD Pro', 'Logitech'],
     brand: 'Logitech',
-    model: 'Logitech HD / 4K Pro Webcam (USB External)',
-    sensorType: '4K Ultra HD / 1080p CMOS Sensor (Logitech Optics)',
-    lensOptics: 'RightLight 3 / HDR Glass Lens with Autofocus',
-    category: 'Webcam PC / USB External',
+    patterns: ['Brio', 'C920', 'C922', 'C930', 'StreamCam', 'Logitech'],
+    model: 'Kamera Webcam Logitech (USB Eksternal)',
+    sensorType: 'Sensor Optik CMOS HD / 4K Logitech Optics',
+    lensOptics: 'Lensa Kaca Optik dengan Autofocus',
+    category: 'Webcam PC / USB Eksternal',
     hardwareConfidence: 98.8,
-    notes: 'Webcam optik fisik eksternal dengan sensor CMOS USB terintegrasi.',
-  },
-  {
-    patterns: ['FaceTime HD', 'FaceTime Camera', 'Apple T2 Camera', 'iSight'],
-    brand: 'Apple',
-    model: 'Apple Mac FaceTime HD Camera',
-    sensorType: '1080p FaceTime HD Sensor (Apple Silicon ISP)',
-    lensOptics: 'Wide-angle Fixed Focus Glass Lens',
-    category: 'Webcam Laptop (macOS)',
-    hardwareConfidence: 98.6,
-    notes: 'Kamera webcam internal bawaan laptop MacBook / iMac fisik.',
+    notes: 'Kamera webcam USB fisik dengan pemrosesan hardware optik Logitech.',
   },
 
   // ==========================================
-  // 2. APPLE IPHONE & IPAD ECOSYSTEM
+  // 2. APPLE IPHONE & IPAD
   // ==========================================
   {
-    patterns: ['iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone17,1', 'iPhone17,2'],
     brand: 'Apple',
-    model: 'Apple iPhone 16 Pro / Pro Max',
-    sensorType: '48MP 1/1.28" Quad-Pixel CMOS + 5x Tetraprism Periscope',
-    lensOptics: 'f/1.78 main (24mm eq.) + Sensor-Shift OIS Gen 2',
-    category: 'Smartphone Flagship (iOS)',
-    hardwareConfidence: 99.4,
-    notes: 'Sensor optik generasi terbaru Apple dengan kompensasi micro-jitter 3D Sensor-Shift.',
-  },
-  {
-    patterns: ['iPhone 16 Plus', 'iPhone 16', 'iPhone17,3', 'iPhone17,4'],
-    brand: 'Apple',
-    model: 'Apple iPhone 16 / 16 Plus',
-    sensorType: '48MP Fusion Sensor (1/1.56" CMOS)',
-    lensOptics: 'f/1.6 main (26mm eq.) + 100% Focus Pixels',
-    category: 'Smartphone (iOS)',
-    hardwareConfidence: 98.9,
-    notes: 'Sensor Fusion 48MP dengan integrasi 2x Telephoto optik.',
-  },
-  {
-    patterns: ['iPhone 15 Pro Max', 'iPhone 15 Pro', 'iPhone16,1', 'iPhone16,2'],
-    brand: 'Apple',
-    model: 'Apple iPhone 15 Pro / Pro Max',
-    sensorType: '48MP Sony Custom 1/1.28" CMOS Quad-Bayer',
-    lensOptics: 'f/1.78 (24mm eq.) + Photonic Engine Processing',
-    category: 'Smartphone Flagship (iOS)',
-    hardwareConfidence: 99.2,
-    notes: 'Kamera fisik Apple dengan resolusi default 24MP HEIF/JPEG.',
-  },
-  {
-    patterns: ['iPhone 15 Plus', 'iPhone 15', 'iPhone15,4', 'iPhone15,5'],
-    brand: 'Apple',
-    model: 'Apple iPhone 15 / 15 Plus',
-    sensorType: '48MP 1/1.56" CMOS Quad-Bayer',
-    lensOptics: 'f/1.6 (26mm eq.) + Dual-Pixel AF',
-    category: 'Smartphone (iOS)',
-    hardwareConfidence: 98.7,
-    notes: 'Modul sensor optik fisik Apple dengan lensa 7-elemen.',
-  },
-  {
-    patterns: ['iPhone 14 Pro Max', 'iPhone 14 Pro', 'iPhone15,2', 'iPhone15,3'],
-    brand: 'Apple',
-    model: 'Apple iPhone 14 Pro / Pro Max',
-    sensorType: '48MP 1/1.28" Sony Quad-Bayer CMOS',
-    lensOptics: 'f/1.78 (24mm) + 2nd Gen Sensor Shift OIS',
-    category: 'Smartphone Flagship (iOS)',
-    hardwareConfidence: 98.8,
-    notes: 'Kamera fisik resolusi tinggi pertama Apple.',
-  },
-  {
-    patterns: ['iPhone 14 Plus', 'iPhone 14', 'iPhone 13 Pro Max', 'iPhone 13 Pro', 'iPhone14,2', 'iPhone14,3', 'iPhone14,5', 'iPhone14,7', 'iPhone14,8'],
-    brand: 'Apple',
-    model: 'Apple iPhone 13 Pro / 14 Series',
-    sensorType: '12MP 1/1.65" Sony Exmor-RS CMOS (1.9µm pixels)',
-    lensOptics: 'f/1.5 7-element lens + Sensor-Shift OIS',
-    category: 'Smartphone (iOS)',
-    hardwareConfidence: 98.5,
-    notes: 'Sensor optik fisik Apple dengan butiran noise alami khas 12MP.',
-  },
-  {
-    patterns: ['iPhone 13 mini', 'iPhone 13', 'iPhone 12 Pro Max', 'iPhone 12 Pro', 'iPhone 12 mini', 'iPhone 12', 'iPhone13,', 'iPhone12,'],
-    brand: 'Apple',
-    model: 'Apple iPhone 12 / 13 Series',
-    sensorType: '12MP 1/1.76" Sony CMOS Sensor',
-    lensOptics: 'f/1.6 lens (26mm) + Optical Image Stabilization',
-    category: 'Smartphone (iOS)',
-    hardwareConfidence: 98.2,
-    notes: 'Sensor CMOS optik Apple dengan lensa multi-coated sapphire crystal.',
-  },
-  {
-    patterns: ['iPhone 11 Pro Max', 'iPhone 11 Pro', 'iPhone 11', 'iPhone XS Max', 'iPhone XS', 'iPhone XR', 'iPhone X', 'iPhone 8 Plus', 'iPhone 8', 'iPhone 7 Plus', 'iPhone 7', 'iPhone SE', 'iPhone '],
-    brand: 'Apple',
-    model: 'Apple iPhone (Legacy / SE Series)',
-    sensorType: '12MP 1/2.55" Sony iSight CMOS Sensor',
-    lensOptics: 'f/1.8 optical aperture + Focus Pixels PDAF',
-    category: 'Smartphone (iOS)',
-    hardwareConfidence: 97.8,
-    notes: 'Modul kamera perangkat fisik Apple iPhone standar.',
-  },
-  {
-    patterns: ['iPad Pro', 'iPad Air', 'iPad mini', 'iPad '],
-    brand: 'Apple',
-    model: 'Apple iPad Tablet Camera',
-    sensorType: '12MP Wide CMOS Sensor (iPad Camera System)',
-    lensOptics: 'f/1.8 (28mm eq.) 5-element lens',
-    category: 'Tablet (iPadOS)',
-    hardwareConfidence: 97.5,
-    notes: 'Kamera fisik terintegrasi pada perangkat Apple iPad.',
+    patterns: ['iPhone', 'iPad', 'Apple', 'iOS'],
+    model: 'Kamera Apple iPhone / iPad',
+    sensorType: 'Sensor Optik CMOS Apple (Photonic Engine / iSight)',
+    lensOptics: 'Lensa Safir Optik Apple + Stabilisasi Hardware (OIS)',
+    category: 'Smartphone / Tablet (Apple iOS)',
+    hardwareConfidence: 99.0,
+    notes: 'Modul kamera perangkat fisik Apple dengan sensor optik silikon dan lensa multi-elemen.',
   },
 
   // ==========================================
-  // 3. SAMSUNG GALAXY (FLAGSHIP, A-SERIES, Z-FOLD)
+  // 3. SAMSUNG
   // ==========================================
   {
-    patterns: ['SM-S928', 'SM-S918', 'SM-S908', 'Galaxy S24 Ultra', 'Galaxy S23 Ultra', 'Galaxy S22 Ultra'],
     brand: 'Samsung',
-    model: 'Samsung Galaxy S22/S23/S24 Ultra',
-    sensorType: '200MP Samsung ISOCELL HP2 (1/1.3" Sensor)',
-    lensOptics: 'f/1.7 23mm eq. + Multi-Directional PDAF + OIS',
-    category: 'Smartphone Flagship (Android)',
-    hardwareConfidence: 99.3,
-    notes: 'Sensor ISOCELL 200MP dengan teknologi 16-in-1 Tetra2pixel binning.',
-  },
-  {
-    patterns: ['SM-S921', 'SM-S926', 'SM-S911', 'SM-S916', 'SM-S901', 'SM-S906', 'Galaxy S24', 'Galaxy S23', 'Galaxy S22', 'Galaxy S21'],
-    brand: 'Samsung',
-    model: 'Samsung Galaxy S-Series (Mainstream Flagship)',
-    sensorType: '50MP Samsung ISOCELL GN3 / GNV (1/1.57")',
-    lensOptics: 'f/1.8 24mm + Dual Pixel PDAF + OIS',
-    category: 'Smartphone Flagship (Android)',
-    hardwareConfidence: 98.9,
-    notes: 'Sensor optik fisik Samsung dengan grain noise 50MP alami.',
-  },
-  {
-    patterns: ['SM-F946', 'SM-F936', 'SM-F926', 'SM-F731', 'SM-F721', 'Galaxy Z Fold', 'Galaxy Z Flip'],
-    brand: 'Samsung',
-    model: 'Samsung Galaxy Z Fold / Z Flip Series',
-    sensorType: '50MP / 12MP ISOCELL Dual-Pixel CMOS',
-    lensOptics: 'f/1.8 Ultra-Thin Glass Optic + OIS',
-    category: 'Foldable Smartphone (Android)',
-    hardwareConfidence: 98.7,
-    notes: 'Sensor optik lipat fisik Samsung dengan sistem stabilisasi ganda.',
-  },
-  {
-    patterns: ['SM-A556', 'SM-A546', 'SM-A536', 'SM-A356', 'SM-A346', 'Galaxy A55', 'Galaxy A54', 'Galaxy A53', 'Galaxy A35', 'Galaxy A34'],
-    brand: 'Samsung',
-    model: 'Samsung Galaxy A-Series (Mid-Range Popular)',
-    sensorType: '50MP Sony IMX906 / Samsung ISOCELL GN5 (1/1.56")',
-    lensOptics: 'f/1.8 lens + VDIS + All-Pixel AF',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 98.4,
-    notes: 'Sensor kamera fisik Samsung seri A terpopuler di Indonesia.',
-  },
-  {
-    patterns: ['SM-A256', 'SM-A155', 'SM-A145', 'SM-A057', 'Galaxy A25', 'Galaxy A15', 'Galaxy A14', 'Galaxy A05', 'Samsung Galaxy', 'SAMSUNG '],
-    brand: 'Samsung',
-    model: 'Samsung Galaxy Smartphone (A/M/Entry Series)',
-    sensorType: '50MP ISOCELL JN1 (1/2.76") / CMOS Sensor',
-    lensOptics: 'f/1.8 autofocus optical lens',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 97.6,
-    notes: 'Sensor optik kamera fisik Samsung standar.',
+    patterns: ['Samsung', 'SAMSUNG', 'SM-S', 'SM-A', 'SM-M', 'SM-F', 'Galaxy'],
+    model: 'Kamera Samsung Galaxy',
+    sensorType: 'Sensor Optik Samsung ISOCELL / CMOS',
+    lensOptics: 'Lensa Optik Autofocus Samsung + Hardware OIS/VDIS',
+    category: 'Smartphone (Android Samsung)',
+    hardwareConfidence: 98.8,
+    notes: 'Kamera ponsel fisik Samsung dengan penangkapan sensor silikon ISOCELL alami.',
   },
 
   // ==========================================
   // 4. XIAOMI / REDMI / POCO
   // ==========================================
   {
-    patterns: ['23116PN5BC', '23127PN0CG', 'Xiaomi 14 Ultra', 'Xiaomi 14 Pro', 'Xiaomi 14', 'Xiaomi 13 Ultra', 'Xiaomi 13 Pro', 'Xiaomi 13'],
     brand: 'Xiaomi',
-    model: 'Xiaomi 13 / 14 Series (Leica Co-engineered)',
-    sensorType: '50MP 1-Inch Sony LYT-900 / IMX989 Sensor',
-    lensOptics: 'Leica Summilux f/1.42 - f/4.0 Stepless Variable Aperture',
-    category: 'Smartphone Flagship (Android)',
-    hardwareConfidence: 99.4,
-    notes: 'Sensor fisik optik 1 inci terbesar di industri ponsel dengan lensa Leica.',
-  },
-  {
-    patterns: ['2312DRA50G', '23090RA98G', '22101316G', 'Redmi Note 13 Pro', 'Redmi Note 13', 'Redmi Note 12 Pro', 'Redmi Note 12', 'Redmi Note 11 Pro', 'Redmi Note 11', 'Redmi Note 10', 'Redmi Note '],
-    brand: 'Xiaomi / Redmi',
-    model: 'Xiaomi Redmi Note Series',
-    sensorType: '200MP Samsung ISOCELL HP3 (1/1.4") / 108MP HM2',
-    lensOptics: 'f/1.65 7P lens + OIS + Super QPD Focus',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 98.6,
-    notes: 'Kamera fisik seri Redmi Note dengan resolusi tinggi 200MP.',
-  },
-  {
-    patterns: ['2311DRK48G', '23049PCD8G', 'POCO F6 Pro', 'POCO F6', 'POCO F5', 'POCO X6 Pro', 'POCO X6', 'POCO X5', 'POCO M6 Pro', 'POCO M6', 'POCO '],
-    brand: 'Xiaomi / POCO',
-    model: 'Xiaomi POCO Series (Performance & Flagship)',
-    sensorType: '64MP/50MP OmniVision OV50H / Sony IMX882',
-    lensOptics: 'f/1.6 6P lens with Dual OIS/EIS',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 98.3,
-    notes: 'Modul kamera fisik POCO dengan sensor optik CMOS.',
-  },
-  {
-    patterns: ['Redmi 13', 'Redmi 12', 'Redmi 10', 'Xiaomi 12', 'Xiaomi 11', 'Xiaomi Mi', 'Xiaomi '],
-    brand: 'Xiaomi',
-    model: 'Xiaomi / Redmi Smartphone',
-    sensorType: 'CMOS Optical Image Sensor (Xiaomi Hardware)',
-    lensOptics: 'f/1.8 PDAF auto-exposure optical glass',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 97.4,
-    notes: 'Sensor optik fisik perangkat Xiaomi.',
-  },
-
-  // ==========================================
-  // 5. OPPO / VIVO / REALME / ONEPLUS
-  // ==========================================
-  {
-    patterns: ['Find X7 Ultra', 'Find X6 Pro', 'Find X7', 'Find X6', 'OPPO Find'],
-    brand: 'OPPO',
-    model: 'OPPO Find X Series (Hasselblad Camera)',
-    sensorType: '50MP Sony LYT-900 1-Inch Dual Periscope CMOS',
-    lensOptics: 'Hasselblad Color Calibration f/1.8 + ALC Multi-Coating',
-    category: 'Smartphone Flagship (Android)',
-    hardwareConfidence: 99.3,
-    notes: 'Sensor fisik optik 1 inci dengan tuning warna optik Hasselblad.',
-  },
-  {
-    patterns: ['Reno12 Pro', 'Reno12', 'Reno11 Pro', 'Reno11', 'Reno10 Pro', 'Reno10', 'Reno9', 'Reno8', 'OPPO Reno '],
-    brand: 'OPPO',
-    model: 'OPPO Reno Series (Portrait Expert)',
-    sensorType: '50MP Sony LYT-600 / IMX890 (1/1.56" Sensor)',
-    lensOptics: 'f/1.8 24mm eq. + 2x Telephoto Portrait Lens',
-    category: 'Smartphone (Android)',
+    patterns: ['Xiaomi', 'Redmi', 'POCO', 'Mi 1', 'Mi 9', '2311', '2312', '2210'],
+    model: 'Kamera Xiaomi / Redmi / POCO',
+    sensorType: 'Sensor Optik CMOS Xiaomi Imaging System',
+    lensOptics: 'Lensa Optik Multi-Coated + Auto Exposure Hardware',
+    category: 'Smartphone (Android Xiaomi)',
     hardwareConfidence: 98.5,
-    notes: 'Sensor optik fisik kamera potret spesifik OPPO.',
+    notes: 'Sensor optik fisik kamera perangkat Xiaomi dengan butiran piksel sensor CMOS nyata.',
   },
+
+  // ==========================================
+  // 5. OPPO
+  // ==========================================
   {
-    patterns: ['OPPO A98', 'OPPO A78', 'OPPO A58', 'OPPO A38', 'OPPO A18', 'OPPO A79', 'OPPO '],
     brand: 'OPPO',
-    model: 'OPPO Smartphone (A-Series)',
-    sensorType: '50MP/13MP CMOS Hardware Optical Sensor',
-    lensOptics: 'f/1.8 aperture lens + AI Scene Enhancement Hardware',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 97.6,
-    notes: 'Sensor kamera optik fisik ponsel OPPO.',
+    patterns: ['OPPO', 'Oppo', 'CPH'],
+    model: 'Kamera OPPO Smartphone',
+    sensorType: 'Sensor Optik CMOS OPPO Imaging Hardware',
+    lensOptics: 'Lensa Optik Portrait / Wide dengan Autofocus',
+    category: 'Smartphone (Android OPPO)',
+    hardwareConfidence: 98.2,
+    notes: 'Kamera fisik ponsel OPPO dengan karakteristik sensor optik alami.',
   },
+
+  // ==========================================
+  // 6. VIVO
+  // ==========================================
   {
-    patterns: ['vivo X100 Ultra', 'vivo X100 Pro', 'vivo X100', 'vivo X90 Pro', 'vivo X90', 'vivo X80', 'vivo X '],
     brand: 'Vivo',
-    model: 'Vivo X-Series (ZEISS Optics Co-engineered)',
-    sensorType: '50MP 1-Inch Sony IMX989 + 200MP ZEISS APO Telephoto',
-    lensOptics: 'ZEISS T* Coating Glass + f/1.75 Optical Lens',
-    category: 'Smartphone Flagship (Android)',
-    hardwareConfidence: 99.4,
-    notes: 'Sensor optik fisik dengan lapisan anti-pantul ZEISS T* Coating.',
-  },
-  {
-    patterns: ['vivo V30 Pro', 'vivo V30', 'vivo V29', 'vivo V27', 'vivo Y100', 'vivo Y28', 'vivo Y27', 'vivo V ', 'vivo Y ', 'vivo '],
-    brand: 'Vivo',
-    model: 'Vivo V / Y Series (Aura Light Portrait)',
-    sensorType: '50MP OmniVision OV50E / Sony IMX920 Sensor',
-    lensOptics: 'f/1.88 VCS (Bionic Color Spectrum) + OIS',
-    category: 'Smartphone (Android)',
+    patterns: ['vivo', 'Vivo', 'V23', 'V22', 'V21', 'V20'],
+    model: 'Kamera Vivo Smartphone',
+    sensorType: 'Sensor Optik CMOS Vivo Imaging System',
+    lensOptics: 'Lensa Optik Fisik dengan Stabilisasi Hardware',
+    category: 'Smartphone (Android Vivo)',
     hardwareConfidence: 98.3,
-    notes: 'Sensor optik fisik Vivo dengan sensor spektrum warna bionik.',
+    notes: 'Kamera fisik ponsel Vivo dengan susunan sensor silikon optik nyata.',
   },
+
+  // ==========================================
+  // 7. REALME
+  // ==========================================
   {
-    patterns: ['Realme GT 6', 'Realme GT 5', 'Realme 12 Pro+', 'Realme 12 Pro', 'Realme 11 Pro', 'Realme 10 Pro', 'Realme 10', 'Realme C67', 'Realme C55', 'Realme '],
     brand: 'Realme',
-    model: 'Realme Smartphone (GT & Number Series)',
-    sensorType: '50MP Sony LYT-808 / IMX890 / 200MP HP3 Sensor',
-    lensOptics: 'f/1.88 6P lens with SuperOIS Stabilization',
-    category: 'Smartphone (Android)',
+    patterns: ['Realme', 'realme', 'RMX'],
+    model: 'Kamera Realme Smartphone',
+    sensorType: 'Sensor Optik CMOS Realme Hardware Camera',
+    lensOptics: 'Lensa Optik 6P dengan Hardware Shutter',
+    category: 'Smartphone (Android Realme)',
     hardwareConfidence: 98.2,
-    notes: 'Sensor kamera fisik perangkat Realme.',
-  },
-  {
-    patterns: ['OnePlus 12', 'OnePlus 11', 'OnePlus Open', 'OnePlus Nord', 'OnePlus '],
-    brand: 'OnePlus',
-    model: 'OnePlus Series (Hasselblad Optics)',
-    sensorType: '50MP Sony LYT-808 (1/1.4" Dual-Layer Transistor CMOS)',
-    lensOptics: 'Hasselblad Camera for Mobile f/1.6 + ALC Optical Coating',
-    category: 'Smartphone Flagship (Android)',
-    hardwareConfidence: 99.0,
-    notes: 'Sensor Sony Lytia dual-layer transistor dengan hardware shutter.',
+    notes: 'Modul sensor optik fisik perangkat smartphone Realme.',
   },
 
   // ==========================================
-  // 6. GOOGLE PIXEL
+  // 8. GOOGLE PIXEL
   // ==========================================
   {
-    patterns: ['Pixel 9 Pro XL', 'Pixel 9 Pro', 'Pixel 9', 'Pixel 8 Pro', 'Pixel 8a', 'Pixel 8', 'Pixel 7 Pro', 'Pixel 7a', 'Pixel 7', 'Pixel 6 Pro', 'Pixel 6', 'Google Pixel'],
     brand: 'Google',
-    model: 'Google Pixel Smartphone (Tensor ISP)',
-    sensorType: '50MP Samsung ISOCELL GNK / GN1 (1/1.31" CMOS)',
-    lensOptics: 'f/1.68 25mm eq. + Octa PD AF + Laser Detect Autofocus',
-    category: 'Smartphone Flagship (Android)',
-    hardwareConfidence: 99.2,
-    notes: 'Kamera fisik Google Pixel dengan RAW capture dari sensor ISOCELL.',
-  },
-
-  // ==========================================
-  // 7. TRANSSION (INFINIX, TECNO, ITEL) - Strict 6+ Char Matching
-  // ==========================================
-  {
-    patterns: ['Infinix GT 20 Pro', 'Infinix Note 40 Pro', 'Infinix Note 40', 'Infinix Zero 30', 'Infinix Hot 40', 'Infinix Hot 30', 'Infinix Smart 8', 'Infinix '],
-    brand: 'Infinix',
-    model: 'Infinix Smartphone (Note & GT Series)',
-    sensorType: '108MP Samsung ISOCELL HM6 / 50MP CMOS Sensor',
-    lensOptics: 'f/1.75 6P lens with OIS/EIS optical stabilizer',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 98.1,
-    notes: 'Sensor optik fisik kamera Infinix (Transsion Holdings).',
-  },
-  {
-    patterns: ['Tecno Camon 30 Premier', 'Tecno Camon 30', 'Tecno Pova 6 Pro', 'Tecno Pova 6', 'Tecno Pova 5', 'Tecno Spark 20', 'Tecno Spark 10', 'Tecno Phantom', 'TECNO '],
-    brand: 'Tecno',
-    model: 'Tecno Smartphone (Camon & Pova Series)',
-    sensorType: '50MP Sony IMX890 1/1.56" Optical Sensor',
-    lensOptics: 'f/1.88 PolarAce Imaging System + OIS',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 98.2,
-    notes: 'Kamera fisik Tecno dengan sensor optik CMOS.',
-  },
-  {
-    patterns: ['itel S23 Plus', 'itel S23', 'itel S24', 'itel P55 5G', 'itel P55', 'itel Color Pro', 'itel '],
-    brand: 'itel',
-    model: 'itel Smartphone (Vision & S Series)',
-    sensorType: '50MP / 108MP ISOCELL HM6 CMOS Sensor',
-    lensOptics: 'f/1.6 5P lens with Auto-Focus',
-    category: 'Smartphone (Android)',
-    hardwareConfidence: 97.4,
-    notes: 'Sensor kamera optik fisik perangkat itel.',
-  },
-
-  // ==========================================
-  // 8. HUAWEI & HONOR
-  // ==========================================
-  {
-    patterns: ['Pura 70 Ultra', 'Pura 70 Pro', 'Mate 60 Pro', 'Mate 50 Pro', 'P60 Pro', 'HUAWEI Pura', 'HUAWEI Mate', 'HUAWEI P'],
-    brand: 'Huawei',
-    model: 'Huawei Pura / Mate Series (XMAGE Optics)',
-    sensorType: '50MP 1-Inch Retractable Lens Sensor (RYYB Matrix)',
-    lensOptics: 'XMAGE Variable Aperture f/1.4 - f/4.0 + Sensor-Shift OIS',
-    category: 'Smartphone Flagship (HarmonyOS)',
-    hardwareConfidence: 99.4,
-    notes: 'Sensor fisik optik dengan mekanisme lensa mekanis retractable.',
-  },
-  {
-    patterns: ['HONOR Magic6 Pro', 'HONOR Magic5 Pro', 'HONOR 200 Pro', 'HONOR 90', 'HONOR X9b', 'HONOR '],
-    brand: 'Honor',
-    model: 'Honor Smartphone (Magic & Number Series)',
-    sensorType: '50MP 1/1.3" OmniVision H9800 Falcon Camera',
-    lensOptics: 'f/1.4 - f/2.0 Self-Adjusting Optical Aperture + OIS',
-    category: 'Smartphone Flagship (Android)',
+    patterns: ['Pixel', 'Google Pixel'],
+    model: 'Kamera Google Pixel',
+    sensorType: 'Sensor Optik CMOS Google (Tensor ISP)',
+    lensOptics: 'Lensa Optik Fisik + Laser Detect Autofocus',
+    category: 'Smartphone (Google Android)',
     hardwareConfidence: 99.1,
-    notes: 'Sensor optik fisik Honor dengan kecepatan shutter ultra-fast 1/8000s.',
+    notes: 'Sensor optik fisik kamera Google Pixel dengan penangkapan RAW sensor nyata.',
   },
 
   // ==========================================
-  // 9. DSLR & MIRRORLESS PROFESSIONAL CAMERAS
+  // 9. TRANSSION (INFINIX, TECNO, ITEL)
   // ==========================================
   {
-    patterns: ['ILCE-7RM5', 'ILCE-7RM4', 'ILCE-7M4', 'ILCE-7SM3', 'ILCE-6700', 'ILCE-6400', 'ILCE-1', 'ILME-FX3', 'SONY ILCE', 'SONY Alpha'],
-    brand: 'Sony',
-    model: 'Sony Alpha Full-Frame / APS-C Mirrorless',
-    sensorType: '33MP - 61MP Exmor R BSI CMOS 35.7 x 23.8 mm (Full Frame)',
-    lensOptics: 'Sony E-Mount Optical Lens System (Physical Mechanical Shutter)',
-    category: 'Kamera Mirrorless Profesional',
-    hardwareConfidence: 99.8,
-    notes: 'Kamera profesional fisik dengan sensor Full-Frame dan dynamic range 15-stop.',
+    brand: 'Infinix',
+    patterns: ['Infinix', 'INFINIX'],
+    model: 'Kamera Infinix Smartphone',
+    sensorType: 'Sensor Optik CMOS Infinix Camera Hardware',
+    lensOptics: 'Lensa Optik Fisik Autofocus',
+    category: 'Smartphone (Android Infinix)',
+    hardwareConfidence: 98.0,
+    notes: 'Kamera fisik smartphone Infinix dengan sensor optik silikon nyata.',
   },
   {
-    patterns: ['EOS R5', 'EOS R6', 'EOS R8', 'EOS R50', 'EOS 5D Mark', 'EOS 6D', 'EOS 200D', 'EOS 1500D', 'Canon EOS', 'Canon DIGITAL'],
+    brand: 'Tecno',
+    patterns: ['Tecno', 'TECNO'],
+    model: 'Kamera Tecno Smartphone',
+    sensorType: 'Sensor Optik CMOS Tecno Camera Hardware',
+    lensOptics: 'Lensa Optik Fisik Autofocus',
+    category: 'Smartphone (Android Tecno)',
+    hardwareConfidence: 98.0,
+    notes: 'Kamera fisik smartphone Tecno dengan sensor optik silikon nyata.',
+  },
+  {
+    brand: 'itel',
+    patterns: ['itel', 'ITEL'],
+    model: 'Kamera itel Smartphone',
+    sensorType: 'Sensor Optik CMOS itel Camera Hardware',
+    lensOptics: 'Lensa Optik Fisik Autofocus',
+    category: 'Smartphone (Android itel)',
+    hardwareConfidence: 97.5,
+    notes: 'Kamera fisik smartphone itel dengan sensor optik CMOS.',
+  },
+
+  // ==========================================
+  // 10. ONEPLUS & HUAWEI / HONOR
+  // ==========================================
+  {
+    brand: 'OnePlus',
+    patterns: ['OnePlus', 'ONEPLUS'],
+    model: 'Kamera OnePlus Smartphone',
+    sensorType: 'Sensor Optik CMOS OnePlus Imaging System',
+    lensOptics: 'Lensa Optik Fisik + Shutter Mekanis',
+    category: 'Smartphone (Android OnePlus)',
+    hardwareConfidence: 98.8,
+    notes: 'Sensor optik fisik perangkat smartphone OnePlus.',
+  },
+  {
+    brand: 'Huawei / Honor',
+    patterns: ['Huawei', 'HUAWEI', 'Honor', 'HONOR'],
+    model: 'Kamera Huawei / Honor Smartphone',
+    sensorType: 'Sensor Optik CMOS Huawei / Honor Imaging Hardware',
+    lensOptics: 'Lensa Optik Fisik dengan Stabilisasi Hardware',
+    category: 'Smartphone (Huawei / Honor)',
+    hardwareConfidence: 98.9,
+    notes: 'Sensor fisik optik perangkat kamera ponsel Huawei/Honor.',
+  },
+
+  // ==========================================
+  // 11. DSLR & MIRRORLESS PROFESSIONAL CAMERAS
+  // ==========================================
+  {
+    brand: 'Sony',
+    patterns: ['SONY', 'Sony', 'ILCE', 'ILME', 'DSC-'],
+    model: 'Kamera Sony (Alpha / Cyber-shot)',
+    sensorType: 'Sensor Optik CMOS Sony (Full-Frame / APS-C)',
+    lensOptics: 'Sistem Lensa Optik Sony E-Mount / Shutter Fisik Mekanis',
+    category: 'Kamera Mirrorless / DSLR Profesional',
+    hardwareConfidence: 99.8,
+    notes: 'Kamera profesional fisik Sony dengan sensor silikon Full-Frame/APS-C alami.',
+  },
+  {
     brand: 'Canon',
-    model: 'Canon EOS Digital SLR / Mirrorless (RF/EF Mount)',
-    sensorType: '24MP - 45MP Canon Dual Pixel CMOS Sensor (Full Frame / APS-C)',
-    lensOptics: 'Canon RF / EF L-Series Glass + In-Body Image Stabilization',
+    patterns: ['Canon', 'CANON', 'EOS', 'PowerShot'],
+    model: 'Kamera Canon (EOS / PowerShot)',
+    sensorType: 'Sensor Optik CMOS Canon Dual Pixel (Full-Frame / APS-C)',
+    lensOptics: 'Lensa Optik Kaca Canon RF/EF + Shutter Mekanis',
     category: 'Kamera DSLR / Mirrorless Profesional',
     hardwareConfidence: 99.8,
     notes: 'Sensor fisik optik Canon dengan filter optik low-pass alami.',
   },
   {
-    patterns: ['NIKON Z 9', 'NIKON Z 8', 'NIKON Z 6', 'NIKON Z 5', 'NIKON D850', 'NIKON D750', 'NIKON D3500', 'NIKON D5600', 'NIKON Z', 'NIKON D'],
     brand: 'Nikon',
-    model: 'Nikon Z Mirrorless / D-Series DSLR',
-    sensorType: '24.5MP - 45.7MP FX BSI Stacked CMOS Sensor',
-    lensOptics: 'NIKKOR Z / F Mount Optical Elements + VR Vibration Reduction',
+    patterns: ['Nikon', 'NIKON', 'NIKKOR'],
+    model: 'Kamera Nikon (Z-Series / D-Series)',
+    sensorType: 'Sensor Optik CMOS Nikon (FX / DX Format)',
+    lensOptics: 'Lensa Optik Kaca NIKKOR + Shutter Fisik Mekanis',
     category: 'Kamera DSLR / Mirrorless Profesional',
     hardwareConfidence: 99.8,
-    notes: 'Sensor CMOS optik Nikon dengan resolusi mikro tajam alami.',
+    notes: 'Kamera fisik Nikon dengan karakteristik optik mikro tajam alami.',
   },
   {
-    patterns: ['X-T5', 'X-T4', 'X100VI', 'X100V', 'X-S20', 'X-H2S', 'GFX100', 'GFX 50S', 'FUJIFILM X', 'FUJIFILM GFX', 'FUJIFILM'],
     brand: 'Fujifilm',
-    model: 'Fujifilm X-Series / GFX Medium Format',
-    sensorType: '40.2MP X-Trans CMOS 5 HR / 102MP Medium Format Sensor',
-    lensOptics: 'Fujinon Aspherical EBC Glass (Aperiodic X-Trans Color Filter)',
+    patterns: ['Fujifilm', 'FUJIFILM', 'FinePix'],
+    model: 'Kamera Fujifilm (X-Series / GFX)',
+    sensorType: 'Sensor Optik CMOS Fujifilm (X-Trans / Bayer)',
+    lensOptics: 'Lensa Optik Kaca Fujinon + Shutter Mekanis',
     category: 'Kamera Mirrorless / Medium Format',
     hardwareConfidence: 99.8,
-    notes: 'Sensor fisik dengan susunan filter warna aperiodik X-Trans alami.',
+    notes: 'Sensor fisik dengan susunan filter warna optik alami Fujifilm.',
   },
   {
-    patterns: ['LEICA M11', 'LEICA Q3', 'LEICA Q2', 'LEICA SL2', 'LEICA M', 'LEICA Q', 'LEICA SL', 'LEICA '],
-    brand: 'Leica',
-    model: 'Leica Camera System (M / Q / SL Series)',
-    sensorType: '60MP BSI CMOS Sensor with Triple Resolution Technology',
-    lensOptics: 'Leica Summilux / Summicron Hand-Crafted Optical Elements',
-    category: 'Kamera Rangefinder / Mirrorless Luxury',
+    brand: 'Leica / Hasselblad',
+    patterns: ['Leica', 'LEICA', 'Hasselblad', 'HASSELBLAD'],
+    model: 'Kamera Leica / Hasselblad System',
+    sensorType: 'Sensor Optik Presisi Tinggi (Full Frame / Medium Format)',
+    lensOptics: 'Lensa Optik Hand-Crafted Jerman/Swedia',
+    category: 'Kamera Profesional Luxury',
     hardwareConfidence: 99.9,
-    notes: 'Kamera optik buatan Jerman dengan karakteristik optik legendaris.',
-  },
-  {
-    patterns: ['HASSELBLAD X2D', 'HASSELBLAD 907X', 'HASSELBLAD X1D', 'HASSELBLAD '],
-    brand: 'Hasselblad',
-    model: 'Hasselblad Medium Format System',
-    sensorType: '100MP 43.8 x 32.9 mm Medium Format BSI CMOS',
-    lensOptics: 'Hasselblad XCD Leaf Shutter Optics (HNCS Color Science)',
-    category: 'Kamera Medium Format Profesional',
-    hardwareConfidence: 99.9,
-    notes: 'Sensor medium format 100MP dengan leaf shutter mekanis.',
+    notes: 'Kamera optik profesional dengan karakteristik optik legendaris.',
   },
 
   // ==========================================
-  // 10. DRONES, ACTION CAMS & 360 CAMS
+  // 12. DRONES & ACTION CAMS
   // ==========================================
   {
-    patterns: ['DJI Mavic 3', 'DJI Mini 4 Pro', 'DJI Mini 3', 'DJI Air 3', 'DJI Osmo Pocket 3', 'DJI Osmo Action 4', 'DJI FC', 'DJI Osmo', 'DJI Pocket', 'DJI '],
     brand: 'DJI',
-    model: 'DJI Drone / Osmo Pocket / Action Gimbal Camera',
-    sensorType: '4/3" CMOS Hasselblad Sensor / 1-Inch CMOS Pocket Sensor',
-    lensOptics: '24mm eq. f/2.8 Gimbal-Stabilized Optical Camera',
+    patterns: ['DJI', 'Mavic', 'Osmo'],
+    model: 'Kamera DJI (Drone / Gimbal Osmo)',
+    sensorType: 'Sensor Optik CMOS DJI Gimbal Camera',
+    lensOptics: 'Lensa Optik dengan Stabilisasi Hardware 3-Axis',
     category: 'Drone / Action Gimbal Camera',
     hardwareConfidence: 99.2,
-    notes: 'Sensor optik fisik drone/gimbal DJI dengan stabilisasi hardware 3-axis.',
+    notes: 'Sensor optik fisik drone/gimbal DJI dengan stabilisasi hardware nyata.',
   },
   {
-    patterns: ['GoPro HERO12', 'GoPro HERO11', 'GoPro HERO10', 'GoPro HERO9', 'GoPro HERO', 'GoPro Max', 'GoPro '],
-    brand: 'GoPro',
-    model: 'GoPro HERO Action Camera',
-    sensorType: '27MP 1/1.9" CMOS 8:7 Aspect Ratio Sensor',
-    lensOptics: 'HyperView Ultra-Wide Lens + HyperSmooth Stabilization',
-    category: 'Action Camera',
+    brand: 'GoPro / Insta360',
+    patterns: ['GoPro', 'GOPRO', 'HERO', 'Insta360'],
+    model: 'Kamera Aksi GoPro / Insta360',
+    sensorType: 'Sensor Optik CMOS Ultra-Wide Action Camera',
+    lensOptics: 'Lensa Optik Fisheye / Wide-Angle + HyperSmooth',
+    category: 'Action Camera Fisik',
     hardwareConfidence: 99.0,
-    notes: 'Sensor fisik aksi GoPro dengan field of view ultra-lebar.',
-  },
-  {
-    patterns: ['Insta360 X4', 'Insta360 X3', 'Insta360 Ace Pro', 'Insta360 GO 3', 'Insta360 '],
-    brand: 'Insta360',
-    model: 'Insta360 360° / Action Camera',
-    sensorType: '1/1.3" 8K AI Sensor / Dual 1/2" 360 CMOS Sensors',
-    lensOptics: 'Dual Fisheye 360° Optical Lenses + FlowState Stabilization',
-    category: 'Action / 360 Panoramic Camera',
-    hardwareConfidence: 99.0,
-    notes: 'Sensor optik ganda 360 derajat kamera fisik Insta360.',
+    notes: 'Sensor optik aksi fisik dengan bidang pandang sudut lebar.',
   },
 ];
 
 /**
- * Match a file's raw binary and filename against the sensor database
+ * Match a file's raw binary and filename against brand-level camera profiles
  */
 export function identifyCameraHardware(rawText, fileName) {
   const lowerName = (fileName || '').toLowerCase();
 
-  // Priority 1: Check if it's Windows Camera / Webcam filename pattern
+  // Priority 1: Check Windows Camera / Webcam filename patterns
   if (
     lowerName.startsWith('win_') ||
     lowerName.includes('webcam') ||
-    lowerName.includes('camera') ||
     lowerName.includes('snapshot') ||
-    lowerName.includes('capture')
+    lowerName.includes('capture') ||
+    lowerName.includes('camera')
   ) {
     const webcamEntry = CAMERA_SENSOR_DATABASE.find((e) => e.brand === 'Windows / PC Laptop');
     if (webcamEntry) {
@@ -506,12 +295,9 @@ export function identifyCameraHardware(rawText, fileName) {
     }
   }
 
-  // Priority 2: Iterate over database entries with strict pattern checking
+  // Priority 2: Iterate over simplified brand-level database entries
   for (const entry of CAMERA_SENSOR_DATABASE) {
     for (const pattern of entry.patterns) {
-      // Must be at least 4 characters to avoid false substring collisions
-      if (pattern.length < 3) continue;
-
       if (rawText.includes(pattern) || lowerName.includes(pattern.toLowerCase())) {
         return {
           matched: true,
@@ -527,15 +313,15 @@ export function identifyCameraHardware(rawText, fileName) {
     }
   }
 
-  // Fallback if not matched to specific branded model
+  // Fallback: Generic Real Camera (Non-AI)
   return {
     matched: false,
     brand: 'Sensor Optik Fisik',
-    model: 'Kamera Digital / Smartphone (Non-AI)',
-    sensorType: 'Sensor Optik CMOS Fisik (Natural Noise Stream)',
+    model: 'Kamera Digital / Smartphone Fisik',
+    sensorType: 'Sensor Optik CMOS Fisik (Natural Grain)',
     lensOptics: 'Lensa Optik Fisik Terintegrasi (Hardware Shutter)',
-    category: 'Kamera Optik Umum',
-    hardwareConfidence: 96.5,
-    notes: 'Karakteristik butiran piksel konsisten dengan sensor optik fisik kamera.',
+    category: 'Kamera Optik Fisik',
+    hardwareConfidence: 97.0,
+    notes: 'Karakteristik butiran piksel konsisten dengan tangkapan sensor optik fisik nyata.',
   };
 }

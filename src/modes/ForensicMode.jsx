@@ -1624,7 +1624,7 @@ export default function ForensicMode() {
               className="w-full py-1.5 px-2.5 rounded-lg bg-bg border border-border hover:border-blue-500/50 hover:bg-blue-500/5 text-blue-400 text-[10px] font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
             >
               <Smartphone className="w-3 h-3" />
-              <span>Lihat 50+ Profil Sensor Android & iPhone</span>
+              <span>Lihat Profil Merek Sensor (Samsung, Xiaomi, Apple, Canon, dll.)</span>
               <ChevronRight className="w-3 h-3" />
             </button>
           </div>
