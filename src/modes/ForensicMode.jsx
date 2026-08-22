@@ -5,7 +5,7 @@ import {
   Sliders, ZoomIn, ZoomOut, Maximize2, Sparkles, FileText, Image as ImageIcon,
   Flame, Lock, Eye, CheckCircle2, XCircle, Search, Layers, Activity,
   BookOpen, HelpCircle, ChevronRight, ChevronDown, Lightbulb, Compass,
-  BarChart3, Gauge, PieChart, CheckSquare
+  BarChart3, Gauge, PieChart, CheckSquare, RotateCcw
 } from 'lucide-react';
 import { showAlert } from '../utils/alerts.js';
 import { FORENSIC_GLOSSARY } from '../data/forensicGlossary.js';
@@ -46,13 +46,25 @@ const PRESET_SAMPLES = [
   },
 ];
 
+const INITIAL_PARAMETERS = [
+  { id: 'meta', name: 'Integritas Metadata & EXIF', score: 0.0, unit: '% Indikasi AI', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+  { id: 'c2pa', name: 'Kriptografi C2PA Manifest', score: 0.0, unit: '% AI Signature', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+  { id: 'ela', name: 'Anomali Kompresi ELA', score: 0.0, unit: '% Anomali', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+  { id: 'fft', name: 'Pola Resonansi Kisi 2D FFT', score: 0.0, unit: '% Kisi AI', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+  { id: 'noise', name: 'Distribusi Noise Sensor Fisik', score: 0.0, unit: '% Alami', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+  { id: 'synth', name: 'Sinyal Watermark SynthID', score: 0.0, unit: '% Energi Sinyal', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+  { id: 'light', name: 'Vektor Kontinuitas Cahaya', score: 0.0, unit: '% Konsistensi', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+  { id: 'neural', name: 'Neural Diffusion Artifact Index', score: 0.0, unit: '% Artefak', status: 'neutral', desc: 'Menunggu unggahan foto untuk analisis' },
+];
+
 export default function ForensicMode() {
-  // File & Canvas State
+  // File & Canvas State (Defaults to Standby 0% state)
+  const [hasFile, setHasFile] = useState(false);
   const [fileInfo, setFileInfo] = useState({
-    name: 'Sony_A7R4_Sample.jpg',
-    size: '348.5 KB',
-    type: 'image/jpeg',
-    dimensions: '800 × 500 px',
+    name: 'Belum ada file dipilih',
+    size: '-',
+    type: '-',
+    dimensions: '-',
   });
   const [activeTab, setActiveTab] = useState('original'); // 'original' | 'ela' | 'fft' | 'laplacian'
   const [isProcessing, setIsProcessing] = useState(false);
@@ -67,12 +79,12 @@ export default function ForensicMode() {
   const [glossarySearch, setGlossarySearch] = useState('');
   const [showQuickGuide, setShowQuickGuide] = useState(true);
 
-  // Forensic Metadata & Metrics (with Granular Decimal Breakdown)
+  // Forensic Metadata & Metrics (Initial 0.0% Standby)
   const [meta, setMeta] = useState({
-    software: 'Sony Alpha ILCE-7RM4 (Firmware 2.0)',
-    model: 'Sony A7R IV (Full Frame CMOS Sensor)',
-    optics: 'FE 24-70mm F2.8 GM, f/2.8, 1/200s, ISO 100',
-    prompt: 'None (Optical Sensor Hardware Shutter)',
+    software: 'Menunggu input file...',
+    model: 'Menunggu input file...',
+    optics: 'Menunggu input file...',
+    prompt: '-',
     rawFound: [],
   });
 
@@ -84,23 +96,13 @@ export default function ForensicMode() {
   });
 
   const [metrics, setMetrics] = useState({
-    aiProb: 3.8, // Realistic non-zero decimal
-    elaScore: 7.8,
-    fftSpikeScore: 1,
-    synthScore: 2.1,
+    aiProb: 0.0,
+    elaScore: 0.0,
+    fftSpikeScore: 0,
+    synthScore: 0.0,
     isAiFlag: false,
     reasons: [],
-    // 8 Multi-dimensional breakdown parameters
-    parameters: [
-      { id: 'meta', name: 'Integritas Metadata & EXIF', score: 1.4, unit: '% Indikasi AI', status: 'pass', desc: 'Metadata perangkat fisik optik konsisten' },
-      { id: 'c2pa', name: 'Kriptografi C2PA Manifest', score: 0.0, unit: '% AI Signature', status: 'neutral', desc: 'Tidak ditemukan sertifikat sintetis AI' },
-      { id: 'ela', name: 'Anomali Kompresi ELA', score: 6.2, unit: '% Anomali', status: 'pass', desc: 'Tingkat kompresi seragam merata' },
-      { id: 'fft', name: 'Pola Resonansi Kisi 2D FFT', score: 4.1, unit: '% Kisi AI', status: 'pass', desc: 'Spektrum frekuensi alami tanpa grid spike' },
-      { id: 'noise', name: 'Distribusi Noise Sensor Fisik', score: 94.8, unit: '% Alami', status: 'pass', desc: 'Noise mikroskopis CMOS optik terdeteksi' },
-      { id: 'synth', name: 'Sinyal Watermark SynthID', score: 2.3, unit: '% Energi Sinyal', status: 'pass', desc: 'Tidak ada jejak watermark sintetis' },
-      { id: 'light', name: 'Vektor Kontinuitas Cahaya', score: 93.6, unit: '% Konsistensi', status: 'pass', desc: 'Arah bayangan dan pantulan cahaya konsisten' },
-      { id: 'neural', name: 'Neural Diffusion Artifact Index', score: 3.7, unit: '% Artefak', status: 'pass', desc: 'Bebas dari pola dekonvolusi jaringan saraf' },
-    ],
+    parameters: INITIAL_PARAMETERS,
   });
 
   // Cached generated canvases
@@ -113,6 +115,40 @@ export default function ForensicMode() {
 
   const activeCanvasRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  // Reset to clean standby state
+  const handleReset = () => {
+    setHasFile(false);
+    setFileInfo({
+      name: 'Belum ada file dipilih',
+      size: '-',
+      type: '-',
+      dimensions: '-',
+    });
+    setMeta({
+      software: 'Menunggu input file...',
+      model: 'Menunggu input file...',
+      optics: 'Menunggu input file...',
+      prompt: '-',
+      rawFound: [],
+    });
+    setC2pa({
+      hasJumbf: false,
+      issuer: 'None',
+      actions: 'None',
+      chainValid: false,
+    });
+    setMetrics({
+      aiProb: 0.0,
+      elaScore: 0.0,
+      fftSpikeScore: 0,
+      synthScore: 0.0,
+      isAiFlag: false,
+      reasons: [],
+      parameters: INITIAL_PARAMETERS,
+    });
+    cachedCanvasesRef.current = { original: null, ela: null, fft: null, laplacian: null };
+  };
 
   // Open Glossary focused on a specific term
   const openGlossary = (termId = null) => {
@@ -171,6 +207,7 @@ export default function ForensicMode() {
 
   // 2. Render Active Viewport Canvas
   const renderCanvasView = useCallback((mode = activeTab) => {
+    if (!hasFile) return;
     const canvas = activeCanvasRef.current;
     if (!canvas) return;
     const target = cachedCanvasesRef.current[mode];
@@ -181,7 +218,7 @@ export default function ForensicMode() {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(target, 0, 0);
-  }, [activeTab]);
+  }, [activeTab, hasFile]);
 
   // 3. Binary Parser for EXIF, PNG Text Chunks, and C2PA
   const parseBinaryMetadata = (buffer, file) => {
@@ -447,6 +484,7 @@ export default function ForensicMode() {
   // 7. Full Forensic Execution Pipeline (Calculates 8 Granular Non-Round Parameters)
   const runForensicPipeline = async (imgObj, currentMeta, currentC2pa, forcedPresetType = null) => {
     setIsProcessing(true);
+    setHasFile(true);
 
     // Limit computation canvas to max 800px
     const maxDim = 800;
@@ -821,7 +859,7 @@ export default function ForensicMode() {
   // 10. In-Browser Stress Testing Tools
   const handleStressCompression = () => {
     const orig = cachedCanvasesRef.current.original;
-    if (!orig) {
+    if (!orig || !hasFile) {
       showAlert({ title: 'Perhatian', text: 'Silakan pilih atau unggah gambar terlebih dahulu.', icon: 'warning' });
       return;
     }
@@ -851,7 +889,7 @@ export default function ForensicMode() {
 
   const handleStressCrop = () => {
     const orig = cachedCanvasesRef.current.original;
-    if (!orig) {
+    if (!orig || !hasFile) {
       showAlert({ title: 'Perhatian', text: 'Silakan pilih atau unggah gambar terlebih dahulu.', icon: 'warning' });
       return;
     }
@@ -880,18 +918,26 @@ export default function ForensicMode() {
     img.src = cropCanvas.toDataURL('image/jpeg', 0.85);
   };
 
-  // Initial demo on mount
-  useEffect(() => {
-    handleLoadPreset('real_camera');
-  }, []);
-
   // Update canvas view on activeTab change
   useEffect(() => {
-    renderCanvasView(activeTab);
-  }, [activeTab, renderCanvasView]);
+    if (hasFile) {
+      renderCanvasView(activeTab);
+    }
+  }, [activeTab, hasFile, renderCanvasView]);
 
   // Verdict Colors & Text with plain-language explanations
   const getVerdictInfo = () => {
+    if (!hasFile) {
+      return {
+        badge: 'MENUNGGU FOTO',
+        badgeBg: 'bg-bg-elev text-text-dim border-border',
+        headline: 'Belum Ada Foto yang Dianalisis',
+        action: 'SIAP MEMERIKSA',
+        actionColor: 'text-text-dim',
+        color: '#64748b',
+        plainMeaning: 'Silakan unggah file foto dari komputer Anda atau pilih salah satu sampel kasus praktik di samping untuk memulai analisis forensik multi-lapis.',
+      };
+    }
     if (metrics.aiProb >= 70) {
       return {
         badge: 'TERINDIKASI KUAT AI',
@@ -937,6 +983,10 @@ export default function ForensicMode() {
 
   // Copy newsroom report text
   const handleCopyReport = () => {
+    if (!hasFile) {
+      showAlert({ title: 'Perhatian', text: 'Silakan unggah atau pilih sampel foto terlebih dahulu.', icon: 'warning' });
+      return;
+    }
     const reportElem = document.getElementById('forensicReportDocument');
     if (reportElem) {
       navigator.clipboard.writeText(reportElem.innerText).then(() => {
@@ -1033,7 +1083,7 @@ export default function ForensicMode() {
             onClick={() => openGlossary('verdict')}
             title="Klik untuk memahami perhitungan skor"
           >
-            <span>{metrics.aiProb.toFixed(1)}%</span>
+            <span>{hasFile ? metrics.aiProb.toFixed(1) : '0.0'}%</span>
             <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80 -mt-1">Skor AI</span>
             <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-bg border border-border text-text-dim flex items-center justify-center text-[9px] font-bold">
               ?
@@ -1060,6 +1110,17 @@ export default function ForensicMode() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 self-stretch md:self-auto justify-end shrink-0 flex-wrap">
+          {hasFile && (
+            <button
+              type="button"
+              onClick={handleReset}
+              className="px-3 py-2 rounded-xl bg-bg-elev border border-border text-text-mut hover:text-text font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+              title="Bersihkan dan kembalikan ke kondisi awal"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={() => openGlossary()}
@@ -1070,7 +1131,13 @@ export default function ForensicMode() {
           </button>
           <button
             type="button"
-            onClick={() => setShowReportModal(true)}
+            onClick={() => {
+              if (!hasFile) {
+                showAlert({ title: 'Perhatian', text: 'Silakan unggah atau pilih sampel foto terlebih dahulu.', icon: 'warning' });
+                return;
+              }
+              setShowReportModal(true);
+            }}
             className="px-3.5 py-2 rounded-xl bg-accent text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm hover:opacity-95 transition cursor-pointer"
           >
             <FileText className="w-4 h-4" />
@@ -1136,7 +1203,7 @@ export default function ForensicMode() {
               <div className="truncate text-text font-medium">{fileInfo.name}</div>
               <div className="flex justify-between text-[10px]">
                 <span>Ukuran: {fileInfo.size}</span>
-                <span>Tipe: {fileInfo.type.split('/')[1]?.toUpperCase() || 'JPEG'}</span>
+                <span>Tipe: {fileInfo.type.includes('/') ? fileInfo.type.split('/')[1]?.toUpperCase() : '-'}</span>
               </div>
             </div>
           </div>
@@ -1297,17 +1364,35 @@ export default function ForensicMode() {
                   <span className="text-xs font-semibold mono">Menghitung Fourier & ELA Canvas...</span>
                 </div>
               )}
-              <canvas
-                ref={activeCanvasRef}
-                style={{
-                  transform: `scale(${zoomLevel})`,
-                  transformOrigin: 'center center',
-                  transition: 'transform 0.15s ease-out',
-                  maxWidth: '100%',
-                  objectFit: 'contain',
-                }}
-                className="rounded shadow-2xl border border-white/10"
-              />
+              {!hasFile ? (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex flex-col items-center justify-center p-8 text-center cursor-pointer hover:bg-white/5 transition rounded-2xl border border-dashed border-white/15 max-w-sm"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-accent/15 border border-accent/30 text-accent flex items-center justify-center mb-3 shadow-inner">
+                    <Upload className="w-6 h-6" />
+                  </div>
+                  <div className="text-sm font-bold text-white mb-1">Unggah Foto untuk Analisis</div>
+                  <div className="text-xs text-text-dim leading-relaxed">
+                    Tarik file foto ke sini atau pilih salah satu sampel praktik di samping untuk memulai.
+                  </div>
+                  <div className="mt-4 px-3.5 py-1.5 rounded-xl bg-accent text-white text-xs font-semibold shadow-sm hover:opacity-90 transition">
+                    Pilih File Foto
+                  </div>
+                </div>
+              ) : (
+                <canvas
+                  ref={activeCanvasRef}
+                  style={{
+                    transform: `scale(${zoomLevel})`,
+                    transformOrigin: 'center center',
+                    transition: 'transform 0.15s ease-out',
+                    maxWidth: '100%',
+                    objectFit: 'contain',
+                  }}
+                  className="rounded shadow-2xl border border-white/10"
+                />
+              )}
             </div>
 
             {/* Description Banner */}
@@ -1370,14 +1455,16 @@ export default function ForensicMode() {
               </div>
               <span
                 className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
-                  meta.rawFound.length > 0
+                  !hasFile
+                    ? 'bg-bg-elev text-text-dim border border-border'
+                    : meta.rawFound.length > 0
                     ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
                     : meta.software.includes('Stripped')
                     ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
                     : 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
                 }`}
               >
-                {meta.rawFound.length > 0 ? 'AI TERDETEKSI' : meta.software.includes('Stripped') ? 'EXIF HILANG' : 'KAMERA ASLI'}
+                {!hasFile ? 'STANDBY' : meta.rawFound.length > 0 ? 'AI TERDETEKSI' : meta.software.includes('Stripped') ? 'EXIF HILANG' : 'KAMERA ASLI'}
               </span>
             </div>
 
@@ -1405,7 +1492,9 @@ export default function ForensicMode() {
             </div>
 
             <div className="p-2.5 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
-              {meta.rawFound.length > 0 ? (
+              {!hasFile ? (
+                <span>ℹ️ Menunggu foto diunggah untuk memeriksa struktur header biner.</span>
+              ) : meta.rawFound.length > 0 ? (
                 <span className="text-rose-500 font-medium">
                   🚨 <strong>BAHAYA:</strong> Nama mesin generator AI tercantum di data biner: <code>{meta.rawFound.join(', ')}</code>
                 </span>
@@ -1438,12 +1527,14 @@ export default function ForensicMode() {
               </div>
               <span
                 className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
-                  c2pa.hasJumbf
+                  !hasFile
+                    ? 'bg-bg-elev text-text-dim border border-border'
+                    : c2pa.hasJumbf
                     ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30'
                     : 'bg-bg-elev text-text-dim border border-border'
                 }`}
               >
-                {c2pa.hasJumbf ? 'C2PA SIGNED' : 'TIDAK ADA SEGEL'}
+                {!hasFile ? 'STANDBY' : c2pa.hasJumbf ? 'C2PA SIGNED' : 'TIDAK ADA SEGEL'}
               </span>
             </div>
 
@@ -1451,23 +1542,25 @@ export default function ForensicMode() {
               <div className="flex justify-between py-1 border-b border-border/50">
                 <span className="text-text-dim font-medium">Status Segel:</span>
                 <span className="font-semibold text-text text-right">
-                  {c2pa.hasJumbf ? 'Sertifikat Digital Valid' : 'Tidak ada sertifikat JUMBF'}
+                  {!hasFile ? 'Menunggu foto' : c2pa.hasJumbf ? 'Sertifikat Digital Valid' : 'Tidak ada sertifikat JUMBF'}
                 </span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
                 <span className="text-text-dim font-medium">Penerbit Sertifikat:</span>
-                <span className="font-semibold text-text text-right">{c2pa.issuer}</span>
+                <span className="font-semibold text-text text-right">{hasFile ? c2pa.issuer : '-'}</span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-text-dim font-medium">Tindakan Sistem:</span>
                 <span className="font-semibold text-text text-right truncate max-w-[170px]" title={c2pa.actions}>
-                  {c2pa.actions}
+                  {hasFile ? c2pa.actions : '-'}
                 </span>
               </div>
             </div>
 
             <div className="p-2.5 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
-              {c2pa.hasJumbf ? (
+              {!hasFile ? (
+                <span>ℹ️ Pemindaian segel kriptografi JUMBF otomatis berjalan saat foto dimuat.</span>
+              ) : c2pa.hasJumbf ? (
                 <span className="text-purple-400 font-medium">
                   🔐 <strong>BUKTI RESMI:</strong> Sertifikat digital mengonfirmasi gambar dibuat oleh Text-to-Image AI.
                 </span>
@@ -1496,32 +1589,36 @@ export default function ForensicMode() {
               </div>
               <span
                 className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
-                  metrics.isAiFlag
+                  !hasFile
+                    ? 'bg-bg-elev text-text-dim border border-border'
+                    : metrics.isAiFlag
                     ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
                     : 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
                 }`}
               >
-                {metrics.isAiFlag ? 'POLA SINTETIS' : 'SENSOR ALAMI'}
+                {!hasFile ? 'STANDBY' : metrics.isAiFlag ? 'POLA SINTETIS' : 'SENSOR ALAMI'}
               </span>
             </div>
 
             <div className="space-y-1.5 text-xs">
               <div className="flex justify-between py-1 border-b border-border/50">
                 <span className="text-text-dim font-medium">Ketidaksamaan ELA:</span>
-                <span className="font-semibold text-text text-right">{metrics.elaScore.toFixed(1)} px (Selisih)</span>
+                <span className="font-semibold text-text text-right">{hasFile ? `${metrics.elaScore.toFixed(1)} px (Selisih)` : '-'}</span>
               </div>
               <div className="flex justify-between py-1 border-b border-border/50">
                 <span className="text-text-dim font-medium">Titik Kisi Kisi FFT:</span>
-                <span className="font-semibold text-text text-right">{metrics.fftSpikeScore} titik anomali</span>
+                <span className="font-semibold text-text text-right">{hasFile ? `${metrics.fftSpikeScore} titik anomali` : '-'}</span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-text-dim font-medium">Sinyal SynthID:</span>
-                <span className="font-semibold text-text text-right">{metrics.synthScore.toFixed(1)}% (Energi AI)</span>
+                <span className="font-semibold text-text text-right">{hasFile ? `${metrics.synthScore.toFixed(1)}% (Energi AI)` : '-'}</span>
               </div>
             </div>
 
             <div className="p-2.5 bg-bg-elev rounded-lg text-[11px] text-text-mut border border-border/50">
-              {metrics.isAiFlag ? (
+              {!hasFile ? (
+                <span>ℹ️ Rontgen 2D FFT & ELA akan aktif otomatis segera setelah foto diunggah.</span>
+              ) : metrics.isAiFlag ? (
                 <span className="text-rose-500 font-medium">
                   🚨 <strong>HASIL RONTGEN:</strong> Spektrum frekuensi & ELA membuktikan struktur kisi matematika AI.
                 </span>
@@ -1548,7 +1645,7 @@ export default function ForensicMode() {
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-text-dim">Skor AI Agregat:</span>
             <span className={`text-xs font-black px-2.5 py-0.5 rounded-lg border ${verdict.badgeBg}`}>
-              {metrics.aiProb.toFixed(1)}%
+              {hasFile ? metrics.aiProb.toFixed(1) : '0.0'}%
             </span>
           </div>
         </div>
@@ -1556,9 +1653,9 @@ export default function ForensicMode() {
         {/* 8 Parameter Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {metrics.parameters.map((param, idx) => {
-            const isHighRisk = param.status === 'alert' || (param.id === 'noise' && param.score < 50);
-            const isMedium = param.status === 'warn';
-            const isC2PA = param.status === 'c2pa';
+            const isHighRisk = hasFile && (param.status === 'alert' || (param.id === 'noise' && param.score < 50));
+            const isMedium = hasFile && param.status === 'warn';
+            const isC2PA = hasFile && param.status === 'c2pa';
 
             return (
               <div
@@ -1574,7 +1671,9 @@ export default function ForensicMode() {
                   <div className="flex items-baseline justify-between mt-1.5">
                     <span
                       className={`text-lg font-black tracking-tight ${
-                        isC2PA
+                        !hasFile
+                          ? 'text-text-dim'
+                          : isC2PA
                           ? 'text-purple-400'
                           : isHighRisk
                           ? 'text-rose-500'
@@ -1583,7 +1682,7 @@ export default function ForensicMode() {
                           : 'text-emerald-500'
                       }`}
                     >
-                      {param.score.toFixed(1)}%
+                      {hasFile ? param.score.toFixed(1) : '0.0'}%
                     </span>
                     <span className="text-[10px] text-text-dim font-medium">{param.unit}</span>
                   </div>
@@ -1592,7 +1691,9 @@ export default function ForensicMode() {
                   <div className="w-full h-1.5 bg-bg rounded-full overflow-hidden mt-1.5 border border-border/50">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
-                        isC2PA
+                        !hasFile
+                          ? 'bg-transparent'
+                          : isC2PA
                           ? 'bg-purple-500'
                           : isHighRisk
                           ? 'bg-rose-500'
@@ -1600,7 +1701,7 @@ export default function ForensicMode() {
                           ? 'bg-amber-500'
                           : 'bg-emerald-500'
                       }`}
-                      style={{ width: `${Math.min(100, Math.max(4, param.score))}%` }}
+                      style={{ width: `${hasFile ? Math.min(100, Math.max(4, param.score)) : 0}%` }}
                     />
                   </div>
                 </div>
