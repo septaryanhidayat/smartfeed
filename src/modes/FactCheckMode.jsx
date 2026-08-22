@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   ShieldAlert, CheckCircle, FileWarning, Palette, LayoutGrid, Search,
   ExternalLink, Sparkles, RefreshCw, Globe, Check, AlertTriangle, HelpCircle,
-  Flame, BookOpen, Layers, Newspaper
+  Flame, BookOpen, Layers, Newspaper, Radio, CheckCircle2
 } from 'lucide-react';
 import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
@@ -10,7 +10,7 @@ import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
 import { VERDICT_STATUSES, FACT_CHECK_THEMES } from '../prompts/buildFactCheck.js';
 import { NEWS_RATIOS } from '../prompts/buildNewsCard.js';
-import { searchFactChecks, TRENDING_FACT_CHECKS } from '../services/factCheckService.js';
+import { searchFactChecks, fetchLiveFactChecks, REAL_ARCHIVE_FALLBACK } from '../services/factCheckService.js';
 import { showAlert } from '../utils/alerts.js';
 
 export default function FactCheckMode({ state, dispatch }) {
@@ -18,18 +18,40 @@ export default function FactCheckMode({ state, dispatch }) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState(TRENDING_FACT_CHECKS);
+  const [searchResults, setSearchResults] = useState(REAL_ARCHIVE_FALLBACK);
   const [selectedResultId, setSelectedResultId] = useState(null);
-  const [autoFilledSuccess, setAutoFilledSuccess] = useState(false);
+  const [isLiveLoaded, setIsLiveLoaded] = useState(false);
 
   const statusOptions = VERDICT_STATUSES.map((s) => s.label);
 
-  // Search CekFakta Database
-  const handleSearch = async (query = searchQuery) => {
+  // Auto-fetch 100% REAL LIVE Articles on Mount
+  useEffect(() => {
+    let isMounted = true;
+    async function loadLiveFeed() {
+      setIsSearching(true);
+      try {
+        const liveData = await fetchLiveFactChecks(false);
+        if (isMounted && liveData.length > 0) {
+          setSearchResults(liveData);
+          setIsLiveLoaded(true);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (isMounted) setIsSearching(false);
+      }
+    }
+    loadLiveFeed();
+    return () => { isMounted = false; };
+  }, []);
+
+  // Search CekFakta & TurnBackHoax Live Database
+  const handleSearch = async (query = searchQuery, force = false) => {
     setIsSearching(true);
     try {
-      const results = await searchFactChecks(query);
+      const results = await searchFactChecks(query, force);
       setSearchResults(results);
+      setIsLiveLoaded(true);
     } catch (err) {
       console.error(err);
     } finally {
@@ -37,7 +59,7 @@ export default function FactCheckMode({ state, dispatch }) {
     }
   };
 
-  // Quick Filter by Trending Topic
+  // Quick Filter by Keyword
   const handleQuickTopic = (topic) => {
     setSearchQuery(topic);
     handleSearch(topic);
@@ -51,7 +73,7 @@ export default function FactCheckMode({ state, dispatch }) {
       state: {
         ...state,
         status: item.rating,
-        mediaName: item.publisher || 'Cek Fakta Media Indonesia',
+        mediaName: item.publisher || 'TurnBackHoax.id / CekFakta',
         claim: item.claim,
         fact: item.fact,
         officialSource: `${item.publisher} (${item.sourceUrl})`,
@@ -60,46 +82,57 @@ export default function FactCheckMode({ state, dispatch }) {
       },
     });
 
-    setAutoFilledSuccess(true);
-    setTimeout(() => setAutoFilledSuccess(false), 2500);
-
     showAlert({
-      title: 'Data Cek Fakta Diterapkan!',
-      text: `Klaim dari "${item.publisher}" berhasil dimuat ke formulir desain visual.`,
+      title: 'Data Berita Real Berhasil Dimuat!',
+      text: `Klarifikasi hoaks dari "${item.publisher}" otomatis diterapkan ke formulir desain visual.`,
       icon: 'success',
     });
   };
 
   return (
     <div className="space-y-4">
-      {/* 1. TOP SECTION: LIVE SEARCH & CRAWLER FROM CEKFAKTA.COM & TURNBACKHOAX */}
+      {/* 1. TOP SECTION: LIVE CRAWLER & SEARCH ENGINE FROM TURNBACKHOAX.ID & CEKFAKTA.COM */}
       <div className="surface p-4 sm:p-5 rounded-2xl border border-border shadow-sm space-y-3.5 bg-gradient-to-br from-bg-elev via-bg to-bg-elev/60">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
-              <Globe className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              <Radio className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-text flex items-center gap-2">
-                <span>Pencarian Database CekFakta.com & TurnBackHoax.id</span>
-                <span className="text-[10px] bg-rose-500/15 text-rose-500 font-extrabold px-2 py-0.2 rounded-full border border-rose-500/30">
-                  Live Koalisi
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-text">Live Feed CekFakta.com & TurnBackHoax.id</h3>
+                <span className="text-[9px] bg-emerald-500/15 text-emerald-400 font-black px-2 py-0.2 rounded-full border border-emerald-500/30 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  REAL-TIME RSS
                 </span>
-              </h3>
-              <p className="text-[11px] text-text-mut">
-                Cari klarifikasi hoaks dari 24+ media nasional terverifikasi (Kompas, Tempo, Liputan6, Mafindo, dll.)
+              </div>
+              <p className="text-[11px] text-text-mut mt-0.5">
+                Menarik langsung berita klarifikasi hoaks asli dari Mafindo, CekFakta, Kompas, dan Tempo
               </p>
             </div>
           </div>
-          <a
-            href="https://cekfakta.com"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] text-accent hover:underline flex items-center gap-1 font-semibold"
-          >
-            <span>Buka Portal CekFakta.com</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => handleSearch(searchQuery, true)}
+              disabled={isSearching}
+              className="px-3 py-1.5 rounded-xl bg-bg-elev border border-border hover:border-rose-500 text-text-mut hover:text-text font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+              title="Refresh stream artikel hoaks terbaru"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSearching ? 'animate-spin' : ''}`} />
+              <span>Refresh Feed</span>
+            </button>
+            <a
+              href="https://turnbackhoax.id"
+              target="_blank"
+              rel="noreferrer"
+              className="px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 font-semibold text-xs flex items-center gap-1 transition"
+            >
+              <span>Portal Asli</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
         </div>
 
         {/* Search Input Bar */}
@@ -116,7 +149,7 @@ export default function FactCheckMode({ state, dispatch }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari isu/kata kunci viral: Bansos, Gempa, Vaksin, Ijazah, Video Deepfake..."
+              placeholder="Cari berita hoaks asli: Israel, Khofifah, Bangkalan, Dana Bantuan, Gempa, Pil..."
               className="w-full bg-bg border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text focus:outline-none focus:border-rose-500 transition shadow-xs"
             />
           </div>
@@ -126,38 +159,36 @@ export default function FactCheckMode({ state, dispatch }) {
             className="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer disabled:opacity-50"
           >
             {isSearching ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
-            <span>{isSearching ? 'Mencari...' : 'Cari Cek Fakta'}</span>
+            <span>{isSearching ? 'Menarik...' : 'Cari Berita'}</span>
           </button>
         </form>
 
-        {/* Quick Topic Pills */}
+        {/* Quick Keyword Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px]">
           <span className="text-text-dim font-medium text-[10px] uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <Flame className="w-3 h-3 text-amber-500" /> Trending:
+            <Flame className="w-3 h-3 text-amber-500" /> Kata Kunci:
           </span>
-          {[
-            'Bansos Tunai',
-            'Megathrust BMKG',
-            'Deepfake Pidato',
-            'Kuota Kemenkes',
-            'Obat Herbal DBD',
-            'Rekrutmen BUMN',
-          ].map((topic) => (
+          {['Semua', 'Dana Bantuan', 'Israel', 'KPK', 'Bupati', 'Kemenkeu', 'Desil', 'Bansos'].map((k) => (
             <button
-              key={topic}
+              key={k}
               type="button"
-              onClick={() => handleQuickTopic(topic)}
-              className="px-2.5 py-0.5 rounded-lg bg-bg-elev border border-border hover:border-rose-500/50 hover:bg-rose-500/10 text-text-mut hover:text-text shrink-0 transition cursor-pointer text-[10px] font-medium"
+              onClick={() => handleQuickTopic(k === 'Semua' ? '' : k)}
+              className={`px-2.5 py-0.5 rounded-lg border transition cursor-pointer text-[10px] font-medium shrink-0 ${
+                (k === 'Semua' && !searchQuery) || searchQuery === k
+                  ? 'bg-rose-500 text-white border-rose-500'
+                  : 'bg-bg-elev border-border hover:border-rose-500/50 text-text-mut hover:text-text'
+              }`}
             >
-              {topic}
+              {k}
             </button>
           ))}
         </div>
 
-        {/* Search Results Grid */}
-        <div className="space-y-2 pt-1 max-h-[340px] overflow-y-auto pr-1">
+        {/* Real Live Articles Feed List */}
+        <div className="space-y-2 pt-1 max-h-[360px] overflow-y-auto pr-1">
           {searchResults.map((item) => {
             const isSelected = selectedResultId === item.id;
+            const isPenipuan = item.rating.includes('PENIPUAN');
             const isHoax = item.rating.includes('HOAKS') || item.rating.includes('SALAH');
             const isMisleading = item.rating.includes('DISINFORMASI') || item.rating.includes('KONTEKS');
 
@@ -170,12 +201,14 @@ export default function FactCheckMode({ state, dispatch }) {
                     : 'border-border bg-bg/80 hover:border-border-hover'
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
                   <div className="space-y-1 min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
                         className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${
-                          isHoax
+                          isPenipuan
+                            ? 'bg-purple-500/15 text-purple-400 border-purple-500/30'
+                            : isHoax
                             ? 'bg-rose-500/15 text-rose-500 border-rose-500/30'
                             : isMisleading
                             ? 'bg-amber-500/15 text-amber-500 border-amber-500/30'
@@ -191,11 +224,11 @@ export default function FactCheckMode({ state, dispatch }) {
                     </div>
 
                     <div className="text-xs font-bold text-text line-clamp-2 mt-1">
-                      Klaim: "{item.claim}"
+                      {item.rawTitle || item.claim}
                     </div>
 
                     <div className="text-[11px] text-text-mut leading-relaxed line-clamp-2">
-                      <strong>Fakta:</strong> {item.fact}
+                      <strong>Ringkasan Fakta:</strong> {item.fact}
                     </div>
                   </div>
 
@@ -213,9 +246,9 @@ export default function FactCheckMode({ state, dispatch }) {
                         href={item.sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[10px] text-text-dim hover:text-accent hover:underline flex items-center gap-0.5 px-2 py-1"
+                        className="text-[10px] text-accent hover:underline flex items-center gap-0.5 px-2 py-1"
                       >
-                        <span>Baca Rujukan</span>
+                        <span>Baca Artikel Asli</span>
                         <ExternalLink className="w-2.5 h-2.5" />
                       </a>
                     )}
@@ -225,9 +258,9 @@ export default function FactCheckMode({ state, dispatch }) {
             );
           })}
 
-          {searchResults.length === 0 && (
+          {searchResults.length === 0 && !isSearching && (
             <div className="text-center py-6 text-text-dim text-xs">
-              Tidak ditemukan hasil cek fakta untuk "{searchQuery}".
+              Tidak ditemukan artikel berita untuk pencarian "{searchQuery}".
             </div>
           )}
         </div>
@@ -249,7 +282,7 @@ export default function FactCheckMode({ state, dispatch }) {
             label="Nama Unit Cek Fakta / Media"
             value={state.mediaName}
             onChange={set('mediaName')}
-            placeholder="Cek Fakta Media Indonesia"
+            placeholder="TurnBackHoax.id / Cek Fakta Media"
           />
         </div>
 
@@ -276,7 +309,7 @@ export default function FactCheckMode({ state, dispatch }) {
           value={state.claim}
           onChange={set('claim')}
           required
-          placeholder="Beredar narasi bahwa BMKG mengeluarkan peringatan dini tsunami setinggi 15 meter..."
+          placeholder="Beredar narasi bahwa..."
           rows={2}
         />
         <div className="mt-3">
@@ -285,16 +318,16 @@ export default function FactCheckMode({ state, dispatch }) {
             value={state.fact}
             onChange={set('fact')}
             required
-            placeholder="BMKG menegaskan narasi tersebut sepenuhnya PALSU. Pantauan sensor seismik dan buoy laut selatan normal..."
+            placeholder="Hasil penelusuran tim cek fakta membuktikan..."
             rows={3}
           />
         </div>
         <div className="mt-3">
           <TextField
-            label="Rujukan / Sumber Klarifikasi Resmi"
+            label="Rujukan / Link Artikel Resmi"
             value={state.officialSource}
             onChange={set('officialSource')}
-            placeholder="Klarifikasi Resmi BMKG Pusat (No. Pers: 08/KLARIF/BMKG/2026)"
+            placeholder="https://turnbackhoax.id/articles/..."
           />
         </div>
         <div className="mt-3">
