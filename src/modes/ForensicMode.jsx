@@ -363,7 +363,7 @@ export default function ForensicMode() {
         colIm[y] = imag[y * fftSize + x];
       }
       fft1D(colRe, colIm);
-      for (let x = 0; x < fftSize; x++) {
+      for (let y = 0; y < fftSize; y++) {
         real[y * fftSize + x] = colRe[y];
         imag[y * fftSize + x] = colIm[y];
       }
