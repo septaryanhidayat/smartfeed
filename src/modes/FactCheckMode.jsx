@@ -10,7 +10,7 @@ import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
 import { VERDICT_STATUSES, FACT_CHECK_THEMES } from '../prompts/buildFactCheck.js';
 import { NEWS_RATIOS } from '../prompts/buildNewsCard.js';
-import { searchFactChecks, fetchLiveFactChecks, REAL_VERIFIED_REPOSITORY } from '../services/factCheckService.js';
+import { searchFactChecks, fetchLiveFactChecks, FALLBACK_REAL_ARTICLES } from '../services/factCheckService.js';
 import { showAlert } from '../utils/alerts.js';
 
 export default function FactCheckMode({ state, dispatch }) {
@@ -18,9 +18,10 @@ export default function FactCheckMode({ state, dispatch }) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState(REAL_VERIFIED_REPOSITORY);
+  const [searchResults, setSearchResults] = useState(FALLBACK_REAL_ARTICLES);
   const [selectedResultId, setSelectedResultId] = useState(null);
-  const [totalCount, setTotalCount] = useState(REAL_VERIFIED_REPOSITORY.length);
+  const [totalCount, setTotalCount] = useState(FALLBACK_REAL_ARTICLES.length);
+  const [crawlStatus, setCrawlStatus] = useState('loading');
 
   const statusOptions = VERDICT_STATUSES.map((s) => s.label);
 
@@ -29,14 +30,19 @@ export default function FactCheckMode({ state, dispatch }) {
     let isMounted = true;
     async function loadLiveFeed() {
       setIsSearching(true);
+      setCrawlStatus('loading');
       try {
         const liveData = await fetchLiveFactChecks(false);
         if (isMounted && liveData.length > 0) {
           setSearchResults(liveData);
           setTotalCount(liveData.length);
+          setCrawlStatus('live');
+        } else {
+          setCrawlStatus('fallback');
         }
       } catch (e) {
         console.error(e);
+        if (isMounted) setCrawlStatus('error');
       } finally {
         if (isMounted) setIsSearching(false);
       }
@@ -102,15 +108,35 @@ export default function FactCheckMode({ state, dispatch }) {
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-sm sm:text-base font-extrabold text-text leading-tight">
-                  Live Feed Website CekFakta.com & TurnBackHoax.id
+                  Live Feed TurnBackHoax.id & CekFakta.com
                 </h3>
-                <span className="text-[9px] bg-emerald-500/15 text-emerald-400 font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1 shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                  ONLINE STREAM
-                </span>
+                {crawlStatus === 'loading' && (
+                  <span className="text-[9px] bg-amber-500/15 text-amber-500 font-extrabold px-2 py-0.5 rounded-full border border-amber-500/30 flex items-center gap-1 shrink-0">
+                    <RefreshCw className="w-2.5 h-2.5 animate-spin" />
+                    CRAWLING...
+                  </span>
+                )}
+                {crawlStatus === 'live' && (
+                  <span className="text-[9px] bg-emerald-500/15 text-emerald-400 font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1 shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                    LIVE · {totalCount} ARTIKEL
+                  </span>
+                )}
+                {crawlStatus === 'fallback' && (
+                  <span className="text-[9px] bg-blue-500/15 text-blue-400 font-extrabold px-2 py-0.5 rounded-full border border-blue-500/30 flex items-center gap-1 shrink-0">
+                    <AlertTriangle className="w-2.5 h-2.5" />
+                    ARSIP TERVERIFIKASI
+                  </span>
+                )}
+                {crawlStatus === 'error' && (
+                  <span className="text-[9px] bg-rose-500/15 text-rose-500 font-extrabold px-2 py-0.5 rounded-full border border-rose-500/30 flex items-center gap-1 shrink-0">
+                    <AlertTriangle className="w-2.5 h-2.5" />
+                    OFFLINE · ARSIP LOKAL
+                  </span>
+                )}
               </div>
               <p className="text-xs text-text-mut leading-normal">
-                Terhubung langsung ke server media pemeriksa fakta. Tersedia <strong className="text-text">{totalCount} artikel</strong> klarifikasi asli.
+                Menarik berita klarifikasi hoaks langsung dari server website sumber (Mafindo, CekFakta Koalisi). Klik "<strong className="text-text">Buka Website Asli</strong>" untuk membaca artikel lengkap.
               </p>
             </div>
           </div>
