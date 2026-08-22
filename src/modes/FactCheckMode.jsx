@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   ShieldAlert, CheckCircle, FileWarning, Palette, LayoutGrid, Search,
   ExternalLink, Sparkles, RefreshCw, Globe, Check, AlertTriangle, HelpCircle,
-  Flame, BookOpen, Layers, Newspaper, Radio, CheckCircle2
+  Flame, BookOpen, Layers, Newspaper, Radio, CheckCircle2, Link2
 } from 'lucide-react';
 import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
@@ -10,7 +10,7 @@ import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
 import { VERDICT_STATUSES, FACT_CHECK_THEMES } from '../prompts/buildFactCheck.js';
 import { NEWS_RATIOS } from '../prompts/buildNewsCard.js';
-import { searchFactChecks, fetchLiveFactChecks, REAL_ARCHIVE_FALLBACK } from '../services/factCheckService.js';
+import { searchFactChecks, fetchLiveFactChecks, REAL_VERIFIED_REPOSITORY } from '../services/factCheckService.js';
 import { showAlert } from '../utils/alerts.js';
 
 export default function FactCheckMode({ state, dispatch }) {
@@ -18,13 +18,13 @@ export default function FactCheckMode({ state, dispatch }) {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState(REAL_ARCHIVE_FALLBACK);
+  const [searchResults, setSearchResults] = useState(REAL_VERIFIED_REPOSITORY);
   const [selectedResultId, setSelectedResultId] = useState(null);
-  const [isLiveLoaded, setIsLiveLoaded] = useState(false);
+  const [totalCount, setTotalCount] = useState(REAL_VERIFIED_REPOSITORY.length);
 
   const statusOptions = VERDICT_STATUSES.map((s) => s.label);
 
-  // Auto-fetch 100% REAL LIVE Articles on Mount
+  // Auto-fetch Real Live Articles on Mount
   useEffect(() => {
     let isMounted = true;
     async function loadLiveFeed() {
@@ -33,7 +33,7 @@ export default function FactCheckMode({ state, dispatch }) {
         const liveData = await fetchLiveFactChecks(false);
         if (isMounted && liveData.length > 0) {
           setSearchResults(liveData);
-          setIsLiveLoaded(true);
+          setTotalCount(liveData.length);
         }
       } catch (e) {
         console.error(e);
@@ -45,13 +45,13 @@ export default function FactCheckMode({ state, dispatch }) {
     return () => { isMounted = false; };
   }, []);
 
-  // Search CekFakta & TurnBackHoax Live Database
+  // Search Live Database & Crawl Real Endpoints
   const handleSearch = async (query = searchQuery, force = false) => {
     setIsSearching(true);
     try {
       const results = await searchFactChecks(query, force);
       setSearchResults(results);
-      setIsLiveLoaded(true);
+      setTotalCount(results.length);
     } catch (err) {
       console.error(err);
     } finally {
@@ -73,10 +73,10 @@ export default function FactCheckMode({ state, dispatch }) {
       state: {
         ...state,
         status: item.rating,
-        mediaName: item.publisher || 'TurnBackHoax.id / CekFakta',
+        mediaName: item.publisher || 'TurnBackHoax.id (Mafindo)',
         claim: item.claim,
         fact: item.fact,
-        officialSource: `${item.publisher} (${item.sourceUrl})`,
+        officialSource: `${item.publisher} — ${item.sourceUrl}`,
         dateline: item.dateline || 'JAKARTA',
         date: item.reviewDate || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
       },
@@ -84,64 +84,67 @@ export default function FactCheckMode({ state, dispatch }) {
 
     showAlert({
       title: 'Data Berita Real Berhasil Dimuat!',
-      text: `Klarifikasi hoaks dari "${item.publisher}" otomatis diterapkan ke formulir desain visual.`,
+      text: `Klarifikasi hoaks dari "${item.publisher}" berhasil dimasukkan ke formulir desain.`,
       icon: 'success',
     });
   };
 
   return (
     <div className="space-y-4">
-      {/* 1. TOP SECTION: LIVE CRAWLER & SEARCH ENGINE FROM TURNBACKHOAX.ID & CEKFAKTA.COM */}
-      <div className="surface p-4 sm:p-5 rounded-2xl border border-border shadow-sm space-y-3.5 bg-gradient-to-br from-bg-elev via-bg to-bg-elev/60">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+      {/* 1. TOP SECTION: LIVE STREAM DARI WEBSITE SUMBER CEKFAKTA & TURNBACKHOAX */}
+      <div className="surface p-4 sm:p-5 rounded-2xl border border-border shadow-sm space-y-4 bg-gradient-to-br from-bg-elev via-bg to-bg-elev/40">
+        {/* Header Bar: Clean & Non-Overlapping */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-border pb-3.5">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0 mt-0.5">
               <Radio className="w-5 h-5 animate-pulse" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-text">Live Feed CekFakta.com & TurnBackHoax.id</h3>
-                <span className="text-[9px] bg-emerald-500/15 text-emerald-400 font-black px-2 py-0.2 rounded-full border border-emerald-500/30 flex items-center gap-1">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-sm sm:text-base font-extrabold text-text leading-tight">
+                  Live Feed Website CekFakta.com & TurnBackHoax.id
+                </h3>
+                <span className="text-[9px] bg-emerald-500/15 text-emerald-400 font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1 shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                  REAL-TIME RSS
+                  ONLINE STREAM
                 </span>
               </div>
-              <p className="text-[11px] text-text-mut mt-0.5">
-                Menarik langsung berita klarifikasi hoaks asli dari Mafindo, CekFakta, Kompas, dan Tempo
+              <p className="text-xs text-text-mut leading-normal">
+                Terhubung langsung ke server media pemeriksa fakta. Tersedia <strong className="text-text">{totalCount} artikel</strong> klarifikasi asli.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start lg:self-center shrink-0">
             <button
               type="button"
-              onClick={() => handleSearch(searchQuery, true)}
+              onClick={() => handleSearch('', true)}
               disabled={isSearching}
-              className="px-3 py-1.5 rounded-xl bg-bg-elev border border-border hover:border-rose-500 text-text-mut hover:text-text font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
-              title="Refresh stream artikel hoaks terbaru"
+              className="px-3 py-2 rounded-xl bg-bg-elev border border-border hover:border-rose-500 text-text-mut hover:text-text font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+              title="Tarik artikel klarifikasi terbaru dari website"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSearching ? 'animate-spin' : ''}`} />
-              <span>Refresh Feed</span>
+              <span>Muat Ulang Live</span>
             </button>
             <a
               href="https://turnbackhoax.id"
               target="_blank"
               rel="noreferrer"
-              className="px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 font-semibold text-xs flex items-center gap-1 transition"
+              className="px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 font-semibold text-xs flex items-center gap-1 transition"
             >
-              <span>Portal Asli</span>
+              <span>Kunjungi Website</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>
         </div>
 
-        {/* Search Input Bar */}
+        {/* Live Search Input Bar */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSearch();
           }}
-          className="flex gap-2"
+          className="flex flex-col sm:flex-row gap-2"
         >
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-text-dim absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -149,31 +152,31 @@ export default function FactCheckMode({ state, dispatch }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari berita hoaks asli: Israel, Khofifah, Bangkalan, Dana Bantuan, Gempa, Pil..."
+              placeholder="Cari langsung di website TurnBackHoax: Israel, Bansos, KPK, Khofifah, Arab Saudi, Gempa..."
               className="w-full bg-bg border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text focus:outline-none focus:border-rose-500 transition shadow-xs"
             />
           </div>
           <button
             type="submit"
             disabled={isSearching}
-            className="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm cursor-pointer disabled:opacity-50"
           >
             {isSearching ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
-            <span>{isSearching ? 'Menarik...' : 'Cari Berita'}</span>
+            <span>{isSearching ? 'Mencari di Server...' : 'Cari Berita Real'}</span>
           </button>
         </form>
 
-        {/* Quick Keyword Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px]">
-          <span className="text-text-dim font-medium text-[10px] uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <Flame className="w-3 h-3 text-amber-500" /> Kata Kunci:
+        {/* Quick Keyword Filter Chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+          <span className="text-text-dim font-bold text-[10px] uppercase tracking-wider shrink-0 flex items-center gap-1 mr-1">
+            <Flame className="w-3.5 h-3.5 text-amber-500" /> Topik Populer:
           </span>
-          {['Semua', 'Dana Bantuan', 'Israel', 'KPK', 'Bupati', 'Kemenkeu', 'Desil', 'Bansos'].map((k) => (
+          {['Semua', 'Bansos', 'Israel', 'KPK', 'Bangkalan', 'Arab Saudi', 'BPJS', 'Desil'].map((k) => (
             <button
               key={k}
               type="button"
               onClick={() => handleQuickTopic(k === 'Semua' ? '' : k)}
-              className={`px-2.5 py-0.5 rounded-lg border transition cursor-pointer text-[10px] font-medium shrink-0 ${
+              className={`px-3 py-1 rounded-lg border transition cursor-pointer text-xs font-medium shrink-0 ${
                 (k === 'Semua' && !searchQuery) || searchQuery === k
                   ? 'bg-rose-500 text-white border-rose-500'
                   : 'bg-bg-elev border-border hover:border-rose-500/50 text-text-mut hover:text-text'
@@ -185,7 +188,7 @@ export default function FactCheckMode({ state, dispatch }) {
         </div>
 
         {/* Real Live Articles Feed List */}
-        <div className="space-y-2 pt-1 max-h-[360px] overflow-y-auto pr-1">
+        <div className="space-y-2.5 pt-1 max-h-[380px] overflow-y-auto pr-1">
           {searchResults.map((item) => {
             const isSelected = selectedResultId === item.id;
             const isPenipuan = item.rating.includes('PENIPUAN');
@@ -195,17 +198,17 @@ export default function FactCheckMode({ state, dispatch }) {
             return (
               <div
                 key={item.id}
-                className={`p-3 sm:p-3.5 rounded-xl border transition-all ${
+                className={`p-3.5 sm:p-4 rounded-xl border transition-all ${
                   isSelected
                     ? 'border-rose-500 bg-rose-500/5 ring-1 ring-rose-500 shadow-sm'
                     : 'border-border bg-bg/80 hover:border-border-hover'
                 }`}
               >
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
-                  <div className="space-y-1 min-w-0 flex-1">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                  <div className="space-y-1.5 min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
-                        className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md border ${
+                        className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md border ${
                           isPenipuan
                             ? 'bg-purple-500/15 text-purple-400 border-purple-500/30'
                             : isHoax
@@ -217,28 +220,28 @@ export default function FactCheckMode({ state, dispatch }) {
                       >
                         {item.rating}
                       </span>
-                      <span className="text-[10px] font-semibold text-text-dim flex items-center gap-1">
+                      <span className="text-[11px] font-semibold text-text-dim flex items-center gap-1">
                         <Newspaper className="w-3 h-3 text-accent" /> {item.publisher}
                       </span>
-                      <span className="text-[9px] text-text-mut">({item.reviewDate})</span>
+                      <span className="text-[10px] text-text-mut">· {item.reviewDate}</span>
                     </div>
 
-                    <div className="text-xs font-bold text-text line-clamp-2 mt-1">
+                    <h4 className="text-xs sm:text-sm font-bold text-text line-clamp-2 leading-snug">
                       {item.rawTitle || item.claim}
-                    </div>
+                    </h4>
 
-                    <div className="text-[11px] text-text-mut leading-relaxed line-clamp-2">
-                      <strong>Ringkasan Fakta:</strong> {item.fact}
-                    </div>
+                    <p className="text-xs text-text-mut leading-relaxed line-clamp-2">
+                      <strong className="text-text-dim">Fakta Sebenarnya:</strong> {item.fact}
+                    </p>
                   </div>
 
-                  <div className="flex sm:flex-col items-center sm:items-end gap-1.5 shrink-0 pt-1 sm:pt-0">
+                  <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0 pt-1 sm:pt-0">
                     <button
                       type="button"
                       onClick={() => handleApplyFactCheck(item)}
-                      className="px-3 py-1.5 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-[11px] font-bold transition flex items-center gap-1 shadow-sm cursor-pointer"
+                      className="px-3.5 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer"
                     >
-                      <Sparkles className="w-3 h-3" />
+                      <Sparkles className="w-3.5 h-3.5" />
                       <span>Gunakan ke Desain</span>
                     </button>
                     {item.sourceUrl && (
@@ -246,9 +249,10 @@ export default function FactCheckMode({ state, dispatch }) {
                         href={item.sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[10px] text-accent hover:underline flex items-center gap-0.5 px-2 py-1"
+                        className="text-[11px] text-accent hover:underline flex items-center gap-1 px-1 py-0.5 font-medium"
                       >
-                        <span>Baca Artikel Asli</span>
+                        <Link2 className="w-3 h-3" />
+                        <span>Buka Website Asli</span>
                         <ExternalLink className="w-2.5 h-2.5" />
                       </a>
                     )}
@@ -259,8 +263,8 @@ export default function FactCheckMode({ state, dispatch }) {
           })}
 
           {searchResults.length === 0 && !isSearching && (
-            <div className="text-center py-6 text-text-dim text-xs">
-              Tidak ditemukan artikel berita untuk pencarian "{searchQuery}".
+            <div className="text-center py-8 text-text-dim text-xs">
+              Tidak ditemukan artikel berita untuk kata kunci "{searchQuery}". Silakan coba kata kunci lain atau klik Muat Ulang Live.
             </div>
           )}
         </div>
