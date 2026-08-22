@@ -3,12 +3,13 @@
 // SELURUH library (1500+ ikon, ratusan KB) masuk bundle dan bikin loading lama
 // di HP. Map eksplisit ini hanya membawa ikon yang benar-benar dipakai.
 import {
-  // categories.js (48 kategori demo)
+  // categories.js (48+ kategori demo)
   Baby, Bike, BookOpen, Bot, Briefcase, Building, CalendarDays, Camera, Car,
   Cloud, Coffee, Dumbbell, Flame, Flower, Gamepad2, Gem, GraduationCap, Heart,
   Home, Hotel, Leaf, Mic, Moon, Network, Paperclip, PawPrint, Plane, Printer,
   Rocket, Scissors, Shirt, ShoppingBag, Smartphone, Snowflake, Sofa, Sparkles,
-  Stethoscope, Store, TrendingUp, Tv, User, UtensilsCrossed, Vote,
+  Stethoscope, Store, TrendingUp, Tv, User, UtensilsCrossed, Vote, ShieldCheck,
+  ShieldAlert, ScanSearch, Fingerprint,
   // carouselDemos.js
   GitCompareArrows, Newspaper, Tag,
   // menuFBDemos.js
@@ -20,7 +21,8 @@ export const DEMO_ICONS = {
   Cloud, Coffee, Dumbbell, Flame, Flower, Gamepad2, Gem, GraduationCap, Heart,
   Home, Hotel, Leaf, Mic, Moon, Network, Paperclip, PawPrint, Plane, Printer,
   Rocket, Scissors, Shirt, ShoppingBag, Smartphone, Snowflake, Sofa, Sparkles,
-  Stethoscope, Store, TrendingUp, Tv, User, UtensilsCrossed, Vote,
+  Stethoscope, Store, TrendingUp, Tv, User, UtensilsCrossed, Vote, ShieldCheck,
+  ShieldAlert, ScanSearch, Fingerprint,
   GitCompareArrows, Newspaper, Tag,
   Cake, Cookie, Fish, IceCream, Salad, Soup, Wheat,
 };

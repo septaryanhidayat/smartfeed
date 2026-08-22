@@ -66,6 +66,57 @@ function cat(id, label, icon, brand, headline, tagline, description, cta, featur
 }
 
 export const CATEGORIES = [
+  cat('smart_detection_ai', 'SaaS AI — Smart Detection AI', 'ScanSearch',
+    'Smart Detection AI', 'Smart Detection AI — Solusi Deteksi Deepfake & Validasi Fakta', 'Forensik 3 Lapis Kriptografi C2PA, ELA & 2D FFT · Akurasi 99.4%',
+    'Platform SaaS dan REST API deteksi gambar buatan AI, manipulasi deepfake, dan validasi keaslian dokumen visual untuk redaksi jurnalisme, verifikasi e-KYC perbankan, dan institusi hukum.',
+    'Coba Demo Smart Detection',
+    ['Deteksi 3-Lapis Forensik', 'Kriptografi C2PA & SynthID', 'Rontgen 2D FFT & ELA', 'Modul Cek Fakta Anti-Hoaks'],
+    'SMART DETECTION AI', 'The Ultimate AI Media Shield',
+    '#2563eb', '#06b6d4',
+    {
+      banner: { style: 'Cyberpunk Neon', lighting: 'Studio Light', ratio: '1:1 (Square Feed)', position: 'center' },
+      thumbnail: { style: 'Pro Clean', mood: 'Shock', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Tech Innovator', energy: 'Bold Impact', layout: 'Centered Hero' },
+      copywriting: {
+        angle: 'Tawarkan software & API Smart Detection AI ke agensi media, korporasi, dan tim cek fakta dengan menekankan bahaya hoaks visual serta pembuktian forensik ilmiah.',
+        summary: 'Smart Detection AI — Platform investigasi multimedia dan penangkal hoaks visual terdepan dengan akurasi 99.4%.',
+      }
+    }),
+
+  cat('verifai_antihoaks', 'Aplikasi Cek Fakta — VerifAI Pro', 'ShieldCheck',
+    'VerifAI Studio', 'VerifAI Pro — Sistem Otentikasi Visual & Penangkal Hoaks', 'Platform Terpadu Investigasi Jurnalisme & Keamanan Siber 2026',
+    'Aplikasi komersial mandiri untuk memverifikasi keaslian foto viral, mendeteksi manipulasi Photoshop/splicing, dan memvalidasi sertifikat C2PA secara otomatis.',
+    'Mulai Uji Forensik Gratis',
+    ['Rontgen Spektrogram FFT', 'Audit Integritas EXIF', 'Cek Fakta Terpadu', 'Laporan Berita Acara SOP'],
+    'VERIFAI PRO STUDIO', 'Otentikasi Fakta Real-Time',
+    '#059669', '#10b981',
+    {
+      banner: { style: 'Minimal Clean', lighting: 'Studio Light', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Curious', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Corporate Executive', energy: 'Premium', layout: 'Minimal Elite' },
+      copywriting: {
+        angle: 'Edukasi tim redaksi media dan publik tentang pentingnya verifikasi visual sebelum mempublikasikan berita viral.',
+        summary: 'VerifAI Pro — Software verifikasi fakta dan filter konten AI siap pakai.',
+      }
+    }),
+
+  cat('truthguard_enterprise', 'Enterprise Security — TruthGuard AI', 'Fingerprint',
+    'TruthGuard AI', 'TruthGuard AI — Enterprise Deepfake & Fraud Detection Engine', 'Automated Trust Engine · API Anti-Manipulasi 24/7',
+    'Infrastruktur keamanan siber berbasis AI untuk memverifikasi jutaan transaksi dokumen visual, foto KTP/e-KYC, dan mencegah kejahatan pemalsuan identitas digital.',
+    'Jadwalkan Konsultasi B2B',
+    ['API Response 120ms', 'Anti-Deepfake Engine', 'SDK Web & Mobile', 'Laporan Audit Legal'],
+    'TRUTHGUARD ENTERPRISE', 'Next-Gen Visual Trust',
+    '#7c3aed', '#6366f1',
+    {
+      banner: { style: 'Minimal Clean', lighting: 'Dramatic Shadow', ratio: '16:9 (Landing Page / Web Banner)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Serious', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Modern Sans', energy: 'Professional', layout: 'Minimal Elite' },
+      copywriting: {
+        angle: 'Pitching B2B ke industri fintech, perbankan, dan e-commerce untuk mengamankan proses verifikasi dokumen dari manipulasi AI.',
+        summary: 'TruthGuard AI — Enterprise Security Engine pencegah manipulasi identitas digital.',
+      }
+    }),
+
   cat('qris_bi_sultra', 'BI Sultra — Akselerasi QRIS', 'TrendingUp',
     'Bank Indonesia Sultra', 'Akselerasi QRIS Sultra — Juara 2 Nasional', 'Transaksi Praktis · Merchant Tembus 120%',
     'Program QRIS Jelajah Kuliner Indonesia mendorong lonjakan adopsi merchant UMKM hingga 120% target dengan kenaikan volume transaksi 38,6%.',
