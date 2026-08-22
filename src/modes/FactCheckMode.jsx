@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
-  ShieldAlert, FileWarning, Palette, LayoutGrid, Search,
-  ExternalLink, Sparkles, RefreshCw, AlertTriangle,
-  Flame, Newspaper, Radio, Link2, Globe, X, Maximize2, Minimize2
+  ShieldAlert, FileWarning, Palette, LayoutGrid,
+  ExternalLink, RefreshCw, Globe, Maximize2, Minimize2
 } from 'lucide-react';
 import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
@@ -35,7 +34,6 @@ const FACT_CHECK_SOURCES = [
 export default function FactCheckMode({ state, dispatch }) {
   const set = (field) => (value) => dispatch({ type: 'SET_FIELD', field, value });
 
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeSource, setActiveSource] = useState(FACT_CHECK_SOURCES[0]);
   const [iframeUrl, setIframeUrl] = useState(FACT_CHECK_SOURCES[0].url);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -43,27 +41,10 @@ export default function FactCheckMode({ state, dispatch }) {
 
   const statusOptions = VERDICT_STATUSES.map((s) => s.label);
 
-  // Search handler — opens search results directly on the selected source website
-  const handleSearch = (e) => {
-    e?.preventDefault();
-    const q = searchQuery.trim();
-    if (!q) {
-      setIframeUrl(activeSource.url);
-    } else {
-      setIframeUrl(activeSource.searchUrl(q));
-    }
-    setIframeLoading(true);
-  };
-
   // Switch source website
   const handleSwitchSource = (source) => {
     setActiveSource(source);
-    const q = searchQuery.trim();
-    if (q) {
-      setIframeUrl(source.searchUrl(q));
-    } else {
-      setIframeUrl(source.url);
-    }
+    setIframeUrl(source.url);
     setIframeLoading(true);
   };
 
@@ -137,28 +118,6 @@ export default function FactCheckMode({ state, dispatch }) {
               </button>
             ))}
           </div>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-text-dim absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Cari di ${activeSource.name}: vaksin, gempa, bansos, presiden, subsidi, bpjs, pilkada...`}
-                className="w-full bg-bg border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text focus:outline-none focus:border-accent transition shadow-xs"
-              />
-            </div>
-            <button
-              type="submit"
-              className="px-5 py-2.5 rounded-xl text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm cursor-pointer hover:opacity-90"
-              style={{ backgroundColor: activeSource.color }}
-            >
-              <Search className="w-3.5 h-3.5" />
-              <span>Cari di {activeSource.name}</span>
-            </button>
-          </form>
         </div>
 
         {/* Embedded Website iframe */}
