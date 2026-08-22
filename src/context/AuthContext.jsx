@@ -40,6 +40,15 @@ export function AuthProvider({ children }) {
       showAccountDisabledAlert();
       return { ok: false, error: check.reason };
     }
+    // Sinkronisasi Nama Asli dari Google Sheet jika tersedia
+    if (check.name && check.name !== session.name) {
+      setSession((prev) => {
+        if (!prev) return prev;
+        const updated = { ...prev, name: check.name };
+        try { localStorage.setItem(KEY, JSON.stringify(updated)); } catch {}
+        return updated;
+      });
+    }
     return { ok: true };
   }, [session, logout]);
 
@@ -75,9 +84,19 @@ export function AuthProvider({ children }) {
     const result = await validateLogin(email, password);
     if (!result.ok) return result;
 
+    const cleanEmail = (email || '').toLowerCase().trim();
+    let userName = result.name || '';
+    if (!userName && CONFIG.sheetWebhookUrl) {
+      try {
+        const check = await verifyEmailAllowed(cleanEmail);
+        if (check?.name) userName = check.name;
+      } catch {}
+    }
+
     const now = Date.now();
     const newSession = {
       email: result.email,
+      name: userName || '',
       loggedInAt: now,
       expiresAt: now + SESSION_TTL_MS,
     };

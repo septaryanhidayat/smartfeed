@@ -214,7 +214,7 @@ export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
             clearAuthCache();
             return { allowed: false, reason: 'Email Anda tidak terdaftar di database.' };
           }
-          return { allowed: true };
+          return { allowed: true, name: j.name || '' };
         }
       }
     } catch {

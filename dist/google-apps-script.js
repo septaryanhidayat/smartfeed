@@ -29,23 +29,29 @@ function doGet(e) {
     var userSheet = ss.getSheetByName('Users') || ss.getSheets()[0];
     var lastRow = userSheet ? userSheet.getLastRow() : 0;
     var emails = [];
+    var userMap = {};
 
     if (lastRow > 1) {
-      var data = userSheet.getRange(2, 1, lastRow - 1, 1).getValues();
+      var data = userSheet.getRange(2, 1, lastRow - 1, 2).getValues();
       for (var i = 0; i < data.length; i++) {
         var em = (data[i][0] || '').toString().toLowerCase().trim();
-        if (em && em.includes('@') && !emails.includes(em)) {
-          emails.push(em);
+        var nm = (data[i][1] || '').toString().trim();
+        if (em && em.includes('@')) {
+          if (!emails.includes(em)) emails.push(em);
+          if (nm) userMap[em] = nm;
         }
       }
     }
 
     if (e.parameter.action === 'check') {
       var targetEmail = (e.parameter.email || '').toString().toLowerCase().trim();
+      var isAllowed = emails.includes(targetEmail);
+      var matchedName = userMap[targetEmail] || '';
       return ContentService.createTextOutput(JSON.stringify({
         ok: true,
-        allowed: emails.includes(targetEmail),
-        email: targetEmail
+        allowed: isAllowed,
+        email: targetEmail,
+        name: matchedName
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
@@ -115,25 +121,22 @@ function handleIncomingWebhook(e, isPost) {
     // 0. JIKA EVENT TYPE = 'activity' (CATAT KE TAB "Riwayat Aktivitas")
     // ─────────────────────────────────────────────────────────────
     if (eventType === 'activity') {
-      var actSheet = getOrCreateSheet(ss, 'Riwayat Aktivitas', ['Waktu', 'Email Peserta', 'Nama Peserta', 'Tool / Mode', 'Aksi', 'Keterangan']);
-      actSheet.appendRow([
-        now,
-        email || 'anonim',
-        name || '-',
-        data.tool || data.mode || '-',
-        data.action || '-',
-        data.details || data.label || '-'
-      ]);
+      var participantName = name || '';
 
-      // Update kolom 'Terakhir Aktif' di tab Users jika email ditemukan
+      // Cari Nama Asli peserta dari tab Users berdasarkan email
       if (email && email.includes('@')) {
         var uSheet = ss.getSheetByName('Users');
         if (uSheet) {
           var uLastRow = uSheet.getLastRow();
           if (uLastRow > 1) {
-            var uEmails = uSheet.getRange(2, 1, uLastRow - 1, 1).getValues();
-            for (var u = 0; u < uEmails.length; u++) {
-              if ((uEmails[u][0] || '').toString().toLowerCase().trim() === email) {
+            var uData = uSheet.getRange(2, 1, uLastRow - 1, 2).getValues();
+            for (var u = 0; u < uData.length; u++) {
+              if ((uData[u][0] || '').toString().toLowerCase().trim() === email) {
+                var registeredName = (uData[u][1] || '').toString().trim();
+                if (registeredName) {
+                  participantName = registeredName;
+                }
+                // Update kolom 'Terakhir Aktif'
                 uSheet.getRange(u + 2, 7).setValue(now);
                 break;
               }
@@ -141,6 +144,16 @@ function handleIncomingWebhook(e, isPost) {
           }
         }
       }
+
+      var actSheet = getOrCreateSheet(ss, 'Riwayat Aktivitas', ['Waktu', 'Email Peserta', 'Nama Peserta', 'Tool / Mode', 'Aksi', 'Keterangan']);
+      actSheet.appendRow([
+        now,
+        email || 'anonim',
+        participantName || '-',
+        data.tool || data.mode || '-',
+        data.action || '-',
+        data.details || data.label || '-'
+      ]);
 
       lock.releaseLock();
       return ContentService.createTextOutput(JSON.stringify({
