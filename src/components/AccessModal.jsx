@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
-import { X, Mail, User, Sparkles, ArrowRight, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { X, Mail, User, Phone, Sparkles, ArrowRight, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { CONFIG } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { notifyLoginSuccess } from '../utils/alerts.js';
 
 /**
  * Modal Formulir Akses Gratis Peserta Pelatihan.
- * Menyimpan data peserta ke Google Spreadsheet via Google Apps Script Webhook
+ * Menyimpan data peserta (Nama, Email, Nomor HP) ke Google Spreadsheet via Google Apps Script Webhook
  * dan langsung mengarahkan peserta masuk ke Studio (/app).
  */
 export default function AccessModal({ open, onClose }) {
   const { loginFree } = useAuth();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -32,6 +33,7 @@ export default function AccessModal({ open, onClose }) {
 
     const cleanName = name.trim();
     const cleanEmail = email.toLowerCase().trim();
+    const cleanPhone = phone.trim();
 
     if (!cleanName) {
       setError('Nama Lengkap wajib diisi.');
@@ -40,6 +42,11 @@ export default function AccessModal({ open, onClose }) {
 
     if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
       setError('Masukkan alamat email yang valid.');
+      return;
+    }
+
+    if (!cleanPhone) {
+      setError('Nomor WhatsApp / HP wajib diisi.');
       return;
     }
 
@@ -57,6 +64,7 @@ export default function AccessModal({ open, onClose }) {
             type: 'register',
             email: cleanEmail,
             name: cleanName,
+            phone: cleanPhone,
             source: 'Peserta Pelatihan (Gratis)',
             payment_method: 'Peserta Pelatihan (Gratis)',
             payment_name: 'Peserta Pelatihan (Gratis)',
@@ -177,6 +185,26 @@ export default function AccessModal({ open, onClose }) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="emailkamu@gmail.com"
+                    className="input w-full"
+                    style={{ paddingLeft: '2.5rem' }}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              {/* Nomor WhatsApp / HP */}
+              <div>
+                <label className="text-xs font-medium text-text mb-1.5 block">
+                  Nomor WhatsApp / HP <span className="text-accent">*</span>
+                </label>
+                <div className="relative">
+                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-dim pointer-events-none z-10" />
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="0812-3456-7890"
                     className="input w-full"
                     style={{ paddingLeft: '2.5rem' }}
                     disabled={loading}

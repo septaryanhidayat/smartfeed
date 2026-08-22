@@ -23,7 +23,11 @@ export function logActivity(action, metadata = {}) {
 
   const session = getSession();
   const email = session?.email || metadata.email || 'anonim';
-  const name = session?.name || metadata.name || '';
+  let name = session?.name || metadata.name || '';
+  if (!name && email && email.includes('@')) {
+    const userPart = email.split('@')[0];
+    name = userPart.replace(/[._-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  }
 
   const payload = JSON.stringify({
     type: 'activity',
