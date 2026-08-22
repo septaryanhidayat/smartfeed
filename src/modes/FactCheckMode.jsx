@@ -30,30 +30,6 @@ const FACT_CHECK_SOURCES = [
     searchUrl: (q) => `https://cekfakta.com/?s=${encodeURIComponent(q)}`,
     color: '#3b82f6',
   },
-  {
-    id: 'kompas',
-    name: 'Kompas Cek Fakta',
-    desc: 'Unit Verifikasi Kompas.com',
-    url: 'https://www.kompas.com/cekfakta',
-    searchUrl: (q) => `https://www.kompas.com/cekfakta/?q=${encodeURIComponent(q)}`,
-    color: '#0ea5e9',
-  },
-  {
-    id: 'tempo',
-    name: 'Tempo Cek Fakta',
-    desc: 'Unit Verifikasi Tempo.co',
-    url: 'https://cekfakta.tempo.co',
-    searchUrl: (q) => `https://cekfakta.tempo.co/search?q=${encodeURIComponent(q)}`,
-    color: '#f97316',
-  },
-  {
-    id: 'liputan6',
-    name: 'Liputan6 Cek Fakta',
-    desc: 'Tim Cek Fakta Liputan6.com',
-    url: 'https://www.liputan6.com/cek-fakta',
-    searchUrl: (q) => `https://www.liputan6.com/search?q=${encodeURIComponent(q)}&type=cek-fakta`,
-    color: '#a855f7',
-  },
 ];
 
 export default function FactCheckMode({ state, dispatch }) {
