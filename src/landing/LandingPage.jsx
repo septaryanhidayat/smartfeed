@@ -121,9 +121,9 @@ export default function LandingPage() {
         <SafeSection><Testimonials /></SafeSection>
         <SafeSection><BottomShowcase /></SafeSection>
         <SafeSection><Pricing onOpenAccess={openAccess} /></SafeSection>
+        <SafeSection><EcosystemShowcase /></SafeSection>
         <SafeSection><Faq /></SafeSection>
         <SafeSection><FinalCta onOpenAccess={openAccess} /></SafeSection>
-        <SafeSection><EcosystemShowcase /></SafeSection>
       </main>
       <ErrorBoundary fallback={null}>
         <Suspense fallback={null}>
