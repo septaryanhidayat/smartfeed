@@ -38,7 +38,7 @@ window.__AF_CONFIG = {
    facebookHandle: "Beranda Teknologi Digital",
 
    /* -- 3. HARGA (tampilan teks) -------------------------------------- */
-   price: "149.000",            // harga tampil untuk tes
+   price: "0",            // harga tampil untuk tes
    priceStrike: "499.000",    // harga coret
    affiliatePerSignup: 25000, // komisi affiliate per pendaftaran (angka, tanpa kutip)
 

@@ -107,7 +107,7 @@ export default function Checkout() {
   const strikeInt = parseNum(CONFIG.priceStrike);
   const discountInt = Math.max(strikeInt - priceInt, 0);
 
-  const priceNum = CONFIG.price || '1.000';
+  const priceNum = CONFIG.price !== undefined && CONFIG.price !== '' ? CONFIG.price : '0';
   const priceStrikeNum = CONFIG.priceStrike || '499.000';
   const discountFormatted = discountInt > 0 ? discountInt.toLocaleString('id-ID') : '0';
 

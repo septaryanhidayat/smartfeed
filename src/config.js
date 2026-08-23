@@ -59,7 +59,7 @@ export const CONFIG = {
   facebookHandle:  pick(cfg.facebookHandle, 'Beranda Teknologi Digital'),
 
   // ── Harga (tampilan) ──────────────────────────────────────
-  price:        pick(cfg.price, '149.000'),
+  price:        pick(cfg.price, '0'),
   priceStrike:  pick(cfg.priceStrike, '499.000'),
   affiliatePerSignup: Number(pick(cfg.affiliatePerSignup, 25000)),
   enableFreeTrainingClaim: isTruthy(cfg.enableFreeTrainingClaim, true),

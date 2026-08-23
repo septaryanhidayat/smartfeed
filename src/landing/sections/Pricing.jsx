@@ -98,7 +98,7 @@ export default function Pricing({ onOpenAccess }) {
                 <div className="mt-6 flex flex-col items-center gap-1">
                   <span className="text-text-dim text-base sm:text-lg line-through mono">Rp {CONFIG.priceStrike || '499.000'}</span>
                   <span className="text-5xl sm:text-6xl font-black text-accent whitespace-nowrap leading-none">
-                    Rp {CONFIG.price || '149.000'}
+                    Rp {CONFIG.price !== undefined && CONFIG.price !== '' ? CONFIG.price : '0'}
                   </span>
                 </div>
 
@@ -148,7 +148,7 @@ export default function Pricing({ onOpenAccess }) {
                   className="btn-cta !text-base !px-8 !py-4 text-center"
                 >
                   <Sparkles className="w-4.5 h-4.5" />
-                  Ambil Promo Sekarang — Rp {CONFIG.price || '1.000'}
+                  Ambil Promo Sekarang — Rp {CONFIG.price !== undefined && CONFIG.price !== '' ? CONFIG.price : '0'}
                   <ArrowRight className="w-4.5 h-4.5" />
                 </a>
                 
