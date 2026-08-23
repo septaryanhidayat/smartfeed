@@ -31,6 +31,7 @@ const BottomShowcase   = lazyWithRetry(() => import('./sections/BottomShowcase.j
 const Faq              = lazyWithRetry(() => import('./sections/Faq.jsx'), 'fq');
 const Pricing          = lazyWithRetry(() => import('./sections/Pricing.jsx'), 'pr');
 const FinalCta         = lazyWithRetry(() => import('./sections/FinalCta.jsx'), 'fcta');
+const EcosystemShowcase = lazyWithRetry(() => import('./sections/EcosystemShowcase.jsx'), 'es');
 const LandingFooter    = lazyWithRetry(() => import('./sections/LandingFooter.jsx'), 'ft');
 const MayarNotification = lazyWithRetry(() => import('./components/MayarNotification.jsx'), 'mn');
 import AccessModal from '../components/AccessModal.jsx';
@@ -122,6 +123,7 @@ export default function LandingPage() {
         <SafeSection><Pricing onOpenAccess={openAccess} /></SafeSection>
         <SafeSection><Faq /></SafeSection>
         <SafeSection><FinalCta onOpenAccess={openAccess} /></SafeSection>
+        <SafeSection><EcosystemShowcase /></SafeSection>
       </main>
       <ErrorBoundary fallback={null}>
         <Suspense fallback={null}>

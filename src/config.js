@@ -76,6 +76,55 @@ export const CONFIG = {
   authEndpoint: pick(cfg.authEndpoint, ''),
   loginPasswordHash: pick(cfg.loginPasswordHash, '21e37e7c35bf7735516fb55cffd36b025e124647430849feac0b61fff45decd3'),
 
+  // ── Ekosistem Produk Digital ──────────────────────────────
+  ecosystemProducts: cfg.ecosystemProducts || [
+    {
+      id: 'smartfeed',
+      name: 'SmartFeed',
+      category: 'AI Design Studio',
+      desc: 'Studio visual AI untuk banner promosi, 9-feed IG, carousel, dan iklan komersial instan.',
+      logo: '/landing/ecosystem/smartfeed.jpg',
+      url: 'https://smartfeed.berandadigital.net',
+      badge: 'Active Studio'
+    },
+    {
+      id: 'smartedu',
+      name: 'SmartEdu',
+      category: 'AI Education Studio',
+      desc: 'Platform generator kurikulum, modul ajar, soal ujian, & materi pembelajaran cerdas.',
+      logo: '/landing/ecosystem/smartedu.jpg',
+      url: 'https://smartedu.berandadigital.net',
+      badge: 'Pendidikan'
+    },
+    {
+      id: 'smartnews',
+      name: 'SmartNews',
+      category: 'AI Journalism & Redaksi',
+      desc: 'Suite redaksi media berita 5W+1H, breaking news card, fact-check hoaks, & SEO portal.',
+      logo: '/landing/ecosystem/smartnews.jpg',
+      url: 'https://smartnews.berandadigital.net',
+      badge: 'Jurnalisme'
+    },
+    {
+      id: 'smartsdm',
+      name: 'SmartSDM',
+      category: 'AI HR & People Ops',
+      desc: 'Manajemen talenta cerdas, penilaian KPI, SOP perusahaan, & rekrutmen SDM otomatis.',
+      logo: '/landing/ecosystem/smartsdm.jpg',
+      url: 'https://smartsdm.berandadigital.net',
+      badge: 'HR & Talenta'
+    },
+    {
+      id: 'smartsynth',
+      name: 'SmartSynth',
+      category: 'AI Audio & Voiceover',
+      desc: 'Studio sintesis suara AI natural, voiceover iklan komersial, & generator audio narasi.',
+      logo: '/landing/ecosystem/smartsynth.png',
+      url: 'https://smartsynth.berandadigital.net',
+      badge: 'Audio & VO'
+    },
+  ],
+
   // Kredensial Airtable (terobfuscate) HANYA ada di config milik pemilik asli.
   // Paket reseller TIDAK menyertakan ini → token kamu tidak ikut terjual.
   // Bentuk: { t, b, f:[...], k }

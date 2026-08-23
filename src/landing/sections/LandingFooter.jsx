@@ -8,9 +8,9 @@ export default function LandingFooter() {
   return (
     <footer className="relative border-t border-border bg-bg-deep/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-8">
           {/* Kolom 1: Brand & Profil Perusahaan */}
-          <div className="space-y-3">
+          <div className="space-y-3 lg:col-span-1 sm:col-span-2">
             <div className="flex items-center gap-2.5">
               <span className="inline-flex w-10 h-10 items-center justify-center shadow-[0_0_20px_rgba(var(--accent-rgb),0.4)] rounded-xl">
                 <SafeImage
@@ -43,7 +43,31 @@ export default function LandingFooter() {
             </div>
           </div>
 
-          {/* Kolom 2: Navigasi Studio */}
+          {/* Kolom 2: Ekosistem Produk Digital */}
+          <div>
+            <div className="text-[10px] mono uppercase tracking-widest text-text-dim mb-3 font-semibold">
+              Produk Digital AI
+            </div>
+            <ul className="space-y-2 text-xs">
+              {(CONFIG.ecosystemProducts || []).map((prod) => (
+                <li key={prod.id}>
+                  <a
+                    href={prod.url}
+                    target={prod.id === 'smartfeed' ? '_self' : '_blank'}
+                    rel={prod.id === 'smartfeed' ? '' : 'noreferrer'}
+                    className="text-text-mut hover:text-accent transition-colors inline-flex items-center gap-1 group"
+                  >
+                    <span>{prod.name}</span>
+                    {prod.id !== 'smartfeed' && (
+                      <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Kolom 3: Navigasi Studio */}
           <div>
             <div className="text-[10px] mono uppercase tracking-widest text-text-dim mb-3 font-semibold">
               Fitur Studio
@@ -52,9 +76,9 @@ export default function LandingFooter() {
               <li><a href="#fitur" className="text-text-mut hover:text-accent transition-colors">Fitur Generator</a></li>
               <li><a href="#cara" className="text-text-mut hover:text-accent transition-colors">Cara Kerja</a></li>
               <li><a href="#contoh" className="text-text-mut hover:text-accent transition-colors">Galeri Showcase</a></li>
+              <li><a href="#ekosistem" className="text-text-mut hover:text-accent transition-colors">Ekosistem Produk</a></li>
               <li><a href="#harga" className="text-text-mut hover:text-accent transition-colors">Paket & Harga</a></li>
               <li><a href="/checkout" className="text-text-mut hover:text-accent transition-colors">Halaman Checkout</a></li>
-              <li><a href="#faq" className="text-text-mut hover:text-accent transition-colors">Tanya Jawab (FAQ)</a></li>
               <li><a href="/app" className="text-accent font-semibold hover:underline">Masuk ke Studio</a></li>
             </ul>
           </div>
