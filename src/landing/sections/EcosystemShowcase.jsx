@@ -1,4 +1,4 @@
-import { ArrowUpRight, Sparkles, ExternalLink, Layers, GraduationCap, Newspaper, Users, Mic, LayoutGrid } from 'lucide-react';
+import { ArrowUpRight, Sparkles, ExternalLink, Layers, GraduationCap, Newspaper, Users, ShieldCheck, LayoutGrid, Clock } from 'lucide-react';
 import SafeImage from '../primitives/SafeImage.jsx';
 import GlowOrb from '../primitives/GlowOrb.jsx';
 import { CONFIG } from '../../config.js';
@@ -8,7 +8,7 @@ const ICON_MAP = {
   smartedu: GraduationCap,
   smartnews: Newspaper,
   smartsdm: Users,
-  smartsynth: Mic,
+  smartsynth: ShieldCheck,
 };
 
 export default function EcosystemShowcase() {
@@ -28,10 +28,10 @@ export default function EcosystemShowcase() {
             EKOSISTEM PRODUK DIGITAL
           </span>
           <h2 className="h-section mt-4">
-            Jelajahi Suite <span className="text-grad-red">AI Tools & Produk Digital</span> Kami
+            Jelajahi Suite <span className="text-grad-red">Produk & Tools Digital</span> Kami
           </h2>
           <p className="mt-4 text-sm sm:text-base text-text-mut leading-relaxed">
-            Rangkaian solusi kecerdasan buatan terpadu untuk kebutuhan desain grafis, edukasi, jurnalistik, manajemen SDM, hingga sintesis audio profesional.
+            Rangkaian solusi terpadu untuk kebutuhan desain grafis instan, portal berita online, big data edukasi, manajemen SDM, hingga verifikasi fakta & cek metadata konten AI.
           </p>
         </div>
 
@@ -40,6 +40,7 @@ export default function EcosystemShowcase() {
           {products.map((item, idx) => {
             const FallbackIcon = ICON_MAP[item.id] || Sparkles;
             const isFeatured = item.id === 'smartfeed';
+            const hasLink = Boolean(item.url && item.url.trim() && item.url !== '#');
 
             return (
               <div
@@ -73,8 +74,12 @@ export default function EcosystemShowcase() {
                           Platform Ini
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] mono uppercase tracking-wider font-semibold bg-accent-sm text-accent border border-border-strong">
-                          {item.badge || 'Ekosistem AI'}
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] mono uppercase tracking-wider font-semibold border ${
+                          hasLink
+                            ? 'bg-accent-sm text-accent border-border-strong'
+                            : 'bg-bg-deep text-text-dim border-border'
+                        }`}>
+                          {item.badge || (hasLink ? 'Tersedia' : 'Segera Hadir')}
                         </span>
                       )}
                     </div>
@@ -99,22 +104,29 @@ export default function EcosystemShowcase() {
                 {/* Bottom CTA Link */}
                 <div className="mt-6 pt-4 border-t border-border/70 flex items-center justify-between">
                   <span className="text-[11px] mono text-text-dim">
-                    {item.id === 'smartfeed' ? 'Aplikasi Aktif' : 'Produk Terhubung'}
+                    {item.id === 'smartfeed' ? 'Aplikasi Aktif' : hasLink ? 'Website Tersedia' : 'Dalam Pengembangan'}
                   </span>
 
-                  <a
-                    href={item.url}
-                    target={item.id === 'smartfeed' ? '_self' : '_blank'}
-                    rel={item.id === 'smartfeed' ? '' : 'noreferrer'}
-                    className={`inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-lg transition-all ${
-                      isFeatured
-                        ? 'bg-accent text-white hover:bg-accent-h shadow-xs'
-                        : 'text-text hover:text-accent bg-bg-deep border border-border hover:border-accent hover:bg-accent-sm'
-                    }`}
-                  >
-                    <span>{item.id === 'smartfeed' ? 'Masuk Studio' : 'Kunjungi Web'}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
+                  {hasLink ? (
+                    <a
+                      href={item.url}
+                      target={item.id === 'smartfeed' ? '_self' : '_blank'}
+                      rel={item.id === 'smartfeed' ? '' : 'noreferrer'}
+                      className={`inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-lg transition-all ${
+                        isFeatured
+                          ? 'bg-accent text-white hover:bg-accent-h shadow-xs'
+                          : 'text-text hover:text-accent bg-bg-deep border border-border hover:border-accent hover:bg-accent-sm'
+                      }`}
+                    >
+                      <span>{item.id === 'smartfeed' ? 'Masuk Studio' : 'Kunjungi Web'}</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-md bg-bg-deep/80 text-text-dim border border-border/60">
+                      <Clock className="w-3 h-3" />
+                      <span>Segera Hadir</span>
+                    </span>
+                  )}
                 </div>
               </div>
             );
@@ -129,10 +141,10 @@ export default function EcosystemShowcase() {
             </span>
             <div>
               <div className="text-xs sm:text-sm font-bold text-text">
-                Butuh Integrasi Custom atau Paket Bundling Seluruh Produk?
+                Butuh Integrasi Custom atau Informasi Seluruh Ekosistem Produk?
               </div>
               <div className="text-[11px] text-text-mut">
-                Hubungi tim {CONFIG.companyName} untuk penawaran lisensi korporat dan kemitraan.
+                Hubungi tim {CONFIG.companyName} untuk pertanyaan lisensi, akses portal, dan kemitraan.
               </div>
             </div>
           </div>

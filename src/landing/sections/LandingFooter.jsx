@@ -46,24 +46,36 @@ export default function LandingFooter() {
           {/* Kolom 2: Ekosistem Produk Digital */}
           <div>
             <div className="text-[10px] mono uppercase tracking-widest text-text-dim mb-3 font-semibold">
-              Produk Digital AI
+              Ekosistem Produk
             </div>
             <ul className="space-y-2 text-xs">
-              {(CONFIG.ecosystemProducts || []).map((prod) => (
-                <li key={prod.id}>
-                  <a
-                    href={prod.url}
-                    target={prod.id === 'smartfeed' ? '_self' : '_blank'}
-                    rel={prod.id === 'smartfeed' ? '' : 'noreferrer'}
-                    className="text-text-mut hover:text-accent transition-colors inline-flex items-center gap-1 group"
-                  >
-                    <span>{prod.name}</span>
-                    {prod.id !== 'smartfeed' && (
-                      <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
-                    )}
-                  </a>
-                </li>
-              ))}
+              {(CONFIG.ecosystemProducts || []).map((prod) => {
+                const hasLink = Boolean(prod.url && prod.url.trim() && prod.url !== '#');
+                if (!hasLink) {
+                  return (
+                    <li key={prod.id} className="text-text-dim/70 flex items-center gap-1.5">
+                      <span>{prod.name}</span>
+                      <span className="text-[9px] mono text-text-dim/60 bg-bg-deep px-1.5 py-0.5 rounded border border-border/40">Segera</span>
+                    </li>
+                  );
+                }
+
+                return (
+                  <li key={prod.id}>
+                    <a
+                      href={prod.url}
+                      target={prod.id === 'smartfeed' ? '_self' : '_blank'}
+                      rel={prod.id === 'smartfeed' ? '' : 'noreferrer'}
+                      className="text-text-mut hover:text-accent transition-colors inline-flex items-center gap-1 group"
+                    >
+                      <span>{prod.name}</span>
+                      {prod.id !== 'smartfeed' && (
+                        <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:opacity-100 transition-opacity" />
+                      )}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

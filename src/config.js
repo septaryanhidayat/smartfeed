@@ -90,38 +90,38 @@ export const CONFIG = {
     {
       id: 'smartedu',
       name: 'SmartEdu',
-      category: 'AI Education Studio',
-      desc: 'Platform generator kurikulum, modul ajar, soal ujian, & materi pembelajaran cerdas.',
+      category: 'Portal Edukasi & Big Data',
+      desc: 'Platform big data pendidikan, manajemen kurikulum, modul ajar, dan sistem materi terpadu.',
       logo: '/landing/ecosystem/smartedu.jpg',
-      url: 'https://smartedu.berandadigital.net',
-      badge: 'Pendidikan'
+      url: 'https://bigdata.sitrobbani.sch.id/',
+      badge: 'Edukasi & Data'
     },
     {
       id: 'smartnews',
       name: 'SmartNews',
-      category: 'AI Journalism & Redaksi',
-      desc: 'Suite redaksi media berita 5W+1H, breaking news card, fact-check hoaks, & SEO portal.',
+      category: 'Portal Berita Online',
+      desc: 'Portal media berita online modern, menyajikan ragam informasi terkini, aktual, dan terpercaya.',
       logo: '/landing/ecosystem/smartnews.jpg',
       url: 'https://smartnews.berandadigital.net',
-      badge: 'Jurnalisme'
+      badge: 'Portal Berita'
     },
     {
       id: 'smartsdm',
       name: 'SmartSDM',
-      category: 'AI HR & People Ops',
-      desc: 'Manajemen talenta cerdas, penilaian KPI, SOP perusahaan, & rekrutmen SDM otomatis.',
+      category: 'Manajemen SDM & Talenta',
+      desc: 'Sistem manajemen talenta cerdas, penilaian KPI, SOP perusahaan, & otomasi pengelolaan SDM.',
       logo: '/landing/ecosystem/smartsdm.jpg',
-      url: 'https://smartsdm.berandadigital.net',
-      badge: 'HR & Talenta'
+      url: '',
+      badge: 'Segera Hadir'
     },
     {
       id: 'smartsynth',
       name: 'SmartSynth',
-      category: 'AI Audio & Voiceover',
-      desc: 'Studio sintesis suara AI natural, voiceover iklan komersial, & generator audio narasi.',
+      category: 'Fact Check & Metadata AI',
+      desc: 'Platform verifikasi keaslian konten digital, deteksi hoaks, audit metadata foto/video, dan analisis rekayasa AI.',
       logo: '/landing/ecosystem/smartsynth.png',
-      url: 'https://smartsynth.berandadigital.net',
-      badge: 'Audio & VO'
+      url: '',
+      badge: 'Segera Hadir'
     },
   ],
 
