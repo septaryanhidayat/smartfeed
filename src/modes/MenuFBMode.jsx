@@ -6,6 +6,7 @@ import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
 import ColorSwatch from '../components/ColorSwatch.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   RATIOS, LAYOUT_STYLES, BUSINESS_TYPES, DESIGN_THEMES,
   PALETTE_PRESETS, TYPOGRAPHY_STYLES, MOODS, PHOTO_STYLES, PAGE_COUNTS,
@@ -102,7 +103,23 @@ export default function MenuFBMode({ state, dispatch }) {
       />
 
       {/* SECTION A — Brand Info */}
-      <Section num="A" title="Informasi Brand & Bisnis" icon={Store}>
+      <Section num="A" title="Informasi Brand, Bisnis & Foto Menu" icon={Store}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Menu / Makanan Unggulan (Opsional)"
+            value={state.imagePreview || state.menuPhoto}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto sajian menu untuk dijadikan acuan visual fotografi makanan pada poster menu."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Nama Brand / Resto" value={state.brand} onChange={set('brand')} required placeholder="Cherryelle Patisserie" />
           <SelectField label="Tipe Bisnis" value={state.businessType} onChange={set('businessType')} options={BUSINESS_TYPES} />

@@ -4,6 +4,7 @@ import TextField from '../components/TextField.jsx';
 import SelectField from '../components/SelectField.jsx';
 import SelectOrCustom from '../components/SelectOrCustom.jsx';
 import ColorSwatch from '../components/ColorSwatch.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   TYPO_DNA, TYPO_ENERGY, CHARACTERS, TYPO_POSES, LAYOUTS, INTENSITIES, WEIGHTS, BACKGROUNDS, RATIOS,
 } from '../data/typographyOptions.js';
@@ -14,8 +15,22 @@ export default function TypographyMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="A" title="Typography Core" icon={Box}>
+      <Section num="A" title="Typography Core & Foto Subjek" icon={Box}>
         <div className="space-y-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk / Karakter (Opsional)"
+            value={state.imagePreview || state.subjectPhoto}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk atau karakter untuk digabungkan dengan desain tipografi."
+          />
           <TextField label="Typography Hook" value={state.hook} onChange={set('hook')} required
             placeholder="VISUAL YANG MENJUAL" counter />
           <div className="grid sm:grid-cols-2 gap-3">

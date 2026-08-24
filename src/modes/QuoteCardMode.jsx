@@ -3,6 +3,7 @@ import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import { PORTRAIT_STYLES, QUOTE_CONTEXTS, QUOTE_LIGHTINGS } from '../prompts/buildQuoteCard.js';
 import { NEWS_RATIOS } from '../prompts/buildNewsCard.js';
 
@@ -70,7 +71,23 @@ export default function QuoteCardMode({ state, dispatch }) {
         </div>
       </Section>
 
-      <Section num="C" title="Gaya Visual Potret Tokoh" icon={Camera}>
+      <Section num="C" title="Gaya Visual Potret Tokoh & Foto" icon={Camera}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Tokoh / Narasumber (Opsional)"
+            value={state.imagePreview || state.sourcePhoto}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto portrait narasumber/tokoh untuk dijadikan acuan visual pada kartu kutipan."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <SelectField
             label="Gaya Potret Editorial"

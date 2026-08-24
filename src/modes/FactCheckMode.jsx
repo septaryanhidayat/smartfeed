@@ -7,6 +7,7 @@ import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import { VERDICT_STATUSES, FACT_CHECK_THEMES } from '../prompts/buildFactCheck.js';
 import { NEWS_RATIOS } from '../prompts/buildNewsCard.js';
 import { showAlert } from '../utils/alerts.js';
@@ -216,11 +217,27 @@ export default function FactCheckMode({ state, dispatch }) {
           />
         </div>
         <div className="mt-3">
+          <ImageUploadField
+            label="Pilih File Tangkapan Layar Hoaks / Bukti Foto (Opsional)"
+            value={state.imagePreview || state.hoaxPhoto}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload screenshot postingan medsos hoaks atau foto bukti klarifikasi."
+          />
+        </div>
+        <div className="mt-3">
           <TextField
-            label="Foto Pelengkap / Tangkapan Bukti (Opsional)"
+            label="Keterangan Foto Pelengkap / Catatan Bukti (Opsional)"
             value={state.supportingPhoto}
             onChange={set('supportingPhoto')}
-            placeholder="Contoh: Tangkapan layar postingan medsos"
+            placeholder="Contoh: Tangkapan layar postingan medsos viral dengan cap hoaks"
           />
         </div>
       </Section>

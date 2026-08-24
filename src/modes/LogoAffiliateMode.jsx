@@ -6,6 +6,7 @@ import SelectField from '../components/SelectField.jsx';
 import SelectOrCustom from '../components/SelectOrCustom.jsx';
 import SegmentedField from '../components/SegmentedField.jsx';
 import CustomColorPicker from '../components/CustomColorPicker.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   LOGO_BRAND_CATEGORIES, LOGO_TYPES, LOGO_PERSONALITIES, LOGO_COLOR_PALETTES,
   LOGO_TYPOGRAPHY, LOGO_ICON_CONCEPTS, LOGO_LAYOUTS, LOGO_BACKGROUNDS, LOGO_USAGES,
@@ -36,6 +37,22 @@ export default function LogoAffiliateMode({ state, dispatch }) {
             ? 'Mockup: tempel logo yang SUDAH ada ke produk/merch. Siapkan file logomu sesuai langkah di video tutorial.'
             : 'Logo: generate logo baru dari nol.'}
         />
+        <div className="mt-3">
+          <ImageUploadField
+            label={isMockup ? "Pilih File Logo / Brand Asset (PNG Transparan Disarankan)" : "Pilih File Sketsa / Referensi Logo (Opsional)"}
+            value={state.imagePreview || state.logo_file}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint={isMockup ? "Upload file logo Anda untuk ditempelkan ke mock up produk." : "Upload sketsa atau contoh logo referensi yang Anda sukai."}
+          />
+        </div>
       </Section>
 
       {/* SHARED — Brand Identity */}

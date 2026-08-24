@@ -18,6 +18,7 @@ import {
 } from '../data/presentationOptions.js';
 import { buildPresentation, INITIAL_PRESENTATION } from '../prompts/buildPresentation.js';
 import PresentationDemoModal from '../components/PresentationDemoModal.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 
 export default function PresentationMode({ state, onChangeField, onSetState }) {
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
@@ -248,6 +249,24 @@ export default function PresentationMode({ state, onChangeField, onSetState }) {
             </div>
 
             <div className="space-y-4">
+              {/* Foto / Brand Asset Referensi */}
+              <div>
+                <ImageUploadField
+                  label="Pilih File Foto Subjek / Logo / Referensi Slide (Opsional)"
+                  value={state?.imagePreview || state?.presentationPhoto}
+                  fileName={state?.imageName}
+                  onChange={(preview, file, name) => {
+                    onChangeField && onChangeField('imagePreview', preview);
+                    onChangeField && onChangeField('imageName', name);
+                  }}
+                  onRemove={() => {
+                    onChangeField && onChangeField('imagePreview', '');
+                    onChangeField && onChangeField('imageName', '');
+                  }}
+                  hint="Upload foto pembicara, logo brand, atau gambar produk untuk acuan visual slide presentasi."
+                />
+              </div>
+
               {/* 1. Judul / Topik */}
               <div>
                 <label className="block text-xs font-bold text-text mb-1.5">

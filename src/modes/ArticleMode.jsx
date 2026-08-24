@@ -6,6 +6,7 @@ import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   ARTICLE_FORMATS, ARTICLE_RUBRICS, TARGET_MEDIA,
   ARTICLE_TONES, ARTICLE_LENGTHS
@@ -17,7 +18,23 @@ export default function ArticleMode({ state, dispatch }) {
   return (
     <div className="space-y-4 animate-fade-in">
       {/* 1. Informasi Dasar & Rubrik */}
-      <Section num="1" title="Topik & Rubrik Berita" icon={Newspaper}>
+      <Section num="1" title="Topik, Rubrik & Foto Berita" icon={Newspaper}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Liputan / Dokumen Terkait (Opsional)"
+            value={state.imagePreview || state.articlePhoto}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto liputan berita, rilis pers, atau dokumen pendukung artikel."
+          />
+        </div>
         <TextField
           label="Judul Utama / Topik Berita"
           value={state.headline}

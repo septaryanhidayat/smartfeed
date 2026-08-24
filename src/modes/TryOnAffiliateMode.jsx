@@ -2,6 +2,7 @@ import { Shirt, User, Camera, Sun } from 'lucide-react';
 import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
 import SelectOrCustom from '../components/SelectOrCustom.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   TRYON_PRODUCT_CATEGORIES, TRYON_MODES, TRYON_CHARACTER_PERSONAS, TRYON_BODY_SHOTS,
   TRYON_POSES, TRYON_BACKGROUNDS, TRYON_CAMERA_ANGLES, TRYON_LIGHTING,
@@ -13,7 +14,23 @@ export default function TryOnAffiliateMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="1" title="Product Info" icon={Shirt}>
+      <Section num="1" title="Product Info & Foto Referensi" icon={Shirt}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk (Referensi Try-On)"
+            value={state.imagePreview || state.product_image}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk fashion/pakaian untuk dijadikan acuan model virtual AI."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Product Name" value={state.product_name} onChange={set('product_name')} placeholder="Crop Tee Linen Premium" required />
           <SelectOrCustom label="Product Category" value={state.product_category} onChange={set('product_category')} options={TRYON_PRODUCT_CATEGORIES} />

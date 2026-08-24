@@ -7,6 +7,7 @@ import SelectOrCustom from '../components/SelectOrCustom.jsx';
 import ColorSwatch from '../components/ColorSwatch.jsx';
 import ColorField from '../components/ColorField.jsx';
 import ToggleField from '../components/ToggleField.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   TEMPLATE_TYPES, SLIDE_PRESETS, VISUAL_STYLES, TONE_OPTIONS,
   PLATFORMS, RATIOS, COLOR_MOODS, COVER_LAYOUTS,
@@ -41,7 +42,23 @@ export default function CarouselMode({ state, dispatch }) {
 
       {/* TEMPLATE NEWS — cukup isi beritanya saja */}
       {isNews ? (
-        <Section num="B" title="Isi Berita" icon={Newspaper} badge="Cukup isi ini">
+        <Section num="B" title="Isi Berita & Foto" icon={Newspaper} badge="Cukup isi ini">
+          <div className="mb-3">
+            <ImageUploadField
+              label="Pilih File Foto Berita / Peristiwa (Opsional)"
+              value={state.imagePreview || state.newsImage}
+              fileName={state.imageName}
+              onChange={(preview, file, name) => {
+                dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+                dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+              }}
+              onRemove={() => {
+                dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+                dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+              }}
+              hint="Upload foto kejadian/peristiwa untuk dijadikan gambar cover slide berita."
+            />
+          </div>
           <p className="text-[11px] text-text-dim mb-3">
             Tempel teks berita lengkap. Sistem otomatis memecahnya jadi cover headline,
             ringkasan, fakta-fakta, sampai slide sumber/follow, sesuai jumlah slide yang dipilih.
@@ -98,7 +115,23 @@ export default function CarouselMode({ state, dispatch }) {
         </Section>
       ) : (
       <>
-      <Section num="B" title="Informasi Brand & Produk" icon={Box}>
+      <Section num="B" title="Informasi Brand, Produk & Foto" icon={Box}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk / Subjek (Opsional)"
+            value={state.imagePreview || state.productImage}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk/subjek untuk dijadikan acuan konten slide carousel."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Nama Brand"  value={state.brandName}   onChange={set('brandName')}   required placeholder="AuraSkin" />
           <TextField label="Nama Produk / Konten" value={state.productName} onChange={set('productName')} required placeholder="Glow Serum" />

@@ -3,6 +3,7 @@ import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectOrCustom from '../components/SelectOrCustom.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   SB_CATEGORIES, SB_TARGET_AUDIENCES, SB_PLATFORMS, SB_DURATIONS, SB_TYPES,
   SB_HOOK_STYLES, SB_SELLING_INTENSITY, SB_VISUAL_STYLES, SB_CREATOR_PERSONAS,
@@ -14,9 +15,22 @@ export default function StoryboardAffiliateMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="1" title="Produk" icon={Film}>
-        <div className="mb-3 text-[11px] text-text-dim p-2 rounded bg-bg-elev/40 border border-border">
-          💡 Output = <span className="text-accent">konsep storyboard</span>. Produk dijaga sama persis, scene-by-scene otomatis. Ikuti video tutorial untuk memakainya.
+      <Section num="1" title="Produk & Foto Referensi" icon={Film}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk (Referensi Storyboard)"
+            value={state.imagePreview || state.product_image}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk untuk dijadikan acuan visual shot list scene-by-scene video."
+          />
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Product Name (opsional)" value={state.product_name} onChange={set('product_name')} placeholder="Mini Leather Tote" />

@@ -7,6 +7,7 @@ import SelectField from '../components/SelectField.jsx';
 import FeatureChipsField from '../components/FeatureChipsField.jsx';
 import ColorSwatch from '../components/ColorSwatch.jsx';
 import ReferenceModal from '../components/ReferenceModal.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   IMAGE_COUNTS, POSITIONS, STYLES, LIGHTINGS, RATIOS,
 } from '../data/bannerOptions.js';
@@ -19,7 +20,23 @@ export default function BannerMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="A" title="Informasi Brand & Produk" icon={Box}>
+      <Section num="A" title="Informasi Brand & Foto Produk" icon={Box}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk / Referensi Visual (Opsional)"
+            value={state.imagePreview || state.product_image}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk untuk dijadikan acuan penempatan hero visual pada feed."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Nama Brand"    value={state.brand}    onChange={set('brand')}    required placeholder="AuraSkin" />
           <TextField label="Judul Utama"   value={state.headline} onChange={set('headline')} required placeholder="Sunscreen Ringan Tanpa Whitecast" />

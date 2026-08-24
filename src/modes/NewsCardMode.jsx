@@ -3,6 +3,7 @@ import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import { NEWS_BADGES, NEWS_RUBRICS, PHOTO_STYLES, PHOTO_LIGHTINGS, NEWS_RATIOS } from '../prompts/buildNewsCard.js';
 
 export default function NewsCardMode({ state, dispatch }) {
@@ -77,6 +78,22 @@ export default function NewsCardMode({ state, dispatch }) {
       </Section>
 
       <Section num="C" title="Arahan Foto Jurnalistik (Visual Scene)" icon={Camera}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Bukti / Adegan Berita (Opsional)"
+            value={state.imagePreview || state.newsPhoto}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto bukti, narasumber, atau tempat kejadian untuk dijadikan acuan visual kartu berita."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <SelectField
             label="Gaya Fotografi Jurnalistik"
@@ -104,7 +121,7 @@ export default function NewsCardMode({ state, dispatch }) {
 
         <div className="mt-3">
           <TextField
-            label="Foto Pelengkap / Bukti Tambahan (Opsional)"
+            label="Foto Pelengkap / Keterangan Tambahan (Opsional)"
             value={state.supportingPhoto}
             onChange={set('supportingPhoto')}
             placeholder="Contoh: Inset tumpukan berkas dokumen bukti sitaan dan map berkas perkara bermaterai"

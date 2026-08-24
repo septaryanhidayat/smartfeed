@@ -5,6 +5,7 @@ import TextField from '../components/TextField.jsx';
 import SegmentedField from '../components/SegmentedField.jsx';
 import CheckboxGroupField from '../components/CheckboxGroupField.jsx';
 import ToggleField from '../components/ToggleField.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   SUB_TYPES, SUBTYPE_DESC, AESTHETIC_DEFAULT_BY_SUBTYPE,
   AESTHETICS, BACKGROUND_TONES, TYPOGRAPHY_STYLES, COLOR_MOODS,
@@ -41,7 +42,7 @@ export default function FaceCardMode({ state, dispatch }) {
   return (
     <div className="space-y-3">
       {/* SECTION A — Sub-type selector */}
-      <Section num="A" title="Pilih Tipe Analysis" icon={ScanFace}>
+      <Section num="A" title="Pilih Tipe Analysis & Foto" icon={ScanFace}>
         <SegmentedField
           value={state.subType}
           onChange={onSubTypeChange}
@@ -50,6 +51,22 @@ export default function FaceCardMode({ state, dispatch }) {
         {activeSubDesc && (
           <p className="mt-2.5 text-[11px] text-text-mut leading-relaxed">{activeSubDesc}</p>
         )}
+        <div className="mt-3 pt-3 border-t border-border/60">
+          <ImageUploadField
+            label="Pilih File Foto Wajah / Portrait (Opsional)"
+            value={state.imagePreview || state.portrait_image}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto portrait/selfie wajah untuk acuan analisis fitur wajah, skin undertone, dan gaya makeup."
+          />
+        </div>
       </Section>
 
       {/* SECTION B — Style Direction (common) */}

@@ -5,6 +5,7 @@ import TextField from '../components/TextField.jsx';
 import SelectField from '../components/SelectField.jsx';
 import ColorSwatch from '../components/ColorSwatch.jsx';
 import ReferenceModal from '../components/ReferenceModal.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   THUMB_STYLES, MOODS, STYLES, LIGHTINGS, RATIOS,
 } from '../data/thumbnailOptions.js';
@@ -18,8 +19,22 @@ export default function ThumbnailMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="A" title="Video Core" icon={Video}>
+      <Section num="A" title="Video Core & Foto Subjek" icon={Video}>
         <div className="space-y-3">
+          <ImageUploadField
+            label="Pilih File Foto Subjek / Wajah / Produk (Opsional)"
+            value={state.imagePreview || state.subjectPhoto}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto ekspresi wajah narasumber atau produk untuk ditempatkan pada thumbnail."
+          />
           <TextField label="Judul Video" value={state.title} onChange={set('title')} required
             placeholder="Sunscreen Ringan Tanpa Whitecast" />
           <div className="grid sm:grid-cols-2 gap-3">

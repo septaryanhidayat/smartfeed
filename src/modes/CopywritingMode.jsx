@@ -3,6 +3,7 @@ import Section from '../components/Section.jsx';
 import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   OBJECTIVES, PLATFORMS, WRITING_STYLES, GREETINGS,
 } from '../data/copywritingOptions.js';
@@ -12,13 +13,29 @@ export default function CopywritingMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="1" title="Konteks Bisnis" icon={Briefcase}>
+      <Section num="1" title="Konteks Bisnis & Foto Produk" icon={Briefcase}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk / Materi Iklan (Opsional)"
+            value={state.imagePreview || state.product_image}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk untuk membantu acuan penulisan angle copywriting yang spesifik."
+          />
+        </div>
         <TextareaField
           label="Ringkasan Produk / Penawaran"
           value={state.summary}
           onChange={set('summary')}
           placeholder="Contoh: Sepatu lari ultra ringan dengan teknologi sol empuk, diskon 50% khusus hari ini..."
-          rows={4}
+          rows={3}
         />
         <div className="grid sm:grid-cols-2 gap-3 mt-3">
           <TextField

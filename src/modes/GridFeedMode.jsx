@@ -6,6 +6,7 @@ import TextareaField from '../components/TextareaField.jsx';
 import SelectField from '../components/SelectField.jsx';
 import ColorSwatch from '../components/ColorSwatch.jsx';
 import GridFeedTutorial from '../components/GridFeedTutorial.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import { CONFIG } from '../config.js';
 import { GOALS, VISUAL_STYLES_GRID } from '../data/gridFeedOptions.js';
 
@@ -52,7 +53,23 @@ export default function GridFeedMode({ state, dispatch }) {
 
       <GridFeedTutorial open={animOpen} onClose={() => setAnimOpen(false)} />
 
-      <Section num="A" title="Brand & Produk" icon={Box}>
+      <Section num="A" title="Brand, Produk & Foto" icon={Box}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk (Referensi 9 Feed)"
+            value={state.imagePreview || state.productImage}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk untuk dijadikan acuan visual 9 feed yang serasi dan konsisten."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Nama Brand"  value={state.brandName}  onChange={set('brandName')}  required placeholder="POPO" />
           <TextField label="Username Instagram" value={state.username} onChange={set('username')} placeholder="@popoofficial" />

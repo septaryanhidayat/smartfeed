@@ -7,6 +7,7 @@ import SelectOrCustom from '../components/SelectOrCustom.jsx';
 import ToggleField from '../components/ToggleField.jsx';
 import CheckboxGroupField from '../components/CheckboxGroupField.jsx';
 import CustomColorPicker from '../components/CustomColorPicker.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   RVB_CATEGORIES, RVB_TARGET_AUDIENCES, RVB_PRICE_POSITIONING, RVB_MAIN_PLATFORMS,
   RVB_FRAMEWORKS, RVB_HEADLINE_STYLES, RVB_HEADLINE_EXAMPLES, RVB_HEADLINE_PLACEMENTS,
@@ -28,9 +29,22 @@ export default function ReviewAffiliateMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="1" title="Produk" icon={Star}>
-        <div className="mb-3 text-[11px] text-text-dim p-2 rounded bg-bg-elev/40 border border-border">
-          💡 Output = <span className="text-accent">konsep banner review</span>. Produk dijaga sama persis, ikuti video tutorial untuk hasilkan visualnya.
+      <Section num="1" title="Produk & Foto Referensi" icon={Star}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk Asli (Hero Image)"
+            value={state.imagePreview || state.product_image}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk asli yang akan menjadi elemen visual utama (hero) pada banner review."
+          />
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Product Name" value={state.product_name} onChange={set('product_name')} placeholder="Mini Leather Tote" required />

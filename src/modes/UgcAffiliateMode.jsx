@@ -5,6 +5,7 @@ import TextField from '../components/TextField.jsx';
 import TextareaField from '../components/TextareaField.jsx';
 import SelectOrCustom from '../components/SelectOrCustom.jsx';
 import ReferenceModal from '../components/ReferenceModal.jsx';
+import ImageUploadField from '../components/ImageUploadField.jsx';
 import {
   UGC_STYLES, UGC_CREATOR_PERSONAS, UGC_ENERGIES, UGC_HOOKS, UGC_DURATIONS,
   UGC_CAMERA_STYLES, UGC_LOCATIONS, UGC_PRODUCT_DEMOS, UGC_EMOTIONS,
@@ -20,7 +21,23 @@ export default function UgcAffiliateMode({ state, dispatch }) {
 
   return (
     <div className="space-y-3">
-      <Section num="1" title="Product Context" icon={Video}>
+      <Section num="1" title="Product Context & Foto" icon={Video}>
+        <div className="mb-3">
+          <ImageUploadField
+            label="Pilih File Foto Produk / Kreator UGC (Opsional)"
+            value={state.imagePreview || state.product_image}
+            fileName={state.imageName}
+            onChange={(preview, file, name) => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: preview });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: name });
+            }}
+            onRemove={() => {
+              dispatch({ type: 'SET_FIELD', field: 'imagePreview', value: '' });
+              dispatch({ type: 'SET_FIELD', field: 'imageName', value: '' });
+            }}
+            hint="Upload foto produk atau talenta UGC untuk acuan visual naskah video & shot list."
+          />
+        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           <TextField label="Product Name" value={state.product_name} onChange={set('product_name')} placeholder="Serum Brightening Glow" required />
           <SelectOrCustom label="Product Category" value={state.product_category} onChange={set('product_category')} options={LOGO_BRAND_CATEGORIES} />
