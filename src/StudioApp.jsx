@@ -41,9 +41,12 @@ import VideoScriptMode from './modes/VideoScriptMode.jsx';
 import ImageSlicerMode from './modes/ImageSlicerMode.jsx';
 import PresentationMode from './modes/PresentationMode.jsx';
 import ForensicMode from './modes/ForensicMode.jsx';
+import FlyerBannerMode from './modes/FlyerBannerMode.jsx';
 import VideoScriptDemoModal from './components/VideoScriptDemoModal.jsx';
 import PresentationDemoModal from './components/PresentationDemoModal.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
+import { buildFlyerBanner } from './prompts/buildFlyerBanner.js';
+import { INITIAL_FLYER_BANNER } from './data/flyerBannerOptions.js';
 import { generateCarouselPrompts, INITIAL_CAROUSEL } from './prompts/buildCarousel.js';
 import { buildGridFeed, INITIAL_GRIDFEED } from './prompts/buildGridFeed.js';
 import { buildThumbnail, INITIAL_THUMBNAIL } from './prompts/buildThumbnail.js';
@@ -75,6 +78,7 @@ function modeReducer(state, action) {
 
 const TITLES = {
   banner:      { name: 'Design Feeds', desc: 'Isi detail produk untuk menghasilkan desain feed profesional siap pakai.' },
+  flyerbanner: { name: 'Spanduk, Flyer & Banner', desc: 'Desain spanduk horizontal, backdrop panggung, flyer brosur A4 & X-banner berbagai varian ukuran.' },
   carousel:    { name: 'Carousel Feeds', desc: 'Pilih tipe template carousel & jumlah slide, sistem menyusun story flow, objektif tiap slide, dan variasi layout jadi satu rangkaian konten.' },
   gridfeed:    { name: '9 Feed Konsisten', desc: 'Isi info produk → sistem susun konsep 9 feed konsisten satu campaign, tiap feed beda peran (hero, fitur, harga, testimoni, CTA, dll). Ikuti video tutorial untuk hasilkan visualnya.' },
   imageslicer: { name: 'Grid & Image Slicer', desc: 'Potong otomatis gambar 9-Grid Instagram atau Carousel, preview garis potong interaktif, dan download semua potongan dalam file ZIP.' },
@@ -97,7 +101,7 @@ const TITLES = {
 };
 
 const HAS_MOCKUP = {
-  banner: true, carousel: true, gridfeed: true, imageslicer: false, forensic: false, videoscript: true, presentation: false,
+  banner: true, flyerbanner: true, carousel: true, gridfeed: true, imageslicer: false, forensic: false, videoscript: true, presentation: false,
   thumbnail: true, typography: true, copywriting: true, facecard: false, menufb: false, article: true,
   newscard: true, quotecard: true, factcheck: true,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
@@ -137,6 +141,7 @@ function AuthedApp() {
   };
 
   const [banner, dispatchBanner]           = useReducer(modeReducer, INITIAL_BANNER);
+  const [flyerBanner, dispatchFlyerBanner] = useReducer(modeReducer, INITIAL_FLYER_BANNER);
   const [carousel, dispatchCarousel]       = useReducer(modeReducer, INITIAL_CAROUSEL);
   const [gridfeed, dispatchGridfeed]       = useReducer(modeReducer, INITIAL_GRIDFEED);
   const [thumbnail, dispatchThumbnail]     = useReducer(modeReducer, INITIAL_THUMBNAIL);
@@ -157,6 +162,7 @@ function AuthedApp() {
 
   const activeState =
     mode === 'banner'              ? banner :
+    mode === 'flyerbanner'         ? flyerBanner :
     mode === 'carousel'            ? carousel :
     mode === 'gridfeed'            ? gridfeed :
     mode === 'videoscript'         ? videoScript :
@@ -178,6 +184,7 @@ function AuthedApp() {
 
   const prompt = useMemo(() => {
     if (mode === 'banner')              return buildBanner(deferredState);
+    if (mode === 'flyerbanner')         return buildFlyerBanner(deferredState);
     if (mode === 'carousel')            return generateCarouselPrompts(deferredState);
     if (mode === 'gridfeed')            return buildGridFeed(deferredState);
     if (mode === 'videoscript')         return buildVideoScript(deferredState);
@@ -203,6 +210,7 @@ function AuthedApp() {
 
   const promptLabel = (() => {
     if (mode === 'banner')      return activeState.brand || activeState.headline || 'Banner Prompt';
+    if (mode === 'flyerbanner') return activeState.title || activeState.institution || 'Spanduk & Flyer';
     if (mode === 'carousel') {
       if (activeState.templateType === 'news') {
         const twoWords = (activeState.newsContent || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).join(' ');
@@ -356,7 +364,7 @@ function AuthedApp() {
     }
 
     // All affiliate, journalism, and video script modes return string/object format.
-    const TEXT_MODES = ['gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate', 'article', 'newscard', 'quotecard', 'factcheck', 'videoscript'];
+    const TEXT_MODES = ['flyerbanner', 'gridfeed', 'thumbnail', 'copywriting', 'logoaffiliate', 'tryonaffiliate', 'reviewaffiliate', 'storyboardaffiliate', 'article', 'newscard', 'quotecard', 'factcheck', 'videoscript'];
     const text = mode === 'carousel'
       ? (Array.isArray(prompt) ? prompt : []).map((s) => `=== ${s.slideTitle} | Layout: ${s.layout} ===\n${s.prompt}`).join('\n\n\n')
       : ['newscard', 'quotecard', 'factcheck'].includes(mode)
@@ -393,6 +401,7 @@ function AuthedApp() {
     // versions have default values, preventing crashes on old history entries.
     const safe = (initial, snap) => ({ ...initial, ...(snap || {}) });
     if (entry.mode === 'banner')           dispatchBanner({ type: 'RESET_TO', state: safe(INITIAL_BANNER, entry.snapshot) });
+    else if (entry.mode === 'flyerbanner') dispatchFlyerBanner({ type: 'RESET_TO', state: safe(INITIAL_FLYER_BANNER, entry.snapshot) });
     else if (entry.mode === 'carousel')    dispatchCarousel({ type: 'RESET_TO', state: safe(INITIAL_CAROUSEL, entry.snapshot) });
     else if (entry.mode === 'gridfeed')    dispatchGridfeed({ type: 'RESET_TO', state: safe(INITIAL_GRIDFEED, entry.snapshot) });
     else if (entry.mode === 'thumbnail')   dispatchThumbnail({ type: 'RESET_TO', state: safe(INITIAL_THUMBNAIL, entry.snapshot) });
@@ -520,6 +529,7 @@ function AuthedApp() {
                   <p className="text-xs text-text-mut mt-1">{t.desc}</p>
                 </div>
                 {mode === 'banner'              && <BannerMode              state={banner}        dispatch={dispatchBanner} />}
+                {mode === 'flyerbanner'         && <FlyerBannerMode         state={flyerBanner}   dispatch={dispatchFlyerBanner} />}
                 {mode === 'carousel'            && <CarouselMode            state={carousel}      dispatch={dispatchCarousel} />}
                 {mode === 'gridfeed'            && <GridFeedMode            state={gridfeed}      dispatch={dispatchGridfeed} />}
                 {mode === 'thumbnail'           && <ThumbnailMode           state={thumbnail}     dispatch={dispatchThumbnail} />}

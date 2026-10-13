@@ -1,0 +1,318 @@
+/**
+ * Options, presets, and metadata for Flyer, Banner & Spanduk Module
+ * Supports multiple size variants: Flyer (A4, A5, 4:5, 9:16), Spanduk (3x1, 4x1, 5x1, 2x1),
+ * Backdrop (16:9, 3:1), X-Banner / Roll-Up (60x160, 80x200), and Baliho (2:1, 3:2).
+ */
+
+export const FORMAT_TYPES = [
+  { value: 'spanduk', label: 'Spanduk Horizontal & Pagar (Outdoor)', icon: 'Flag' },
+  { value: 'backdrop', label: 'Backdrop Panggung & Acara (Indoor/Outdoor)', icon: 'Presentation' },
+  { value: 'flyer', label: 'Flyer & Brosur (Cetak & Digital)', icon: 'FileText' },
+  { value: 'xbanner', label: 'X-Banner & Roll-Up Stand Banner', icon: 'Columns' },
+  { value: 'baliho', label: 'Baliho & Billboard Raksasa Kota', icon: 'Maximize2' },
+  { value: 'webbanner', label: 'Web Header & Cover Media Sosial', icon: 'Laptop' },
+];
+
+export const SIZE_VARIANTS = [
+  // SPANDUK
+  { id: 'spanduk_3x1', category: 'spanduk', name: 'Spanduk Standar 3x1 Meter', ratio: '3:1', dims: '300 x 100 cm', desc: 'Ukuran paling populer untuk pagar jalan, gapura, dan depan gedung', aspectWidth: 3, aspectHeight: 1 },
+  { id: 'spanduk_4x1', category: 'spanduk', name: 'Spanduk Panjang 4x1 Meter', ratio: '4:1', dims: '400 x 100 cm', desc: 'Rentang jalan raya, dinding aula panjang, dan jembatan penyeberangan', aspectWidth: 4, aspectHeight: 1 },
+  { id: 'spanduk_5x1', category: 'spanduk', name: 'Spanduk Lebar 5x1 Meter', ratio: '5:1', dims: '500 x 100 cm', desc: 'Pagar utama lembaga, frontage gerbang besar, dan publikasi jalan protokol', aspectWidth: 5, aspectHeight: 1 },
+  { id: 'spanduk_mini_2x1', category: 'spanduk', name: 'Spanduk Mini / Tenda 2x1 Meter', ratio: '2:1', dims: '200 x 100 cm', desc: 'Posko pendaftaran, tenda bazar, stand pameran, plang nama sementara', aspectWidth: 2, aspectHeight: 1 },
+
+  // BACKDROP PANGGUNG
+  { id: 'backdrop_16x9', category: 'backdrop', name: 'Backdrop Panggung 16:9 (4x2.25 m)', ratio: '16:9', dims: '400 x 225 cm', desc: 'Panggung seminar, wisuda santri, aula pertemuan, dan webinar hybrid', aspectWidth: 16, aspectHeight: 9 },
+  { id: 'backdrop_mega_3x1', category: 'backdrop', name: 'Backdrop Panggung Mega 3:1 (6x2 m)', ratio: '3:1', dims: '600 x 200 cm', desc: 'Panggung akbar tabligh, haflah akhirussanah, dan aula berukuran besar', aspectWidth: 3, aspectHeight: 1 },
+  { id: 'backdrop_panoramic_4x1', category: 'backdrop', name: 'Backdrop Panoramic 4x1 (8x2 m)', ratio: '4:1', dims: '800 x 200 cm', desc: 'Panggung utama ballroom hotel dan gedung serbaguna luas', aspectWidth: 4, aspectHeight: 1 },
+
+  // FLYER & BROSUR
+  { id: 'flyer_a4', category: 'flyer', name: 'Flyer / Brosur A4 (21 x 29.7 cm)', ratio: '1:1.41', dims: '210 x 297 mm', desc: 'Standar cetak brosur Penerimaan Santri Baru (PSB), profil lembaga & kurikulum', aspectWidth: 1, aspectHeight: 1.414 },
+  { id: 'flyer_a5', category: 'flyer', name: 'Flyer / Selebaran A5 (14.8 x 21 cm)', ratio: '1:1.41', dims: '148 x 210 mm', desc: 'Selebaran praktis hemat biaya, undangan tabligh akbar, pamflet infaq', aspectWidth: 1, aspectHeight: 1.414 },
+  { id: 'flyer_ig_feed', category: 'flyer', name: 'Flyer Digital Instagram Feed 4:5', ratio: '4:5', dims: '1080 x 1350 px', desc: 'Format poster medsos vertikal dengan ruang baca luas di layar HP', aspectWidth: 4, aspectHeight: 5 },
+  { id: 'flyer_wa_story', category: 'flyer', name: 'Flyer Digital Story / Reels / WA 9:16', ratio: '9:16', dims: '1080 x 1920 px', desc: 'Format layar penuh untuk Status WhatsApp, IG Story, TikTok & Reels', aspectWidth: 9, aspectHeight: 16 },
+
+  // X-BANNER / ROLL-UP
+  { id: 'xbanner_60x160', category: 'xbanner', name: 'Roll-Up / X-Banner Standar (60 x 160 cm)', ratio: '1:2.67', dims: '60 x 160 cm', desc: 'Stand pintu masuk masjid, lobby aula, ruang sekretariat, meja tamu', aspectWidth: 1, aspectHeight: 2.67 },
+  { id: 'xbanner_80x200', category: 'xbanner', name: 'Roll-Up / X-Banner Jumbo (80 x 200 cm)', ratio: '1:2.5', dims: '80 x 200 cm', desc: 'Stand expo pendidikan, gerbang kedatangan tamu kehormatan, hall utama', aspectWidth: 1, aspectHeight: 2.5 },
+  { id: 'xbanner_mini_table', category: 'xbanner', name: 'Mini X-Banner Meja A3 (30 x 42 cm)', ratio: '1:1.41', dims: '30 x 42 cm', desc: 'Meja pendaftaran, meja kasir infaq, desk penerima tamu', aspectWidth: 1, aspectHeight: 1.414 },
+
+  // BALIHO OUTDOOR
+  { id: 'baliho_4x2', category: 'baliho', name: 'Baliho Outdoor 4x2 Meter', ratio: '2:1', dims: '400 x 200 cm', desc: 'Papan tiang jalan kota, gerbang kecamatan, pertigaan jalan raya', aspectWidth: 2, aspectHeight: 1 },
+  { id: 'baliho_6x3', category: 'baliho', name: 'Billboard Protokol 6x3 Meter', ratio: '2:1', dims: '600 x 300 cm', desc: 'Papan reklame jalan provinsi, ucapan resmi bupati/kepala daerah', aspectWidth: 2, aspectHeight: 1 },
+  { id: 'baliho_6x4', category: 'baliho', name: 'Billboard Mega 6x4 Meter (3:2)', ratio: '3:2', dims: '600 x 400 cm', desc: 'Billboard vertikal tinggi pusat kabupaten/kota', aspectWidth: 3, aspectHeight: 2 },
+
+  // WEB / COVER
+  { id: 'web_cover_16x9', category: 'webbanner', name: 'Web Banner / YouTube Header 16:9', ratio: '16:9', dims: '1920 x 1080 px', desc: 'Header website lembaga, banner pengumuman web portal, cover YouTube', aspectWidth: 16, aspectHeight: 9 },
+  { id: 'fb_cover_16x6', category: 'webbanner', name: 'Facebook Fanpage Cover (16:6)', ratio: '16:6', dims: '820 x 312 px', desc: 'Sampul halaman Facebook resmi TK/TPA, majelis ta\'lim & komunitas dakwah', aspectWidth: 16, aspectHeight: 6 },
+];
+
+export const THEMES_AND_STYLES = [
+  {
+    id: 'islamic_green_gold',
+    name: 'Hijau Madinah & Emas Kemuliaan',
+    desc: 'Nuansa kubah nabawi hijau zamrud mewah dipadu ornamen arabesque emas mengkilau',
+    primary: '#065f46',
+    secondary: '#f59e0b',
+    accent: '#10b981',
+    bg: '#022c22'
+  },
+  {
+    id: 'modern_smart_blue',
+    name: 'Biru Peradaban Ogan Ilir SMART',
+    desc: 'Biru royal profesional dengan aksen cyan futuristik mencerminkan transformasi digital',
+    primary: '#1d4ed8',
+    secondary: '#06b6d4',
+    accent: '#3b82f6',
+    bg: '#0f172a'
+  },
+  {
+    id: 'warm_spiritual_gold',
+    name: 'Emas Gurun & Putih Bersih (Warm Spiritual)',
+    desc: 'Warna hangat kaligrafi emas dengan latar marmer putih bersih dan pencahayaan surgawi',
+    primary: '#b45309',
+    secondary: '#fbbf24',
+    accent: '#d97706',
+    bg: '#1c1917'
+  },
+  {
+    id: 'vibrant_santri_ceria',
+    name: 'Ceria Edukasi Santri (Ramah Anak)',
+    desc: 'Warna toska cerah, kuning ceria & jingga hangat sangat cocok untuk TK/TPA dan anak-anak',
+    primary: '#0d9488',
+    secondary: '#f59e0b',
+    accent: '#14b8a6',
+    bg: '#134e4a'
+  },
+  {
+    id: 'monochrome_formal_gov',
+    name: 'Merah Putih & Emas Kenegaraan',
+    desc: 'Gaya protokoler resmi pemda / kementerian dengan kontras tinggi dan logo resmi',
+    primary: '#b91c1c',
+    secondary: '#fbbf24',
+    accent: '#ef4444',
+    bg: '#450a0a'
+  },
+  {
+    id: 'high_contrast_outdoor',
+    name: 'Kontras Tinggi Outdoor (Mudah Dibaca Jauh)',
+    desc: 'Kombinasi kuning neon & biru dongker pekat agar teks terbaca jelas pengendara motor/mobil',
+    primary: '#1e3a8a',
+    secondary: '#facc15',
+    accent: '#eab308',
+    bg: '#172554'
+  },
+];
+
+export const PRINTING_SPECS = [
+  { value: 'outdoor_flexi_280', label: 'Flexi China 280-340 gr (Spanduk / Baliho Standar Outdoor)' },
+  { value: 'outdoor_flexi_korea_440', label: 'Flexi Korea / Jerman 440 gr (Kualitas Premium Tahan Hujan & Panas)' },
+  { value: 'indoor_albatros', label: 'Albatros + Laminasi Doff/Glossy (Roll-Up / X-Banner Mewah Indoor)' },
+  { value: 'print_artpaper_150', label: 'Art Paper 120-150 gr (Flyer / Brosur Lipat Halus)' },
+  { value: 'print_artcarton_260', label: 'Art Carton 210-260 gr (Flyer Tebal & Kartu Undangan)' },
+  { value: 'digital_highres', label: 'Digital Web / Display Screen (RGB High-Resolution 150-300 DPI)' },
+];
+
+export const FINISHING_OPTIONS = [
+  { value: 'mata_ayam_4_pojok', label: 'Ring Mata Ayam 4 Pojok (Standar Spanduk Gantung)' },
+  { value: 'mata_ayam_keliling', label: 'Ring Mata Ayam Tiap 1 Meter Keliling (Spanduk Panjang & Angin Kencang)' },
+  { value: 'kolong_bambu_kiri_kanan', label: 'Kolong Bambu Kiri & Kanan (Spanduk Rentang Jalan)' },
+  { value: 'kolong_atas_bawah', label: 'Kolong Selongsong Atas & Bawah (Banner Gantung Tiang)' },
+  { value: 'potong_pas_gambar', label: 'Potong Pas Gambar / Rata Gambar (Backdrop Panggung & X-Banner)' },
+  { value: 'potong_mesin_sisir', label: 'Potong Mesin Sisir Rapi (Brosur & Flyer Lembaran)' },
+];
+
+export const INITIAL_FLYER_BANNER = {
+  formatType: 'spanduk',
+  sizeVariant: 'spanduk_3x1',
+  title: 'PELATIHAN KEPEMIMPINAN GURU NGAJI TK/TPA',
+  subTitle: 'Urutan Membangun Peradaban: Manusia, Sistem, dan Sumber Daya Menuju Ogan Ilir SMART',
+  institution: 'DPD BKPRMI KABUPATEN OGAN ILIR',
+  themeStyle: 'islamic_green_gold',
+  eventDate: 'Rabu, 14 Oktober 2026',
+  eventTime: '08.00 WIB s.d. Selesai',
+  eventLocation: 'Aula SMA IT Raudhatul Ulum Sakatiga, Ogan Ilir',
+  speaker: 'Pemateri Ahli Manajemen Pendidikan & Tim BKPRMI',
+  contactPerson: 'Hubungi Panitia: 0812-xxxx-xxxx / 0896-9524-9089',
+  badgeText: 'GRATIS & TERBUKA UNTUK KEPALA & GURU TK/TPA',
+  callToAction: 'Daftarkan Unit TK/TPA Anda Sekarang!',
+  printingSpec: 'outdoor_flexi_korea_440',
+  finishing: 'mata_ayam_4_pojok',
+  customPrimary: '#065f46',
+  customSecondary: '#f59e0b',
+  showLogoSlot: true,
+  showQrCodeSlot: true,
+  showSpeakerPhoto: true,
+  imagePreview: '',
+  imageName: '',
+};
+
+export const FLYER_BANNER_PRESETS = [
+  {
+    id: 'preset_spanduk_pelatihan_sakatiga',
+    label: 'Spanduk Pelatihan Guru Ngaji Sakatiga (3x1 m)',
+    formatType: 'spanduk',
+    sizeVariant: 'spanduk_3x1',
+    preset: {
+      formatType: 'spanduk',
+      sizeVariant: 'spanduk_3x1',
+      title: 'PELATIHAN KEPEMIMPINAN & DAKWAH GURU NGAJI',
+      subTitle: 'Urutan Berdirinya Peradaban: Manusia > Sistem > Sumber Daya Menuju Ogan Ilir SMART',
+      institution: 'DPD BKPRMI KABUPATEN OGAN ILIR',
+      themeStyle: 'islamic_green_gold',
+      eventDate: 'Rabu, 14 Oktober 2026',
+      eventTime: '12.15 – 13.45 WIB',
+      eventLocation: 'Aula SMA IT Raudhatul Ulum Sakatiga',
+      speaker: 'Narasumber Kepemimpinan & Praktisi Syiar Digital',
+      contactPerson: 'Informasi & Konfirmasi: 0896-9524-9089',
+      badgeText: 'BEASISWA PENUH — 100% GRATIS',
+      callToAction: 'Bangkit Bersama Cetak Generasi Qurani Berkarakter',
+      printingSpec: 'outdoor_flexi_korea_440',
+      finishing: 'mata_ayam_4_pojok',
+      customPrimary: '#065f46',
+      customSecondary: '#f59e0b',
+      showLogoSlot: true,
+      showQrCodeSlot: true,
+      showSpeakerPhoto: false,
+    }
+  },
+  {
+    id: 'preset_flyer_psb_santri_baru',
+    label: 'Flyer Brosur Penerimaan Santri Baru (A4 Portrait)',
+    formatType: 'flyer',
+    sizeVariant: 'flyer_a4',
+    preset: {
+      formatType: 'flyer',
+      sizeVariant: 'flyer_a4',
+      title: 'PENERIMAAN SANTRI BARU (PSB) 2026/2027',
+      subTitle: 'Membina Generasi Penghafal Al-Qur\'an, Berakhlak Mulia & Siap Menghadapi Era Digital',
+      institution: 'TK/TPA & RUMAH TAHFIDZ AL-IKHLAS',
+      themeStyle: 'vibrant_santri_ceria',
+      eventDate: 'Pendaftaran: 1 Okt – 30 Nov 2026',
+      eventTime: 'Kelas Sore: 15.30 – 17.15 WIB',
+      eventLocation: 'Jl. Raya Sakatiga Indralaya, Ogan Ilir',
+      speaker: 'Metode Iqro Cepat, Tahsin Bersanad & Karakter Santri',
+      contactPerson: 'Pendaftaran via WhatsApp: 0812-7890-xxxx',
+      badgeText: 'BEASISWA ANAK YATIM & DHUAFA',
+      callToAction: 'Segera Daftar! Kuota Terbatas 60 Santri Baru',
+      printingSpec: 'print_artpaper_150',
+      finishing: 'potong_mesin_sisir',
+      customPrimary: '#0d9488',
+      customSecondary: '#f59e0b',
+      showLogoSlot: true,
+      showQrCodeSlot: true,
+      showSpeakerPhoto: true,
+    }
+  },
+  {
+    id: 'preset_backdrop_wisuda_santri',
+    label: 'Backdrop Panggung Wisuda & Khataman (16:9 / 4x2.25 m)',
+    formatType: 'backdrop',
+    sizeVariant: 'backdrop_16x9',
+    preset: {
+      formatType: 'backdrop',
+      sizeVariant: 'backdrop_16x9',
+      title: 'HAFLAH AKHIRUSSANAH & WISUDA KHATAMAN AL-QUR\'AN',
+      subTitle: 'Mahkotai Orang Tua dengan Cahaya Al-Qur\'an di Dunia dan Akhirat',
+      institution: 'LEMBAGA PENDIDIKAN AL-QUR\'AN BKPRMI',
+      themeStyle: 'warm_spiritual_gold',
+      eventDate: 'Ahad, 25 Oktober 2026',
+      eventTime: '08.00 WIB s.d. Selesai',
+      eventLocation: 'Gedung Serbaguna Caram Seguguk, KPT Tanjung Senai',
+      speaker: 'Wisuda Santri Tingkat TPA & Rumah Tahfidz Angkatan IX',
+      contactPerson: 'Sekretariat Panitia Wisuda: 0813-xxxx-xxxx',
+      badgeText: 'WISUDA AKBAR ANGKATAN IX',
+      callToAction: 'Mencetak Generasi Rabbani Penegak Sunnah',
+      printingSpec: 'outdoor_flexi_korea_440',
+      finishing: 'potong_pas_gambar',
+      customPrimary: '#b45309',
+      customSecondary: '#fbbf24',
+      showLogoSlot: true,
+      showQrCodeSlot: false,
+      showSpeakerPhoto: false,
+    }
+  },
+  {
+    id: 'preset_xbanner_wakaf_sarana',
+    label: 'X-Banner Wakaf Meja & Sarana Belajar (60x160 cm)',
+    formatType: 'xbanner',
+    sizeVariant: 'xbanner_60x160',
+    preset: {
+      formatType: 'xbanner',
+      sizeVariant: 'xbanner_60x160',
+      title: 'WAKAF SARANA BELAJAR SANTRI NGURAN',
+      subTitle: 'Tanam Saham Akhirat: Patungan Meja Lipat & Mushaf Iqro untuk Santri Desa',
+      institution: 'PROGRAM DAKWAH PEDULI GURU NGAJI',
+      themeStyle: 'modern_smart_blue',
+      eventDate: 'Target: 50 Meja Belajar (@Rp 50.000)',
+      eventTime: 'Penyaluran Langsung & Transparan',
+      eventLocation: 'Unit TK/TPA Wilayah Pelosok Ogan Ilir',
+      speaker: 'Pahala Mengalir Setiap Huruf yang Dilafadzkan Santri',
+      contactPerson: 'Konfirmasi Transfer Wakaf: 0896-9524-9089',
+      badgeText: 'WAKAF ABADI MULAI RP 50.000',
+      callToAction: 'Scan QRIS Bank Sumsel Babel / BSI di Bawah Ini',
+      printingSpec: 'indoor_albatros',
+      finishing: 'potong_pas_gambar',
+      customPrimary: '#1d4ed8',
+      customSecondary: '#06b6d4',
+      showLogoSlot: true,
+      showQrCodeSlot: true,
+      showSpeakerPhoto: false,
+    }
+  },
+  {
+    id: 'preset_baliho_oganilir_smart',
+    label: 'Baliho Publikasi Sinergi Ogan Ilir SMART (4x2 m)',
+    formatType: 'baliho',
+    sizeVariant: 'baliho_4x2',
+    preset: {
+      formatType: 'baliho',
+      sizeVariant: 'baliho_4x2',
+      title: 'BANGKIT BERSAMA MENUJU OGAN ILIR SMART',
+      subTitle: 'Sejahtera · Maju · Adaptif · Religius · Berkelanjutan bersama Pejuang Al-Qur\'an',
+      institution: 'PEMERINTAH KABUPATEN OGAN ILIR & BKPRMI',
+      themeStyle: 'monochrome_formal_gov',
+      eventDate: 'Tahun Penguatan SDM & Digitalisasi Dakwah 2026',
+      eventTime: 'Gerakan Bebas Buta Aksara Al-Qur\'an Se-Kabupaten',
+      eventLocation: 'Kabupaten Ogan Ilir, Sumatera Selatan',
+      speaker: 'Bupati Ogan Ilir & Wakil Bupati Ogan Ilir',
+      contactPerson: 'Pemerintah Daerah & BKPRMI Kab. Ogan Ilir',
+      badgeText: '5 PILAR PEMBANGUNAN DAERAH',
+      callToAction: 'Bersatu Membangun Peradaban dari Desa Hingga Kota',
+      printingSpec: 'outdoor_flexi_korea_440',
+      finishing: 'mata_ayam_keliling',
+      customPrimary: '#b91c1c',
+      customSecondary: '#fbbf24',
+      showLogoSlot: true,
+      showQrCodeSlot: true,
+      showSpeakerPhoto: true,
+    }
+  },
+  {
+    id: 'preset_flyer_digital_wa_story',
+    label: 'Flyer Digital Status WA & Story (9:16 / 1080x1920 px)',
+    formatType: 'flyer',
+    sizeVariant: 'flyer_wa_story',
+    preset: {
+      formatType: 'flyer',
+      sizeVariant: 'flyer_wa_story',
+      title: 'TABLIGH AKBAR & KAJIAN PARENTING ISLAMI',
+      subTitle: 'Mendidik Generasi Alpha di Tengah Arus Gadget dengan Kasih Sayang & Keteladanan',
+      institution: 'FORUM GURU NGAJI & WALI SANTRI',
+      themeStyle: 'islamic_green_gold',
+      eventDate: 'Ahad Pagi, 18 Oktober 2026',
+      eventTime: 'Pukul 08.30 – 11.30 WIB',
+      eventLocation: 'Masjid Agung An-Nuur Indralaya',
+      speaker: 'Ustadz Praktisi Psikologi & Pendidikan Islam',
+      contactPerson: 'Daftar Hadir via WA: 0812-3456-xxxx (Gratis)',
+      badgeText: 'GRATIS + SNACK & SERTIFIKAT',
+      callToAction: 'Ajak Pasangan & Keluarga Hadir Meraih Berkah',
+      printingSpec: 'digital_highres',
+      finishing: 'potong_mesin_sisir',
+      customPrimary: '#065f46',
+      customSecondary: '#f59e0b',
+      showLogoSlot: true,
+      showQrCodeSlot: true,
+      showSpeakerPhoto: true,
+    }
+  }
+];

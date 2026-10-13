@@ -9,6 +9,22 @@ function parseRatio(label, mode, state = {}) {
   }
   if (mode === 'copywriting') return [4, 5];
   if (mode === 'menufb') return [4, 5];
+  if (mode === 'flyerbanner') {
+    const sz = state?.sizeVariant || '';
+    if (sz.includes('3x1') || sz.includes('mega')) return [3, 1];
+    if (sz.includes('4x1') || sz.includes('panoramic')) return [4, 1];
+    if (sz.includes('5x1')) return [5, 1];
+    if (sz.includes('16x9') || sz.includes('web_cover')) return [16, 9];
+    if (sz.includes('16x6')) return [16, 6];
+    if (sz.includes('2x1') || sz.includes('baliho_4x2') || sz.includes('baliho_6x3')) return [2, 1];
+    if (sz.includes('3x2') || sz.includes('baliho_6x4')) return [3, 2];
+    if (sz.includes('a4') || sz.includes('a5') || sz.includes('mini_table')) return [1, 1.414];
+    if (sz.includes('60x160')) return [1, 2.67];
+    if (sz.includes('80x200')) return [1, 2.5];
+    if (sz.includes('ig_feed')) return [4, 5];
+    if (sz.includes('wa_story')) return [9, 16];
+    return [3, 1];
+  }
   if (!label) return [1, 1];
   const m = String(label).match(/(\d+(?:\.\d+)?)\s*[:x]\s*(\d+(?:\.\d+)?)/i);
   if (!m) return [4, 5]; // carousel slide → 4:5
@@ -81,6 +97,9 @@ export default function MockupPreview({ mode, state }) {
   } else if (mode === 'article') {
     primary = '#334155';
     secondary = '#0f172a';
+  } else if (mode === 'flyerbanner') {
+    primary = state.customPrimary || '#065f46';
+    secondary = state.customSecondary || '#022c22';
   } else {
     primary = state.primaryColor || '#2dd4bf';
     secondary = state.secondaryColor || '#ffffff';
@@ -128,6 +147,7 @@ export default function MockupPreview({ mode, state }) {
           {mode === 'videoscript' && renderVideoScript(targetW, targetH, state)}
           {mode === 'presentation' && renderPresentation(targetW, targetH, state)}
           {mode === 'article' && renderArticle(targetW, targetH, state)}
+          {mode === 'flyerbanner' && renderFlyerBanner(targetW, targetH, state)}
         </svg>
       </div>
 
@@ -192,6 +212,12 @@ export default function MockupPreview({ mode, state }) {
             <Meta label="Format" value={state.format || 'Straight News'} />
             <Meta label="Rubrik" value={(state.rubric || 'Pendidikan').slice(0, 16)} />
             <Meta label="Dateline" value={(state.dateline || 'Sakatiga').slice(0, 16)} />
+          </>
+        ) : mode === 'flyerbanner' ? (
+          <>
+            <Meta label="Format" value={(state.formatType || 'Spanduk').toUpperCase()} />
+            <Meta label="Ukuran" value={(state.sizeVariant || '3x1').replace(/^[a-z]+_/, '').toUpperCase()} />
+            <Meta label="Bahan" value={(state.printingSpec || 'Outdoor Flexi').slice(0, 16)} />
           </>
         ) : (
           <>
@@ -1038,4 +1064,166 @@ function renderArticle(W, H, s) {
     </g>
   );
 }
+
+function renderFlyerBanner(w, h, state) {
+  const title = state.title || 'JUDUL SPANDUK / FLYER ACARA';
+  const sub = state.subTitle || '';
+  const institution = state.institution || 'LEMBAGA PENDIDIKAN AL-QUR\'AN';
+  const badge = state.badgeText || '';
+  const date = state.eventDate || '';
+  const loc = state.eventLocation || '';
+  const speaker = state.speaker || '';
+  const cta = state.callToAction || state.contactPerson || '';
+
+  const isWide = w / h >= 2.5; // Spanduk horizontal 3:1, 4:1, 5:1
+  const isTall = h / w >= 1.8; // X-Banner vertical 1:2.67
+
+  return (
+    <g>
+      {/* Background with soft arabesque arches */}
+      <rect width={w} height={h} fill="none" />
+      <circle cx={w * 0.15} cy={h * 0.5} r={Math.min(w, h) * 0.8} fill="#ffffff" fillOpacity="0.04" />
+      <circle cx={w * 0.85} cy={h * 0.5} r={Math.min(w, h) * 0.8} fill="#ffffff" fillOpacity="0.04" />
+
+      {/* Spanduk Ring Mata Ayam di 4 Sudut */}
+      <circle cx="16" cy="16" r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.8" />
+      <circle cx={w - 16} cy="16" r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.8" />
+      <circle cx="16" cy={h - 16} r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.8" />
+      <circle cx={w - 16} cy={h - 16} r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.8" />
+
+      {/* Decorative Border Frame */}
+      <rect x="10" y="10" width={w - 20} height={h - 20} rx="4" fill="none" stroke="#fbbf24" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+
+      {isWide ? (
+        // WIDE HORIZONTAL (SPANDUK 3:1, 4:1)
+        <g>
+          {/* Header pill */}
+          <rect x="28" y="14" width={Math.min(260, w * 0.45)} height="18" rx="4" fill="#000000" fillOpacity="0.35" stroke="#ffffff" strokeOpacity="0.2" />
+          <text x="36" y="26" fill="#fbbf24" fontSize="8" fontWeight="bold" fontFamily="monospace">
+            ✦ {institution.slice(0, 36)}
+          </text>
+          {badge && (
+            <g transform={`translate(${w - 145}, 14)`}>
+              <rect width="120" height="18" rx="4" fill="#dc2626" />
+              <text x="60" y="12" fill="#ffffff" fontSize="7" fontWeight="bold" textAnchor="middle">
+                {badge.slice(0, 24)}
+              </text>
+            </g>
+          )}
+
+          {/* Massive Title */}
+          <text x={w * 0.08} y={h * 0.48} fill="#ffffff" fontSize={Math.min(20, h * 0.28)} fontWeight="900" fontFamily="sans-serif">
+            {title.slice(0, 42)}
+          </text>
+          {title.length > 42 && (
+            <text x={w * 0.08} y={h * 0.68} fill="#ffffff" fontSize={Math.min(16, h * 0.22)} fontWeight="900" fontFamily="sans-serif">
+              {title.slice(42, 85)}
+            </text>
+          )}
+
+          {/* Subtitle */}
+          {sub && (
+            <text x={w * 0.08} y={h * 0.84} fill="#fde68a" fontSize={Math.min(9.5, h * 0.14)} fontWeight="600" fontFamily="sans-serif">
+              {sub.slice(0, 75)}
+            </text>
+          )}
+
+          {/* Right info column */}
+          <g transform={`translate(${w * 0.64}, ${h * 0.36})`}>
+            <rect width={w * 0.3} height={h * 0.54} rx="6" fill="#000000" fillOpacity="0.45" stroke="#ffffff" strokeOpacity="0.2" />
+            <text x="10" y="18" fill="#38bdf8" fontSize="8" fontWeight="bold">🗓 {date.slice(0, 28)}</text>
+            <text x="10" y="32" fill="#ffffff" fontSize="7">📍 {loc.slice(0, 32)}</text>
+            {speaker && <text x="10" y="46" fill="#fde047" fontSize="7">👤 {speaker.slice(0, 32)}</text>}
+          </g>
+        </g>
+      ) : isTall ? (
+        // TALL VERTICAL (X-BANNER 1:2.67, 1:2.5)
+        <g>
+          {/* Logo / Header */}
+          <rect x={w * 0.08} y="20" width={w * 0.84} height="28" rx="6" fill="#000000" fillOpacity="0.35" />
+          <text x={w * 0.5} y="38" fill="#fbbf24" fontSize="9.5" fontWeight="bold" textAnchor="middle">
+            {institution.slice(0, 26)}
+          </text>
+
+          {/* Badge */}
+          {badge && (
+            <g transform={`translate(${w * 0.15}, 58)`}>
+              <rect width={w * 0.7} height="20" rx="4" fill="#dc2626" />
+              <text x={w * 0.35} y="13" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">
+                {badge.slice(0, 24)}
+              </text>
+            </g>
+          )}
+
+          {/* Main Title */}
+          <text x={w * 0.5} y={h * 0.26} fill="#ffffff" fontSize="16" fontWeight="900" textAnchor="middle">
+            {title.slice(0, 22)}
+          </text>
+          {title.length > 22 && (
+            <text x={w * 0.5} y={h * 0.31} fill="#ffffff" fontSize="14" fontWeight="900" textAnchor="middle">
+              {title.slice(22, 45)}
+            </text>
+          )}
+
+          {/* Graphic Inset Box / Silhouette */}
+          <rect x={w * 0.12} y={h * 0.36} width={w * 0.76} height={h * 0.22} rx="8" fill="#ffffff" fillOpacity="0.1" stroke="#ffffff" strokeOpacity="0.25" />
+          <text x={w * 0.5} y={h * 0.48} fill="#fde68a" fontSize="8.5" fontWeight="bold" textAnchor="middle">
+            {sub ? sub.slice(0, 30) : '✦ PUSAT KEGIATAN DAKWAH ✦'}
+          </text>
+
+          {/* Details Card */}
+          <rect x={w * 0.08} y={h * 0.63} width={w * 0.84} height={h * 0.22} rx="8" fill="#000000" fillOpacity="0.45" />
+          <text x={w * 0.14} y={h * 0.69} fill="#38bdf8" fontSize="8.5" fontWeight="bold">🗓 {date.slice(0, 24)}</text>
+          <text x={w * 0.14} y={h * 0.75} fill="#ffffff" fontSize="8">📍 {loc.slice(0, 26)}</text>
+          {speaker && <text x={w * 0.14} y={h * 0.81} fill="#fde047" fontSize="8">👤 {speaker.slice(0, 26)}</text>}
+
+          {/* CTA Button */}
+          <rect x={w * 0.12} y={h * 0.88} width={w * 0.76} height="28" rx="6" fill="#fbbf24" />
+          <text x={w * 0.5} y={h * 0.92} fill="#0f172a" fontSize="9" fontWeight="900" textAnchor="middle">
+            {(cta || 'KONTAK PANITIA').slice(0, 26)}
+          </text>
+        </g>
+      ) : (
+        // BALANCED / PORTRAIT / 16:9 / A4 FLYER
+        <g>
+          {/* Header */}
+          <rect x="20" y="18" width={w - 40} height="24" rx="6" fill="#000000" fillOpacity="0.35" />
+          <text x={w * 0.5} y="34" fill="#fbbf24" fontSize="9" fontWeight="bold" textAnchor="middle">
+            ✦ {institution.slice(0, 42)} ✦
+          </text>
+
+          {/* Title */}
+          <text x={w * 0.5} y={h * 0.3} fill="#ffffff" fontSize={Math.min(17, w * 0.055)} fontWeight="900" textAnchor="middle">
+            {title.slice(0, 35)}
+          </text>
+          {title.length > 35 && (
+            <text x={w * 0.5} y={h * 0.38} fill="#ffffff" fontSize={Math.min(14, w * 0.045)} fontWeight="900" textAnchor="middle">
+              {title.slice(35, 75)}
+            </text>
+          )}
+
+          {/* Subtitle */}
+          {sub && (
+            <text x={w * 0.5} y={h * 0.46} fill="#fde68a" fontSize="9" fontWeight="600" textAnchor="middle">
+              {sub.slice(0, 52)}
+            </text>
+          )}
+
+          {/* Inset Schedule / Venue Grid */}
+          <rect x={w * 0.08} y={h * 0.54} width={w * 0.84} height={h * 0.28} rx="8" fill="#000000" fillOpacity="0.45" stroke="#ffffff" strokeOpacity="0.2" />
+          <text x={w * 0.14} y={h * 0.62} fill="#38bdf8" fontSize="8" fontWeight="bold">🗓 Hari/Tanggal: {date.slice(0, 32)}</text>
+          <text x={w * 0.14} y={h * 0.70} fill="#ffffff" fontSize="8">📍 Lokasi: {loc.slice(0, 36)}</text>
+          {speaker && <text x={w * 0.14} y={h * 0.78} fill="#fde047" fontSize="8">👤 Narasumber: {speaker.slice(0, 36)}</text>}
+
+          {/* Bottom Bar */}
+          <rect x="20" y={h - 38} width={w - 40} height="24" rx="6" fill="#fbbf24" />
+          <text x={w * 0.5} y={h - 23} fill="#0f172a" fontSize="9" fontWeight="bold" textAnchor="middle">
+            {(cta || 'DAFTAR / INFORMASI LENGKAP').slice(0, 40)}
+          </text>
+        </g>
+      )}
+    </g>
+  );
+}
+
 

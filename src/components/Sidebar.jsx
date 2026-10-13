@@ -5,7 +5,7 @@ import {
   Wand2, Settings, PlayCircle, Sparkles, DollarSign, GalleryHorizontalEnd, HandCoins,
   Sparkles as LogoIcon, Shirt, Star, Film, ChevronRight, ChevronDown, Store, Grid3x3, LogOut,
   PanelLeftClose, PanelLeftOpen, Sun, Moon, Layers, Newspaper, MessageSquareQuote, ShieldAlert,
-  Scissors, BookOpenText, Clapperboard, Presentation, X, Menu, ScanSearch
+  Scissors, BookOpenText, Clapperboard, Presentation, X, Menu, ScanSearch, Flag
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -14,6 +14,7 @@ import { showConfirmLogout } from '../utils/alerts.js';
 
 const MODES = [
   { id: 'banner',       icon: Image,                label: 'Design Feeds',       badge: '' },
+  { id: 'flyerbanner',  icon: Flag,                 label: 'Spanduk & Flyer',    badge: 'Hot' },
   { id: 'carousel',     icon: GalleryHorizontalEnd, label: 'Carousel Feeds',     badge: '' },
   { id: 'gridfeed',     icon: Grid3x3,              label: '9 Feed Konsisten',   badge: 'Hot' },
   { id: 'imageslicer',  icon: Scissors,             label: 'Grid & Image Slicer', badge: 'New' },
