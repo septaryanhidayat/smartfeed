@@ -50,7 +50,7 @@ export default function LandingNav({ onOpenAccess }) {
               <span className="text-accent">{brandParts().accent}</span>
             </span>
             <span className="text-[8px] sm:text-[9px] mono uppercase tracking-[0.14em] text-text-dim whitespace-nowrap">
-              Studio Visual Instan
+              Studio Dakwah &amp; Guru Ngaji
             </span>
           </div>
         </a>
@@ -77,10 +77,10 @@ export default function LandingNav({ onOpenAccess }) {
             Login Studio
           </a>
           <a
-            href="#harga"
+            href="/checkout"
             className="btn-cta !py-1.5 sm:!py-2 !px-3 sm:!px-4 !text-xs sm:!text-sm cursor-pointer whitespace-nowrap shrink-0 inline-flex items-center gap-1 sm:gap-1.5 shadow-sm"
           >
-            <span>Dapatkan Akses</span>
+            <span>Daftar Gratis (Rp 0)</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>

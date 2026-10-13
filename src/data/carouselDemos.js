@@ -2,6 +2,77 @@
 // Tiap preset mengikuti key dari INITIAL_CAROUSEL (buildCarousel.js).
 
 export const CAROUSEL_DEMOS = [
+  // ── DAKWAH, GURU NGAJI & LEMBAGA PENDIDIKAN (MODUL SAKATIGA OGAN ILIR) ──
+  {
+    id: 'carousel-peradaban-3syarat',
+    label: 'Peradaban: Manusia > Sistem > Sumber Daya',
+    icon: 'Sparkles',
+    tag: 'Fondasi · 5 slide',
+    preset: {
+      templateType: 'news', totalSlides: '5',
+      newsContent: 'Banyak lembaga dakwah dan pendidikan Al-Qur\'an jalan di tempat karena membalik hukum urutan membangun peradaban—mereka sibuk mengeluhkan ketiadaan uang di awal. Padahal hukum urutan baku peradaban adalah: Pertama MANUSIA (kualitas niat amal jariyah, self-leadership, dan growth mindset para guru ngaji). Kedua SISTEM (tata kelola organisasi terstandar, aplikasi pencatatan, dan sinergi daerah). Ketiga SUMBER DAYA (kepercayaan santri dan donatur akan mengalir otomatis mengikuti manusia amanah dan sistem yang rapi).',
+      mediaName: '@tpa_bqprmi.id', ctaText: 'Simpan & Praktikkan',
+      coverLayout: 'image-full', aspectRatio: '4:5 (Portrait)', visualStyle: 'Editorial Magazine',
+      newsTextColor: '#ffffff', newsMoodColor: '#059669', newsTextBgAuto: true, newsTextBg: '#064e3b',
+    },
+  },
+  {
+    id: 'carousel-growth-mindset-guru',
+    label: 'Growth Mindset Guru Ngaji (Carol Dweck)',
+    icon: 'Sparkles',
+    tag: 'Edukasi · 5 slide',
+    preset: {
+      templateType: 'news', totalSlides: '5',
+      newsContent: 'Agar mutu pendidikan Al-Qur\'an terus melejit, guru ngaji harus meninggalkan Fixed Mindset (kaku/menyerah pada keadaan) dan mengadopsi Growth Mindset. Saat hadapi teknologi digital: buang kata "saya sudah tua tidak paham HP", ganti dengan "aplikasi Bisa Ngaji akan membuat administrasi saya jauh lebih cepat". Saat santri lambat belajar: jangan katakan anak nakal, tapi evaluasi metode mengajar kita. Saat fasilitas di desa seadanya: jangan berkecil hati, lokasi desa bukan penghalang jadi lembaga percontohan berkat syiar digital.',
+      mediaName: '@guru_ngaji_smart', ctaText: 'Share ke Rekan Guru Ngaji',
+      coverLayout: 'image-full', aspectRatio: '4:5 (Portrait)', visualStyle: 'Bold Modern',
+      newsTextColor: '#ffffff', newsMoodColor: '#0d9488', newsTextBgAuto: true, newsTextBg: '#134e4a',
+    },
+  },
+  {
+    id: 'carousel-komunikasi-3s-wali',
+    label: 'Komunikasi 3S: Wali Santri Jadi Mitra Dakwah',
+    icon: 'Heart',
+    tag: 'Komunikasi · 5 slide',
+    preset: {
+      templateType: 'news', totalSlides: '5',
+      newsContent: 'Wali santri cuek atau sulit diajak kerja sama sering kali berakar dari kebiasaan kita yang hanya menghubungi mereka saat tagih SPP atau saat anak bermasalah. Terapkan Sistem Komunikasi 3S: 1. Sapa dengan Kabar Gembira (kirim foto senyum santri dan capaian tajwidnya secara proaktif). 2. Sampaikan Masalah dengan Teknik Sandwich (Puji kelebihan anak - Koreksi solutif - Doakan). 3. Sertakan Wali Santri dalam Visi Lembaga agar mereka memiliki sense of belonging terhadap TK/TPA.',
+      mediaName: '@tk_tpa_berdaya', ctaText: 'Praktikkan di Grup WA',
+      coverLayout: 'image-full', aspectRatio: '4:5 (Portrait)', visualStyle: 'Bold Modern',
+      newsTextColor: '#ffffff', newsMoodColor: '#2563eb', newsTextBgAuto: true, newsTextBg: '#1e3a8a',
+    },
+  },
+  {
+    id: 'carousel-crowdfunding-dakwah',
+    label: 'Blue Ocean Crowdfunding: Saham Akhirat TK/TPA',
+    icon: 'Sparkles',
+    tag: 'Finansial · 5 slide',
+    preset: {
+      templateType: 'promo', totalSlides: '5',
+      brandName: 'TK/TPA Berdaya Mandiri', productName: 'Patungan Wakaf Sarana & Orang Tua Asuh',
+      productCategory: 'Dakwah & Wakaf', productDescription: 'Keluar dari Red Ocean sebar proposal tebal yang jarang cair. Masuk ke Blue Ocean Crowdfunding: pecah kebutuhan Rp2.000.000 menjadi 40 paket amal @Rp50.000 disebar ke 200 kenalan via status WA & Facebook. Tawarkan pahala, jangan jual kesedihan!',
+      mainBenefit: 'Paket wakaf terjangkau Rp30k - Rp50k + Transparan dengan laporan foto dan video doa santri', problemSolved: 'Kesulitan biaya operasional dan renovasi sarana mengaji TK/TPA',
+      targetAudience: 'Muhsinin, wali santri, alumni, perantau, dan masyarakat peduli dakwah', platform: 'Instagram', aspectRatio: '4:5 (Portrait)',
+      visualStyle: 'Vibrant Gradient', colorMood: 'Vibrant', toneCopywriting: 'Persuasive',
+      ctaText: 'Ambil Paket Wakaf Sekarang',
+      slide1Headline: 'Tanam Saham Akhirat: Cukup Patungan Rp50.000 untuk Meja & Mushaf Santri',
+      slide1Subheadline: 'Setiap Huruf yang Dibaca Santri, Mengalirkan Pahala Abadi Tanpa Henti →',
+    },
+  },
+  {
+    id: 'carousel-oganilir-smart',
+    label: 'Peran Guru Ngaji Menuju Ogan Ilir SMART',
+    icon: 'TrendingUp',
+    tag: 'Sinergi Daerah · 5 slide',
+    preset: {
+      templateType: 'news', totalSlides: '5',
+      newsContent: 'Guru ngaji adalah pilar strategis dalam menyukseskan visi Pemkab Ogan Ilir "Bangkit Bersama Menuju Ogan Ilir SMART". S - Sejahtera: mandiri finansial santri dhuafa lewat infaq kreatif. M - Maju: modernisasi tata kelola administrasi TK/TPA terdata. A - Adaptif: sigap transformasi digital dan dakwah medsos. R - Religius: pilar utama memberantas buta aksara Al-Qur\'an sejak usia dini. T - Berkelanjutan: kaderisasi LMD BKPRMI bertahan lintas generasi.',
+      mediaName: '@dpd_bkprmi_oganilir', ctaText: 'Wujudkan Ogan Ilir SMART',
+      coverLayout: 'image-full', aspectRatio: '4:5 (Portrait)', visualStyle: 'Editorial Magazine',
+      newsTextColor: '#ffffff', newsMoodColor: '#1e3a8a', newsTextBgAuto: true, newsTextBg: '#0f172a',
+    },
+  },
+
   // ── BI SULTRA & EKONOMI MAKRO ──
   {
     id: 'news-belanja-bijak-bi',

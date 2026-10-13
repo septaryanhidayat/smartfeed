@@ -14,6 +14,7 @@ export default function AccessModal({ open, onClose }) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [institution, setInstitution] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -34,6 +35,7 @@ export default function AccessModal({ open, onClose }) {
     const cleanName = name.trim();
     const cleanEmail = email.toLowerCase().trim();
     const cleanPhone = phone.trim();
+    const cleanInst = institution.trim();
 
     if (!cleanName) {
       setError('Nama Lengkap wajib diisi.');
@@ -65,9 +67,10 @@ export default function AccessModal({ open, onClose }) {
             email: cleanEmail,
             name: cleanName,
             phone: cleanPhone,
-            source: 'Peserta Pelatihan (Gratis)',
-            payment_method: 'Peserta Pelatihan (Gratis)',
-            payment_name: 'Peserta Pelatihan (Gratis)',
+            institution: cleanInst,
+            source: 'Peserta Pelatihan Guru Ngaji & Dakwah (Gratis)',
+            payment_method: 'Beasiswa Pelatihan (Gratis)',
+            payment_name: 'Beasiswa Pelatihan (Gratis)',
             timestamp: new Date().toISOString(),
           }),
         }).catch(() => {});
@@ -98,7 +101,7 @@ export default function AccessModal({ open, onClose }) {
           window.location.hash = '#/app';
         }
       }
-    }, 600);
+    }, 1200);
   };
 
   return (
@@ -210,6 +213,21 @@ export default function AccessModal({ open, onClose }) {
                     disabled={loading}
                   />
                 </div>
+              </div>
+
+              {/* Asal Lembaga / TK/TPA */}
+              <div>
+                <label className="text-xs font-medium text-text mb-1.5 block">
+                  Asal Lembaga / TK-TPA / Organisasi
+                </label>
+                <input
+                  type="text"
+                  value={institution}
+                  onChange={(e) => setInstitution(e.target.value)}
+                  placeholder="Contoh: TK/TPA Al-Ikhlas Sakatiga"
+                  className="input w-full"
+                  disabled={loading}
+                />
               </div>
 
               {/* Error Alert */}

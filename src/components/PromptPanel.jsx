@@ -46,7 +46,7 @@ export default function PromptPanel({
     } catch {}
   };
 
-  const [hasGenerated, setHasGenerated] = useState(autoShow);
+  const [hasGenerated, setHasGenerated] = useState(true);
   const [streaming, setStreaming] = useState(false);
   const [streamedText, setStreamedText] = useState('');
 
@@ -54,12 +54,12 @@ export default function PromptPanel({
   const prevModeRef = useRef(mode);
   const prevRestoreRef = useRef(restoreSignal);
 
-  // Reset only if mode changes WITHOUT a restore signal bump
+  // Reset streaming state when mode changes, but keep output visible
   useEffect(() => {
     const isRestore = restoreSignal !== prevRestoreRef.current;
     if (mode !== prevModeRef.current && !isRestore) {
       setActiveTab('all');
-      setHasGenerated(false);
+      setHasGenerated(true);
       setStreaming(false);
       setStreamedText('');
       if (streamTimer.current) { clearTimeout(streamTimer.current); streamTimer.current = null; }

@@ -66,6 +66,125 @@ function cat(id, label, icon, brand, headline, tagline, description, cta, featur
 }
 
 export const CATEGORIES = [
+  cat('tpa_bqprmi_santribaru', "TK/TPA & Lembaga Pendidikan Al-Qur'an (PSB)", 'BookOpen',
+    'TK/TPA BKPRMI Unggulan', "Penerimaan Santri Baru — Dekatkan Buah Hati dengan Al-Qur'an", "Membangun Generasi Qur'ani Berakhlak Mulia · Ceria, Disiplin & Beradab",
+    "Lembaga pendidikan Al-Qur'an usia dini (TK/TPA) dengan kurikulum Iqro' berjenjang, tahfidz juz 30 ceria, pembiasaan sholat berjamaah, dan bimbingan adab islami harian ramah anak Generasi Alpha.",
+    'Daftarkan Ananda Sekarang',
+    ["Metode Iqro' Berjenjang", 'Tahfidz Juz 30 Ceria', 'Bimbingan Sholat & Adab', 'Guru Tersertifikasi BKPRMI'],
+    'DAFTAR SANTRI BARU TK/TPA', 'Investasi Terbaik Dunia & Akhirat untuk Buah Hati',
+    '#059669', '#fef3c7',
+    {
+      banner: { style: 'Minimal Clean', lighting: 'Natural Soft', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Warm & Ceria', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Corporate Executive', energy: 'Inspirational', layout: 'Centered Hero' },
+      copywriting: {
+        angle: "Sentuh kekhawatiran orang tua zaman sekarang terhadap kecanduan gadget anak. Tawarkan lingkungan TK/TPA yang ceria, penuh kasih sayang, dan membuat anak cinta Al-Qur'an.",
+        summary: "TK/TPA BKPRMI — Membuka pendaftaran santri baru tahun ajaran 2026/2027 dengan pendekatan kasih sayang dan kurikulum terstandar.",
+      }
+    }),
+
+  cat('guru_ngaji_peradaban', 'Guru Ngaji — Self-Leadership & Investasi Peradaban', 'GraduationCap',
+    "Pendidik Al-Qur'an Mulia", "Mengajar Ngaji: Investasi Amal Jariyah Membangun Peradaban", 'Tajdidun Niyyah · Dakwah Bil-Hal Disiplin & Teladan · Integritas Amanah',
+    "Kepemimpinan diri (self-leadership) dan growth mindset pendidik Al-Qur'an. Setiap huruf yang dibaca santri sepanjang hidupnya mengalir otomatis ke rekening akhirat sang guru ngaji.",
+    'Tingkatkan Kualitas Pengabdian',
+    ['Tajdidun Niyyah (Kelola Niat)', 'Dakwah Bil-Hal & Teladan', 'Integritas Amanah Lembaga', 'Growth Mindset Carol Dweck'],
+    'GURU NGAJI PEMBANGUN PERADABAN', "Pahala Mengalir Otomatis di Setiap Huruf Al-Qur'an",
+    '#0d9488', '#ffffff',
+    {
+      banner: { style: 'Editorial Magazine', lighting: 'Soft Lighting', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Inspirational', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Apple Minimal', energy: 'Premium', layout: 'Minimal Elite' },
+      copywriting: {
+        angle: "Motivasi guru ngaji bahwa mendidik Al-Qur'an bukan sekadar pekerjaan sore hari, melainkan amanah peradaban tertinggi yang pahalanya abadi.",
+        summary: 'Self-Leadership Guru Ngaji — Membangun pondasi Manusia berkualitas sebelum membangun sistem dan fasilitas.',
+      }
+    }),
+
+  cat('komunikasi_3s_wali_santri', 'Komunikasi 3S Wali Santri (Teknik Sandwich)', 'Heart',
+    'Kemitraan Dakwah TK/TPA', "Komunikasi 3S: Mengubah 'Penitip Anak' Menjadi 'Mitra Dakwah'", 'Sapa Kabar Gembira · Teknik Sandwich Solutif · Sertakan dalam Visi',
+    "Panduan komunikasi empatis pengelola TK/TPA dengan wali santri. Jangan hubungi orang tua hanya saat tagih SPP atau anak bermasalah. Terapkan teknik sandwich (Puji - Koreksi Solutif - Doakan).",
+    'Praktikkan Komunikasi 3S',
+    ['Sapa Kabar Gembira Proaktif', 'Teknik Sandwich (Puji-Solusi-Doa)', 'Apresiasi Proses Belajar', 'Grup WhatsApp Interaktif'],
+    'WALI SANTRI ADALAH MITRA DAKWAH', 'Bimbingan Bersama Rumah & Madrasah',
+    '#2563eb', '#dbeafe',
+    {
+      banner: { style: 'Minimal Clean', lighting: 'Bright Clean', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Friendly', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Corporate Executive', energy: 'Friendly', layout: 'Centered Hero' },
+      copywriting: {
+        angle: 'Edukasi pengurus TK/TPA cara menyapa wali santri dengan santun, menyampaikan laporan perkembangan bacaan secara objektif berbasis data aplikasi Bisa Ngaji, dan menjaga rasa memiliki orang tua.',
+        summary: 'Sistem Komunikasi 3S TK/TPA — Harmoni komunikasi guru dan orang tua santri generasi alpha.',
+      }
+    }),
+
+  cat('crowdfunding_wakaf_sarana', 'Crowdfunding Dakwah — Wakaf Meja Lipat & Mushaf', 'Sparkles',
+    'Patungan Amal Jariyah', "Wakaf Meja Belajar & Mushaf Iqro' — Tanam Saham Akhiratmu", 'Blue Ocean Crowdfunding: Pecah Kebutuhan Jadi Paket Amal Ringan @Rp50.000',
+    "Program patungan wakaf sarana mengaji santri: 15 Meja Lipat Kayu (@Rp50.000), 25 Mushaf & Iqro' Baru (@Rp40.000), dan 3 Unit Kipas Angin Dinding (@Rp30.000). Tawarkan pahala, jangan jual kesedihan!",
+    'Ambil Paket Wakaf Sekarang',
+    ['Paket Meja Lipat Rp50.000', "Paket Mushaf Iqro' Rp40.000", 'Slot Kipas Angin Rp30.000', 'Laporan Real-Time & Video Doa'],
+    'PATUNGAN WAKAF SARANA MENGAJI', 'Meja Belajar Dipakai Setiap Sore, Pahalanya Mengalir Selamanya',
+    '#00a8b5', '#ffffff',
+    {
+      banner: { style: 'Festive & Vibrant', lighting: 'Studio Light', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Hopeful', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Modern Sans', energy: 'Bold Impact', layout: 'Minimal Elite' },
+      copywriting: {
+        angle: 'Ajak muhsinin berinfaq dengan nominal terjangkau Rp50.000 tanpa beban. Tekankan fasilitas nyata yang langsung dipakai anak-anak santri mengaji.',
+        summary: "Crowdfunding Sarana Belajar TK/TPA — Paket wakaf ringan Rp40.000 - Rp50.000 transparan via QRIS & transfer bank.",
+      }
+    }),
+
+  cat('crowdfunding_orang_tua_asuh', 'Crowdfunding Dakwah — Orang Tua Asuh Santri & Guru', 'Building',
+    'Program Orang Tua Asuh', 'Program Orang Tua Asuh: Rutin Rp25.000 - Rp50.000 Setiap Gajian', 'Bebaskan SPP Santri Yatim/Dhuafa · Tambahan Insentif Mulia Guru Ngaji',
+    "Skema donatur tetap bulanan dari alumni, PNS, pengusaha lokal, dan warga perantauan. Menjamin operasional harian TK/TPA mandiri serta mensejahterakan para ustadz/ustadzah pejuang Al-Qur'an.",
+    'Gabung Jadi Orang Tua Asuh',
+    ['Donasi Rutin Rp25k - Rp50k', 'Bebas SPP Santri Kurang Mampu', 'Insentif Sejahtera Guru Ngaji', 'Laporan Transparan Bulanan'],
+    'ORANG TUA ASUH GURU NGAJI & SANTRI', 'Sedekah Subuh & Gajian yang Menghidupkan Lentera Al-Qur\'an',
+    '#b45309', '#fffbeb',
+    {
+      banner: { style: 'Minimal Clean', lighting: 'Natural Soft', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Warm', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Corporate Executive', energy: 'Premium', layout: 'Centered Hero' },
+      copywriting: {
+        angle: 'Sentuh hati para perantau dan kalangan mapan untuk menyisihkan sedikit rezeki di hari gajian demi memuliakan guru ngaji di kampung halaman.',
+        summary: 'Program Orang Tua Asuh Santri & Guru Ngaji — Solusi kemandirian finansial lembaga dakwah era digital.',
+      }
+    }),
+
+  cat('visi_oganilir_smart', 'Sinergi Visi Bangkit Bersama Menuju Ogan Ilir SMART', 'TrendingUp',
+    'DPD BKPRMI Ogan Ilir', 'Peran Strategis Guru Ngaji Mendukung Visi Ogan Ilir SMART', 'Sejahtera · Maju · Adaptif · Religius · Berkelanjutan',
+    "Integrasi peran aktif TK/TPA dalam 5 pilar pembangunan daerah: S (keuangan mandiri santri dhuafa), M (administrasi terdata), A (adaptasi digital Bisa Ngaji & medsos), R (garda terdepan akhlakul karimah), T (kaderisasi LMD berkelanjutan).",
+    "Wujudkan Generasi Qur'ani SMART",
+    ['Pilar S - Mandiri Finansial', 'Pilar M - Modern Terdata', 'Pilar A - Adaptif Digital', 'Pilar R & T - Religius Berkelanjutan'],
+    'OGAN ILIR SMART BERSAMA GURU NGAJI', "Bupati & Wakil Bupati Bersinergi Kuatkan Lembaga Al-Qur'an",
+    '#1e3a8a', '#fbbf24',
+    {
+      banner: { style: 'Corporate Executive', lighting: 'Studio Light', ratio: '16:9 (Landing Page / Web Banner)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Proud', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Editorial Bold', energy: 'Bold Impact', layout: 'Minimal Elite' },
+      copywriting: {
+        angle: "Tunjukkan kesiapan guru ngaji TK/TPA se-Kabupaten Ogan Ilir bertransformasi digital, mengikis buta aksara Qur'an, dan mencetak generasi emas daerah.",
+        summary: 'Sinergi Guru Ngaji & Visi Ogan Ilir SMART — Mengawal kemajuan daerah berbasis nilai spiritual yang kokoh.',
+      }
+    }),
+
+  cat('syiar_storytelling_kca', 'Syiar Digital — Storytelling Dakwah (Rumus K-C-A)', 'Mic',
+    "Syiar Kreatif Al-Qur'an", 'Bikin Konten Dakwah Menyentuh Hati dengan Rumus K-C-A', 'Kalimat Pemantik · Cerita Inti Human Interest · Ajakan Berbuat Kebaikan',
+    'Panduan praktis menulis caption status WA, Facebook, dan Instagram TK/TPA. Ubah pengumuman kaku menjadi kisah nyata yang menggetarkan hati donatur dan calon wali santri.',
+    'Buat Storytelling Sekarang',
+    ['K - Kalimat Pemantik Menyentuh', 'C - Cerita Inti Suasana Ceria', 'A - Ajakan / Call to Action Jelas', 'Syiar Digital Bukan Riya'],
+    'RUMUS K-C-A STORYTELLING DAKWAH', "Cukup 5 Menit dari HP, Pancarkan Cahaya Al-Qur'an ke Ruang Digital",
+    '#7c3aed', '#ffffff',
+    {
+      banner: { style: 'Modern Sans', lighting: 'Dramatic Shadow', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Curious', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Modern Sans', energy: 'Energetic', layout: 'Diagonal Flow' },
+      copywriting: {
+        angle: 'Bimbing guru ngaji merangkai kata dengan jujur dari hati menggunakan rumus K-C-A untuk menarik calon santri baru dan donatur.',
+        summary: 'Rumus K-C-A Storytelling — Trik praktis guru ngaji membuat postingan media sosial berdaya pikat tinggi.',
+      }
+    }),
+
   cat('smart_detection_ai', 'SaaS AI — Smart Detection AI', 'ScanSearch',
     'Smart Detection AI', 'Smart Detection AI — Solusi Deteksi Deepfake & Validasi Fakta', 'Forensik 3 Lapis Kriptografi C2PA, ELA & 2D FFT · Akurasi 99.4%',
     'Platform SaaS dan REST API deteksi gambar buatan AI, manipulasi deepfake, dan validasi keaslian dokumen visual untuk redaksi jurnalisme, verifikasi e-KYC perbankan, dan institusi hukum.',

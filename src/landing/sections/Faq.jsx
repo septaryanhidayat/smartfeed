@@ -4,6 +4,10 @@ import { CONFIG } from '../../config.js';
 
 const FAQS = [
   {
+    q: 'Apakah pendaftaran ini benar-benar gratis untuk guru ngaji dan lembaga dakwah?',
+    a: 'Benar, 100% gratis (Rp 0). Aplikasi ini didedikasikan untuk mendukung kemajuan lembaga pendidikan Al-Qur\'an, ustadz/ustadzah guru ngaji TK/TPA, rumah tahfidz, dan aktivis dakwah dalam menyebarkan syiar serta membangun peradaban.',
+  },
+  {
     q: `Apa bedanya ${CONFIG.brandName} dengan Canva atau Photoshop?`,
     a: `Canva dan Photoshop adalah editor (kamu harus tahu desain dulu, atur layer satu per satu). ${CONFIG.brandName} adalah studio otomatis: kamu cukup isi brief, hasilnya langsung jadi visual siap upload tanpa edit manual.`,
   },

@@ -86,31 +86,31 @@ export default function Pricing({ onOpenAccess }) {
           <div className="neon-border p-1.5 shadow-[0_30px_80px_-20px_rgba(var(--accent-rgb),0.5)]">
             <div className="rounded-[14px] bg-bg-panel p-7 sm:p-10 relative overflow-hidden">
               <div className="text-center">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-white text-[10px] mono uppercase tracking-widest font-bold mb-3">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500 text-white text-[10px] mono uppercase tracking-widest font-bold mb-3">
                   <Zap className="w-3 h-3" />
-                  DISKON PROMO 70%
+                  100% BEASISWA DAKWAH &amp; GURU NGAJI
                 </div>
                 <div className="text-[10px] mono uppercase tracking-[0.25em] text-accent">
                   {CONFIG.brandName} · FULL LIFETIME ACCESS
                 </div>
-                <h3 className="mt-2 text-xl font-bold">Lisensi Akses Penuh</h3>
+                <h3 className="mt-2 text-xl font-bold">Lisensi Peserta Pelatihan &amp; Lembaga</h3>
 
                 <div className="mt-6 flex flex-col items-center gap-1">
                   <span className="text-text-dim text-base sm:text-lg line-through mono">Rp {CONFIG.priceStrike || '499.000'}</span>
-                  <span className="text-5xl sm:text-6xl font-black text-accent whitespace-nowrap leading-none">
+                  <span className="text-5xl sm:text-6xl font-black text-emerald-400 whitespace-nowrap leading-none">
                     Rp {CONFIG.price !== undefined && CONFIG.price !== '' ? CONFIG.price : '0'}
                   </span>
                 </div>
 
                 {/* HIGHLIGHTED: Akses Peserta Pelatihan badge */}
-                <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-sm border border-border-strong shadow-[0_0_24px_rgba(var(--accent-rgb),0.25)]">
-                  <InfinityIcon className="w-4 h-4 text-accent" strokeWidth={2.5} />
+                <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/15 border border-emerald-500/30 shadow-[0_0_24px_rgba(16,185,129,0.25)]">
+                  <InfinityIcon className="w-4 h-4 text-emerald-400" strokeWidth={2.5} />
                   <span className="text-sm font-bold tracking-wide text-text">
-                    Akses Seumur Hidup · <span className="text-accent">Tanpa Langganan</span>
+                    Akses Seumur Hidup · <span className="text-emerald-400">100% Gratis</span>
                   </span>
                 </div>
                 <div className="mt-2 text-[10px] mono uppercase tracking-widest text-text-dim">
-                  Sekali bayar · Akses instan langsung ke seluruh tools
+                  Terbuka untuk Peserta Pelatihan Baru · Akses Instan ke Seluruh Engine AI
                 </div>
               </div>
 
@@ -120,11 +120,9 @@ export default function Pricing({ onOpenAccess }) {
                   <Palette className="w-4.5 h-4.5 text-accent" />
                 </span>
                 <div className="leading-relaxed">
-                  <div className="text-sm font-bold text-text">Ribuan gaya visual, satu studio.</div>
+                  <div className="text-sm font-bold text-text">Modul Dakwah, Syiar Al-Qur'an &amp; Visi Peradaban.</div>
                   <p className="text-xs text-text-mut mt-1">
-                    {CONFIG.brandName} bisa mencetak <span className="text-text font-semibold">ribuan variasi style</span> yang
-                    disesuaikan langsung dengan karakter produkmu (minimalis, luxury, edgy, playful, premium),
-                    semua hasilnya <span className="text-accent font-semibold">setara karya designer profesional kelas studio</span>.
+                    {CONFIG.brandName} dirancang untuk membantu <span className="text-text font-semibold">Ustadz, Ustadzah, Guru Ngaji, dan Pengelola TK/TPA</span> membuat materi dakwah, crowdfunding sarana, dan konten penerimaan santri dengan estetika kelas studio profesional.
                   </p>
                 </div>
               </div>
@@ -144,11 +142,11 @@ export default function Pricing({ onOpenAccess }) {
               {/* CTA */}
               <div className="mt-8 flex flex-col items-center gap-3">
                 <a
-                  href={CTA_HREF}
-                  className="btn-cta !text-base !px-8 !py-4 text-center"
+                  href="/checkout"
+                  className="btn-cta !text-base !px-8 !py-4 text-center flex items-center gap-2"
                 >
                   <Sparkles className="w-4.5 h-4.5" />
-                  Ambil Promo Sekarang — Rp {CONFIG.price !== undefined && CONFIG.price !== '' ? CONFIG.price : '0'}
+                  Daftar Pelatihan Sekarang — Gratis (Rp 0)
                   <ArrowRight className="w-4.5 h-4.5" />
                 </a>
                 
@@ -158,12 +156,12 @@ export default function Pricing({ onOpenAccess }) {
                     onClick={handleOpenAccess}
                     className="text-xs text-accent underline font-semibold hover:text-accent-h cursor-pointer bg-transparent border-0 mt-1"
                   >
-                    Peserta Pelatihan? Klik di sini untuk klaim akses gratis →
+                    Sudah punya akun? Masuk langsung ke Studio AI →
                   </button>
                 )}
 
                 <div className="text-[10px] mono uppercase tracking-widest text-text-dim">
-                  Pembayaran aman otomatis via QRIS &amp; Virtual Account
+                  Pendaftaran terbuka untuk peserta baru lembaga pendidikan Al-Qur'an
                 </div>
               </div>
 

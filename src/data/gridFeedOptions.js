@@ -10,10 +10,20 @@ export const FEED_COUNTS = [
 ];
 
 export const GOALS = [
-  'Promo penjualan', 'Launching produk', 'Branding premium', 'Awareness', 'Edukasi',
+  'Syiar & Dakwah Islami',
+  'Penerimaan Santri Baru (PSB)',
+  'Crowdfunding & Wakaf',
+  'Edukasi Karakter & Adab',
+  'Promo penjualan',
+  'Launching produk',
+  'Branding premium',
+  'Awareness',
+  'Edukasi',
 ];
 
 export const VISUAL_STYLES_GRID = [
+  'Islamic modern clean',
+  'Warm spiritual gold',
   'Korean pastel premium',
   'Luxury elegant',
   'Clean minimalist',
@@ -27,6 +37,24 @@ export const VISUAL_STYLES_GRID = [
 // Tiap style menentukan elemen yang KONSISTEN di semua feed: palette, typography,
 // lighting, background dasar, extra elements, dan "grid mood".
 export const STYLE_MAP = {
+  'Islamic modern clean': {
+    aesthetic: 'modern Islamic clean & dignified',
+    bg: 'soft ivory cream with subtle modern Islamic geometric pattern, elegant arch gradient',
+    palette: 'emerald green, ivory white, subtle gold foil, warm sandstone',
+    typo: 'clean modern sans-serif paired with dignified calligraphy accents, high readability',
+    lighting: 'pure morning spiritual daylight, gentle warmth, soft holy ambiance',
+    extra: 'subtle Islamic arch line, gold leaf dot, serene atmosphere',
+    mood: 'Emerald • Ivory • Gold foil • Sandstone',
+  },
+  'Warm spiritual gold': {
+    aesthetic: 'warm spiritual gold editorial',
+    bg: 'warm amber dusk gradient, soft bokeh, peaceful twilight glow',
+    palette: 'warm gold, royal navy, off-white, desert sand',
+    typo: 'dignified modern serif, warm friendly letterforms',
+    lighting: 'golden hour twilight illumination, warm radiant rim light',
+    extra: 'golden particle glow, delicate geometric ornament',
+    mood: 'Gold • Royal Navy • Off-white • Warm Amber',
+  },
   'Korean pastel premium': {
     aesthetic: 'Korean pastel luxury commercial',
     bg: 'soft pastel gradient studio, dreamy aesthetic, subtle cloud & sparkle',

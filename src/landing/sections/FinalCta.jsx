@@ -24,17 +24,17 @@ export default function FinalCta({ onOpenAccess }) {
           <span className="text-grad-red">Mulai buat konten profesional hari ini.</span>
         </h2>
         <p className="mt-5 text-text-mut max-w-2xl mx-auto text-base">
-          Tingkatkan kualitas visual konten dan promosi kamu secara instan dengan {CONFIG.brandName}.
-          Ambil penawaran promo seumur hidup sekarang sebelum harga normal kembali.
+          Tingkatkan kualitas syiar, materi belajar, dan daya pikat lembaga Al-Qur'an Anda secara instan dengan {CONFIG.brandName}.
+          Daftarkan diri Anda sekarang sebagai peserta pelatihan baru tanpa dipungut biaya.
         </p>
 
         <div className="mt-9 flex flex-col sm:flex-row gap-3 items-center justify-center">
           <a
-            href={CTA_HREF}
-            className="btn-cta text-base sm:text-lg !py-3.5 !px-8 shadow-[0_10px_35px_rgba(var(--accent-rgb),0.35)]"
+            href="/checkout"
+            className="btn-cta text-base sm:text-lg !py-3.5 !px-8 shadow-[0_10px_35px_rgba(var(--accent-rgb),0.35)] flex items-center gap-2"
           >
             <Sparkles className="w-5 h-5" />
-            Dapatkan Akses Sekarang
+            Daftar Pelatihan Gratis (Rp 0)
             <ArrowRight className="w-5 h-5" />
           </a>
         </div>
@@ -46,13 +46,13 @@ export default function FinalCta({ onOpenAccess }) {
               onClick={handleOpenAccess}
               className="text-xs text-accent underline font-semibold hover:text-accent-h cursor-pointer bg-transparent border-0"
             >
-              Peserta Pelatihan? Klik di sini untuk klaim akses gratis →
+              Sudah punya akun? Masuk langsung ke Studio AI →
             </button>
           </div>
         )}
 
         <div className="mt-4 text-[10px] mono uppercase tracking-widest text-text-dim">
-          Akses instan selamanya · Sekali bayar tanpa langganan bulanan
+          Akses instan selamanya · 100% Gratis untuk Guru Ngaji &amp; Lembaga Dakwah
         </div>
       </div>
     </section>

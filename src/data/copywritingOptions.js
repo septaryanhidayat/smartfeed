@@ -1,4 +1,8 @@
 export const OBJECTIVES = [
+  'Penerimaan Santri Baru (PSB)',
+  'Crowdfunding & Wakaf Dakwah',
+  'Edukasi & Pembinaan Wali Santri',
+  'Syiar & Branding Lembaga Dakwah',
   'Direct Sales / Conversion',
   'Leads Generation',
   'Brand Awareness',
@@ -8,15 +12,21 @@ export const OBJECTIVES = [
 ];
 
 export const PLATFORMS = [
+  'Status WhatsApp & Broadcast',
+  'Facebook Lembaga & Komunitas',
   'Meta Ads (FB & IG)',
-  'TikTok Ads',
-  'Shopee / Marketplace',
+  'Instagram Reels & Feed',
+  'TikTok Dakwah & Edukasi',
   'Landing Page',
-  'WhatsApp Campaign',
+  'Shopee / Marketplace',
   'YouTube Ads',
 ];
 
 export const WRITING_STYLES = [
+  'Storytelling Dakwah (Rumus K-C-A)',
+  'Komunikasi Empatik 3S (Teknik Sandwich)',
+  'Kisah Transformasi Santri (Before-After)',
+  'Tawarkan Pahala (Bukan Jual Kesedihan)',
   'Soft Selling (Storytelling, Empati)',
   'Hard Selling (Direct Conversion)',
   'Luxury Premium',
@@ -27,6 +37,10 @@ export const WRITING_STYLES = [
 ];
 
 export const GREETINGS = [
+  "Assalamu'alaikum Ayah/Bunda (Wali Santri)",
+  'Bapak/Ibu Muhsinin & Donatur',
+  "Sahabat Pecinta Al-Qur'an",
+  'Ustadz / Ustadzah Pendidik',
   'Saya - Anda (Professional)',
   'Aku - Kamu (Casual)',
   'Formal Brand Voice',

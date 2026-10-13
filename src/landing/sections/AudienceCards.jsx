@@ -1,7 +1,19 @@
-import { Store, Megaphone, GraduationCap, Camera, Building2, Briefcase, Newspaper, School, Radio } from 'lucide-react';
+import { Store, Megaphone, GraduationCap, Camera, Building2, Briefcase, Newspaper, School, Radio, BookOpen, HeartHandshake } from 'lucide-react';
 import { CONFIG } from '../../config.js';
 
 const PERSONAS = [
+  {
+    icon: BookOpen,
+    title: 'Guru Ngaji & Asatidz',
+    body: 'Self-leadership dakwah, Growth Mindset, materi ajar Al-Qur\'an, dan komunikasi empatik santri & wali santri.',
+    tag: 'FOKUS UTAMA',
+  },
+  {
+    icon: School,
+    title: 'TK/TPA, Madrasah & Rumah Tahfidz',
+    body: 'Penerimaan Santri Baru (PSB), crowdfunding wakaf meja & mushaf, laporan akuntabilitas, dan sinergi Ogan Ilir SMART.',
+    tag: 'LEMBAGA DAKWAH',
+  },
   {
     icon: Store,
     title: 'UMKM & Brand Owner',
@@ -57,11 +69,10 @@ export default function AudienceCards() {
         <div className="max-w-2xl reveal">
           <span className="eyebrow"><span className="dot" /> dipakai oleh</span>
           <h2 className="h-section mt-4">
-            {CONFIG.brandName} dibuat untuk <span className="text-grad-red">sembilan tipe pengguna</span> ini.
+            {CONFIG.brandName} dibuat untuk <span className="text-grad-red">pendidik, dai, dan kreator</span> ini.
           </h2>
           <p className="mt-4 text-text-mut">
-            Kalau salah satu deskripsi di bawah terdengar seperti kamu, {CONFIG.brandName}
-            akan langsung kepake hari pertama akses.
+            Dirancang khusus untuk mendukung digitalisasi syiar dakwah Al-Qur'an serta promosi kreatif lembaga Anda.
           </p>
         </div>
 

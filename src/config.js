@@ -28,7 +28,7 @@ const isTruthy = (val, defaultVal = true) => {
 export const CONFIG = {
   // ── Branding ──────────────────────────────────────────────
   brandName: pick(cfg.brandName, 'Smart Feed'),
-  tagline:   pick(cfg.tagline, 'AI Design Studio · v2.1'),
+  tagline:   pick(cfg.tagline, 'Studio AI Lembaga Pendidikan, Guru Ngaji & Aktivitas Dakwah'),
   logoUrl:   pick(cfg.logoUrl, '/landing/brand/logo.png'),
 
   // ── Warna (opsional; kosong = pakai default merah/gelap) ──

@@ -25,32 +25,31 @@ export default function Hero({ onOpenAccess }) {
         {/* Copy column — TANPA .reveal: konten hero harus langsung tampil */}
         <div>
           <span className="eyebrow">
-            <span className="dot" /> PROMO SPESIAL · AKSES SEUMUR HIDUP
+            <span className="dot" /> EDISI LEMBAGA PENDIDIKAN, GURU NGAJI &amp; DAKWAH
           </span>
 
           <h1 className="h-display mt-5">
-            Nggak Perlu Jago Desain <span className="text-grad-red">Bikin Konten Sekelas Pro</span>
+            Studio Kreatif AI <span className="text-grad-red">Lembaga Pendidikan &amp; Guru Ngaji</span>
             <br className="hidden sm:block" />
-            {' '}Cuma Sekejap!
+            {' '}Syiar Dakwah Sekelas Pro!
           </h1>
 
           <p className="mt-5 text-base sm:text-lg text-text-mut leading-relaxed max-w-xl">
-            Bikin <span className="text-text font-semibold">aset visual, banner iklan, carousel, berita, hingga naskah video</span> secara instan.
-            Lupakan skill desain rumit, biaya langganan bulanan mahal, atau nunggu revisi berhari-hari.
+            Bikin <span className="text-text font-semibold">Carousel dakwah, 9-feed santri baru, materi slide TOR, naskah video reels, hingga broadcast crowdfunding</span> secara instan dengan fondasi <span className="text-text font-semibold">Urutan Berdirinya Peradaban (Manusia &gt; Sistem &gt; Sumber Daya)</span>.
           </p>
 
           <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <a
-              href="#harga"
+              href="/checkout"
               className="btn-cta cursor-pointer text-center"
             >
               <Sparkles className="w-4 h-4" />
-              Dapatkan Akses Sekarang
+              Daftar Pelatihan — Gratis (Rp 0)
               <ArrowRight className="w-4 h-4" />
             </a>
-            <a href="#contoh" className="btn-cta-ghost">
+            <a href="/app" className="btn-cta-ghost">
               <Play className="w-4 h-4" />
-              Lihat Hasil Generate
+              Buka Studio Langsung
             </a>
           </div>
 

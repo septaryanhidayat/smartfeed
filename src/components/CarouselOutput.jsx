@@ -22,7 +22,7 @@ export default function CarouselOutput({
   autoShow = false, // true saat panel di-mount akibat restore lintas-mode
 }) {
   const [showHistory, setShowHistory] = useState(false);
-  const [hasGenerated, setHasGenerated] = useState(autoShow);
+  const [hasGenerated, setHasGenerated] = useState(true);
   const [selectedEngine, setSelectedEngine] = useState(() => {
     try { return localStorage.getItem('af_selected_ai_engine') || 'chatgpt'; } catch { return 'chatgpt'; }
   });

@@ -167,6 +167,9 @@ export async function validateLogin(rawEmail, rawPassword) {
     const w = await fetchAllowedFromWebhook(CONFIG.sheetWebhookUrl);
     if (w.ok) {
       if (!w.emails.includes(email)) {
+        if (CONFIG.enableFreeTrainingClaim) {
+          return { ok: true, email };
+        }
         return { ok: false, error: ERR.notAllowed };
       }
       return { ok: true, email };
@@ -178,10 +181,18 @@ export async function validateLogin(rawEmail, rawPassword) {
     const s = await fetchAllowedFromSheet(CONFIG.sheetCsvUrl);
     if (s.ok) {
       if (!s.emails.includes(email)) {
+        if (CONFIG.enableFreeTrainingClaim) {
+          return { ok: true, email };
+        }
         return { ok: false, error: ERR.notAllowed };
       }
       return { ok: true, email };
     }
+  }
+
+  // Jika pendaftaran pelatihan gratis dibuka
+  if (CONFIG.enableFreeTrainingClaim) {
+    return { ok: true, email };
   }
 
   // Jika database tersambung tapi email tidak ada
@@ -195,6 +206,10 @@ export async function validateLogin(rawEmail, rawPassword) {
 export async function verifyEmailAllowed(rawEmail, sessionObj = null) {
   if (!rawEmail) return { allowed: false, reason: 'Sesi tidak valid' };
   const email = rawEmail.toLowerCase().trim();
+
+  if (CONFIG.enableFreeTrainingClaim || sessionObj?.isFreeClaim) {
+    return { allowed: true, name: sessionObj?.name || '' };
+  }
 
   if (CONFIG.sheetWebhookUrl) {
     try {

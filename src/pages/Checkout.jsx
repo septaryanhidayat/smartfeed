@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import {
   ShieldCheck, Lock, ArrowRight, ArrowLeft,
-  RefreshCw, AlertCircle, Sparkles, Building2, Wallet, QrCode, Check, CheckCircle2, Copy, LogIn
+  RefreshCw, AlertCircle, Sparkles, Building2, Wallet, QrCode, Check, CheckCircle2, Copy, LogIn, HeartHandshake, BookOpen
 } from 'lucide-react';
 import { CONFIG, brandParts } from '../config.js';
 import SafeImage from '../landing/primitives/SafeImage.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 // Active payment channels matching user's TriPay dashboard & File 1
 const PAYMENT_OPTIONS = [
@@ -84,16 +85,19 @@ const PAYMENT_OPTIONS = [
 ];
 
 export default function Checkout() {
+  const { loginFree } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    institution: '',
     paymentMethod: 'QRIS',
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedPass, setCopiedPass] = useState(false);
+  const [registeredSuccess, setRegisteredSuccess] = useState(null);
 
   // Check if returning from a successful TriPay payment
   const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
@@ -104,6 +108,7 @@ export default function Checkout() {
 
   const parseNum = (val) => parseInt(String(val).replace(/\D/g, ''), 10) || 0;
   const priceInt = parseNum(CONFIG.price);
+  const isZeroPrice = priceInt === 0;
   const strikeInt = parseNum(CONFIG.priceStrike);
   const discountInt = Math.max(strikeInt - priceInt, 0);
 
@@ -161,8 +166,51 @@ export default function Checkout() {
       return;
     }
 
-    setIsLoading(true);
+    // ALUR PENDAFTARAN GRATIS (PESERTA PELATIHAN / RP 0)
+    if (isZeroPrice) {
+      setIsLoading(true);
+      const email = formData.email.trim();
+      const name = formData.name.trim();
+      const phone = formData.phone.trim();
+      const institution = formData.institution.trim() || 'Lembaga Pendidikan Al-Qur\'an';
 
+      if (CONFIG.sheetWebhookUrl) {
+        try {
+          const payload = JSON.stringify({
+            event: 'pelatihan_guru_ngaji_register',
+            status: 'PAID',
+            merchant_ref: 'TRN-FREE-' + Date.now(),
+            email,
+            name,
+            phone,
+            institution,
+            amount: 0,
+            source: 'Pendaftaran Pelatihan Guru Ngaji & Dakwah'
+          });
+
+          fetch(CONFIG.sheetWebhookUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload
+          }).catch(() => {});
+        } catch (err) {
+          console.warn('[checkout] free register sync err', err);
+        }
+      }
+
+      // Aktifkan sesi langsung
+      loginFree(email, name);
+
+      setTimeout(() => {
+        setIsLoading(false);
+        setRegisteredSuccess({ email, name, phone, institution });
+      }, 500);
+      return;
+    }
+
+    // ALUR TRIPAY JIKA HARGA BERBAYAR
+    setIsLoading(true);
     try {
       const res = await fetch('/tripay-create.php', {
         method: 'POST',
@@ -191,8 +239,12 @@ export default function Checkout() {
     }
   };
 
-  // SUCCESS SCREEN (Setelah Selesai Bayar di TriPay)
-  if (isPaidReturn) {
+  // SUCCESS SCREEN (Setelah Selesai Bayar di TriPay ATAU Registrasi Gratis Peserta)
+  if (isPaidReturn || registeredSuccess) {
+    const finalEmail = registeredSuccess ? registeredSuccess.email : returnEmail;
+    const finalName = registeredSuccess ? registeredSuccess.name : returnName;
+    const finalInstitution = registeredSuccess?.institution;
+
     return (
       <div className="min-h-screen bg-bg text-text flex flex-col justify-between selection:bg-accent/20">
         <header className="border-b border-border/80 bg-bg-panel/95 backdrop-blur-md sticky top-0 z-30 shadow-xs">
@@ -211,7 +263,7 @@ export default function Checkout() {
                   <span className="text-accent">{brandParts().accent}</span>
                 </span>
                 <span className="text-[10px] sm:text-[11px] mono text-emerald-400 uppercase tracking-wider font-semibold">
-                  ● Pembayaran Sukses
+                  ● Pendaftaran Berhasil & Akses Aktif
                 </span>
               </div>
             </a>
@@ -226,13 +278,15 @@ export default function Checkout() {
 
             <div className="space-y-2">
               <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-xs font-bold mono uppercase tracking-wider">
-                Transaksi Berhasil Diverifikasi
+                {isZeroPrice ? 'Peserta Pelatihan Terverifikasi' : 'Transaksi Berhasil Diverifikasi'}
               </span>
               <h1 className="text-2xl sm:text-3xl font-black text-text">
                 Selamat Datang di SmartFeed Studio! 🎉
               </h1>
               <p className="text-xs sm:text-sm text-text-mut max-w-sm mx-auto">
-                {returnName ? `Hai ${returnName}, ` : ''}Akses seumur hidup (lifetime) ke 20 Engine Kreatif AI Anda telah aktif permanen.
+                {finalName ? `Ahlan wa Sahlan Ustadz/Ustadzah ${finalName}, ` : ''}
+                {finalInstitution ? `dari ${finalInstitution}. ` : ''}
+                Akses studio dakwah & 20 engine kreatif AI Anda telah aktif.
               </p>
             </div>
 
@@ -246,7 +300,7 @@ export default function Checkout() {
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between items-center">
                   <span className="text-text-dim">Email Terdaftar:</span>
-                  <span className="font-bold text-accent mono">{returnEmail || 'Email Anda'}</span>
+                  <span className="font-bold text-accent mono">{finalEmail || 'Email Anda'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-text-dim">Password Login:</span>
@@ -264,6 +318,12 @@ export default function Checkout() {
                     </button>
                   </div>
                 </div>
+                {finalInstitution && (
+                  <div className="flex justify-between items-center text-[11px] text-text-dim pt-1 border-t border-border/40">
+                    <span>Lembaga / TPA:</span>
+                    <span className="font-semibold text-text">{finalInstitution}</span>
+                  </div>
+                )}
                 {returnRef && (
                   <div className="flex justify-between items-center text-[11px] text-text-dim pt-1 border-t border-border/40">
                     <span>ID Transaksi:</span>
@@ -276,7 +336,7 @@ export default function Checkout() {
             {/* Direct Login CTA Button */}
             <a
               href="/app"
-              className="w-full btn-cta text-sm sm:text-base !py-4 justify-center shadow-[0_10px_30px_rgba(var(--accent-rgb),0.4)] cursor-pointer"
+              className="w-full btn-cta text-sm sm:text-base !py-4 justify-center shadow-[0_10px_30px_rgba(var(--accent-rgb),0.4)] cursor-pointer flex items-center gap-2"
             >
               <LogIn className="w-5 h-5" />
               <span>Buka Studio SmartFeed Sekarang</span>
@@ -284,7 +344,7 @@ export default function Checkout() {
             </a>
 
             <p className="text-[11px] text-text-dim leading-relaxed">
-              Detail akun &amp; instruksi juga telah dikirimkan ke email <strong>{returnEmail || 'Anda'}</strong>. Jika butuh bantuan, hubungi WhatsApp <strong>0896-9524-9089</strong>.
+              Detail akun Anda disimpan di browser ini. Simpan password <strong>SmartFeedOKE</strong> jika ingin login dari perangkat lain.
             </p>
           </div>
         </main>
@@ -338,23 +398,28 @@ export default function Checkout() {
           
           {/* Header Title */}
           <div className="text-center space-y-1.5 py-1">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold mono uppercase tracking-wider mb-1">
+              {isZeroPrice ? '✦ Program Hibah Dakwah & Guru Ngaji' : '✦ Akses Resmi Studio AI'}
+            </div>
             <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight">
-              Selesaikan Pembayaran
+              {isZeroPrice ? 'Pendaftaran Peserta Pelatihan' : 'Selesaikan Pembayaran'}
             </h1>
             <p className="text-xs sm:text-sm text-text-mut max-w-sm mx-auto">
-              Akses seumur hidup ke <strong>SmartFeed AI Studio (20 Engine)</strong>.
+              {isZeroPrice
+                ? 'Akses 100% Gratis untuk Guru Ngaji, Pengelola TK/TPA, Rumah Tahfidz & Aktivis Dakwah (20 Engine AI).'
+                : 'Akses seumur hidup ke SmartFeed AI Studio (20 Engine).'}
             </p>
           </div>
 
           {/* Form Utama */}
           <form onSubmit={handleSubmit} className="space-y-4">
             
-            {/* Card 1: Data Pembeli */}
+            {/* Card 1: Data Pembeli / Peserta */}
             <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5">
               <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
                 <span className="text-xs font-bold text-text uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-accent" />
-                  1. Informasi Pembeli
+                  {isZeroPrice ? '1. Data Peserta Pelatihan' : '1. Informasi Pembeli'}
                 </span>
                 <span className="text-[10px] mono text-text-dim">Wajib Diisi</span>
               </div>
@@ -362,7 +427,7 @@ export default function Checkout() {
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Nama Lengkap <span className="text-red-500">*</span>
+                    Nama Lengkap {isZeroPrice ? '(Ustadz / Ustadzah / Pengurus)' : ''} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -370,7 +435,7 @@ export default function Checkout() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Contoh: Ryan Hidayat"
+                    placeholder="Contoh: Ustadz Ahmad Fauzi"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text focus:border-accent focus:outline-none transition"
                   />
                 </div>
@@ -385,17 +450,17 @@ export default function Checkout() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="Contoh: ryan@email.com"
+                    placeholder="Contoh: ustadz.ahmad@gmail.com"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text focus:border-accent focus:outline-none transition"
                   />
                   <span className="text-[10px] text-text-dim mt-1 block">
-                    Email ini otomatis didaftarkan sebagai akun login Anda.
+                    Email ini otomatis didaftarkan sebagai akun login Studio Anda.
                   </span>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-text mb-1">
-                    Nomor WhatsApp <span className="text-red-500">*</span>
+                    Nomor WhatsApp Aktif <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"
@@ -407,96 +472,151 @@ export default function Checkout() {
                     className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text focus:border-accent focus:outline-none transition"
                   />
                   <span className="text-[10px] text-text-dim mt-1 block">
-                    Untuk notifikasi invoice dan bantuan support.
+                    Untuk konfirmasi pendaftaran dan panduan modul materi.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-text mb-1">
+                    Asal Lembaga / TK-TPA / Rumah Tahfidz / Masjid
+                  </label>
+                  <input
+                    type="text"
+                    name="institution"
+                    value={formData.institution}
+                    onChange={handleChange}
+                    placeholder="Contoh: TK/TPA Al-Ikhlas Sakatiga / DPK BKPRMI"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-bg-deep border border-border text-xs sm:text-sm text-text focus:border-accent focus:outline-none transition"
+                  />
+                  <span className="text-[10px] text-text-dim mt-1 block">
+                    Nama institusi, unit TK/TPA, madrasah, atau lembaga dakwah Anda.
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Card 2: Pilihan Metode Pembayaran */}
-            <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5">
-              <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
-                <span className="text-xs font-bold text-text uppercase tracking-wider flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  2. Pilih Metode Pembayaran
-                </span>
-                <span className="text-[10px] mono text-emerald-400 font-bold">Otomatis Terverifikasi</span>
+            {/* Card 2: Pilihan Metode Pembayaran ATAU Benefit Hibah Pelatihan */}
+            {!isZeroPrice ? (
+              <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3.5">
+                <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
+                  <span className="text-xs font-bold text-text uppercase tracking-wider flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    2. Pilih Metode Pembayaran
+                  </span>
+                  <span className="text-[10px] mono text-emerald-400 font-bold">Otomatis Terverifikasi</span>
+                </div>
+
+                <div className="space-y-3">
+                  {PAYMENT_OPTIONS.map((cat, cIdx) => (
+                    <div key={cIdx} className="space-y-1.5">
+                      <div className="text-[11px] font-bold text-text-mut flex items-center gap-1.5 pt-1">
+                        <cat.icon className="w-3.5 h-3.5 text-accent" />
+                        <span>{cat.category}</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-1.5">
+                        {cat.items.map((method) => {
+                          const isSelected = formData.paymentMethod === method.id;
+                          return (
+                            <button
+                              key={method.id}
+                              type="button"
+                              onClick={() => handleSelectMethod(method.id)}
+                              className={`w-full p-2.5 sm:p-3 rounded-xl border text-left flex items-center justify-between gap-3 transition cursor-pointer ${
+                                isSelected
+                                  ? 'bg-accent/10 border-accent shadow-xs ring-1 ring-accent/30'
+                                  : 'bg-bg-deep border-border/80 hover:bg-bg-elev hover:border-border'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div className="h-10 w-[96px] sm:w-[104px] rounded-lg bg-white p-1.5 flex items-center justify-center shrink-0 border border-neutral-200/80 shadow-2xs">
+                                  <img
+                                    src={method.logo}
+                                    alt={method.name}
+                                    className="h-full w-full object-contain"
+                                  />
+                                </div>
+
+                                <div className="min-w-0">
+                                  <div className="text-xs sm:text-sm font-bold text-text truncate flex items-center gap-1.5">
+                                    <span>{method.name}</span>
+                                    {method.popular && (
+                                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold mono">
+                                        Tercepat
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-[10px] sm:text-[11px] text-text-dim truncate">
+                                    {method.desc}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="shrink-0 pl-1">
+                                <span
+                                  className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center ${
+                                    isSelected
+                                      ? 'bg-accent border-accent text-white'
+                                      : 'border-border bg-bg-panel'
+                                  }`}
+                                >
+                                  {isSelected && <Check className="w-3.5 h-3.5" />}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+            ) : (
+              <div className="surface p-4 sm:p-5 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 space-y-3.5">
+                <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2.5">
+                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <HeartHandshake className="w-4 h-4 text-emerald-400" />
+                    2. Fasilitas Pelatihan & Syiar Dakwah Digital
+                  </span>
+                  <span className="text-[10px] mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">
+                    Gratis / Rp 0
+                  </span>
+                </div>
 
-              <div className="space-y-3">
-                {PAYMENT_OPTIONS.map((cat, cIdx) => (
-                  <div key={cIdx} className="space-y-1.5">
-                    <div className="text-[11px] font-bold text-text-mut flex items-center gap-1.5 pt-1">
-                      <cat.icon className="w-3.5 h-3.5 text-accent" />
-                      <span>{cat.category}</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-1.5">
-                      {cat.items.map((method) => {
-                        const isSelected = formData.paymentMethod === method.id;
-                        return (
-                          <button
-                            key={method.id}
-                            type="button"
-                            onClick={() => handleSelectMethod(method.id)}
-                            className={`w-full p-2.5 sm:p-3 rounded-xl border text-left flex items-center justify-between gap-3 transition cursor-pointer ${
-                              isSelected
-                                ? 'bg-accent/10 border-accent shadow-xs ring-1 ring-accent/30'
-                                : 'bg-bg-deep border-border/80 hover:bg-bg-elev hover:border-border'
-                            }`}
-                          >
-                            <div className="flex items-center gap-3 min-w-0">
-                              {/* Logo Container Rata & Proporsional */}
-                              <div className="h-10 w-[96px] sm:w-[104px] rounded-lg bg-white p-1.5 flex items-center justify-center shrink-0 border border-neutral-200/80 shadow-2xs">
-                                <img
-                                  src={method.logo}
-                                  alt={method.name}
-                                  className="h-full w-full object-contain"
-                                />
-                              </div>
-
-                              <div className="min-w-0">
-                                <div className="text-xs sm:text-sm font-bold text-text truncate flex items-center gap-1.5">
-                                  <span>{method.name}</span>
-                                  {method.popular && (
-                                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold mono">
-                                      Tercepat
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-[10px] sm:text-[11px] text-text-dim truncate">
-                                  {method.desc}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="shrink-0 pl-1">
-                              <span
-                                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full border flex items-center justify-center ${
-                                  isSelected
-                                    ? 'bg-accent border-accent text-white'
-                                    : 'border-border bg-bg-panel'
-                                }`}
-                              >
-                                {isSelected && <Check className="w-3 h-3" />}
-                              </span>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
+                <div className="space-y-2 text-xs text-text-mut leading-relaxed">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Urutan Membangun Peradaban:</strong> Manusia (Growth Mindset) &gt; Sistem (Tata Kelola) &gt; Sumber Daya (Blue Ocean).</span>
                   </div>
-                ))}
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Komunikasi Empatik 3S:</strong> Sapa Kabar Gembira, Teknik Sandwich Wali Santri, dan Visi Bersama.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Crowdfunding &amp; Syiar:</strong> Program Orang Tua Asuh, Wakaf Sarana Belajar, dan Storytelling Rumus K-C-A.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Sinergi Ogan Ilir SMART:</strong> Mendukung 5 pilar (Sejahtera, Maju, Adaptif, Religius, Berkelanjutan).</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>20 Engine Kreatif AI Lengkap:</strong> Carousel, Feed 3x3, Video Script, Slide TOR, Berita &amp; Fact Check.</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Card 3: Ringkasan & Total Biaya */}
             <div className="surface p-4 sm:p-5 rounded-2xl border border-border space-y-3">
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <span className="text-xs font-bold text-text uppercase tracking-wider">
-                  3. Ringkasan Pesanan
+                  3. Ringkasan Pendaftaran
                 </span>
-                <span className="text-[10px] mono text-accent font-bold">Lifetime Deal</span>
+                <span className="text-[10px] mono text-accent font-bold">
+                  {isZeroPrice ? 'Beasiswa Penuh Dakwah' : 'Lifetime Deal'}
+                </span>
               </div>
 
               <div className="space-y-1.5 text-xs sm:text-sm">
@@ -504,40 +624,53 @@ export default function Checkout() {
                   <span>SmartFeed AI Studio (20 Engine)</span>
                   <span className="mono font-semibold whitespace-nowrap">Rp {priceStrikeNum}</span>
                 </div>
-                {discountInt > 0 && (
+                {isZeroPrice ? (
+                  <div className="flex justify-between text-emerald-400 font-semibold">
+                    <span>Subsidi Pelatihan Lembaga Dakwah</span>
+                    <span className="mono whitespace-nowrap">- Rp {priceStrikeNum}</span>
+                  </div>
+                ) : discountInt > 0 ? (
                   <div className="flex justify-between text-emerald-400 font-semibold">
                     <span>Diskon Promo Akses</span>
                     <span className="mono whitespace-nowrap">- Rp {discountFormatted}</span>
                   </div>
-                )}
+                ) : null}
                 <div className="flex justify-between text-text-mut text-[11px] sm:text-xs">
-                  <span>Biaya Transaksi Payment Gateway</span>
+                  <span>Biaya Administrasi &amp; Registrasi</span>
                   <span className="text-emerald-400 font-semibold whitespace-nowrap">Gratis (Rp 0)</span>
                 </div>
               </div>
 
-              {/* Total Nominal Bersih Tanpa Terpotong */}
+              {/* Total Nominal Bersih */}
               <div className="pt-3 border-t border-border/60 flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="text-xs sm:text-sm font-bold text-text">Total Pembayaran</div>
-                  <div className="text-[10px] text-text-dim">Akses seumur hidup tanpa langganan</div>
+                  <div className="text-xs sm:text-sm font-bold text-text">Total Investasi</div>
+                  <div className="text-[10px] text-text-dim">
+                    {isZeroPrice ? 'Terbuka bebas untuk peserta pelatihan baru' : 'Akses seumur hidup tanpa langganan'}
+                  </div>
                 </div>
-                <div className="text-2xl sm:text-3xl font-black text-accent mono whitespace-nowrap shrink-0">
+                <div className="text-2xl sm:text-3xl font-black text-emerald-400 mono whitespace-nowrap shrink-0">
                   Rp {priceNum}
                 </div>
               </div>
 
-              {/* Tombol Bayar Sekarang */}
+              {/* Tombol Submit */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full btn-cta text-sm sm:text-base !py-3.5 sm:!py-4 justify-center shadow-[0_8px_25px_rgba(var(--accent-rgb),0.35)] mt-1 cursor-pointer"
+                className="w-full btn-cta text-sm sm:text-base !py-3.5 sm:!py-4 justify-center shadow-[0_8px_25px_rgba(var(--accent-rgb),0.35)] mt-1 cursor-pointer flex items-center gap-2"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    Menghubungkan ke TriPay...
+                    {isZeroPrice ? 'Mendaftarkan Peserta...' : 'Menghubungkan ke TriPay...'}
                   </span>
+                ) : isZeroPrice ? (
+                  <>
+                    <BookOpen className="w-5 h-5" />
+                    <span className="whitespace-nowrap font-bold">Daftar &amp; Masuk Studio Sekarang (Gratis)</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </>
                 ) : (
                   <>
                     <Lock className="w-4 h-4" />
@@ -550,7 +683,11 @@ export default function Checkout() {
               <div className="pt-1 text-center">
                 <div className="flex items-center justify-center gap-1.5 text-[10px] sm:text-[11px] text-text-dim mono">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Jalur Enkripsi 256-Bit Aman via TriPay Resmi</span>
+                  <span>
+                    {isZeroPrice
+                      ? 'Akses langsung aktif seketika tanpa perlu verifikasi manual'
+                      : 'Jalur Enkripsi 256-Bit Aman via TriPay Resmi'}
+                  </span>
                 </div>
               </div>
 

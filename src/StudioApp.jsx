@@ -97,9 +97,9 @@ const TITLES = {
 };
 
 const HAS_MOCKUP = {
-  banner: true, carousel: true, gridfeed: false, imageslicer: false, forensic: false, videoscript: false, presentation: false,
-  thumbnail: true, typography: true, copywriting: false, facecard: false, menufb: false, article: false,
-  newscard: false, quotecard: false, factcheck: false,
+  banner: true, carousel: true, gridfeed: true, imageslicer: false, forensic: false, videoscript: true, presentation: false,
+  thumbnail: true, typography: true, copywriting: true, facecard: false, menufb: false, article: true,
+  newscard: true, quotecard: true, factcheck: true,
   logoaffiliate: false, tryonaffiliate: false, reviewaffiliate: true,
   storyboardaffiliate: false,
 };
