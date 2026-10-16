@@ -81,6 +81,24 @@ export const PRESENTATION_PRINCIPLES = [
 
 export const PRESENTATION_DEMOS = [
   {
+    id: 'demo_spmb_open_house',
+    tag: '🏫 Sosialisasi SPMB & Open House Sekolah',
+    topic: 'Sosialisasi Kurikulum & Program Unggulan SPMB SIT Robbani T.A 2027/2028',
+    type: 'Edukasi / Presentasi Wali Murid',
+    audience: 'Calon Wali Murid SD IT & SMP IT Robbani Ogan Ilir',
+    slideCount: 12,
+    duration: '45-60 menit',
+    language: 'Indonesia',
+    keyPoints: '- Profil Lembaga & Visi Pendidikan Islam Terpadu SIT Robbani\n- Filosofi "Because Every Child is Unique" dalam Pendekatan Pembelajaran\n- 5 Program Unggulan: Tahfidz Qur\'an Berkelanjutan, Smart School & Vibe Coding, Bilingual Active, Pembiasaan Adab & Sholat, Ekstrakurikuler Minat Bakat\n- Capaian Prestasi Akademik & Non-Akademik Santri / Siswa\n- Sarana Prasarana Sekolah & Lingkungan Belajar yang Aman (Child-Friendly School)\n- Rincian Biaya Pendidikan Transparan & Skema Beasiswa Prestasi/Tahfidz\n- Alur Seleksi & Observasi Minat Bakat Calon Murid Baru\n- Jadwal Gelombang Pendaftaran & Kontak Helpdesk SPMB',
+    dataEvidence: '98% lulusan SD IT Robbani fasih membaca Al-Qur\'an berstandar tajwid dan hafal minimal 3 juz; 87% siswa SMP IT berhasil menembus SMA unggulan dan pesantren terakreditasi nasional.',
+    mainCta: 'Amankan kuota calon murid baru Anda hari ini dan jadilah bagian dari keluarga besar SIT Robbani!',
+    designStyle: 'Clean & Edukatif',
+    colorScheme: 'Electric Cyan (#0284C7) + Solar Yellow (#FACC15) + Deep Navy (#0C4A6E)',
+    visualElements: ['Infografis & Diagram', 'Timeline Pendaftaran', 'Tabel Biaya & Beasiswa', 'Foto Fasilitas Sekolah'],
+    tone: 'Inspiratif & Terpercaya',
+    extraNotes: 'Slide presentasi resmi sosialisasi SPMB & pertemuan calon wali murid di Gedung SIT Robbani.',
+  },
+  {
     id: 'demo_vibe_coding_masterclass',
     tag: '🚀 Teacher Development: Vibe Coding',
     topic: 'VIBE CODING MASTERCLASS: Menuju Smart School Ecosystem Berbasis Agentic AI',

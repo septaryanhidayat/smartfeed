@@ -66,6 +66,23 @@ function cat(id, label, icon, brand, headline, tagline, description, cta, featur
 }
 
 export const CATEGORIES = [
+  cat('spmb_sit_robbani', 'SPMB Sekolah Islam Terpadu (SD IT & SMP IT Robbani)', 'GraduationCap',
+    'SIT Robbani Ogan Ilir', 'Penerimaan Peserta Didik Baru (SPMB) 2027/2028', 'Mencetak Generasi Qur\'ani Berakhlak Mulia & Unggul Smart School',
+    'Sekolah Islam Terpadu jenjang SD IT dan SMP IT dengan kurikulum terpadu: Tahfidz Al-Qur\'an bersanad, bilingual active, fasilitas AC & smartboard, serta kelas inovasi digital Vibe Coding. "Because Every Child is Unique".',
+    'Daftar SPMB Sekarang',
+    ['Tahfidz Qur\'an Bersanad', 'Bilingual Class', 'Smart School Vibe Coding', 'Early Bird Gelombang 1'],
+    'PENERIMAAN SISWA BARU', 'Investasi Terbaik Menuju Generasi Emas Berkarakter',
+    '#0284c7', '#facc15',
+    {
+      banner: { style: 'Minimal Clean', lighting: 'Clean Studio', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Pro Clean', mood: 'Warm & Ceria', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Corporate Executive', energy: 'Inspirational', layout: 'Centered Hero' },
+      copywriting: {
+        angle: 'Sentuh kebutuhan orang tua akan sekolah yang tidak hanya mengejar nilai akademis, tetapi membina akhlak, hafalan Al-Qur\'an, dan kecakapan digital masa depan.',
+        summary: 'Penerimaan Peserta Didik Baru (SPMB) SIT Robbani Ogan Ilir T.A 2027/2028. Dapatkan beasiswa prestasi dan diskon uang pangkal khusus pendaftar Gelombang 1.',
+      }
+    }),
+
   cat('smartschool_vibecoding', 'Smart School — Vibe Coding Masterclass (SIT Robbani)', 'Sparkles',
     'Teacher Development Program · SIT Robbani', 'Vibe Coding Masterclass: Menuju Smart School Ecosystem', 'Akselerasi Transformasi Digital Pendidikan Berbasis Agentic AI',
     'Sebuah workshop interaktif untuk mengakselerasi transformasi digital pendidikan bersama Septa Ryan Hidayat. Temukan kekuatan Agentic AI dalam mewujudkan ekosistem sekolah terotomatisasi mulai dari media pembelajaran interaktif hingga sistem administrasi.',

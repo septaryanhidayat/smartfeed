@@ -2,6 +2,20 @@
 // Tiap preset mengikuti key dari INITIAL_CAROUSEL (buildCarousel.js).
 
 export const CAROUSEL_DEMOS = [
+  // ── SPMB & SEKOLAH ISLAM TERPADU ──
+  {
+    id: 'carousel-spmb-sit-robbani',
+    label: 'SPMB: 5 Alasan Memilih Sekolah Islam Terpadu',
+    icon: 'GraduationCap',
+    tag: 'SPMB Sekolah · 5 slide',
+    preset: {
+      templateType: 'news', totalSlides: '5',
+      newsContent: 'Memilih sekolah terbaik adalah keputusan investasi terpenting bagi masa depan anak. Mengapa Sekolah Islam Terpadu (SIT) Robbani menjadi pilihan utama para orang tua? 1. Keseimbangan Iman & IPTEK: Kurikulum terpadu memadukan tahfidz Al-Qur\'an bersanad dengan literasi digital Smart School & Vibe Coding. 2. Pembinaan Karakter & Adab: Penanaman adab islami harian, sholat berjamaah terbiasa, dan empati sosial sejak dini. 3. Guru Penggerak Berkualitas: Pendidik tersertifikasi, ramah anak, dan mengedepankan filosofi "Because Every Child is Unique". 4. Fasilitas Unggul & Nyaman: Ruang kelas ber-AC & multimedia, laboratorium modern, lingkungan asri, dan kantin sehat. 5. Kuota Terbatas & Beasiswa Prestasi. Pendaftaran Siswa Baru (SPMB) Tahun Ajaran 2027/2028 telah resmi dibuka untuk jenjang SD IT & SMP IT Robbani. Amankan kuota putra-putri tercinta sekarang!',
+      mediaName: '@sit_robbani_oganilir', ctaText: 'Daftar SPMB Online',
+      coverLayout: 'image-full', aspectRatio: '4:5 (Portrait)', visualStyle: 'Bold Modern',
+      newsTextColor: '#ffffff', newsMoodColor: '#0284c7', newsTextBgAuto: true, newsTextBg: '#0c4a6e',
+    },
+  },
   // ── TEACHER DEVELOPMENT & SMART SCHOOL ECOSYSTEM (OGAN ILIR) ──
   {
     id: 'carousel-vibe-coding-smart-school',

@@ -62,6 +62,25 @@ export const INITIAL_VIDEOSCRIPT_STATE = {
 
 export const VIDEOSCRIPT_DEMO_PRESETS = [
   {
+    id: 'demo-reels-spmb-school-tour',
+    label: 'Reels / TikTok (60s): School Tour & SPMB SIT Robbani',
+    badge: 'SPMB / SCHOOL TOUR',
+    icon: 'GraduationCap',
+    preset: {
+      title: 'School Tour SIT Robbani: Fasilitas Modern & Alur Pendaftaran SPMB 2027/2028!',
+      scriptType: 'short_video',
+      duration: '60s',
+      platform: 'TikTok & IG Reels',
+      tone: 'Enerjik, Cepat & Menghibur (Gen Z / Medsos)',
+      visualStyle: 'Cinematic 4K Film Look (24fps, Color Graded)',
+      speaker: 'Siswa Ceria & Panitia Penerimaan Murid Baru SIT Robbani',
+      coreMessage: 'Mengenalkan suasana belajar yang nyaman, fasilitas kelas smartboard, tahfidz bersanad, dan kemudahan daftar SPMB online.',
+      keyPoints: '00-05s: Hook visual siswa tersenyum di pintu gerbang megah sekolah: "Yuk ikut aku keliling sekolah impian!". 06-25s: B-roll kelas ber-AC, lab komputer, aktivitas tahfidz seru & robotik. 26-45s: Fasilitas masjid, lapangan olahraga luas, dan kantin sehat higienis. 46-60s: Info pembukaan SPMB Gelombang 1 dan ajakan daftar via link bio.',
+      callToAction: 'Kuota terbatas 25 siswa per kelas! Kunjungi link di bio atau WhatsApp 0812-7890-xxxx sekarang juga!',
+      additionalNotes: 'Visual warna cerah (cyan & emas), transisi cepat ala vlog kekinian, musik latar instrumen ceria dan ramah anak.',
+    },
+  },
+  {
     id: 'demo-reels-vibe-coding-robbani',
     label: 'Reels / TikTok (60s): Vibe Coding Guru SIT Robbani',
     badge: 'SMART SCHOOL / 60S',

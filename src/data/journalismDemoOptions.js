@@ -1,6 +1,28 @@
 export const JOURNALISM_DEMO_PRESETS = {
   newscard: [
     {
+      id: 'news-spmb-sit-robbani',
+      label: 'SPMB SIT Robbani Ogan Ilir Resmi Dibuka',
+      badge: 'SPMB 2027/2028',
+      rubric: 'Pendidikan Sekolah',
+      icon: 'GraduationCap',
+      preset: {
+        mediaName: 'Warta Pendidikan Sumsel',
+        badge: 'SPMB 2027/2028',
+        rubric: 'Pendidikan Sekolah',
+        headline: 'SIT Robbani Ogan Ilir Resmi Buka SPMB 2027/2028: Padukan Tahfidz Al-Qur\'an dan Smart School Vibe Coding',
+        dateline: 'INDRALAYA, OGAN ILIR',
+        date: 'Oktober 2026',
+        lead: 'Sekolah Islam Terpadu (SIT) Robbani resmi membuka pendaftaran peserta didik baru jenjang SD IT dan SMP IT dengan kuota terbatas demi menjaga kualitas rasio guru-siswa.',
+        keyPoint: 'Tersedia beasiswa tahfidz Al-Qur\'an dan potongan biaya uang pangkal khusus pendaftar Gelombang I.',
+        aspectRatio: '1:1 (Instagram Feed)',
+        photographyStyle: 'Documentary Photojournalism (Reuters / AP style, candid realism)',
+        lighting: 'Bright Morning Daylight (Clean Modern Classroom)',
+        sceneDescription: 'Gedung megah dan asri SIT Robbani Indralaya dengan spanduk selamat datang SPMB, tampak calon orang tua murid berkonsultasi ramah dengan panitia di meja pendaftaran.',
+        supportingPhoto: 'Brosur resmi SPMB SIT Robbani T.A 2027/2028 dan potret keceriaan siswa di ruang kelas smartboard',
+      },
+    },
+    {
       id: 'news-vibe-coding-robbani',
       label: 'Vibe Coding Masterclass SIT Robbani Ogan Ilir',
       badge: 'TEACHER PROGRAM',
@@ -157,6 +179,24 @@ export const JOURNALISM_DEMO_PRESETS = {
   ],
 
   quotecard: [
+    {
+      id: 'quote-kepsek-spmb-robbani',
+      label: 'Kepala Sekolah SIT Robbani — Investasi Masa Depan Anak',
+      icon: 'GraduationCap',
+      preset: {
+        mediaName: 'Warta SIT Robbani',
+        sourceName: 'Pimpinan SIT Robbani Ogan Ilir',
+        sourceRole: 'Badan Pengelola Pendidikan SIT Robbani',
+        quote: 'Pendidikan anak bukan sekadar mengejar angka di atas kertas rapor, melainkan menumbuhkan fitrah keimanan, adab luhur, dan kesiapan mental menghadapi zaman kecerdasan buatan. Di SIT Robbani, setiap anak dihargai keunikannya.',
+        context: 'Peluncuran Resmi Penerimaan Peserta Didik Baru (SPMB) T.A 2027/2028',
+        dateline: 'OGAN ILIR',
+        date: 'Oktober 2026',
+        portraitStyle: 'Formal Press Portrait (Clean background, direct eye contact)',
+        lighting: 'Natural Newsroom Daylight',
+        aspectRatio: '1:1 (Instagram Feed)',
+        supportingPhoto: 'Logo resmi SIT Robbani dan latar belakang perpustakaan modern sekolah',
+      },
+    },
     {
       id: 'quote-septa-vibe-coding',
       label: 'Septa Ryan Hidayat — Agentic AI & Smart School',
@@ -378,6 +418,28 @@ export const JOURNALISM_DEMO_PRESETS = {
     },
   ],
   article: [
+    {
+      id: 'art-spmb-sit-robbani',
+      label: 'Liputan: Pembukaan SPMB SIT Robbani 2027/2028',
+      badge: 'INFO SPMB',
+      rubric: 'Pendidikan & Sekolah',
+      icon: 'GraduationCap',
+      preset: {
+        headline: 'Songsong Masa Depan Emas, SIT Robbani Ogan Ilir Resmi Buka SPMB 2027/2028 Berbasis Kurikulum Terpadu & Karakter',
+        rubric: 'Pendidikan & Sekolah',
+        mediaName: 'Portal Berita Pendidikan Sumsel',
+        dateline: 'INDRALAYA, 17 Oktober 2026',
+        format: 'straight_news',
+        targetMedia: 'online_seo',
+        tone: 'Inspiratif & Edukatif',
+        length: 'medium',
+        facts: 'Sekolah Islam Terpadu (SIT) Robbani Ogan Ilir yang menaungi jenjang SD IT dan SMP IT resmi membuka Penerimaan Peserta Didik Baru (SPMB) untuk Tahun Ajaran 2027/2028. Pendaftaran dibagi dalam dua gelombang: Gelombang I (Oktober - Desember 2026) dengan fasilitas diskon Early Bird serta Gelombang II (Januari - Maret 2027). Sekolah mengunggulkan pembinaan tahfidz Al-Qur\'an bersanad, kurikulum bilingual, dan integrasi Smart School Vibe Coding dengan kuota ketat maksimal 25 peserta didik per kelas.',
+        quotes: 'Ketua Panitia SPMB: "Kami tidak hanya mengasah kecerdasan akademik anak, tetapi memastikan mereka tumbuh dengan adab islami yang kokoh dan siap beradaptasi dengan kemajuan teknologi modern."\nWali Murid: "Lingkungan sekolah yang aman, asri, dan guru-guru yang penuh perhatian membuat kami mantap menyekolahkan anak di SIT Robbani."',
+        sourceDetails: 'Rilis Resmi Panitia SPMB Yayasan Generasi Robbani Sumatera Selatan & Peliputan di Kampus Indralaya.',
+        keywords: 'SPMB SIT Robbani, Sekolah Islam Terpadu Ogan Ilir, SD IT Robbani, SMP IT Robbani, Pendaftaran Siswa Baru 2027',
+        additionalNotes: 'Sertakan informasi link pendaftaran online www.sitrobbani.sch.id serta nomor hotline layanan orang tua.',
+      },
+    },
     {
       id: 'art-vibe-coding-robbani',
       label: 'Liputan: Teacher Development Program di SIT Robbani',
