@@ -44,6 +44,7 @@ import ForensicMode from './modes/ForensicMode.jsx';
 import FlyerBannerMode from './modes/FlyerBannerMode.jsx';
 import VideoScriptDemoModal from './components/VideoScriptDemoModal.jsx';
 import PresentationDemoModal from './components/PresentationDemoModal.jsx';
+import FlyerBannerDemoModal from './components/FlyerBannerDemoModal.jsx';
 import { buildBanner, INITIAL_BANNER } from './prompts/buildBanner.js';
 import { buildFlyerBanner } from './prompts/buildFlyerBanner.js';
 import { INITIAL_FLYER_BANNER } from './data/flyerBannerOptions.js';
@@ -264,6 +265,16 @@ function AuthedApp() {
         colorPrimary: b.primaryColor || '#ec4899',
         colorSecondary: b.secondaryColor || '#ffffff',
       } });
+      // Spanduk, Flyer & Banner juga ikut terupdate dari inspirasi kategori
+      dispatchFlyerBanner({ type: 'LOAD_DEMO', preset: {
+        title: (b.headline || b.brand || 'WORKSHOP & WEBINAR').toUpperCase(),
+        subTitle: b.tagline || b.description || '',
+        institution: (b.brand || 'LEMBAGA PENDIDIKAN & BISNIS').toUpperCase(),
+        badgeText: (Array.isArray(b.features) && b.features[0]) || 'TERBUKA UNTUK UMUM',
+        callToAction: b.cta || 'Daftar Sekarang!',
+        customPrimary: b.primaryColor || '#0284c7',
+        customSecondary: b.secondaryColor || '#facc15',
+      } });
       // Note: facecard & menufb tidak ikut LOAD_DEMO — punya demo modal sendiri.
       logActivity('DEMO', { tool: mode, details: cat.name });
       setLoadingDemo(null);
@@ -352,6 +363,15 @@ function AuthedApp() {
     logActivity('DEMO', { tool: 'presentation', details: demo.topic });
     setTimeout(() => {
       dispatchPresentation({ type: 'RESET_TO', state: { ...INITIAL_PRESENTATION, ...demo } });
+      setLoadingDemo(null);
+    }, 600);
+  };
+
+  const handleFlyerBannerDemoPick = (demo) => {
+    setLoadingDemo({ label: demo.label, icon: 'Flag' });
+    logActivity('DEMO', { tool: 'flyerbanner', details: demo.label });
+    setTimeout(() => {
+      dispatchFlyerBanner({ type: 'LOAD_DEMO', preset: demo.preset });
       setLoadingDemo(null);
     }, 600);
   };
@@ -624,6 +644,8 @@ function AuthedApp() {
         <CarouselDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleCarouselDemoPick} />
       ) : mode === 'presentation' ? (
         <PresentationDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handlePresentationDemoPick} currentTopic={presentation.topic} />
+      ) : mode === 'flyerbanner' ? (
+        <FlyerBannerDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleFlyerBannerDemoPick} />
       ) : mode === 'menufb' ? (
         <MenuFBDemoModal open={demoOpen} onClose={() => setDemoOpen(false)} onPick={handleMenuFBDemoPick} />
       ) : mode === 'videoscript' ? (

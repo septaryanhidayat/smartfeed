@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { X, Search } from 'lucide-react';
+import { X, Search, Shuffle } from 'lucide-react';
 import { getDemoIcon } from './demoIcons.js';
 import { CATEGORIES } from '../data/categories.js';
 
@@ -10,6 +10,14 @@ export default function DemoCategoryModal({ open, onClose, onPick }) {
     if (!s) return CATEGORIES;
     return CATEGORIES.filter((c) => c.label.toLowerCase().includes(s));
   }, [q]);
+
+  const handleRandomPick = () => {
+    if (!CATEGORIES || CATEGORIES.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * CATEGORIES.length);
+    const picked = CATEGORIES[randomIndex];
+    onPick(picked);
+    onClose();
+  };
 
   if (!open) return null;
 
@@ -28,9 +36,20 @@ export default function DemoCategoryModal({ open, onClose, onPick }) {
             <h2 className="text-base font-semibold">Pilih Inspirasi Demo</h2>
             <p className="text-xs text-text-mut mt-0.5">Pilih industri untuk mengisi data demo secara otomatis ke semua mode.</p>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-md hover:bg-bg-elev flex items-center justify-center text-text-mut">
-            <X className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleRandomPick}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-accent text-white hover:bg-accent/90 transition shadow-sm cursor-pointer"
+              title="Pilih satu kategori secara acak"
+            >
+              <Shuffle className="w-3.5 h-3.5" />
+              <span>Acak Demo</span>
+            </button>
+            <button onClick={onClose} className="w-8 h-8 rounded-md hover:bg-bg-elev flex items-center justify-center text-text-mut cursor-pointer">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Search */}
