@@ -62,6 +62,25 @@ export const INITIAL_VIDEOSCRIPT_STATE = {
 
 export const VIDEOSCRIPT_DEMO_PRESETS = [
   {
+    id: 'demo-reels-vibe-coding-robbani',
+    label: 'Reels / TikTok (60s): Vibe Coding Guru SIT Robbani',
+    badge: 'SMART SCHOOL / 60S',
+    icon: 'Sparkles',
+    preset: {
+      title: 'Guru Bikin Aplikasi Belajar Sendiri? Intip Keseruan Vibe Coding Masterclass di SD IT Robbani Ogan Ilir!',
+      scriptType: 'short_video',
+      duration: '60s',
+      platform: 'TikTok & IG Reels',
+      tone: 'Enerjik, Cepat & Menghibur (Gen Z / Medsos)',
+      visualStyle: 'Cinematic 4K Film Look (24fps, Color Graded)',
+      speaker: 'Septa Ryan Hidayat (Direktur Beranda Teknologi Digital)',
+      coreMessage: 'Kekuatan Agentic AI dan Vibe Coding memungkinkan guru membuat aplikasi interaktif dan otomatisasi administrasi sekolah cukup dengan bahasa alami.',
+      keyPoints: '00-05s: Hook visual tumpukan berkas nilai guru vs sekali ketik prompt langsung jadi aplikasi. 06-25s: Penjelasan praktis apa itu Vibe Coding untuk pendidikan. 26-45s: Suasana antusias Teacher Development Program di Aula SD IT Robbani Ogan Ilir. 46-60s: Ajakan upgrade kapasitas diri untuk ekosistem sekolah cerdas.',
+      callToAction: 'Follow @sit_robbani_oganilir dan kunjungi berandateknologi.com untuk hadirkan workshop AI di sekolah Anda!',
+      additionalNotes: 'Visual warna cyan & kuning cerah, b-roll suasana aula SD IT Robbani dan ekspresi senyum guru memegang laptop.',
+    },
+  },
+  {
     id: 'demo-storytelling-santri-kca',
     label: 'Reels / TikTok (30s): Storytelling Santri (Rumus K-C-A)',
     badge: 'STORYTELLING / 30S',

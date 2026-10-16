@@ -1,6 +1,28 @@
 export const JOURNALISM_DEMO_PRESETS = {
   newscard: [
     {
+      id: 'news-vibe-coding-robbani',
+      label: 'Vibe Coding Masterclass SIT Robbani Ogan Ilir',
+      badge: 'TEACHER PROGRAM',
+      rubric: 'Pendidikan & Teknologi',
+      icon: 'Sparkles',
+      preset: {
+        mediaName: 'Warta Pendidikan Ogan Ilir',
+        badge: 'TEACHER PROGRAM',
+        rubric: 'Pendidikan & Teknologi',
+        headline: 'Akselerasi Smart School Ecosystem, Guru SIT Robbani Ogan Ilir Ikuti Vibe Coding Masterclass Bersama Septa Ryan Hidayat',
+        dateline: 'OGAN ILIR, 17 OKTOBER 2026',
+        date: '17 Oktober 2026',
+        lead: 'Yayasan Generasi Robbani Sumatera Selatan berkolaborasi dengan Beranda Teknologi Digital menggelar workshop Vibe Coding Masterclass di Aula SD IT Robbani guna mempercepat ekosistem sekolah terotomatisasi.',
+        keyPoint: 'Narasumber memaparkan kekuatan Agentic AI dalam merancang media pembelajaran interaktif mandiri dan memangkas waktu beban administrasi sekolah.',
+        aspectRatio: '1:1 (Instagram Feed)',
+        photographyStyle: 'Documentary Photojournalism (Reuters / AP style, candid realism)',
+        lighting: 'Bright Morning Daylight (Clean Modern Classroom)',
+        sceneDescription: 'Septa Ryan Hidayat memegang mikrofon di panggung Aula SD IT Robbani memaparkan bagan Smart School Ecosystem di hadapan dewan guru yang antusias mempraktikkan Vibe Coding di laptop masing-masing.',
+        supportingPhoto: 'Poster Teacher Development Program dan dokumentasi antusiasme guru SD IT Robbani',
+      },
+    },
+    {
       id: 'news-pelatihan-guru-ngaji',
       label: 'Pelatihan Guru Ngaji TK/TPA Sakatiga Ogan Ilir',
       badge: 'LIPUTAN KHUSUS',
@@ -135,6 +157,24 @@ export const JOURNALISM_DEMO_PRESETS = {
   ],
 
   quotecard: [
+    {
+      id: 'quote-septa-vibe-coding',
+      label: 'Septa Ryan Hidayat — Agentic AI & Smart School',
+      icon: 'Sparkles',
+      preset: {
+        mediaName: 'Teacher Development Program SIT Robbani',
+        sourceName: 'Septa Ryan Hidayat',
+        sourceRole: 'Direktur Beranda Teknologi Digital & Founder SmartverseID',
+        quote: 'Dunia pendidikan terus berkembang. Kekuatan Agentic AI memungkinkan guru mewujudkan ekosistem sekolah yang terotomatisasi—mulai dari menciptakan media pembelajaran interaktif yang memikat siswa, hingga menyederhanakan sistem administrasi sekolah tanpa beban repetitif.',
+        context: 'Vibe Coding Masterclass di Aula SD IT Robbani Ogan Ilir',
+        dateline: 'OGAN ILIR',
+        date: '17 Oktober 2026',
+        portraitStyle: 'Candid Press Conference (Speaking at podium with microphones)',
+        lighting: 'Natural Newsroom Daylight',
+        aspectRatio: '1:1 (Instagram Feed)',
+        supportingPhoto: 'Foto Septa Ryan Hidayat berjas navy dengan dasi bermotif memegang mikrofon di Aula SD IT Robbani',
+      },
+    },
     {
       id: 'quote-narasumber-peradaban',
       label: 'Narasumber BKPRMI — 3 Syarat Berdirinya Peradaban',
@@ -338,6 +378,28 @@ export const JOURNALISM_DEMO_PRESETS = {
     },
   ],
   article: [
+    {
+      id: 'art-vibe-coding-robbani',
+      label: 'Liputan: Teacher Development Program di SIT Robbani',
+      badge: 'LIPUTAN KHUSUS',
+      rubric: 'Pendidikan & Transformasi Digital',
+      icon: 'Sparkles',
+      preset: {
+        headline: 'Menuju Smart School Ecosystem: Puluhan Pendidik SIT Robbani Ogan Ilir Akselerasi Kapasitas Digital Lewat Vibe Coding Masterclass',
+        rubric: 'Pendidikan & Transformasi Digital',
+        mediaName: 'Portal Berita Pendidikan Sumsel',
+        dateline: 'OGAN ILIR, 17 Oktober 2026',
+        format: 'straight_news',
+        targetMedia: 'online_seo',
+        tone: 'Inspiratif & Edukatif',
+        length: 'medium',
+        facts: 'Bertempat di Aula SD IT Robbani Ogan Ilir pada Sabtu, 17 Oktober 2026 pukul 07.00 - 12.00 WIB, Yayasan Generasi Robbani Sumatera Selatan menyelenggarakan Teacher Development Program bertajuk Vibe Coding Masterclass: Menuju Smart School Ecosystem. Workshop interaktif ini menghadirkan narasumber utama Septa Ryan Hidayat (Direktur Beranda Teknologi Digital & Founder SmartverseID) yang juga merupakan Trainer Ralenta Learning Center (RLC). Peserta mengeksplorasi pemanfaatan Agentic AI dalam menciptakan media pembelajaran interaktif serta merancang otomatisasi sistem administrasi sekolah.',
+        quotes: 'Septa Ryan Hidayat: "Guru masa kini tidak lagi dituntut menghafal sintaks koding manual yang rumit. Di era Vibe Coding dan Agentic AI, instruksi bahasa alami kita dapat langsung diterjemahkan menjadi perangkat ajar interaktif dan sistem otomatisasi sekolah yang menghemat waktu secara dramatis."\nKepala SD IT Robbani: "Ini adalah langkah konkret kami mempercepat adaptasi digital agar guru dan siswa memiliki pengalaman belajar terbaik yang unggul dan menyenangkan."',
+        sourceDetails: 'Liputan langsung di Aula SD IT Robbani Ogan Ilir & Siaran Pers Beranda Teknologi Digital.',
+        keywords: 'Teacher Development Program, Vibe Coding Masterclass, SIT Robbani Ogan Ilir, Septa Ryan Hidayat, Smart School Ecosystem, Agentic AI',
+        additionalNotes: 'Terapkan rumus piramida terbalik, soroti kolaborasi Yayasan Generasi Robbani Sumsel, SIT Robbani, Beranda Teknologi Digital, dan Ralenta Learning Center (RLC).',
+      },
+    },
     {
       id: 'art-pelatihan-guru-ngaji-oganilir',
       label: 'Liputan: Pelatihan Guru Ngaji di SMA IT Sakatiga',

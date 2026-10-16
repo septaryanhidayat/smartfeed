@@ -81,6 +81,24 @@ export const PRESENTATION_PRINCIPLES = [
 
 export const PRESENTATION_DEMOS = [
   {
+    id: 'demo_vibe_coding_masterclass',
+    tag: '🚀 Teacher Development: Vibe Coding',
+    topic: 'VIBE CODING MASTERCLASS: Menuju Smart School Ecosystem Berbasis Agentic AI',
+    type: 'Edukasi / Workshop',
+    audience: 'Kepala Sekolah, Guru & Pendidik SIT Robbani Ogan Ilir',
+    slideCount: 12,
+    duration: '60-90 menit',
+    language: 'Indonesia',
+    keyPoints: '- Paradigma Baru Guru 2026: Dari sekadar pengguna teknologi menjadi arsitek media ajar interaktif\n- Apa Itu Vibe Coding: Membangun aplikasi dan alat bantu kelas dengan bahasa alami tanpa pusing sintaks kode manual\n- Kekuatan Agentic AI: Agen cerdas otonom yang bertugas sebagai asisten pengajar dan otomasi administrasi 24/7\n- Menyederhanakan Administrasi Sekolah: Otomasi rekap nilai, format asesmen, RPP berdiferensiasi & notifikasi orang tua\n- Live Demo Vibe Coding: Membangun media pembelajaran interaktif yang adaptif untuk siswa generasi alpha\n- Arsitektur 4 Pilar Smart School Ecosystem: Pembelajaran Personal, Tata Kelola Terotomasi, Guru Berdaya & Sinergi Wali Murid\n- Profil Narasumber: Septa Ryan Hidayat (Direktur Beranda Teknologi Digital, Founder SmartverseID, Trainer RLC)\n- Pelaksanaan: Sabtu, 17 Oktober 2026 di Aula SD IT Robbani Ogan Ilir',
+    dataEvidence: 'Agentic AI mereduksi beban administrasi guru hingga 65%, mengembalikan fokus utama guru pada pendampingan karakter dan empati murid; media ajar interaktif mendongkrak retensi pemahaman materi hingga 82%.',
+    mainCta: 'Upgrade kapasitas diri Anda hari ini: buka laptop, ketikkan instruksi alami Anda, dan hadirkan pengalaman belajar terbaik bagi siswa!',
+    designStyle: 'Futuristic Modern & Edukatif',
+    colorScheme: 'Electric Cyan (#0284C7) + Solar Yellow (#FACC15) + Deep Navy (#0C4A6E)',
+    visualElements: ['Infografis & Diagram', 'Timeline', 'Live Code Prompt Demo', 'Mockup Interaktif'],
+    tone: 'Inspiratif & Solutif',
+    extraNotes: 'Slide presentasi resmi Teacher Development Program Aula SD IT Robbani Ogan Ilir oleh Septa Ryan Hidayat.',
+  },
+  {
     id: 'demo_modul3_kepemimpinan',
     tag: '🏛️ Materi III: Kepemimpinan Guru Ngaji',
     topic: 'Kepemimpinan Diri & Organisasi: Peran Strategis Guru Ngaji Mendukung Ogan Ilir SMART',

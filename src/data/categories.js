@@ -66,6 +66,23 @@ function cat(id, label, icon, brand, headline, tagline, description, cta, featur
 }
 
 export const CATEGORIES = [
+  cat('smartschool_vibecoding', 'Smart School — Vibe Coding Masterclass (SIT Robbani)', 'Sparkles',
+    'Teacher Development Program · SIT Robbani', 'Vibe Coding Masterclass: Menuju Smart School Ecosystem', 'Akselerasi Transformasi Digital Pendidikan Berbasis Agentic AI',
+    'Sebuah workshop interaktif untuk mengakselerasi transformasi digital pendidikan bersama Septa Ryan Hidayat. Temukan kekuatan Agentic AI dalam mewujudkan ekosistem sekolah terotomatisasi mulai dari media pembelajaran interaktif hingga sistem administrasi.',
+    'Daftar Workshop Sekarang',
+    ['Vibe Coding AI', 'Media Interaktif', 'Otomasi Administrasi', 'Narasumber: Septa Ryan Hidayat'],
+    'VIBE CODING MASTERCLASS', 'Menuju Smart School Ecosystem Berbasis Agentic AI',
+    '#0284c7', '#facc15',
+    {
+      banner: { style: 'Futuristic Tech', lighting: 'Clean Studio', ratio: '1:1 (Square Feed)' },
+      thumbnail: { style: 'Tech Explainer', mood: 'Intrigue', ratio: '16:9 (YouTube Thumbnail)' },
+      typography: { dna: 'Glassmorphism Premium', energy: 'Futuristic', layout: 'Centered Hero' },
+      copywriting: {
+        angle: 'Sentuh tantangan guru menghadapi era digital, tawarkan solusi Vibe Coding dan Agentic AI yang memudahkan pembuatan media ajar interaktif dan memangkas beban administrasi sekolah.',
+        summary: 'Teacher Development Program di Aula SD IT Robbani Ogan Ilir, Sabtu 17 Oktober 2026. Belajar langsung dari Septa Ryan Hidayat (Direktur Beranda Teknologi Digital & Founder SmartverseID).',
+      }
+    }),
+
   cat('tpa_bqprmi_santribaru', "TK/TPA & Lembaga Pendidikan Al-Qur'an (PSB)", 'BookOpen',
     'TK/TPA BKPRMI Unggulan', "Penerimaan Santri Baru — Dekatkan Buah Hati dengan Al-Qur'an", "Membangun Generasi Qur'ani Berakhlak Mulia · Ceria, Disiplin & Beradab",
     "Lembaga pendidikan Al-Qur'an usia dini (TK/TPA) dengan kurikulum Iqro' berjenjang, tahfidz juz 30 ceria, pembiasaan sholat berjamaah, dan bimbingan adab islami harian ramah anak Generasi Alpha.",

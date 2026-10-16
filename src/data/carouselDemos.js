@@ -2,6 +2,20 @@
 // Tiap preset mengikuti key dari INITIAL_CAROUSEL (buildCarousel.js).
 
 export const CAROUSEL_DEMOS = [
+  // ── TEACHER DEVELOPMENT & SMART SCHOOL ECOSYSTEM (OGAN ILIR) ──
+  {
+    id: 'carousel-vibe-coding-smart-school',
+    label: 'Vibe Coding: Menuju Smart School Ecosystem',
+    icon: 'Sparkles',
+    tag: 'Smart School · 5 slide',
+    preset: {
+      templateType: 'news', totalSlides: '5',
+      newsContent: 'Dunia pendidikan terus berkembang, sudah siapkah kita beradaptasi? Mari akselerasi transformasi digital di sekolah kita! Lewat konsep Vibe Coding dan kekuatan Agentic AI, guru dapat mewujudkan ekosistem sekolah yang terotomatisasi—mulai dari menciptakan media pembelajaran interaktif yang menarik perhatian siswa, hingga menyederhanakan sistem administrasi sekolah yang selama ini memakan waktu. Belajar langsung dari ahlinya: Septa Ryan Hidayat (Direktur Beranda Teknologi Digital & Founder SmartverseID). Catat tanggalnya: Sabtu, 17 Oktober 2026 pukul 07.00 - 12.00 WIB bertempat di Aula SD IT Robbani Ogan Ilir. Mari upgrade kapasitas diri demi pengalaman belajar terbaik bagi siswa!',
+      mediaName: '@sit_robbani_oganilir', ctaText: 'Simpan & Hadiri Workshop',
+      coverLayout: 'image-full', aspectRatio: '4:5 (Portrait)', visualStyle: 'Bold Modern',
+      newsTextColor: '#ffffff', newsMoodColor: '#0284c7', newsTextBgAuto: true, newsTextBg: '#0c4a6e',
+    },
+  },
   // ── DAKWAH, GURU NGAJI & LEMBAGA PENDIDIKAN (MODUL SAKATIGA OGAN ILIR) ──
   {
     id: 'carousel-peradaban-3syarat',

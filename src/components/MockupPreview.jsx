@@ -1078,6 +1078,26 @@ function renderFlyerBanner(w, h, state) {
   const isWide = w / h >= 2.5; // Spanduk horizontal 3:1, 4:1, 5:1
   const isTall = h / w >= 1.8; // X-Banner vertical 1:2.67
 
+  if (state.imagePreview) {
+    return (
+      <g>
+        <image
+          href={state.imagePreview}
+          x="0"
+          y="0"
+          width={w}
+          height={h}
+          preserveAspectRatio={isWide ? 'xMidYMid slice' : 'xMidYMid meet'}
+        />
+        {/* Ring Mata Ayam di 4 Sudut */}
+        <circle cx="16" cy="16" r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.85" />
+        <circle cx={w - 16} cy="16" r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.85" />
+        <circle cx="16" cy={h - 16} r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.85" />
+        <circle cx={w - 16} cy={h - 16} r="5" fill="#1e293b" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.85" />
+      </g>
+    );
+  }
+
   return (
     <g>
       {/* Background with soft arabesque arches */}
